@@ -24,13 +24,13 @@
 
   <meta name="description" content="Linux 系统语言的设置至关重要，当设置不匹配的语言时，严重影响使用的效率。如在系统上没有设置中文时，大多出现乱码、数字等情况，使得使用的体验感大幅下降。下面介绍在 Debian, CentOS 等系统上设置中文或其他语言的方法。本篇命令以 root 身份运行。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在 Linux 上设置不同的语言">
+<meta property="og:title" content="在 Linux 上设置不同的语言和时区">
 <meta property="og:url" content="https://xu-jinzhong.gitee.io/2020/12/30/locale-linux-language/index.html">
 <meta property="og:site_name" content="J Blog">
 <meta property="og:description" content="Linux 系统语言的设置至关重要，当设置不匹配的语言时，严重影响使用的效率。如在系统上没有设置中文时，大多出现乱码、数字等情况，使得使用的体验感大幅下降。下面介绍在 Debian, CentOS 等系统上设置中文或其他语言的方法。本篇命令以 root 身份运行。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-12-30T08:40:18.000Z">
-<meta property="article:modified_time" content="2021-03-02T09:51:43.689Z">
+<meta property="article:modified_time" content="2021-03-15T01:55:54.702Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="ubuntu">
 <meta property="article:tag" content="linux">
@@ -53,7 +53,7 @@
   };
 </script>
 
-  <title>在 Linux 上设置不同的语言 | J Blog</title>
+  <title>在 Linux 上设置不同的语言和时区 | J Blog</title>
   
 
 
@@ -310,7 +310,7 @@
     
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          在 Linux 上设置不同的语言
+          在 Linux 上设置不同的语言和时区
         </h1>
 
         <div class="post-meta-container">
@@ -328,7 +328,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-03-02 17:51:43" itemprop="dateModified" datetime="2021-03-02T17:51:43+08:00">2021-03-02</time>
+        <time title="Modified: 2021-03-15 09:55:54" itemprop="dateModified" datetime="2021-03-15T09:55:54+08:00">2021-03-15</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -366,7 +366,17 @@
 
 <h1 id="Debian-类"><a href="#Debian-类" class="headerlink" title="Debian 类"></a>Debian 类</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt install locale</span><br><span class="line">dpkg-reconfigure locales</span><br><span class="line"><span class="comment"># 使用空格选择相应的语言，使用上下键移动光标</span></span><br><span class="line"><span class="comment"># 选择好需要安装的语言后，使用 TAB 键切换到 ok</span></span><br><span class="line"><span class="comment"># 使用上下键选择默认的使用的语言</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装成功后，需重启系统</span></span><br><span class="line">shutdown -r now</span><br><span class="line"><span class="comment"># 使用下面命令查看是否生效</span></span><br><span class="line">locale</span><br><span class="line"><span class="comment"># 使用下面命令查看安装的语言</span></span><br><span class="line">locale -a</span><br></pre></td></tr></table></figure>
 
+<p>设置时区</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg-reconfigure tzdata</span><br></pre></td></tr></table></figure>
+
+
+
 <h1 id="CentOS"><a href="#CentOS" class="headerlink" title="CentOS"></a>CentOS</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">yum update</span><br><span class="line"><span class="comment"># 查看目前系统语言</span></span><br><span class="line">localectl status</span><br><span class="line"><span class="comment"># 或者通过如下命令也可以查看</span></span><br><span class="line">cat /etc/locale.conf</span><br><span class="line"><span class="comment"># 查看系统中安装了哪些语言</span></span><br><span class="line">localectl list-locales</span><br><span class="line"><span class="comment"># 查看系统中安装了哪些英文语言</span></span><br><span class="line">localectl list-locales | grep en_</span><br><span class="line"><span class="comment"># 设置默认语言为 en_GB.utf8</span></span><br><span class="line">localectl <span class="built_in">set</span>-locale LANG=en_GB.utf8</span><br><span class="line"><span class="comment"># 查看修改默认语言是否成功</span></span><br><span class="line">localectl status</span><br><span class="line"><span class="comment"># 更过使用帮助</span></span><br><span class="line">localectl --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<p>设置时区</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">timedatectl <span class="built_in">set</span>-timezone Asia/Shanghai</span><br><span class="line"><span class="comment"># 如何知道有那些时区可以设置，可以使用如下命令查看</span></span><br><span class="line">ls /usr/share/zoneinfo</span><br></pre></td></tr></table></figure>
+
+
 
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-set-up-system-locale-on-centos-7/">How to Set Up System Locale on CentOS 7</a></p>
 
@@ -404,7 +414,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="https://xu-jinzhong.gitee.io/2020/12/30/locale-linux-language/" title="在 Linux 上设置不同的语言">https://xu-jinzhong.gitee.io/2020/12/30/locale-linux-language/</a>
+      <a href="https://xu-jinzhong.gitee.io/2020/12/30/locale-linux-language/" title="在 Linux 上设置不同的语言和时区">https://xu-jinzhong.gitee.io/2020/12/30/locale-linux-language/</a>
   </li>
   <li class="post-copyright-license">
     <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
