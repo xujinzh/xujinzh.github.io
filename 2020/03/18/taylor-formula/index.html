@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xujinzh.github.io","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":false,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="Taylor’s Formula (泰勒公式) 本节为参考华东师范大学《数学分析 上册》，学习本书的心得以及重点知识点总结。  泰勒公式源于多项式的简单性，多项式逼近函数用于近似计算和理论分析； 在$x &#x3D; 0$处展开的泰勒公式又称为 Maclaurin(麦克劳林) 公式； 本节讨论了两种余项的泰勒公式，分别是用于定性分析的佩亚诺余项和用于定量分析的拉格朗日余项； 带有佩亚诺余项的泰勒公式多用于求">
+<meta property="og:type" content="article">
+<meta property="og:title" content="泰勒公式">
+<meta property="og:url" content="https://xujinzh.github.io/2020/03/18/taylor-formula/index.html">
+<meta property="og:site_name" content="J Blog">
+<meta property="og:description" content="Taylor’s Formula (泰勒公式) 本节为参考华东师范大学《数学分析 上册》，学习本书的心得以及重点知识点总结。  泰勒公式源于多项式的简单性，多项式逼近函数用于近似计算和理论分析； 在$x &#x3D; 0$处展开的泰勒公式又称为 Maclaurin(麦克劳林) 公式； 本节讨论了两种余项的泰勒公式，分别是用于定性分析的佩亚诺余项和用于定量分析的拉格朗日余项； 带有佩亚诺余项的泰勒公式多用于求">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-18T14:58:51.000Z">
+<meta property="article:modified_time" content="2021-11-09T10:42:04.906Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="maths">
+<meta property="article:tag" content="taylor&#39;s formula">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2020/03/18/taylor-formula/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>泰勒公式 | J Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">J Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%A6%E6%9C%89%E4%BD%A9%E4%BA%9A%E8%AF%BA%E5%9E%8B%E4%BD%99%E9%A1%B9%E7%9A%84%E6%B3%B0%E5%8B%92%E5%85%AC%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">带有佩亚诺型余项的泰勒公式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%A6%E6%9C%89%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E5%9E%8B%E4%BD%99%E9%A1%B9%E7%9A%84%E6%B3%B0%E5%8B%92%E5%85%AC%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">带有拉格朗日型余项的泰勒公式</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">Just do it!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">203</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">195</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jinzhongxu@csu.ac.cn" title="E-Mail → mailto:jinzhongxu@csu.ac.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2020/03/18/taylor-formula/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+      <meta itemprop="description" content="Just do it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          泰勒公式
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-03-18 22:58:51" itemprop="dateCreated datePublished" datetime="2020-03-18T22:58:51+08:00">2020-03-18</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/maths/" itemprop="url" rel="index"><span itemprop="name">maths</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/maths/mathematical-analysis/" itemprop="url" rel="index"><span itemprop="name">mathematical analysis</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>Taylor’s Formula (泰勒公式) 本节为参考华东师范大学《数学分析 上册》，学习本书的心得以及重点知识点总结。</p>
+<ol>
+<li>泰勒公式源于多项式的简单性，多项式逼近函数用于近似计算和理论分析；</li>
+<li>在$x = 0$处展开的泰勒公式又称为 Maclaurin(麦克劳林) 公式；</li>
+<li>本节讨论了两种余项的泰勒公式，分别是用于定性分析的佩亚诺余项和用于定量分析的拉格朗日余项；</li>
+<li>带有佩亚诺余项的泰勒公式多用于求函数极限，一般先考虑等价无穷小，然后对于复杂函数考虑泰勒公式；</li>
+<li>利用泰勒公式可以近似计算无理数等的近似值。</li>
+</ol>
+<a id="more"></a>
+
+<h1 id="带有佩亚诺型余项的泰勒公式"><a href="#带有佩亚诺型余项的泰勒公式" class="headerlink" title="带有佩亚诺型余项的泰勒公式"></a>带有佩亚诺型余项的泰勒公式</h1><p><strong>定理6.9</strong> 若函数$f$在点$x_0$存在直至$n$阶导数，则有$f(x) = T_n(x) + o((x - x_0)^n)$，这里<br>$$<br>T_n(x) = f(x_0) + f^{\prime}(x_0)(x - x_0) + \frac{f^{(2)}(x_0)}{2!}(x - x_0)^2 + \cdots + \frac{f^{(n)}(x_0)}{n!}(x - x_0)^n.<br>$$<br>称为函数$f$在点$x_0$处的泰勒多项式，$T_n(x)$的各项系数$\frac{f^{(k)}(x_0)}{k!}\ (k = 1, 2, \cdots, n)$称为泰勒系数。具有性质<br>$$<br>f^{(k)}(x_0) = T^{(k)}_n(x_0), \ k = 0, 1, 2, \cdots, n.<br>$$</p>
+<p><strong>注意，这里只要求在一点$x_0$处$n$阶可导，所以，$n - 1$阶导函数后不能使用柯西中值定理</strong> </p>
+<p>$R_n(x) = f(x) - T_n(x)$称为泰勒公式的余项，形如$o((x - x_0)^n)$的余项称为佩亚诺（Peano）型余项，所以上面公式又称为带有佩亚诺型余项的泰勒公式。  </p>
+<p>称如下<br>$$<br>f(x) = f(0) + f^{\prime}(0)x + \frac{f^{\prime\prime}(0)}{2!} x^2 + \cdots + \frac{f^{(n)}(0)}{n!} x^n + o(x^n).<br>$$</p>
+<p>为（带有佩亚诺型余项的）麦克劳林（Maclaurin）公式。</p>
+<p><strong>下面列出一些常用的带有佩亚诺型余项的麦克劳林公式</strong>：</p>
+<ol>
+<li><p>$$<br>e^x = 1 + x + \frac{x^2}{2!} + \cdots + \frac{x^n}{n!} + o(x^n);<br>$$</p>
+</li>
+<li><p>$$<br>\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} + \cdots + (-1)^{m-1}\frac{x^{2m - 1}}{(2m - 1)!} + o(x^{2m});<br>$$</p>
+</li>
+<li><p>$$<br>\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} + \cdots + (-1)^m \frac{x^{2m}}{(2m)!} + o(x^{2m + 1});<br>$$</p>
+</li>
+<li><p>$$<br>\ln(1 + x) = x - \frac{x^2}{2} + \frac{x^3}{3} + \cdots + (-1)^{n-1}\frac{x^n}{n} + o(x^n);<br>$$</p>
+</li>
+<li><p>$$<br>(1 + x)^{\alpha} = 1 + \alpha x + \frac{\alpha(\alpha - 1)}{2!} x^2 + \frac{\alpha(\alpha - 1)\cdots(\alpha - n + 1)}{n!} x^n + o(x^n);<br>$$</p>
+</li>
+<li><p>$$<br>\frac{1}{1 - x} = 1 + x + x^2 + \cdots + x^n + o(x^n).<br>$$</p>
+</li>
+</ol>
+<p><strong>记忆方法：</strong></p>
+<ol>
+<li>$e^x$ 各阶导数相同，因此$f^{\prime}(0) = f^{\prime\prime}(0) = \cdots = f^{(n)}(0) = e^0 = 1$，形式上最解决泰勒公式。</li>
+<li>$\sin x \sim x, \ x \to 0$，且为基函数，只能取奇数幂项。</li>
+<li>$\cos x \sim 1, x \to 0$，且为偶函数，只能取偶次幂项。</li>
+<li>$\frac{1}{1 - x}$为等比数列极限$\frac{a_1}{1 - q}$的特殊形式。</li>
+<li>$\ln(1 + x)$的一次导数为$\frac{1}{1 - (-x)}$，因此是导数展开的一次积分。另外，$\ln(1 + x) \sim x,\ x \to 0.$</li>
+<li>$(1 + x)^{\alpha}$可以参考$(1 + x)^n$的二项式展开，即每项为$C^i_n x^{i}$.</li>
+</ol>
+<h1 id="带有拉格朗日型余项的泰勒公式"><a href="#带有拉格朗日型余项的泰勒公式" class="headerlink" title="带有拉格朗日型余项的泰勒公式"></a>带有拉格朗日型余项的泰勒公式</h1><p>拉格朗日型余项是一种定量形式的余项，便于对逼近误差进行具体的计算或估计。</p>
+<p><strong>定理 6.10</strong> &emsp; (泰勒定理) &emsp; 若函数$f$在$[a, b]$上存在直至$n$阶的连续导函数，在$(a, b)$上存在$(n + 1)$阶导函数，则对任意给定的$x, x_0 \in [a, b]$，至少存在一点$\xi \in (a, b)$，使得<br>$$<br>f(x) = f(x_0) + f^{\prime}(x_0)(x - x_0) + \frac{f^{\prime\prime}(x_0)}{2!}(x - x_0)^2 + \cdots + \frac{f^{(n)}(x_0)}{n!}(x - x_0)^n + \frac{f^{(n + 1)}(\xi)}{(n + 1)!}(x - x_0)^{n + 1}.<br>$$<br><font color='dd0000'>注意：这里是在区间上存在$n$阶连续导函数，可以使用柯西中值定理</font>。  </p>
+<p>上面公式称为带有拉格朗日型余项的泰勒公式，当取$x_0 = 0$时，称下式<br>$$<br>f(x) = f(0) + f^{\prime}(0)x + \frac{f^{\prime\prime}(0)}{2!}x^2 + \cdots + \frac{f^{(n)}(0)}{n!}x^n + \frac{f^{(n + 1)}(\theta x)}{(n + 1)!}x^{n + 1} \\<br>(0 &lt; \theta &lt; 1)<br>$$</p>
+<p>为带有拉格朗日型余项的麦克劳林公式。  </p>
+<p><strong>下面列出一些常用的带有拉格朗日型余项的麦克劳林公式：</strong></p>
+<ol>
+<li><p>$$<br>e^x = 1 + x + \frac{x^2}{2!} + \cdots + \frac{x^n}{n!} + \frac{e^{\theta x}}{(n + 1)!}x^{n + 1}, \ 0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).<br>$$</p>
+</li>
+<li><p>$$<br>\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} + \cdots + (-1)^{m - 1}\frac{x^{2m - 1}}{(2m - 1)!} + (-1)^m \frac{\cos \theta x}{(2m + 1)!}x^{2m + 1}, \\<br>0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).<br>$$</p>
+</li>
+<li><p>$$<br>\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} + \cdots + (-1)^m \frac{x^{2m}}{(2m)!} + (-1)^{m + 1}\frac{\cos \theta x}{(2m + 2)!}x^{2m + 2}, \\<br>0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).<br>$$</p>
+</li>
+<li><p>$$<br>\ln(1 + x) = x - \frac{x^2}{2} + \frac{x^3}{3} + \cdots + (-1)^{n - 1}\frac{x^n}{n} + (-1)^n \frac{x^{n + 1}}{(n + 1)(1 + \theta x)^{n + 1}}, \\<br>0 &lt; \theta &lt; 1, \ x &gt; -1.<br>$$</p>
+</li>
+<li><p>$$<br>(1 + x)^{\alpha} = 1 + \alpha x + \frac{\alpha(\alpha - 1)}{2!}x^2 + \cdots + \frac{\alpha(\alpha - 1) \cdots (\alpha - n + 1)}{n!}x^n + \\<br>\frac{\alpha(\alpha - 1)\cdots(\alpha - n)}{(n + 1)!}(1 + \theta x)^{\alpha - n - 1}x^{n + 1}, \  0 &lt; \theta &lt; 1, \ x &gt; -1.<br>$$</p>
+</li>
+<li><p>$$<br>\frac{1}{1 - x} = 1 + x + x^2 + \cdots + x^n + \frac{x^{n + 1}}{(1 - \theta x)^{n + 2}}, \ 0 &lt; \theta &lt; 1, \ |x| &lt; 1.<br>$$</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Written by:  </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://xujinzh.github.io/2020/03/18/taylor-formula/" title="泰勒公式">https://xujinzh.github.io/2020/03/18/taylor-formula/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/maths/" rel="tag"><i class="fa fa-tag"></i> maths</a>
+              <a href="/tags/taylor-s-formula/" rel="tag"><i class="fa fa-tag"></i> taylor's formula</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/03/18/git-alert-hexo-npm-acorn-minimist/" rel="prev" title="修复GitHub提示acorn和minimist因版本低而易受攻击警告">
+                  <i class="fa fa-chevron-left"></i> 修复GitHub提示acorn和minimist因版本低而易受攻击警告
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/03/19/real-number/" rel="next" title="实数">
+                  实数 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f45c300bef10091" async="async"></script>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.6.4/dist/mermaid.min.js', () => {
+    mermaid.init({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    }, '.mermaid');
+  }, window.mermaid);
+}
+</script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      const script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

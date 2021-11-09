@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xujinzh.github.io","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":false,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="单目标跟踪是指给定第一帧目标框的情况下，在视频的后续帧中自动地给出目标的位置和大小。难点在于复杂场景下目标姿态变化、环境光照变化、尺寸变化、背景干扰、遮挡等，以及实际应用中需要满足实时性。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="视觉目标跟踪算法简介">
+<meta property="og:url" content="https://xujinzh.github.io/2021/08/20/cv-ot-algorithms-intro/index.html">
+<meta property="og:site_name" content="J Blog">
+<meta property="og:description" content="单目标跟踪是指给定第一帧目标框的情况下，在视频的后续帧中自动地给出目标的位置和大小。难点在于复杂场景下目标姿态变化、环境光照变化、尺寸变化、背景干扰、遮挡等，以及实际应用中需要满足实时性。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://github.com/xujinzh/benchmark_results/blob/master/img/recent_Tracker_development.png?raw=true">
+<meta property="article:published_time" content="2021-08-20T04:55:24.000Z">
+<meta property="article:modified_time" content="2021-11-09T10:42:04.856Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="ml">
+<meta property="article:tag" content="vot">
+<meta property="article:tag" content="cv">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/xujinzh/benchmark_results/blob/master/img/recent_Tracker_development.png?raw=true">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2021/08/20/cv-ot-algorithms-intro/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>视觉目标跟踪算法简介 | J Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">J Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">算法分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%BC%8F%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">生成式算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2"><span class="nav-number">2.1.</span> <span class="nav-text">卡尔曼滤波</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CAMShift"><span class="nav-number">2.2.</span> <span class="nav-text">CAMShift</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A4%E5%88%AB%E5%BC%8F%E7%AE%97%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">判别式算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Struct"><span class="nav-number">3.1.</span> <span class="nav-text">Struct</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TLD"><span class="nav-number">3.2.</span> <span class="nav-text">TLD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E6%BB%A4%E6%B3%A2"><span class="nav-number">3.3.</span> <span class="nav-text">相关滤波</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.4.</span> <span class="nav-text">深度学习</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E8%A1%A8%E6%80%A7%E5%AD%A6%E8%80%85"><span class="nav-number">4.</span> <span class="nav-text">代表性学者</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#University-of-Oxford-%E8%8B%B1%E5%9B%BD%E7%89%9B%E6%B4%A5%E5%A4%A7%E5%AD%A6"><span class="nav-number">4.1.</span> <span class="nav-text">University of Oxford 英国牛津大学</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linkoping-University-%E7%91%9E%E5%85%B8%E6%9E%97%E9%9B%AA%E5%B9%B3%E5%A4%A7%E5%AD%A6-amp-the-Computer-Vision-Lab-at-ETH-Zurich-Switzerland-%E7%91%9E%E5%A3%AB%E8%8B%8F%E9%BB%8E%E4%B8%96%E8%81%94%E9%82%A6%E7%90%86%E5%B7%A5%E5%AD%A6%E9%99%A2%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89%E5%AE%9E%E9%AA%8C%E5%AE%A4"><span class="nav-number">4.2.</span> <span class="nav-text">Linköping University 瑞典林雪平大学 &amp; the Computer Vision Lab at ETH Zurich, Switzerland.瑞士苏黎世联邦理工学院计算机视觉实验室</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AD%E5%9B%BD%E7%A7%91%E5%AD%A6%E9%99%A2"><span class="nav-number">4.3.</span> <span class="nav-text">中国科学院</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E8%BF%9E%E7%90%86%E5%B7%A5%E5%A4%A7%E5%AD%A6-%E6%99%BA%E8%83%BD%E5%9B%BE%E5%83%8F%E5%88%86%E6%9E%90%E4%B8%8E%E7%90%86%E8%A7%A3%E5%AE%9E%E9%AA%8C%E5%AE%A4%EF%BC%88IIAU-LAB-Intelligent-Image-Analysis-and-Understanding-Lab%EF%BC%89"><span class="nav-number">4.4.</span> <span class="nav-text">大连理工大学 智能图像分析与理解实验室（IIAU-LAB, Intelligent Image Analysis and Understanding Lab）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">5.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">Just do it!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">203</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">195</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jinzhongxu@csu.ac.cn" title="E-Mail → mailto:jinzhongxu@csu.ac.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2021/08/20/cv-ot-algorithms-intro/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+      <meta itemprop="description" content="Just do it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          视觉目标跟踪算法简介
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-08-20 12:55:24" itemprop="dateCreated datePublished" datetime="2021-08-20T12:55:24+08:00">2021-08-20</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/research/" itemprop="url" rel="index"><span itemprop="name">research</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/research/object-tracking/" itemprop="url" rel="index"><span itemprop="name">object tracking</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>单目标跟踪是指给定第一帧目标框的情况下，在视频的后续帧中自动地给出目标的位置和大小。难点在于复杂场景下目标姿态变化、环境光照变化、尺寸变化、背景干扰、遮挡等，以及实际应用中需要满足实时性。</p>
+<a id="more"></a>
+
+<h1 id="算法分类"><a href="#算法分类" class="headerlink" title="算法分类"></a>算法分类</h1><p>目标跟踪算法的发展大致分成两个阶段，一个是2012年以前，一个是2012年以后。以深度学习方法的引入为拐点。</p>
+<p>目标跟踪算法的种类大致分为两类，一类是生成式（<strong>generative</strong>）算法，一类是判别式（<strong>discriminative</strong>）算法，目前判别式算法是主流算法。</p>
+<p>目标跟踪算法的研究大致分为两个方向，一个是相关滤波方向，一个是深度学习方法，基于相关滤波的跟踪算法因利用快速傅里叶变换，处理速度较快，基于深度学习的跟踪算法因能自动提取目标图像更强大的特征，精度较高。</p>
+<p><img src="https://github.com/xujinzh/benchmark_results/blob/master/img/recent_Tracker_development.png?raw=true"></p>
+<h1 id="生成式算法"><a href="#生成式算法" class="headerlink" title="生成式算法"></a>生成式算法</h1><p>生成式算法采用特征模型描述目标的外观特征，再最小化跟踪目标与候选目标之间的重构误差来确认目标。此方法着重于目标本身的特征提取，忽略目标的背景信息，因而在目标外观发生剧烈变化或者遮挡时，容易出现目标漂移或目标丢失。</p>
+<p>生成式目标跟踪算法主要是在2010年以前发展起来的，代表算法有卡尔曼滤波（Kalman Filters）、CAMShift 等。</p>
+<h2 id="卡尔曼滤波"><a href="#卡尔曼滤波" class="headerlink" title="卡尔曼滤波"></a>卡尔曼滤波</h2><p>卡尔曼滤波器用于估计线性系统的状态，其中假设状态服从高斯分布。卡尔曼滤波目标跟踪算法是一种单目标跟踪算法。</p>
+<p>Broida 和 Chellappa [<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/4767755">1986-TPAMI-Estimation of Object Motion Parameters from Noisy Images</a>] 使用卡尔曼滤波器来跟踪噪声图像中的点。在基于立体相机的对象跟踪中，Beymer 和 Konolige [<a target="_blank" rel="noopener" href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.46.7987&rep=rep1&type=pdf">1999-ICCV- Real-time tracking of multiple people using continuous detection</a>] 使用卡尔曼滤波器来预测对象在 $x-z$ 维度上的位置和速度。 Rosales 和 Sclaroff [<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/784618">1999-CVPR-3D trajectory recovery for tracking multiple objects and trajectory guided recognition of actions</a>] 使用扩展卡尔曼滤波器从 2D 运动估计对象的 3D 轨迹。 KalmanSrc 提供了用于卡尔曼滤波的 Matlab 工具箱。</p>
+<p>卡尔曼滤波器的一个限制是假设状态变量呈正态分布（高斯分布），这个限制在粒子滤波（单目标跟踪算法）中得到解决。ParticleFltSrc 提供了使用粒子滤波进行跟踪的 Matlab 工具箱。</p>
+<h2 id="CAMShift"><a href="#CAMShift" class="headerlink" title="CAMShift"></a>CAMShift</h2><p>CAMShift (<strong>Continuously Adaptive Mean Shift</strong>) 是 Gary Bradski 于 [<a target="_blank" rel="noopener" href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.14.7673">1998-Computer Vision Face Tracking For Use in a Perceptual User Interface</a>] 引入的一种基于颜色直方图（colour histogram，常使用HSV颜色命名空间）的目标跟踪方法。 CAMShift 算法（又叫连续自适应均值偏移算法）衍生自均值偏移（mean shift）算法，它负责寻找要跟踪的对象的概率分布的中心。主要区别在于 CAMShift 会根据搜索窗口大小自行调整，例如，当对象大小随着它们靠近或远离相机而发生变化时。</p>
+<h1 id="判别式算法"><a href="#判别式算法" class="headerlink" title="判别式算法"></a>判别式算法</h1><p>判别式算法将目标跟踪看作一个二元分类问题，通过训练关于目标和背景的分类器来从候选场景中确定目标，可以显著区分背景和目标，性能鲁棒，渐渐成为目标跟踪领域的主流方法，目前大多数基于深度学习的目标跟踪算法都属于判别式方法。</p>
+<p>判别式目标跟踪算法主要是在2010年以后开始流行，代表算法有 Struck、TLD、相关滤波类算法、深度学习类算法等。</p>
+<h2 id="Struct"><a href="#Struct" class="headerlink" title="Struct"></a>Struct</h2><p>Struct 目标跟踪算法是 Sam Hare 等学者于 [<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/6126251">2011-ICCV-Struck: Structured output tracking with kernels</a>] 引入的一种使用 kernelized structured output support vector machine (SVM) 的自适应 tracking-by-detection、判别式、在线学习的 structured output prediction 目标跟踪算法。Struct 主要提出一种基于结构输出预测的自适应视觉目标跟踪的框架，通过明确引入输出空间满足跟踪功能，能够避免中间分类环节，直接输出跟踪结果。同时，为了保证实时性，该算法还引入了阈值机制，防止跟踪过程中支持向量的过增长。</p>
+<p>Struct C++ 源码地址: <a target="_blank" rel="noopener" href="https://github.com/gnebehay/STRUCK">https://github.com/gnebehay/STRUCK</a></p>
+<p>VOTR (视觉目标跟踪算法库): <a target="_blank" rel="noopener" href="https://github.com/gnebehay/VOTR">https://github.com/gnebehay/VOTR</a></p>
+<h2 id="TLD"><a href="#TLD" class="headerlink" title="TLD"></a>TLD</h2><p>TLD 目标跟踪算法是 Zdenek Kalal 等学者于 [<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/6104061">2010-TPAMI-Tracking-Learning-Detection</a>] 引入的一种长时间（long-term）目标跟踪算法，主要包含了三个模块：检测模块、跟踪模块、学习模块。TLD 最适合在跟踪对象被遮挡，不连续出现情况下，进行长时跟踪的应用场合。</p>
+<p>TLD Matlab 源码地址：<a target="_blank" rel="noopener" href="https://github.com/gnebehay/TLD">https://github.com/gnebehay/TLD</a></p>
+<h2 id="相关滤波"><a href="#相关滤波" class="headerlink" title="相关滤波"></a>相关滤波</h2><p>相关滤波类算法最重要的特点是快，都是基于手工设计的特征，最早提出是由 David S. Bolme 在 <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/5539960">2010-MOSSE-Visual object tracking using adaptive correlation filters</a> 中提出，基于单通道灰度特征, MOSSE 表示 Minimum Output Sum of Squared Error，达到 669 FPS.</p>
+<p>在此基础上，Jo˜ao F. Henriques 在 <a target="_blank" rel="noopener" href="https://link.springer.com/chapter/10.1007/978-3-642-33765-9_50">2012-ECCV-CSK-Exploiting the Circulant Structure of Tracking-by-Detection with Kernels</a> 中提出 CSK，其在 MOSSE 的基础上扩展了密集采样 (加 padding) 和 kernel-trick，达到 362 FPS. </p>
+<p>进一步，João F. Henriques 在 <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/6870486">2015-TPAMI-KCF-High-Speed Tracking with Kernelized Correlation Filters</a> 中提出 KCF，其在 CSK 的基础上扩展了多通道梯度的 HOG 特征（梯度特征），达到 172 FPS. </p>
+<p>同期，Martin Danelljan 在 <a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_cvpr_2014/papers/Danelljan_Adaptive_Color_Attributes_2014_CVPR_paper.pdf">2014-CVPR-CN-Adaptive Color Attributes for Real-Time Visual Tracking</a> 中提出 CN，其在 CSK 的基础上扩展了多通道颜色的 Color Names （颜色特征），达到 152 FPS. </p>
+<p>上面的相关滤波类目标跟踪算法都没有考虑目标尺度的变化，当目标缩小或扩大都会使跟踪结果不理想。因此，针对该问题有学者提出如下改进的相关滤波类目标跟踪算法。</p>
+<p>学者 Yang Li 基于 CSK 提出 <a target="_blank" rel="noopener" href="https://link.springer.com/chapter/10.1007/978-3-319-16181-5_18">2014-ECCV-SAMF-A Scale Adaptive Kernel Correlation Filter Tracker with Feature Integration</a>，融合 HOG，CN特征，采用平移滤波器在多尺度缩放的图像块上进行目标检测，取响应最大的那个平移位置及其所在的尺度。</p>
+<p>学者 Martin Danelljan 提出 <a target="_blank" rel="noopener" href="https://www.diva-portal.org/smash/record.jsf?pid=diva2:785778&dswid=-4498">2014-BMVC-DSST-Accurate Scale Estimation for Robust Visual Tracking</a> DSST 算法，只使用 HOG 特征，DCF 专门用于平移位置检测，并且，又专门训练了类似 MOSSE 的相关滤波器检测尺度变化，创造性地使用了平移滤波+尺度滤波。之后，提出 <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/7569092">2015-TPAMI-fDSST-Discriminative Scale Space Tracking</a> fDSST 算法对DSST的加速优化，速度提升50%+，精度提升6%+.</p>
+<p>进一步，Martin Danelljan 提出 <a target="_blank" rel="noopener" href="https://www.cvl.isy.liu.se/research/objrec/visualtracking/conttrack/C-COT_ECCV16.pdf">2016-ECCV-C-COT-Beyond Correlation Filters: Learning Continuous Convolution Operators for Visual Tracking</a> C-COT (Continuous Convolution Operator Tracker) 基于DCF，提出<strong>训练连续卷积滤波器</strong>，在<strong>连续</strong>空间域中，用<strong>隐式插值模型</strong>训练。</p>
+<p>更进一步，Martin Danelljan 提出 <a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_cvpr_2017/html/Danelljan_ECO_Efficient_Convolution_CVPR_2017_paper.html">2017-CVPR-ECO-Efficient Convolution Operators for Tracking</a> ECO 在 C-COT 的基础上进一步提高速度。</p>
+<h2 id="深度学习"><a href="#深度学习" class="headerlink" title="深度学习"></a>深度学习</h2><p>DLT</p>
+<p>MDNet</p>
+<p>SiameseFC</p>
+<p>SiameseRPN</p>
+<p>DaSiameseRPN</p>
+<p>SiameseRPN++</p>
+<h1 id="代表性学者"><a href="#代表性学者" class="headerlink" title="代表性学者"></a>代表性学者</h1><h2 id="University-of-Oxford-英国牛津大学"><a href="#University-of-Oxford-英国牛津大学" class="headerlink" title="University of Oxford 英国牛津大学"></a>University of Oxford 英国牛津大学</h2><p><a target="_blank" rel="noopener" href="https://www.robots.ox.ac.uk/~joao/"><strong>Joao F. Henriques</strong></a> 和 <a target="_blank" rel="noopener" href="https://www.robots.ox.ac.uk/~luca/"><strong>Luca Bertinetto</strong></a></p>
+<p>代表作：CSK, KCF, DCF, Staple, SiamFC, CFNet, Learnet</p>
+<h2 id="Linkoping-University-瑞典林雪平大学-amp-the-Computer-Vision-Lab-at-ETH-Zurich-Switzerland-瑞士苏黎世联邦理工学院计算机视觉实验室"><a href="#Linkoping-University-瑞典林雪平大学-amp-the-Computer-Vision-Lab-at-ETH-Zurich-Switzerland-瑞士苏黎世联邦理工学院计算机视觉实验室" class="headerlink" title="Linköping University 瑞典林雪平大学 &amp; the Computer Vision Lab at ETH Zurich, Switzerland.瑞士苏黎世联邦理工学院计算机视觉实验室"></a>Linköping University 瑞典林雪平大学 &amp; the Computer Vision Lab at ETH Zurich, Switzerland.瑞士苏黎世联邦理工学院计算机视觉实验室</h2><p><a target="_blank" rel="noopener" href="https://martin-danelljan.github.io/"><strong>Martin Danelljan</strong></a></p>
+<p>代表作：CN, DSST, SRDCF, DeepSRDCF, SRDCFdecon, C-COT, ECO, ATOM, DiMP, PrDiMP, KeepTrack</p>
+<h2 id="中国科学院"><a href="#中国科学院" class="headerlink" title="中国科学院"></a>中国科学院</h2><p><a target="_blank" rel="noopener" href="http://www.zhengzhu.net/"><strong>朱政</strong></a> （目前清华在读博后）</p>
+<p>代表作：UCT, DaSiameseRPN</p>
+<h2 id="大连理工大学-智能图像分析与理解实验室（IIAU-LAB-Intelligent-Image-Analysis-and-Understanding-Lab）"><a href="#大连理工大学-智能图像分析与理解实验室（IIAU-LAB-Intelligent-Image-Analysis-and-Understanding-Lab）" class="headerlink" title="大连理工大学 智能图像分析与理解实验室（IIAU-LAB, Intelligent Image Analysis and Understanding Lab）"></a>大连理工大学 智能图像分析与理解实验室（IIAU-LAB, Intelligent Image Analysis and Understanding Lab）</h2><p><a target="_blank" rel="noopener" href="http://ice.dlut.edu.cn/lu/index.html">卢胡川</a></p>
+<p>代表作：Online Visual Tracking, LTMU, STARK</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/dengheCSDN/article/details/78896933">VOT, OTB——目标追踪的发展概况</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Written by:  </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://xujinzh.github.io/2021/08/20/cv-ot-algorithms-intro/" title="视觉目标跟踪算法简介">https://xujinzh.github.io/2021/08/20/cv-ot-algorithms-intro/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ml/" rel="tag"><i class="fa fa-tag"></i> ml</a>
+              <a href="/tags/vot/" rel="tag"><i class="fa fa-tag"></i> vot</a>
+              <a href="/tags/cv/" rel="tag"><i class="fa fa-tag"></i> cv</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/08/02/cnn-flops/" rel="prev" title="CNN 模型计算力 FLOPs">
+                  <i class="fa fa-chevron-left"></i> CNN 模型计算力 FLOPs
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/08/31/jupyter-cell-proxy/" rel="next" title="设置 Jupyter Cell Proxy">
+                  设置 Jupyter Cell Proxy <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f45c300bef10091" async="async"></script>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.6.4/dist/mermaid.min.js', () => {
+    mermaid.init({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    }, '.mermaid');
+  }, window.mermaid);
+}
+</script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      const script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xujinzh.github.io","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":false,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="使用 jupyterlab 开发 python 程序非常方便，但是只能单用户访问。想要多用户共用服务器使用 jupyterlab 可以采用 jupyterhub 实现。下面演示在 CentOS 上搭建 jupyterhub 实现多用户访问 jupyterlab。本篇所有命令均使用 root 用户运行。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用 jupyterhub 搭建多用户 jupyterlab 开发环境">
+<meta property="og:url" content="https://xujinzh.github.io/2021/02/20/jupyterhub/index.html">
+<meta property="og:site_name" content="J Blog">
+<meta property="og:description" content="使用 jupyterlab 开发 python 程序非常方便，但是只能单用户访问。想要多用户共用服务器使用 jupyterlab 可以采用 jupyterhub 实现。下面演示在 CentOS 上搭建 jupyterhub 实现多用户访问 jupyterlab。本篇所有命令均使用 root 用户运行。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-02-20T01:57:44.000Z">
+<meta property="article:modified_time" content="2021-11-09T10:42:04.872Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="jupyterlab">
+<meta property="article:tag" content="jupyterhub">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2021/02/20/jupyterhub/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>利用 jupyterhub 搭建多用户 jupyterlab 开发环境 | J Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">J Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Miniconda"><span class="nav-number">1.</span> <span class="nav-text">安装 Miniconda</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-npm-nodejs"><span class="nav-number">2.</span> <span class="nav-text">安装 npm, nodejs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-jupyterhub"><span class="nav-number">3.</span> <span class="nav-text">配置 jupyterhub</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-nginx"><span class="nav-number">4.</span> <span class="nav-text">配置 nginx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0%E6%96%B0%E7%94%A8%E6%88%B7"><span class="nav-number">5.</span> <span class="nav-text">增加新用户</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A6%81%E6%AD%A2%E6%9F%90%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95"><span class="nav-number">6.</span> <span class="nav-text">禁止某用户登录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">7.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">Just do it!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">203</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">195</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jinzhongxu@csu.ac.cn" title="E-Mail → mailto:jinzhongxu@csu.ac.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2021/02/20/jupyterhub/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+      <meta itemprop="description" content="Just do it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          利用 jupyterhub 搭建多用户 jupyterlab 开发环境
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-02-20 09:57:44" itemprop="dateCreated datePublished" datetime="2021-02-20T09:57:44+08:00">2021-02-20</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>使用 jupyterlab 开发 python 程序非常方便，但是只能单用户访问。想要多用户共用服务器使用 jupyterlab 可以采用 jupyterhub 实现。下面演示在 CentOS 上搭建 jupyterhub 实现多用户访问 jupyterlab。本篇所有命令均使用 root 用户运行。</p>
+<a id="more"></a>
+
+<h1 id="安装-Miniconda"><a href="#安装-Miniconda" class="headerlink" title="安装 Miniconda"></a>安装 Miniconda</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">yum install wget -y</span><br><span class="line">wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh</span><br><span class="line">chmod +x Miniconda*.sh</span><br><span class="line"><span class="comment"># 安装在 /usr/local/miniconda 目录下</span></span><br><span class="line">./Miniconda*.sh</span><br><span class="line">rm -rf Miniconda*.sh</span><br><span class="line"><span class="comment"># 将 miniconda 命令目标添加到系统环境变量中，使得所有用户均可访问</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=/usr/local/miniconda/bin:$PATH&#x27;</span> &gt;&gt; /etc/profile</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br><span class="line"><span class="comment"># 创建 miniconda 用户组，使得包含在该组下的用户均可使用 miniconda 里的 python</span></span><br><span class="line">groupadd miniconda</span><br><span class="line">chgrp -R miniconda /usr/<span class="built_in">local</span>/miniconda</span><br><span class="line">chmod 770 -R /usr/<span class="built_in">local</span>/miniconda</span><br><span class="line">usermod -a -G miniconda root</span><br><span class="line">usermod -a -G miniconda jinzhongxu</span><br><span class="line"><span class="comment"># 查看某用户所属组可以使用 </span></span><br><span class="line">id root</span><br><span class="line">id jinzhongxu</span><br><span class="line">groups</span><br><span class="line"><span class="comment"># 安装 jupyterhub, jupyterlab 以及其他常用的包</span></span><br><span class="line">pip install --upgrade pip jupyterhub jupyterlab pandas matplotlib youtube_dl numba boost scipy numpy sympy scikit-learn</span><br><span class="line"><span class="comment"># 安装配置代码格式化工具</span></span><br><span class="line">pip install jupyterlab_code_formatter;jupyter server extension <span class="built_in">enable</span> jupyterlab_code_formatter;pip install black isort</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装-npm-nodejs"><a href="#安装-npm-nodejs" class="headerlink" title="安装 npm, nodejs"></a>安装 npm, nodejs</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yum update -y</span><br><span class="line">yum remove nodejs npm -y</span><br><span class="line">yum install epel-release -y</span><br><span class="line">yum install psmisc vim htop zsh git nload curl bzip2 util-linux-user gcc npm -y</span><br><span class="line">curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -</span><br><span class="line">yum install nodejs -y</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置-jupyterhub"><a href="#配置-jupyterhub" class="headerlink" title="配置 jupyterhub"></a>配置 jupyterhub</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">yum install npm -y</span><br><span class="line">npm install -g configurable-http-proxy</span><br><span class="line">eventlog_dir=`find / -name eventlog.py`</span><br><span class="line">sed -i <span class="string">&quot;s/ruamel.yaml/ruamel_yaml/g&quot;</span> <span class="variable">$&#123;eventlog_dir&#125;</span></span><br><span class="line">jupyterhub --generate-config</span><br><span class="line">mkdir -p /etc/jupyterhub</span><br><span class="line">mv jupyterhub_config.py /etc/jupyterhub/config.py</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;c.JupyterHub.base_url = &#x27;/jupyterhub&#x27;&quot;</span> &gt;&gt; /etc/jupyterhub/config.py</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;c.JupyterHub.ip = &#x27;0.0.0.0&#x27;&quot;</span> &gt;&gt; /etc/jupyterhub/config.py</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;c.Spawner.default_url = &#x27;/lab&#x27;&quot;</span> &gt;&gt; /etc/jupyterhub/config.py</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;c.PAMAuthenticator.open_sessions = False&quot;</span> &gt;&gt; /etc/jupyterhub/config.py</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;c.LocalAuthenticator.create_system_users = True&quot;</span> &gt;&gt; /etc/jupyterhub/config.py</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;c.Authenticator.admin_users = set([&quot;jinzhongxu&quot;])&#x27;</span> &gt;&gt; /etc/jupyterhub/config.py</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;c.JupyterHub.admin_access = True&quot;</span> &gt;&gt; /etc/jupyterhub/config.py</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;c.Spawner.cmd = [&#x27;/usr/local/miniconda/bin/jupyterhub-singleuser&#x27;]&quot;</span> &gt;&gt; /etc/jupyterhub/config.py</span><br><span class="line">wget https://www.dropbox.com/s/vak1nsajt7s8muj/jupyterhub.service?dl=0 -O jupyterhub.service</span><br><span class="line">mv jupyterhub.service /etc/systemd/system/jupyterhub.service</span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart jupyterhub.service</span><br><span class="line">systemctl <span class="built_in">enable</span> jupyterhub.service</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置-nginx"><a href="#配置-nginx" class="headerlink" title="配置 nginx"></a>配置 nginx</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 nginx 不再介绍，然后，修改配置文件</span></span><br><span class="line">vim  /etc/nginx/nginx.conf</span><br><span class="line"><span class="comment"># 在</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  www.vvv.com;</span><br><span class="line">        root /usr/share/nginx/html;</span><br><span class="line">        index index.php index.html index.htm;</span><br><span class="line"><span class="comment"># 下面添加如下内容：</span></span><br><span class="line">location /jupyterhub &#123;</span><br><span class="line">            proxy_pass           http://127.0.0.1:8000;</span><br><span class="line">            proxy_set_header     Host <span class="variable">$host</span>;</span><br><span class="line">            proxy_set_header     X-Real-Scheme <span class="variable">$scheme</span>;</span><br><span class="line">            proxy_set_header     X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">            proxy_set_header     X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">            proxy_http_version   1.1;</span><br><span class="line">            proxy_set_header     Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">            proxy_set_header     Connection <span class="string">&#x27;upgrade&#x27;</span>;</span><br><span class="line">            proxy_read_timeout   120s;</span><br><span class="line">            proxy_next_upstream  error;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面所有都配置好后，访问 <a target="_blank" rel="noopener" href="https://www.vvv.com/jupyterhub">https://www.vvv.com/jupyterhub</a> 即可登录。</p>
+<p>更多搭建方式（如 docker）可参考 <a target="_blank" rel="noopener" href="https://github.com/jupyterhub/jupyterhub">https://github.com/jupyterhub/jupyterhub</a></p>
+<h1 id="增加新用户"><a href="#增加新用户" class="headerlink" title="增加新用户"></a>增加新用户</h1><p>在网页上的以用户 jinzhongxu 登录 jupyterhub后，默认进入 jupyterlab，点击 File –&gt; Hub Control Panel 进入 jupyterhub 管理后台，点击 admin 即可管理增加用户，开启服务，关闭服务，关闭 Hub 等。</p>
+<p>点击增加用户 username 后，根据上面的配置默认会在系统上创建该用户及家目录。但此时还不能使用过 jupyterlab 服务，需要管理员登录 shell，将新创建的用户增加到 miniconda 组中，命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usermod -a -G miniconda username</span><br><span class="line"><span class="comment"># 同时给该用户增加密码</span></span><br><span class="line">passwd username</span><br></pre></td></tr></table></figure>
+
+<p>此时，该用户即可登录 <a target="_blank" rel="noopener" href="https://www.vvv.com/jupyterhub">https://www.vvv.com/jupyterhub</a> 了，用户名和密码就是该用户登录 shell 的用户名（username）和密码。</p>
+<h1 id="禁止某用户登录"><a href="#禁止某用户登录" class="headerlink" title="禁止某用户登录"></a>禁止某用户登录</h1><p>一种方法是使用命令将该用户的密码删除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd -d username</span><br></pre></td></tr></table></figure>
+
+<p>另一种方法是，将该用户从 miniconda 组中剔除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此命令仅从 miniconda 组中删除用户 username，但不会永久地从系统中删除用户</span></span><br><span class="line">deluser username miniconda</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">gpasswd -d username miniconda</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/jupyterhub/jupyterhub">github:jupyterhub</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.hatarilabs.com/ih-en/how-to-set-a-multiuser-jupyterlab-server-with-jupyterhub-in-windows-with-docker">How to set a multiuser Jupyterlab server with Jupyterhub</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/luoluonuoyasuolong/article/details/88526526">jupyterhub 安装教程</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://sthsf.github.io/wiki/Linux%20Tricks/JupyterHub%20%E9%83%A8%E7%BD%B2%E4%B8%8E%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97.html">JupyterHub 部署与应用指南</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://gist.github.com/tanbro/a94bfa4a552381f599e7e6b551ccadcf">单机多用户 JupyterLab 环境搭建</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/codedancing/article/details/103936542">Linux下多用户Anaconda环境的安装与卸载</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sheldonxu/archive/2012/05/22/2513036.html">Linux: 删除用户密码/禁止登录</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/57883153">如何在 Ubuntu 上为用户授予和移除 sudo 权限</a></p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Written by:  </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://xujinzh.github.io/2021/02/20/jupyterhub/" title="利用 jupyterhub 搭建多用户 jupyterlab 开发环境">https://xujinzh.github.io/2021/02/20/jupyterhub/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+              <a href="/tags/jupyterlab/" rel="tag"><i class="fa fa-tag"></i> jupyterlab</a>
+              <a href="/tags/jupyterhub/" rel="tag"><i class="fa fa-tag"></i> jupyterhub</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/02/09/rename-and-sed/" rel="prev" title="Linux 批处理：修改文件名和文件内容">
+                  <i class="fa fa-chevron-left"></i> Linux 批处理：修改文件名和文件内容
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/03/17/linux-hidden-authority/" rel="next" title="Linux 文件和目录的默认权限和特殊权限">
+                  Linux 文件和目录的默认权限和特殊权限 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f45c300bef10091" async="async"></script>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.6.4/dist/mermaid.min.js', () => {
+    mermaid.init({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    }, '.mermaid');
+  }, window.mermaid);
+}
+</script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      const script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

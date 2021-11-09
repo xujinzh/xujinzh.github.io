@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xujinzh.github.io","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":false,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="本篇参考An Introduction to different Types of Convolutions in Deep Learning 介绍一下深度学习中不同的卷积操作。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习中不同的卷积操作">
+<meta property="og:url" content="https://xujinzh.github.io/2020/11/03/convolution-in-deep-learning/index.html">
+<meta property="og:site_name" content="J Blog">
+<meta property="og:description" content="本篇参考An Introduction to different Types of Convolutions in Deep Learning 介绍一下深度学习中不同的卷积操作。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/convolution.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/dilated_convolutions.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/transposed_convolution_p1.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/transposed_convolution_p2.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/sobel_x_y_filters.png">
+<meta property="article:published_time" content="2020-11-03T06:02:43.000Z">
+<meta property="article:modified_time" content="2021-11-09T10:42:04.856Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="dl">
+<meta property="article:tag" content="machine learning">
+<meta property="article:tag" content="convolution">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/convolution.gif">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2020/11/03/convolution-in-deep-learning/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>深度学习中不同的卷积操作 | J Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">J Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%B7%E7%A7%AF%EF%BC%88Convolutions%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">卷积（Convolutions）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%B7%E7%A7%AF%E6%A0%B8%EF%BC%88kernel%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">卷积核（kernel）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E5%B9%85%EF%BC%88stride%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">步幅（stride）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A1%AB%E5%85%85%EF%BC%88Padding%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">填充（Padding）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E9%80%9A%E9%81%93"><span class="nav-number">1.4.</span> <span class="nav-text">输入输出通道</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%86%A8%E8%83%80%E5%8D%B7%E7%A7%AF%EF%BC%88Dilated-Convolutions%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">膨胀卷积（Dilated Convolutions）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AC%E7%BD%AE%E5%8D%B7%E7%A7%AF%EF%BC%88Transposed-Convolutions%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">转置卷积（Transposed Convolutions）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E5%88%86%E7%A6%BB%E5%8D%B7%E7%A7%AF%EF%BC%88Separable-Convolutions%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">可分离卷积（Separable Convolutions）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">4.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">Just do it!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">203</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">195</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jinzhongxu@csu.ac.cn" title="E-Mail → mailto:jinzhongxu@csu.ac.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2020/11/03/convolution-in-deep-learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+      <meta itemprop="description" content="Just do it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深度学习中不同的卷积操作
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-11-03 14:02:43" itemprop="dateCreated datePublished" datetime="2020-11-03T14:02:43+08:00">2020-11-03</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/research/" itemprop="url" rel="index"><span itemprop="name">research</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/research/machine-learning/" itemprop="url" rel="index"><span itemprop="name">machine learning</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本篇参考<a target="_blank" rel="noopener" href="https://towardsdatascience.com/types-of-convolutions-in-deep-learning-717013397f4d">An Introduction to different Types of Convolutions in Deep Learning</a> 介绍一下深度学习中不同的卷积操作。</p>
+<a id="more"></a>
+
+<h1 id="卷积（Convolutions）"><a href="#卷积（Convolutions）" class="headerlink" title="卷积（Convolutions）"></a>卷积（Convolutions）</h1><p>常规卷积操作如下动图所示，下方（浅蓝色矩形）为输入图像或特征图（feature map），阴影矩形（$3 \times 3$） 为卷积核，上方为输出的特征图。下方虚线边缘矩形为填充，为了在特定卷积核大小和步长下，得到合适的特征图。</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/convolution.gif"></p>
+<p>这里需要先介绍几个概念。</p>
+<h2 id="卷积核（kernel）"><a href="#卷积核（kernel）" class="headerlink" title="卷积核（kernel）"></a>卷积核（kernel）</h2><p>卷积核（卷积核包含至少一个 filter，有时也称 filter 为卷积核）中每个 filter 的大小决定了卷积操作的感受野。如上图所示，卷积核（也是filter，这里输出是单通道）是移动的阴影部分，大小为3，即 $3 \times 3$ 像素。对于输入图像，如果是RGB三通道，那么 filter 也应该是三通道的。如果想输出多通道，可设置多个 filter。即 filter 的通道数和输入图像一样，输出通道由卷积核的个数（filter 的个数）决定。</p>
+<p>卷积核的大小一般设置成奇数，如 $1 \times 1, 3 \times 3, 5 \times 5, 7 \times 7$ 等，这是因为如下两点考虑：</p>
+<ol>
+<li>更容易 padding. 常常想要保持卷积后图像尺寸不变，假设图像大小为 $n \times n$，卷积核大小为 $k \times k$，当 padding 的幅度设为 $(k - 1)/2$ 时，步幅为1，卷积输出为 $(n - k + 2 \times ((k - 1)/2))/1 + 1 = n$. 但是，如果 $k$ 是偶数时，padding 的幅度就不能设置为 $(k - 1)/2$，因为它不再是整数，无法实现；</li>
+<li>更容易找到锚点。卷积时一般选择卷积核的某个位置为基准进行移动，通常选择卷积核的中心，如果卷积核大小为偶数，则无法找到锚点。</li>
+</ol>
+<p>卷积输出图像尺寸的计算公式：</p>
+<p>假设输入图像为 $n \times n$，卷积核大小为 $k \times k$，填充为 $p$，步幅为 $s$，那么输入图像大小为<br>$$<br>\lfloor \frac{n + 2p - k}{s} \rfloor + 1<br>$$</p>
+<h2 id="步幅（stride）"><a href="#步幅（stride）" class="headerlink" title="步幅（stride）"></a>步幅（stride）</h2><p>步幅决定了卷积核在图像上一次跨越的像素个数。如上图所示，卷积核在图像上一次平移一个像素。步幅常设为1，当设置更大步长时，类似于对图像进行下采样（如MaxPooling），即进行信息压缩，使得输出图像尺寸小于输入图像。步幅值就是缩放的倍数，如果步长设为2，输出就是输入的1/2.</p>
+<h2 id="填充（Padding）"><a href="#填充（Padding）" class="headerlink" title="填充（Padding）"></a>填充（Padding）</h2><p>填充定义了如何处理图像的边界。常用方法有两种，分别是 ‘same’ 和 ‘valid’:</p>
+<ul>
+<li>same padding: 进行填充（通常填充0），允许卷积核超出原始图像边界，并使得卷积后的特征图与原来一致；</li>
+<li>valid padding: 不进行任何处理，只使用原始图像，不允许卷积核超出原始图像边界。</li>
+</ul>
+<h2 id="输入输出通道"><a href="#输入输出通道" class="headerlink" title="输入输出通道"></a>输入输出通道</h2><p>输入通道数决定了卷积核中每个 filter 的通道数，如输入通道数为 3，类似于 RGB 彩色图像。输出通道数决定了卷积核中有多少个 filter，如输出通道为 5，假设每个 filter 的尺寸为 $7 \times 7$，那么该卷积层需要的训练学习的参数个数为 $3 \times 7 \times 7 \times 5 = 735$.</p>
+<h1 id="膨胀卷积（Dilated-Convolutions）"><a href="#膨胀卷积（Dilated-Convolutions）" class="headerlink" title="膨胀卷积（Dilated Convolutions）"></a>膨胀卷积（Dilated Convolutions）</h1><p>膨胀卷积（a.k.a, also known as, atrous convolutions, 圆卷积），膨胀卷积为卷积层引入了另一个参数，称为膨胀率。这定义了卷积核中的值之间的间隔。膨胀率为 2 的 $3 \times 3$ 卷积核与 $5 \times 5$ 卷积核具有相同的视野，而仅使用 9 个参数。</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/dilated_convolutions.gif"></p>
+<p>这以相同的计算成本提供了更广阔的视野。膨胀卷积在实时分割领域中特别流行。如果您需要广阔的视野并且无法承受多次卷积或更大的卷积核，请使用它们。</p>
+<h1 id="转置卷积（Transposed-Convolutions）"><a href="#转置卷积（Transposed-Convolutions）" class="headerlink" title="转置卷积（Transposed Convolutions）"></a>转置卷积（Transposed Convolutions）</h1><p>转置卷积（a.k.a. deconvolutions or fractionally strided convolutions，又称为反卷积或分数步卷积）。有些文献使用反卷积名称，这是不合适的，因为它不是反卷积。更糟糕的是，确实存在反卷积，但在深度学习领域并不常见。实际的反卷积可还原卷积的过程。想象一下将图像输入到单个卷积层中。现在获取输出，将其放入黑盒，然后再次输出原始图像。这个黑匣子进行去卷积。它是卷积层功能的数学逆运算。</p>
+<p>转置卷积有些类似，因为它产生的空间分辨率与假设的反卷积层相同。但是，对值执行的实际数学运算是不同的。转置的卷积层执行常规卷积，但还原其空间变换。</p>
+<p>我们看一个具体的例子。 $5 \times 5$ 的图像被输入到卷积层。步幅设置为 2，禁用填充，卷积核尺寸为 $3 \times 3$，这将产生 $2 \times 2$ 的图像。</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/transposed_convolution_p1.gif"></p>
+<p>如果我们想逆转此过程，则需要进行逆数学运算，以便从我们输入的每个像素中生成 9 个值。然后，我们以 2 的步幅遍历输出图像。这将是反卷积。</p>
+<p>转置卷积不会这样做。唯一的共同点是它可以确保输出也将是 $5 \times 5$ 的图像，同时仍执行正常的卷积操作。为了实现这一点，我们需要对输入执行一些华丽的填充。</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/transposed_convolution_p2.gif"></p>
+<p>就像您现在可以想象的那样，此步骤不会从上面逆转该过程。至少不涉及数学逆操作。它仅从以前重建空间分辨率并执行卷积。这可能不是数学上的逆运算，但是对于 Encoder-Decoder 架构，它仍然非常有帮助。这样，我们可以将图像的放大与卷积结合在一起，而不必执行两个单独的过程。</p>
+<h2 id="可分离卷积（Separable-Convolutions）"><a href="#可分离卷积（Separable-Convolutions）" class="headerlink" title="可分离卷积（Separable Convolutions）"></a>可分离卷积（Separable Convolutions）</h2><p>在可分离卷积中，我们能够把卷积操作分成多步进行。假设卷积表示为 $y = conv(x, k)$，其中 $y$ 为输出图像，$x$ 为输入图像，$k$ 为卷积核。并假设卷积核可以通过 $k = k_1.dot(k_2)$ 计算。这样可以进行可分离卷积，在 2D 上进行 $k$ 卷积等价于作两个 1D 的卷积 $k_1, k_2$.</p>
+<p>以图像处理中常常使用的 Sobel 卷积核为例，可以通过将向量 $[1, 0, -1]$ 和 $[1, 2, 1]^T$ 相乘得到，在相同操作下，它只需要 6 个参数，而不是 9 个参数。</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/sobel_x_y_filters.png"></p>
+<p>这种卷积操作称为空间可分离卷积。</p>
+<p>但在深度学习中，深度可分离卷积常会遇到。假设输入图像是 16 通道，卷积核尺寸是 $3 \times 3$，输出通道是 32，按照上面的计算方法常规的卷积操作共有 $16 \times 3 \times 3 \times 32 = 4608$ 个参数。但是，如果进行深度可分离卷积，首先 16 个通道每一个经过 $3 \times 3$ 卷积，得到 16 个特征图，然后，再进行 32（得到 32 通道） 个 $1 \times 1$（每一个都是 16 通道） 的卷积，整个过程一共需要 $16 \times 3 \times 3 + 16 \times 1 \times 1 \times 32 = 656$ 个参数。这里设置的深度乘子是 1.</p>
+<p>之所以这样做是因为这样的假设，即空间和深度信息可以解耦。观察 Xception 模型的性能，该理论似乎行得通。深度可分离卷积由于其对参数的有效利用而也用于移动设备。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/77471866">CNN基础知识</a></li>
+<li><a target="_blank" rel="noopener" href="https://towardsdatascience.com/types-of-convolutions-in-deep-learning-717013397f4d">An Introduction to different Types of Convolutions in Deep Learning</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/vdumoulin/conv_arithmetic">GitHub: Convolutions animations</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Written by:  </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://xujinzh.github.io/2020/11/03/convolution-in-deep-learning/" title="深度学习中不同的卷积操作">https://xujinzh.github.io/2020/11/03/convolution-in-deep-learning/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/dl/" rel="tag"><i class="fa fa-tag"></i> dl</a>
+              <a href="/tags/machine-learning/" rel="tag"><i class="fa fa-tag"></i> machine learning</a>
+              <a href="/tags/convolution/" rel="tag"><i class="fa fa-tag"></i> convolution</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/10/17/definite-integral-calculate-volume/" rel="prev" title="由平行截面面积求体积">
+                  <i class="fa fa-chevron-left"></i> 由平行截面面积求体积
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/11/05/docker-simple/" rel="next" title="docker 简单介绍">
+                  docker 简单介绍 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f45c300bef10091" async="async"></script>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.6.4/dist/mermaid.min.js', () => {
+    mermaid.init({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    }, '.mermaid');
+  }, window.mermaid);
+}
+</script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      const script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

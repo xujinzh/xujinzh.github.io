@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xujinzh.github.io","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":false,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="Zabbix 是一款开源免费的企业级监控软件，原作者是 Alexei Vladishev，编程语言是C（Server 端）和PHP（frontend），跨平台，可以用于集群网络监控、管理系统等。下面简单记录一下Zabbix服务的安装和利用Zabbix监控Linux服务器。服务器采用Ubuntu 18.04，把Zabbix Server 安装在box0，负责监控box1和box2等">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zabbix 监控系统安装与简单设置">
+<meta property="og:url" content="https://xujinzh.github.io/2020/06/08/zabbix-install-tutorial/index.html">
+<meta property="og:site_name" content="J Blog">
+<meta property="og:description" content="Zabbix 是一款开源免费的企业级监控软件，原作者是 Alexei Vladishev，编程语言是C（Server 端）和PHP（frontend），跨平台，可以用于集群网络监控、管理系统等。下面简单记录一下Zabbix服务的安装和利用Zabbix监控Linux服务器。服务器采用Ubuntu 18.04，把Zabbix Server 安装在box0，负责监控box1和box2等">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-08T09:19:46.000Z">
+<meta property="article:modified_time" content="2021-11-09T10:42:04.918Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="zabbix">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2020/06/08/zabbix-install-tutorial/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Zabbix 监控系统安装与简单设置 | J Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">J Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Zabbix"><span class="nav-number">1.</span> <span class="nav-text">安装Zabbix</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E7%B3%BB%E7%BB%9F%EF%BC%88Choose-your-platform%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">选择系统（Choose your platform）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Zabbix-%E6%9C%8D%E5%8A%A1%EF%BC%88Install-and-configure-Zabbix-server-for-your-platform%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">安装Zabbix 服务（Install and configure Zabbix server for your platform）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Zabbix%E4%BB%93%E5%BA%93%EF%BC%88Install-Zabbix-repository%EF%BC%89"><span class="nav-number">1.2.1.</span> <span class="nav-text">安装Zabbix仓库（Install Zabbix repository）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Zabbix%E6%9C%8D%E5%8A%A1%EF%BC%8C%E5%89%8D%E7%AB%AF%E5%92%8C%E4%BB%A3%E7%90%86-%EF%BC%88Install-Zabbix-server-frontend-agent%EF%BC%89"><span class="nav-number">1.2.2.</span> <span class="nav-text">安装Zabbix服务，前端和代理 （Install Zabbix server, frontend, agent）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88Create-initial-database%EF%BC%89"><span class="nav-number">1.2.3.</span> <span class="nav-text">建立初始化数据库（Create initial database）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88Configure-the-database-for-Zabbix-server%EF%BC%89"><span class="nav-number">1.2.4.</span> <span class="nav-text">配置数据库（Configure the database for Zabbix server）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEPHP%E5%89%8D%E7%AB%AF%EF%BC%88Configure-PHP-for-Zabbix-frontend%EF%BC%89"><span class="nav-number">1.2.5.</span> <span class="nav-text">配置PHP前端（Configure PHP for Zabbix frontend）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8Zabbix-%E6%9C%8D%E5%8A%A1%EF%BC%88Start-Zabbix-server-and-agent-processes%EF%BC%89"><span class="nav-number">1.2.6.</span> <span class="nav-text">启动Zabbix 服务（Start Zabbix server and agent processes）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEZabbix%E5%89%8D%E7%AB%AF%EF%BC%88Configure-Zabbix-frontend%EF%BC%89"><span class="nav-number">1.2.7.</span> <span class="nav-text">配置Zabbix前端（Configure Zabbix frontend）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zabbix-Agent-%E5%AE%89%E8%A3%85"><span class="nav-number">1.3.</span> <span class="nav-text">Zabbix Agent 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85%E6%BA%90%E5%B9%B6%E5%AE%89%E8%A3%85Zabbix-Agent"><span class="nav-number">1.3.1.</span> <span class="nav-text">下载安装源并安装Zabbix Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E6%97%B6%E5%8C%BA%E5%90%8CZabbix-Server"><span class="nav-number">1.3.2.</span> <span class="nav-text">设置时区同Zabbix Server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E5%8A%A8"><span class="nav-number">1.3.3.</span> <span class="nav-text">设置开机自启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E4%B8%8D%E5%90%AF%E5%8A%A8%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">1.3.4.</span> <span class="nav-text">设置开机不启动防火墙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEZabbix-Agent-%E5%8F%82%E6%95%B0"><span class="nav-number">1.3.5.</span> <span class="nav-text">配置Zabbix Agent 参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%90%AFZabbix-Agent%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF"><span class="nav-number">1.3.6.</span> <span class="nav-text">重启Zabbix Agent并设置开机自启</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-Hosts"><span class="nav-number">2.</span> <span class="nav-text">配置 Hosts</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-Templates"><span class="nav-number">3.</span> <span class="nav-text">配置 Templates</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">Just do it!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">203</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">195</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jinzhongxu@csu.ac.cn" title="E-Mail → mailto:jinzhongxu@csu.ac.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2020/06/08/zabbix-install-tutorial/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+      <meta itemprop="description" content="Just do it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Zabbix 监控系统安装与简单设置
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-06-08 17:19:46" itemprop="dateCreated datePublished" datetime="2020-06-08T17:19:46+08:00">2020-06-08</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>Zabbix 是一款开源免费的企业级监控软件，原作者是 Alexei Vladishev，编程语言是C（Server 端）和PHP（frontend），跨平台，可以用于集群网络监控、管理系统等。下面简单记录一下Zabbix服务的安装和利用Zabbix监控Linux服务器。服务器采用Ubuntu 18.04，把Zabbix Server 安装在box0，负责监控box1和box2等</p>
+<a id="more"></a>
+
+<h1 id="安装Zabbix"><a href="#安装Zabbix" class="headerlink" title="安装Zabbix"></a>安装Zabbix</h1><p>访问网址：<a target="_blank" rel="noopener" href="https://www.zabbix.com/download?zabbix=5.0&os_distribution=ubuntu&os_version=20.04_focal&db=mysql&ws=apache">Zabbix</a> ，选择Install from Packages</p>
+<h2 id="选择系统（Choose-your-platform）"><a href="#选择系统（Choose-your-platform）" class="headerlink" title="选择系统（Choose your platform）"></a>选择系统（Choose your platform）</h2><p>这里选择 ZABBIX VERSION: 5.0 LTS, OS DISTRIBUTION: Ubuntu, OS VERSION: 18.04 (Bionic), DATABASE: MySQL, WEB SERVER: Apache</p>
+<h2 id="安装Zabbix-服务（Install-and-configure-Zabbix-server-for-your-platform）"><a href="#安装Zabbix-服务（Install-and-configure-Zabbix-server-for-your-platform）" class="headerlink" title="安装Zabbix 服务（Install and configure Zabbix server for your platform）"></a>安装Zabbix 服务（Install and configure Zabbix server for your platform）</h2><p><em>注意：所有命令以<font color='dd0000'> root </font>身份运行</em></p>
+<h3 id="安装Zabbix仓库（Install-Zabbix-repository）"><a href="#安装Zabbix仓库（Install-Zabbix-repository）" class="headerlink" title="安装Zabbix仓库（Install Zabbix repository）"></a>安装Zabbix仓库（Install Zabbix repository）</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://repo.zabbix.com/zabbix/5.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_5.0-1+bionic_all.deb</span><br><span class="line">dpkg -i zabbix-release_5.0-1+bionic_all.deb</span><br><span class="line">apt update</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装Zabbix服务，前端和代理-（Install-Zabbix-server-frontend-agent）"><a href="#安装Zabbix服务，前端和代理-（Install-Zabbix-server-frontend-agent）" class="headerlink" title="安装Zabbix服务，前端和代理 （Install Zabbix server, frontend, agent）"></a>安装Zabbix服务，前端和代理 （Install Zabbix server, frontend, agent）</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-agent</span><br></pre></td></tr></table></figure>
+
+<h3 id="建立初始化数据库（Create-initial-database）"><a href="#建立初始化数据库（Create-initial-database）" class="headerlink" title="建立初始化数据库（Create initial database）"></a>建立初始化数据库（Create initial database）</h3><p><em>注意：’<font color='dd0000'>password</font>‘ 修改成自己喜欢的密码</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p</span><br><span class="line"><span class="meta">#</span><span class="bash"> 输入秘密</span></span><br><span class="line"></span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> create database zabbix character <span class="built_in">set</span> utf8 collate utf8_bin;</span></span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> create user zabbix@localhost identified by <span class="string">&#x27;password&#x27;</span>;</span></span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> grant all privileges on zabbix.* to zabbix@localhost;</span></span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> quit;</span></span><br><span class="line"></span><br><span class="line">zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -p zabbix</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置数据库（Configure-the-database-for-Zabbix-server）"><a href="#配置数据库（Configure-the-database-for-Zabbix-server）" class="headerlink" title="配置数据库（Configure the database for Zabbix server）"></a>配置数据库（Configure the database for Zabbix server）</h3><p>编辑 /etc/zabbix/zabbix_server.conf，修改成前面一步设置的密码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DBPassword=password</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置PHP前端（Configure-PHP-for-Zabbix-frontend）"><a href="#配置PHP前端（Configure-PHP-for-Zabbix-frontend）" class="headerlink" title="配置PHP前端（Configure PHP for Zabbix frontend）"></a>配置PHP前端（Configure PHP for Zabbix frontend）</h3><p><em>注意：这里需要校对时间，方法如下：</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">date</span><br><span class="line">apt install ntpdate</span><br><span class="line">ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span><br><span class="line">ntpdate us.pool.ntp.org</span><br><span class="line">date</span><br></pre></td></tr></table></figure>
+
+<p>编辑  /etc/zabbix/apache.conf, 找到时区，并取消注释和修改时区</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php_value date.timezone Asia/Shanghai</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动Zabbix-服务（Start-Zabbix-server-and-agent-processes）"><a href="#启动Zabbix-服务（Start-Zabbix-server-and-agent-processes）" class="headerlink" title="启动Zabbix 服务（Start Zabbix server and agent processes）"></a>启动Zabbix 服务（Start Zabbix server and agent processes）</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart zabbix-server zabbix-agent apache2</span><br><span class="line">systemctl enable zabbix-server zabbix-agent apache2</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置Zabbix前端（Configure-Zabbix-frontend）"><a href="#配置Zabbix前端（Configure-Zabbix-frontend）" class="headerlink" title="配置Zabbix前端（Configure Zabbix frontend）"></a>配置Zabbix前端（Configure Zabbix frontend）</h3><p>打开网址：<a target="_blank" rel="noopener" href="http://box0/zabbix%EF%BC%8C%E9%85%8D%E7%BD%AEZabbix">http://box0/zabbix，配置Zabbix</a>.</p>
+<p><em>注意：密码为前面设置的MySQL数据库的Zabbix用户的密码；配置后，使用用户名：Admin，密码: <font color='dd000'>password</font></em></p>
+<h2 id="Zabbix-Agent-安装"><a href="#Zabbix-Agent-安装" class="headerlink" title="Zabbix Agent 安装"></a>Zabbix Agent 安装</h2><p>下面开始依次在 box1 和 box2 上安装需要被监控的Linux服务器上的Zabbix Agent，这个比较简单，基本步骤同Server，不过需要配置一下参数。这里以 box1 为例，box2 类似</p>
+<h3 id="下载安装源并安装Zabbix-Agent"><a href="#下载安装源并安装Zabbix-Agent" class="headerlink" title="下载安装源并安装Zabbix Agent"></a>下载安装源并安装Zabbix Agent</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://repo.zabbix.com/zabbix/5.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_5.0-1+bionic_all.deb</span><br><span class="line">dpkg -i zabbix-release_5.0-1+bionic_all.deb</span><br><span class="line">apt install zabbix-agent</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置时区同Zabbix-Server"><a href="#设置时区同Zabbix-Server" class="headerlink" title="设置时区同Zabbix Server"></a>设置时区同Zabbix Server</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt install ntpdate</span><br><span class="line">ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span><br><span class="line">ntpdate us.pool.ntp.org</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置开机自启动"><a href="#设置开机自启动" class="headerlink" title="设置开机自启动"></a>设置开机自启动</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">update-rc.d zabbix-server defaults</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> centos 方法如下</span></span><br><span class="line">chkconfig zabbix-agent on</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置开机不启动防火墙"><a href="#设置开机不启动防火墙" class="headerlink" title="设置开机不启动防火墙"></a>设置开机不启动防火墙</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">update-rc.d ufw remove</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> centos 方法如下</span></span><br><span class="line">chkconfig iptables off</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置Zabbix-Agent-参数"><a href="#配置Zabbix-Agent-参数" class="headerlink" title="配置Zabbix Agent 参数"></a>配置Zabbix Agent 参数</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/zabbix/zabbix_agentd.conf</span><br></pre></td></tr></table></figure>
+
+<p>修改</p>
+<p>（<em>注意：Hostname=box1，不然，zabbix-agent日志会报错找不到hostname，通过 tail /var/log/zabbix-agent/zabbix_agentd.log查看</em>）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Server&#x3D;box0</span><br><span class="line">ServerActive&#x3D;box0</span><br><span class="line">Hostname&#x3D;box1</span><br></pre></td></tr></table></figure>
+
+<h3 id="重启Zabbix-Agent并设置开机自启"><a href="#重启Zabbix-Agent并设置开机自启" class="headerlink" title="重启Zabbix Agent并设置开机自启"></a>重启Zabbix Agent并设置开机自启</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/zabbix-agent status</span><br><span class="line">/etc/init.d/zabbix-agent stop</span><br><span class="line">/etc/init.d/zabbix-agent start</span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置开机自启</span></span><br><span class="line">update-rc.d zabbix-agent defaults</span><br><span class="line"><span class="meta">#</span><span class="bash"> 或者使用如下命令设置</span></span><br><span class="line">systemctl enable zabbix-agent</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看是否设置成功开机自启</span></span><br><span class="line">systemctl list-unit-files | grep enabled | grep zabbix</span><br></pre></td></tr></table></figure>
+
+<p>类似设置 box1 etc.</p>
+<h1 id="配置-Hosts"><a href="#配置-Hosts" class="headerlink" title="配置 Hosts"></a>配置 Hosts</h1><p>点击 Configuration –&gt; Hosts –&gt; Create host –&gt; Host name(ip or hostname，这里输入box1) –&gt; Visible name(Zabbix界面上可见名字) –&gt; Groups(选择 Linux servers) –&gt; Interfaces，Agent（IP address：box1）</p>
+<h1 id="配置-Templates"><a href="#配置-Templates" class="headerlink" title="配置 Templates"></a>配置 Templates</h1><p>点击 Templates –&gt; Link new templates –&gt; (输入linux) Templates OS Linux by Zabbix agent –&gt; Add</p>
+<p>点击 Monitoring–&gt;Hosts，可以查看添加的服务器，选择右边的Graphs，可以查看系统运行情况</p>
+<p>类似设置 box1 etc.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Written by:  </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://xujinzh.github.io/2020/06/08/zabbix-install-tutorial/" title="Zabbix 监控系统安装与简单设置">https://xujinzh.github.io/2020/06/08/zabbix-install-tutorial/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ubuntu/" rel="tag"><i class="fa fa-tag"></i> ubuntu</a>
+              <a href="/tags/zabbix/" rel="tag"><i class="fa fa-tag"></i> zabbix</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/05/30/ai-optimizer/" rel="prev" title="机器学习优化算法：从SGD到Adam">
+                  <i class="fa fa-chevron-left"></i> 机器学习优化算法：从SGD到Adam
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/06/12/mac-addr-and-serial-number/" rel="next" title="Windows 和 Ubuntu 查看网卡 Mac 地址和硬盘序列号的方法">
+                  Windows 和 Ubuntu 查看网卡 Mac 地址和硬盘序列号的方法 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f45c300bef10091" async="async"></script>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.6.4/dist/mermaid.min.js', () => {
+    mermaid.init({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    }, '.mermaid');
+  }, window.mermaid);
+}
+</script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      const script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

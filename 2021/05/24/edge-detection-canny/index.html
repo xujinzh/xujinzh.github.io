@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xujinzh.github.io","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":false,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="图像边缘检测（Edge Detection）作为图像处理和计算机数据的基本问题，其目的是识别数字图像中亮度变化明显的点。图像中这些显著变化的部分反映了重要事件或其他变化，包括深度上的不连续，表面方向的不连续，物质属性的改变和场景照明的变化等。图像边缘检测能够剔除认为不相关的信息，大幅度地减少数据量，同时保留图像重要的结构属性。有两类边缘检测方法，一类是基于查找（一阶），一类是基于零穿越（二阶）。（">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Canny 图像边缘检测算法">
+<meta property="og:url" content="https://xujinzh.github.io/2021/05/24/edge-detection-canny/index.html">
+<meta property="og:site_name" content="J Blog">
+<meta property="og:description" content="图像边缘检测（Edge Detection）作为图像处理和计算机数据的基本问题，其目的是识别数字图像中亮度变化明显的点。图像中这些显著变化的部分反映了重要事件或其他变化，包括深度上的不连续，表面方向的不连续，物质属性的改变和场景照明的变化等。图像边缘检测能够剔除认为不相关的信息，大幅度地减少数据量，同时保留图像重要的结构属性。有两类边缘检测方法，一类是基于查找（一阶），一类是基于零穿越（二阶）。（">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-d0712c8a0b6aaea4d84fe45f454d0109_720w.jpg">
+<meta property="article:published_time" content="2021-05-24T12:26:47.000Z">
+<meta property="article:modified_time" content="2021-11-09T10:42:04.860Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="edge-detection">
+<meta property="article:tag" content="Canny">
+<meta property="article:tag" content="image-segmentation">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic2.zhimg.com/80/v2-d0712c8a0b6aaea4d84fe45f454d0109_720w.jpg">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2021/05/24/edge-detection-canny/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Canny 图像边缘检测算法 | J Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">J Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">数字图像处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">数字图像分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%83%8F%E7%B4%A0%E9%82%BB%E5%9F%9F"><span class="nav-number">3.</span> <span class="nav-text">像素邻域</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E6%BB%A4%E6%B3%A2"><span class="nav-number">4.</span> <span class="nav-text">图像滤波</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BE%B9%E7%BC%98%E6%A3%80%E6%B5%8B%E5%92%8C%E5%B8%B8%E7%94%A8%E6%BB%A4%E6%B3%A2%E5%99%A8"><span class="nav-number">5.</span> <span class="nav-text">边缘检测和常用滤波器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6"><span class="nav-number">5.1.</span> <span class="nav-text">梯度</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Canny-%E5%9B%BE%E5%83%8F%E8%BE%B9%E7%BC%98%E6%A3%80%E6%B5%8B"><span class="nav-number">6.</span> <span class="nav-text">Canny 图像边缘检测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E6%96%AF%E4%BD%8E%E9%80%9A%E6%BB%A4%E6%B3%A2%E5%99%A8-%EF%BC%88Gaussian-filter%EF%BC%89"><span class="nav-number">6.1.</span> <span class="nav-text">高斯低通滤波器 （Gaussian filter）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E6%A2%AF%E5%BA%A6-%EF%BC%88Finding-the-intensity-gradient-of-the-image%EF%BC%89"><span class="nav-number">6.2.</span> <span class="nav-text">图像梯度 （Finding the intensity gradient of the image）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E6%9C%80%E5%A4%A7%E6%8A%91%E5%88%B6-%EF%BC%88Gradient-magnitude-thresholding-or-lower-bound-cut-off-suppression%EF%BC%89"><span class="nav-number">6.3.</span> <span class="nav-text">非最大抑制 （Gradient magnitude thresholding or lower bound cut-off suppression）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8C%E9%98%88%E5%80%BC-%EF%BC%88Double-threshold%EF%BC%89"><span class="nav-number">6.4.</span> <span class="nav-text">双阈值 （Double threshold）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BB%9E%E5%90%8E%E8%B7%9F%E8%B8%AA%E8%BE%B9%E7%BC%98-%EF%BC%88Edge-tracking-by-hysteresis%EF%BC%89"><span class="nav-number">6.5.</span> <span class="nav-text">滞后跟踪边缘 （Edge tracking by hysteresis）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OpenCV-%E8%BE%B9%E7%BC%98%E6%A3%80%E6%B5%8B"><span class="nav-number">7.</span> <span class="nav-text">OpenCV 边缘检测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">8.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">Just do it!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">203</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">195</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jinzhongxu@csu.ac.cn" title="E-Mail → mailto:jinzhongxu@csu.ac.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2021/05/24/edge-detection-canny/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+      <meta itemprop="description" content="Just do it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Canny 图像边缘检测算法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-05-24 20:26:47" itemprop="dateCreated datePublished" datetime="2021-05-24T20:26:47+08:00">2021-05-24</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/research/" itemprop="url" rel="index"><span itemprop="name">research</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/research/image-segmentation/" itemprop="url" rel="index"><span itemprop="name">image segmentation</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>图像边缘检测（Edge Detection）作为图像处理和计算机数据的基本问题，其<strong>目的</strong>是识别数字图像中亮度变化明显的点。图像中这些显著变化的部分反映了重要事件或其他变化，包括深度上的不连续，表面方向的不连续，物质属性的改变和场景照明的变化等。<strong>图像边缘检测能够剔除认为不相关的信息，大幅度地减少数据量，同时保留图像重要的结构属性。</strong>有两类边缘检测方法，一类是基于查找（一阶），一类是基于零穿越（二阶）。（根本上基于数学分析中方法，查找方法是寻求梯度最大的点，零穿越是寻求拐点，即二阶导数为 0 的点）基于查找的方法通过寻找图像一阶导数中的最大和最小值来检测边界，通常是将边界定位在梯度最大的方向。基于零穿越的方法通过寻找图像二阶导数零穿越来寻找边界，通常是 Laplacian 过零点或者非线性差分表示的过零点。</p>
+<a id="more"></a>
+
+<p>常用的边缘检测算子有：</p>
+<ul>
+<li>一阶：Roberts Cross 算子, Prewitt 算子, Sobel 算子, Canny 算子，罗盘算子</li>
+<li>二阶：Marr-Hildreth, 在梯度方向的二阶导数过零点。</li>
+</ul>
+<p><strong>Canny算子</strong>是最常用的边缘检测方法，图像边缘检测效果相对较优。</p>
+<p>本篇主要介绍 Canny 图像边缘检测方法，因其作用的对象是数字图像，所以会简短介绍什么是数字图像处理、常见的数字图像分类、常用的边缘检测算子，最后重点介绍 Canny 边缘检测。</p>
+<h1 id="数字图像处理"><a href="#数字图像处理" class="headerlink" title="数字图像处理"></a>数字图像处理</h1><p>数字图像处理（Digital Image Processing）是使用计算机处理图像成为更易于人类理解或需要的形式。常见的有，改善图示信息以便人类解释，优化图像存储、传输、表示，以便机器自动理解。具体的包括，人脸识别、车牌识别、图像边缘检测、图像目标分割、图像语义分割、视频目标跟踪等。</p>
+<h1 id="数字图像分类"><a href="#数字图像分类" class="headerlink" title="数字图像分类"></a>数字图像分类</h1><p>数字图像是在计算机中以二维矩阵表示，每个元素都是数字像素灰度值，范围一般是 0 ~ 255. 常见的数字图像有二值图像、灰度图像、彩色图像等。</p>
+<p><strong>二值图像</strong>（Binary Image）：每个像素的灰度值仅取 0 或 1，即分别是黑和白，因此可以理解为黑白图像。</p>
+<p><strong>灰度图像</strong>（Gray Scale Image）：每个像素的灰度值取值于 0 ~ 255，0 表示纯黑，255 表示纯白，其他值表示由黑到白的渐变色。</p>
+<p><strong>彩色图像</strong>（Color Image）：同灰度图像，但是是有三幅灰度图像层叠在一起组成，分别表示红（R）、绿（G）、蓝（B）三通道。</p>
+<p>把彩色图像转化为灰度图像可以通过只选择三通道中的一个，也可以通过三通道对应位置进行加权平均计算得到，常用的加权系数有：</p>
+<ol>
+<li><font size=3 color=red> G = 0.299 R + 0.587 G + 0.114 B </font></li>
+<li><font size=3 color=green> G = 0.2126 R + 0.7152 G + 0.0722 B </font></li>
+<li><font size=3 color=blue> G = 0.2627 R + 0.6780 G + 0.0593 B </font></li>
+</ol>
+<p>这些系数大多是基于人类对三种基准色的感官接收能力而定的。</p>
+<h1 id="像素邻域"><a href="#像素邻域" class="headerlink" title="像素邻域"></a>像素邻域</h1><p>既然数字图像是有像素（矩阵中的数值）组成，那么类似于矩阵，每个元素都有邻域元素，因此，数字图像像素也有像素邻域。常使用的邻域有：<strong>4 邻域、D 邻域和 8 邻域</strong>。</p>
+<p>4 邻域：某个像素的上、下、左、右最邻近的像素点组成的 4 个像素集合；</p>
+<p>D 邻域：某个像素的左上、左下、右上、右下最邻近的像素点组成的 4 个像素集合；</p>
+<p>8 邻域：某个像素的 4 邻域和 D 邻域组成的 8 个像素集合；</p>
+<h1 id="图像滤波"><a href="#图像滤波" class="headerlink" title="图像滤波"></a>图像滤波</h1><p>常指的图像滤波是在保留图像细节特征的条件下对目标图像噪声进行抑制，作为图像预处理不可缺少的操作，结果直接影响后续图像处理和分析的有效性和可靠性。</p>
+<p>当把数字图像的某一行取出后，其可以看作一个时间序列或波，同样，整幅图像也可以看作一种波，图像中亮度突变的部分就是高频部分，平滑的部分就是低频部分。对图像进行低通滤波就是使图像变得更平滑，滤除突变部分（包括噪声），图像变得模糊；对图像进行高通滤波就是提取图像的高频部分，只保留那些变化最快速最剧烈的区域，如边缘检测。</p>
+<p>可通过<a target="_blank" rel="noopener" href="https://fellipe.com/demos/lena-js/">在线网址</a>进行图像滤波演示。浏览器实现滤波的范例代码，可以看这个<a target="_blank" rel="noopener" href="https://github.com/rssilva/web-audio-image-filtering">仓库</a>。</p>
+<p>因此，广义的图像滤波不仅指消除图像噪声，还指通过滤波进行图像特征提取，简化图像信息，便于后续图像处理。</p>
+<p>数字图像是二维数字矩阵，常用的滤波器（filter）也是一个二维数字矩阵，一般常取 $3\times 3$ 或 $5 \times 5$，奇数是为了保证中心点唯一，此时滤波器的半径分别是 1 和 2. 如深度学习中卷积神经网络中的卷积核就是一种滤波器，但是，其取值是通过大量图像数据经过反向传播学习得到的。本节介绍的边缘检测中使用的滤波器的每一个元素值是固定的，根据人们研究推断出来的。由此可看出，深度学习依据大数据学习得到合适的滤波器（模型参数），而传统的数字图像处理依据经验选择的滤波器。</p>
+<h1 id="边缘检测和常用滤波器"><a href="#边缘检测和常用滤波器" class="headerlink" title="边缘检测和常用滤波器"></a>边缘检测和常用滤波器</h1><p>边缘检测是一种提取图像高频信息的过程，因此是一种图像高通滤波算法。如何得到滤波器呢？</p>
+<h2 id="梯度"><a href="#梯度" class="headerlink" title="梯度"></a>梯度</h2><p>既然边缘检测是提取高频部分，那么就需要通过一种手段描述高频部分，然后提取。把图像的某一行单独拿出来可以看作是一个函数曲线在自然数点上的采样，高频部分对应着导数绝对值比较大的部分。具体到图像上，就是使用差分近似导数。因为数字图像是二维的，所以有两个方向的导数，分别是 $x,y$，坐标原点是图像左上角，向下为 $y$ 轴，向右为 $x$ 轴。某一点的高频信息就使用该点在 $x,y$ 方向上的梯度来表示，梯度的模或大小是 $x,y$ 两方向导数的平方和再取平方根。梯度的方向是于 $x$ 轴的夹角。数学公式如下</p>
+<p>假设某像素点 $P(x,y)$ 在 $x,y$ 方向的导数（差分）是<br>$$<br>d_x, d_y<br>$$<br>那么该点的梯度大小是<br>$$<br>G(x,y) = \sqrt{d_x^2 + d_y^2}<br>$$<br>梯度的方向是<br>$$<br>\theta = \arctan(\frac{d_y}{d_x})<br>$$<br>那么如何计算某像素点处导数或差分呢？常采用该像素 4 邻域或 8 邻域来计算得到，系数值组成滤波器，如下面的</p>
+<p>Roberts 算子<br>$$<br>s_x =<br>\left [<br>\begin{matrix}<br>1 &amp; 0 \\<br>0 &amp; -1<br>\end{matrix}<br>\right],<br>s_y =<br>\left[<br>\begin{matrix}<br>0 &amp; -1 \\<br>1 &amp; 0<br>\end{matrix}<br>\right]<br>$$<br>Prewitt 算子<br>$$<br>s_x =<br>\left[<br>\begin{matrix}<br>-1 &amp; 0 &amp; 1 \\<br>-1 &amp; 0 &amp; 1 \\<br>-1 &amp; 0 &amp; 1<br>\end{matrix}<br>\right],<br>s_y =<br>\left[<br>\begin{matrix}<br>1 &amp; 1 &amp; 1 \\<br>0 &amp; 0 &amp; 0 \\<br>-1 &amp; -1 &amp; -1<br>\end{matrix}<br>\right]<br>$$<br>Sobel 算子<br>$$<br>s_x =<br>\left[<br>\begin{matrix}<br>1 &amp; 0 &amp; -1 \\<br>2 &amp; 0 &amp; -2 \\<br>1 &amp; 0 &amp; -1<br>\end{matrix}<br>\right],<br>s_y =<br>\left[<br>\begin{matrix}<br>1 &amp; 2 &amp; 1 \\<br>0 &amp; 0 &amp; 0 \\<br>-1 &amp; -2 &amp; -1<br>\end{matrix}<br>\right]<br>$$<br>使用检测算子对图像进行滤波的方法类似卷积神经网络，对于每一个像素，将滤波器矩阵的中心对应图像像素点，依次计算对应位置的矩阵元素乘积，然后将结果加到一起，得到该像素的滤波值。特别的对于边界点，超出边界部分填报 0. 计算后的图像和原图像同尺寸。</p>
+<p>Sobel 算子 $s_x$ 表示检测 $x$ 轴方向边缘，计算得到 $x$ 轴方向的梯度，注意此时的边界方向应是垂直于 $x$ 轴，即 $y$ 轴，即梯度方向与边界方向垂直。</p>
+<p>同理，Sobel 算子 $s_x$ 表示检测 $y$ 轴方向边缘，计算得到 $y$ 轴方向的梯度，注意此时的边界方向应是垂直于 $y$ 轴，即 $x$ 轴，即梯度方向与边界方向垂直。</p>
+<p>注意，当计算的梯度值超出范围 $[0, 255]$ 时，常采用取绝对值。</p>
+<p>同时，可以看到，简单的采用 Sobel 算子得到的梯度值图像（滤波后的图像）容易受噪声像素点的影响（可以考虑先滤波噪声，即低通滤波），也没有对结果进行后续处理，因为边缘信息可能很多不连续，断断续续比较多。</p>
+<h1 id="Canny-图像边缘检测"><a href="#Canny-图像边缘检测" class="headerlink" title="Canny 图像边缘检测"></a>Canny 图像边缘检测</h1><p>针对上述问题，1986年澳洲计算机科学家 John F. Canny 在文章 <a target="_blank" rel="noopener" href="https://d1wqtxts1xzle7.cloudfront.net/64038952/1-with-cover-page.pdf?Expires=1621929742&Signature=DySBlI-DHonzdLJ4-fCcxxbKhOOjIwEU6XE~BNMzOhTJVgJ4einc1Z-ZAHaQFPXaTofZ6itdQRM6aaJTlTwIApmTgzOwoqqxmX8kYpwUrNUcn5NfvvN13B4wlkZAVzS9-buGypk1rW5yG96annqytQfg6YrVqEd2IWo~iBa2KsV0FqB9fXiFbjyN0aCrJHSGJE-c6qJ9Mb~2cDYgZ067J27oorXDZpFbvK21CmvexjWY7t7doZHf4-vWB~Peuy3MZLUxOfdps72zJ3dBUeeuRg8zvu-Sy~ha4JoqdQ9Ml--qsQpaRlGD8I~mHnmDOzSuRQGgXepebhY0qazy-xlGRQ__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA">A Computational Approach to Edge Detection</a> 中提出最优的边缘检测应该能够满足如下标准：</p>
+<ol>
+<li><strong>好的检测</strong> - 算法能够尽可能多地标识出图像中的实际边缘；</li>
+<li><strong>好的定位</strong> - 标识出的边缘要与实际图像中的实际边缘尽可能接近；</li>
+<li><strong>最小响应</strong> - 图像中的边缘只能标识一次，并且可能存在的图像杂讯不应标识为边缘。</li>
+</ol>
+<p>基于上面的三大标准，Canny 提出 5 步骤边缘检测算法，Canny 算子</p>
+<ol>
+<li>首先利用高斯（低通）滤波器平滑图像，去除噪声；</li>
+<li>其次利用 Sobel 算子计算像素梯度；</li>
+<li>然后利用非最大抑制（Non-Maximum Suppression）消除边缘虚假信息，即“瘦边”；</li>
+<li>再然后利用双阈值确定潜在边缘；</li>
+<li>最后利用滞后（Hysteresis）跟踪边缘，即抑制弱边缘和未连接到强边缘的边缘。</li>
+</ol>
+<p>Canny算子不容易受噪声干扰，得到的边缘精细且准确，缺点就是运算代价较高，运行于实时图像处理较困难，<strong>适用于高精度要求的应用</strong></p>
+<h2 id="高斯低通滤波器-（Gaussian-filter）"><a href="#高斯低通滤波器-（Gaussian-filter）" class="headerlink" title="高斯低通滤波器 （Gaussian filter）"></a>高斯低通滤波器 （Gaussian filter）</h2><p><strong>解决噪声影响</strong></p>
+<p>高斯滤波器也有称高斯模糊，是一种图像模糊滤波器，它用正态分布计算图像中每个像素的变换，二维空间中定义如下：<br>$$<br>G(x, y) = \frac{1}{2 \pi \sigma^2} e^{-(x^2 + y^2) / (2 \sigma^2)}<br>$$<br>离散化得到 $(2r + 1) \times (2r + 1)$ 的高斯核公式如下<br>$$<br>H_{ij} = \frac{1}{2 \pi \sigma^2} \exp(- \frac{(i - (r + 1))^2 + (j - (r + 1))^2}{2 \sigma^2}); 1\leq i, j \leq (2r + 1)<br>$$<br>常用的高斯核有，当$\sigma = 1, r = 2$ 时<br>$$<br>H_5 = \frac{1}{159}<br>\left[<br>\begin{matrix}<br>2 &amp; 4 &amp; 5 &amp; 4 &amp; 2 \\<br>4 &amp; 9 &amp; 12 &amp; 9 &amp; 4 \\<br>5 &amp; 12 &amp; 15 &amp; 12 &amp; 5 \\<br>4 &amp; 9 &amp; 12 &amp; 9 &amp; 4 \\<br>2 &amp; 4 &amp; 5 &amp; 4 &amp; 2<br>\end{matrix}<br>\right]<br>$$</p>
+<h2 id="图像梯度-（Finding-the-intensity-gradient-of-the-image）"><a href="#图像梯度-（Finding-the-intensity-gradient-of-the-image）" class="headerlink" title="图像梯度 （Finding the intensity gradient of the image）"></a>图像梯度 （Finding the intensity gradient of the image）</h2><p><strong>找到边界点</strong></p>
+<p>经过高斯平滑后，能够消除噪声影响，再进行边缘检测将会容易些。通过 Sobel 算子计算图像上每个像素的梯度值和梯度方向。</p>
+<h2 id="非最大抑制-（Gradient-magnitude-thresholding-or-lower-bound-cut-off-suppression）"><a href="#非最大抑制-（Gradient-magnitude-thresholding-or-lower-bound-cut-off-suppression）" class="headerlink" title="非最大抑制 （Gradient magnitude thresholding or lower bound cut-off suppression）"></a>非最大抑制 （Gradient magnitude thresholding or lower bound cut-off suppression）</h2><p><strong>解决边缘粗、宽</strong></p>
+<p>由上面可以，梯度方向是与 $x$ 轴的夹角，取值在 $[0, 360]$，Canny 将梯度方向依据 8 邻域分成 4 类，对角组成一类，因此每一类是 $360 / 4 = 90$ 度，每个角 45 度，如下图所示（图片引自知乎@程事在人）</p>
+<p><img src="https://pic2.zhimg.com/80/v2-d0712c8a0b6aaea4d84fe45f454d0109_720w.jpg"></p>
+<p>中心红点为当前像素位置 $(i, j)$，四面八方的黄点为 8 邻域像素位置，$x$ 轴上面划分为 1, 2, 3, 4 区域，下面也是，对角区域相同标识。假设当前像素点的梯度值是 $(g_x(i, j), g_y(i, j))$，梯度模或大小是 $g_{xy}(i, j)$，梯度方向指向上区域 1，负梯度方向指向下区域 1，对于上区域 1，计算上参照点 $g_{up}(i, j)$，比例因子是 $t = \frac{|g_y(i, j)|}{|g_x(i, j)|}$ ，如下计算<br>$$<br>g_{up}(i, j) = (1 - t) g_{xy}(i, j + 1) + t g_{xy}(i - 1, j + 1)<br>$$<br>类似的，计算下参照点 $g_{down}(i, j)$ 如下<br>$$<br>g_{down}(i, j) = (1 - t) g_{xy}(i, j - 1) + tg_{xy}(i + 1, j -1)<br>$$<br>然后，比较 $g_{xy}(i, j)$ 与 $g_{up}(i, j), g_{down}(i, j)$ 之间的大小，规则如下：</p>
+<p>如果 $g_{xy}(i, j) \geq \max{g_{up}(i, j), g_{down}(i, j)}$ ，那么 $g_{xy}(i, j)$ 可能是边，否则，应该被抑制，令 $g_{xy}(i, j) = 0$. 注意，当 $g_x(i, j) = g_y(i, j) = 0$ 时，说明像素点不是边缘点。</p>
+<h2 id="双阈值-（Double-threshold）"><a href="#双阈值-（Double-threshold）" class="headerlink" title="双阈值 （Double threshold）"></a>双阈值 （Double threshold）</h2><p><strong>解决定位不准</strong></p>
+<p>上面三步已经能够大体给出边缘轮廓，但是，仍然存在一些伪边缘，当使用单一阈值截断时，容易导致边缘不连续。</p>
+<p>当梯度值大于等于高阈值时，认为是强边缘；当梯度值小于低阈值时，认为是伪边缘，直接丢弃；对于大于等于低阈值，小于高阈值的边缘点，认为是弱边缘点，进行下一步处理。</p>
+<h2 id="滞后跟踪边缘-（Edge-tracking-by-hysteresis）"><a href="#滞后跟踪边缘-（Edge-tracking-by-hysteresis）" class="headerlink" title="滞后跟踪边缘 （Edge tracking by hysteresis）"></a>滞后跟踪边缘 （Edge tracking by hysteresis）</h2><p><strong>解决间断点多</strong></p>
+<p>经过双阈值判定后，强阈值边缘作为真正的边缘，对于弱边缘还需要进一步的判断是否保留和丢弃。依据的规则是：</p>
+<p>对于弱边缘像素，如果其 8 邻域像素中包含强边缘像素，则其为边缘点，否则不是，将赋值为 0，抑制。</p>
+<p>强边缘像素肯定应该包含在最终边缘图像中，因为它们是从图像的真实边缘中提取的。但是，关于弱边缘像素会有一些争论，因为这些像素可以从真实边缘提取，也可以从噪声/颜色变化中提取。为了获得准确的结果，应消除由后一种原因引起的薄弱边缘。通常，在未连接噪声响应的情况下，由真实边缘引起的弱边缘像素将连接到强边缘像素。为了跟踪边缘连接，通过查看弱边缘像素及其 8 个连接的邻域像素来进行斑点分析。只要斑点中包含一个强边缘像素，该弱边缘点就可以被识别为应该保留的边缘点。</p>
+<h1 id="OpenCV-边缘检测"><a href="#OpenCV-边缘检测" class="headerlink" title="OpenCV 边缘检测"></a>OpenCV 边缘检测</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">img = cv2.imread(<span class="string">&quot;./data/beautiful.jpeg&quot;</span>)  <span class="comment"># BGR 格式 </span></span><br><span class="line">img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  <span class="comment"># 转化为灰度图像</span></span><br><span class="line">img_edge = cv2.Canny(img_gray, <span class="number">30</span>, <span class="number">100</span>, apertureSize=<span class="number">3</span>, L2gradient=<span class="literal">True</span>)</span><br><span class="line"><span class="comment"># img_gray 表示输入图像，注意应该是灰度图像</span></span><br><span class="line"><span class="comment"># 30 是低阈值，取值在 [0, 255]</span></span><br><span class="line"><span class="comment"># 100 是高阈值，取值在 [0, 255]</span></span><br><span class="line"><span class="comment"># apertureSize 表示高斯核大小</span></span><br><span class="line"><span class="comment"># L2gradient 表示计算梯度模时是否采用 L2，如果不是，则采用 L1</span></span><br><span class="line">plt.imshow(img_edge, cmap=<span class="string">&#x27;gray&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/silence-cho/p/11070766.html">(五)OpenCV-Python学习—边缘检测1</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0a256f6909a2">基于python的边缘检测的几种方法的效果对比及分析</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/jnulzl/article/details/47755071">openCV—Python(11)—— 图像边缘检测</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://zj-image-processing.readthedocs.io/zh_CN/stable/opencv/[Canny]%E8%BE%B9%E7%BC%98%E6%A3%80%E6%B5%8B.html">[Canny]边缘检测</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_29462849/article/details/81050212">Canny边缘检测算法解析</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/99959996">Canny边缘检测算法</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/42122107">Canny边缘检测算法</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://lizonghang.github.io/2016/07/22/Canny%E8%BE%B9%E7%BC%98%E6%A3%80%E6%B5%8B/">Canny边缘检测</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/59640437">数字图像处理:边缘检测(Edge detection)</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2017/12/image-and-wave-filters.html">图像与滤波</a></p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Written by:  </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://xujinzh.github.io/2021/05/24/edge-detection-canny/" title="Canny 图像边缘检测算法">https://xujinzh.github.io/2021/05/24/edge-detection-canny/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/edge-detection/" rel="tag"><i class="fa fa-tag"></i> edge-detection</a>
+              <a href="/tags/Canny/" rel="tag"><i class="fa fa-tag"></i> Canny</a>
+              <a href="/tags/image-segmentation/" rel="tag"><i class="fa fa-tag"></i> image-segmentation</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/05/06/python-matplotlib-show-Chinese/" rel="prev" title="解决使用 Python 的 matplotlib 画图时中文显示为乱码的问题">
+                  <i class="fa fa-chevron-left"></i> 解决使用 Python 的 matplotlib 画图时中文显示为乱码的问题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/05/25/python-with-shell-command/" rel="next" title="在 Python 中调用 Shell 命令">
+                  在 Python 中调用 Shell 命令 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f45c300bef10091" async="async"></script>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.6.4/dist/mermaid.min.js', () => {
+    mermaid.init({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    }, '.mermaid');
+  }, window.mermaid);
+}
+</script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      const script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

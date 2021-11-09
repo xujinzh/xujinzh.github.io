@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xujinzh.github.io","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":false,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="对于 Linux 用户而言，当创建文件或目录时都会自动为该文件或目录分配权限，该权限就是默认权限。对于 Linux 文件和目录，除了具有默认权限外，还有特殊权限。默认权限和特殊权限在使用 Linux 系统时非常重要，特别是和团队开发时尤为重要。本篇就介绍一下如何查看和设置默认权限和特殊权限。以 Ubuntu 20.04 为例进行介绍。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 文件和目录的默认权限和特殊权限">
+<meta property="og:url" content="https://xujinzh.github.io/2021/03/17/linux-hidden-authority/index.html">
+<meta property="og:site_name" content="J Blog">
+<meta property="og:description" content="对于 Linux 用户而言，当创建文件或目录时都会自动为该文件或目录分配权限，该权限就是默认权限。对于 Linux 文件和目录，除了具有默认权限外，还有特殊权限。默认权限和特殊权限在使用 Linux 系统时非常重要，特别是和团队开发时尤为重要。本篇就介绍一下如何查看和设置默认权限和特殊权限。以 Ubuntu 20.04 为例进行介绍。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-03-17T06:46:36.000Z">
+<meta property="article:modified_time" content="2021-11-09T10:42:04.877Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2021/03/17/linux-hidden-authority/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Linux 文件和目录的默认权限和特殊权限 | J Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">J Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E9%BB%98%E8%AE%A4%E6%9D%83%E9%99%90%EF%BC%9Aumask"><span class="nav-number">1.</span> <span class="nav-text">文件默认权限：umask</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90%EF%BC%9ASUID-SGID-SBIT"><span class="nav-number">2.</span> <span class="nav-text">文件特殊权限：SUID, SGID, SBIT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Set-UID"><span class="nav-number">2.1.</span> <span class="nav-text">Set UID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Set-GID"><span class="nav-number">2.2.</span> <span class="nav-text">Set GID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sticky-Bit"><span class="nav-number">2.3.</span> <span class="nav-text">Sticky Bit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90"><span class="nav-number">2.4.</span> <span class="nav-text">设置特殊权限</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">Just do it!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">203</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">195</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jinzhongxu@csu.ac.cn" title="E-Mail → mailto:jinzhongxu@csu.ac.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2021/03/17/linux-hidden-authority/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+      <meta itemprop="description" content="Just do it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux 文件和目录的默认权限和特殊权限
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-17 14:46:36" itemprop="dateCreated datePublished" datetime="2021-03-17T14:46:36+08:00">2021-03-17</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>对于 Linux 用户而言，当创建文件或目录时都会自动为该文件或目录分配权限，该权限就是默认权限。对于 Linux 文件和目录，除了具有默认权限外，还有特殊权限。默认权限和特殊权限在使用 Linux 系统时非常重要，特别是和团队开发时尤为重要。本篇就介绍一下如何查看和设置默认权限和特殊权限。以 Ubuntu 20.04 为例进行介绍。</p>
+<a id="more"></a>
+
+<h1 id="文件默认权限：umask"><a href="#文件默认权限：umask" class="headerlink" title="文件默认权限：umask"></a>文件默认权限：<strong>umask</strong></h1><p>查看用户的默认权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ <span class="built_in">umask</span></span><br><span class="line">002</span><br><span class="line">➜  ~ <span class="built_in">umask</span> -S</span><br><span class="line">u=rwx,g=rwx,o=rx</span><br></pre></td></tr></table></figure>
+
+<p>以 umask 显示的是数字，加上参数 -S (Symbolic) 显示的是字符。含义解释：文件权限有 r, w, x 三个，分别对应数字 4， 2， 1，002 表示创建文件、目录时剔除 w 写权限。如 umask -S 显示的是创建目录时的默认权限，从上面命令可以看到其他用户 o 缺少 w 写权限。值得注意的是，文件默认是没有可执行权限 x 的。即文件的默认最高权限是 -rw-rw-rw-，目录的默认最高权限是 drwxrwxrwx，因此，剔除 w 写权限时，用户新创建的文件的默认权限是 -rw-rw-r–，新创建的目录的默认权限是 drwxrwxr-x，如下示例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ touch test1</span><br><span class="line">➜  ~ mkdir test2</span><br><span class="line">➜  ~ ls -ld <span class="built_in">test</span>[12]  <span class="comment"># -d 表示只显示目录本身，不显示它里面包含的内容；中括号表示中间有个指定的字符，而不是任意字符，任意字符用 *</span></span><br><span class="line">-rw-rw-r-- 1 jinzhongxu jinzhongxu    0 3月  17 15:30 test1</span><br><span class="line">drwxrwxr-x 2 jinzhongxu jinzhongxu 4096 3月  17 15:30 test2</span><br></pre></td></tr></table></figure>
+
+<p>如何修改用户的默认权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果想要用户创建的新文件或目录的群组和其他人没有写权限，可以设置如下，即剔除用户的写权限</span></span><br><span class="line"><span class="built_in">umask</span> 022</span><br></pre></td></tr></table></figure>
+
+<h1 id="文件特殊权限：SUID-SGID-SBIT"><a href="#文件特殊权限：SUID-SGID-SBIT" class="headerlink" title="文件特殊权限：SUID, SGID, SBIT"></a>文件特殊权限：<strong>SUID, SGID, SBIT</strong></h1><p>对于 Linux 系统中有一个目录 /tmp 它的权限如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ls -ld /tmp</span><br><span class="line">drwxrwxrwt 12 root root 4096 3月  17 15:05 /tmp</span><br></pre></td></tr></table></figure>
+
+<p>可以看到它的权限中有一个 t，熟悉该目录的人应该知道，/tmp 目录下我们可以自由创建内容，也可以查看别人在该目录下创建的文件和目录，但是，我们不能删除别人创建的文件和目录。同时，别人也不能删除我们自己创建的文件和目录。这一切都要归功于特殊权限。</p>
+<p>​    又如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ls -l /usr/bin/passwd</span><br><span class="line">-rwsr-xr-x 1 root root 68208 5月  28  2020 /usr/bin/passwd</span><br><span class="line">➜  ~ ls -l /etc/shadow</span><br><span class="line">-rw-r----- 1 root shadow 1229 3月  14 21:38 /etc/shadow</span><br></pre></td></tr></table></figure>
+
+<p>在 /etc/shadow 中存储的是所有用户的密码，但只有 root 用户可以查看和修改。但是，有些人可能会疑惑了，明明自己可以修改自己用户的密码啊，使用 passwd 直接修改就可以了，不需要通知 root 进行修改。这是为什么呢？其实，这也要归功于 /usr/bin/passwd 可执行文件特殊权限 s，那么这些特殊权限符号代表什么含义呢，如何进行设置呢？比如，使用 iftop 命令需要输入密码，如何不输入密码直接使用呢？</p>
+<h2 id="Set-UID"><a href="#Set-UID" class="headerlink" title="Set UID"></a>Set UID</h2><p>当 s 出现在文件拥有者的 x 权限上时，称为 Set UID，简称为 SUID 的特殊权限。关于该特殊权限有如下几个特点：</p>
+<ol>
+<li>SUID 权限仅对二进制程序有效，如 passwd, iftop；</li>
+<li>执行者对于该程序需要具有执行权限；</li>
+<li>本权限仅在执行该程序的过程中有效；</li>
+<li>执行者将具有该程序拥有者的权限；</li>
+</ol>
+<p>当普通用户使用 passwd 执行修改密码的时候，因为 passwd 拥有特殊权限，因此，普通用户能够使用该命令，且命令执行期间拥有 root 的权限修改 /etc/shadow 文件</p>
+<h2 id="Set-GID"><a href="#Set-GID" class="headerlink" title="Set GID"></a>Set GID</h2><p>当 s 出现在群组的 x 上时，称为 Set GID，简称为 SGID，它有如下特点：</p>
+<ol>
+<li>SGID 对二进制程序有用；</li>
+<li>程序执行者对于该程序来说，需具备 x 的权限；</li>
+<li>执行者在执行的过程中将会获得该程序群组的支持；</li>
+</ol>
+<h2 id="Sticky-Bit"><a href="#Sticky-Bit" class="headerlink" title="Sticky Bit"></a>Sticky Bit</h2><p>与 Set UID 和 Set GID 不同，Sticky Bit 只针对目录有效。简称为 SBIT，其对目录的作用是：</p>
+<ol>
+<li>当使用者对于此目录具有 w, x 权限时，即具有写入的权限；</li>
+<li>当使用者在该目录下创建文件或目录时，仅有自己与 root 才有权利删除该文件；</li>
+</ol>
+<p>举例来说，我们的 /tmp 本身的权限是 drwxrwxrwt， 在这样的权限内容下，任何人都可以在 /tmp 内新增、修改文件，但仅有该文件/目录创建者与 root 能够删除自己的目录或文件。</p>
+<h2 id="设置特殊权限"><a href="#设置特殊权限" class="headerlink" title="设置特殊权限"></a>设置特殊权限</h2><p>和读写执行一样，特殊权限也对应有数字：</p>
+<ul>
+<li>4 为 SUID</li>
+<li>2 为 SGID</li>
+<li>1 为 SBIT</li>
+</ul>
+<p>如下示例进行特殊权限设置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ touch <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rw-rw-r-- 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ chmod 4664 <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwSrw-r-- 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p>我们发现出现的是大 S，而不是小 s，这是为什么呢？因为文件 test 本身缺乏 x 可执行权限，所以增加特殊权限也为无法执行该文件，大 S 表示空，即无用的特殊权限。想要使用有用的特殊权限，需要我们的文件本身具有执行权限，如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ chmod +x <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwsrwxr-x 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ chmod 6775 <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwsrwsr-x 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ chmod u+s,g+s,o+t <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwsrwsr-t 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p>可见这样就给文件附加了特殊权限。</p>
+<p>再比如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod 4755 /usr/sbin/iftop</span><br><span class="line">ll /usr/sbin/iftop</span><br><span class="line">	-rwsr-xr-x 1 root root 68408 9月   5  2019 /usr/sbin/iftop*</span><br></pre></td></tr></table></figure>
+
+<p>这样普通用户就不需要输入密码就可以使用命令 iftop 了。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>鸟哥的 LINUX 私房菜 基础学习篇（第四版）</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Written by:  </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://xujinzh.github.io/2021/03/17/linux-hidden-authority/" title="Linux 文件和目录的默认权限和特殊权限">https://xujinzh.github.io/2021/03/17/linux-hidden-authority/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ubuntu/" rel="tag"><i class="fa fa-tag"></i> ubuntu</a>
+              <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/02/20/jupyterhub/" rel="prev" title="利用 jupyterhub 搭建多用户 jupyterlab 开发环境">
+                  <i class="fa fa-chevron-left"></i> 利用 jupyterhub 搭建多用户 jupyterlab 开发环境
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/03/19/linux-crontab/" rel="next" title="Linux 定时任务 crontab">
+                  Linux 定时任务 crontab <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f45c300bef10091" async="async"></script>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.6.4/dist/mermaid.min.js', () => {
+    mermaid.init({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    }, '.mermaid');
+  }, window.mermaid);
+}
+</script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      const script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

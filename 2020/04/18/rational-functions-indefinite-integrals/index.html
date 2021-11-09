@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xujinzh.github.io","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":false,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="有理函数的不定积分有理函数是指由两个多项式函数的商所表示的函数，其一般形式为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="有理函数的不定积分">
+<meta property="og:url" content="https://xujinzh.github.io/2020/04/18/rational-functions-indefinite-integrals/index.html">
+<meta property="og:site_name" content="J Blog">
+<meta property="og:description" content="有理函数的不定积分有理函数是指由两个多项式函数的商所表示的函数，其一般形式为">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-04-18T04:09:53.000Z">
+<meta property="article:modified_time" content="2021-11-09T10:42:04.896Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="maths">
+<meta property="article:tag" content="integral">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2020/04/18/rational-functions-indefinite-integrals/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>有理函数的不定积分 | J Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">J Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%89%E7%90%86%E5%87%BD%E6%95%B0%E7%9A%84%E4%B8%8D%E5%AE%9A%E7%A7%AF%E5%88%86"><span class="nav-number">1.</span> <span class="nav-text">有理函数的不定积分</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E6%9C%89%E7%90%86%E5%BC%8F%E7%9A%84%E4%B8%8D%E5%AE%9A%E7%A7%AF%E5%88%86"><span class="nav-number">2.</span> <span class="nav-text">三角函数有理式的不定积分</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%90%E4%BA%9B%E6%97%A0%E7%90%86%E6%A0%B9%E5%BC%8F%E7%9A%84%E4%B8%8D%E5%AE%9A%E7%A7%AF%E5%88%86"><span class="nav-number">3.</span> <span class="nav-text">某些无理根式的不定积分</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%E6%97%A0%E7%90%86%E6%A0%B9%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">第一种无理根式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E6%97%A0%E7%90%86%E6%A0%B9%E5%BC%8F"><span class="nav-number">3.2.</span> <span class="nav-text">第二种无理根式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E4%BE%8B%E5%AD%90"><span class="nav-number">4.</span> <span class="nav-text">重要例子</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">Just do it!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">203</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">195</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jinzhongxu@csu.ac.cn" title="E-Mail → mailto:jinzhongxu@csu.ac.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2020/04/18/rational-functions-indefinite-integrals/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+      <meta itemprop="description" content="Just do it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          有理函数的不定积分
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-04-18 12:09:53" itemprop="dateCreated datePublished" datetime="2020-04-18T12:09:53+08:00">2020-04-18</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/maths/" itemprop="url" rel="index"><span itemprop="name">maths</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/maths/mathematical-analysis/" itemprop="url" rel="index"><span itemprop="name">mathematical analysis</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="有理函数的不定积分"><a href="#有理函数的不定积分" class="headerlink" title="有理函数的不定积分"></a>有理函数的不定积分</h1><p>有理函数是指由两个多项式函数的商所表示的函数，其一般形式为</p>
+<a id="more"></a>
+<p>$$<br>R(x) = \frac{P(x)}{Q(x)} = \frac{\alpha_0 x^n + \alpha_1 x^{n-1} + \cdots + \alpha_n}{\beta_0 x^m + \beta_1 x^{m-1} + \cdots + \beta_m},<br>$$<br>其中$n,m$为非负整数，$\alpha_0, \alpha_1,\cdots, \alpha_n$与$\beta_0,\beta_1, \cdots, \beta_m$都是常数，且$\alpha_0 \neq 0, \beta_0 \neq 0$.若$m &gt; n$，则称它为真分式；若$m \leq n$，则称它为假分式。由多项式的除法可知，假分式总能化为一个多项式与一个真分式之和。多项式的不定积分容易求得，只需要关注真分式的不定积分。</p>
+<p>根据代数知识，有理真分式必定可以表示成若干个部分分式之和（称为部分分式分解）。因而问题归结为求那些部分分式的不定积分。为此，先把如何分解部分分式的方法简述如下：</p>
+<p>第一步    对分母$Q(x)$在实系数内作标准因式分解：<br>$$<br>Q(x) = (x - a_1)^{\lambda_1}\cdots(x - a_k)^{\lambda_k}(x^2 + p_1 x + q_1)^{\mu_1}\cdots(x^2 + p_l x + q_l)^{\mu_l},<br>$$<br>其中$\beta_0 = 1, \lambda_i, \mu_j(i = 1, 2, \cdots, k; j = 1, 2, \cdots, l)$均为自然数，而且<br>$$<br>\sum^k_{i=1}\lambda_i + 2\sum^l_{j=1}\mu_j = m; \\<br>p^2_j - 4q_j &lt; 0, j = 1, 2, \cdots, l.<br>$$<br>第二步    根据分母的各个因式分别写出与之相应的部分分式：对于每个形如$(x-a)^k$的因式，它所对应的部分分式是<br>$$<br>\frac{A_1}{x-a} + \frac{A_2}{(x-a)J^2} + \cdots + \frac{A_k}{(x-a)^k};<br>$$<br>对每个形如$(x^2 + px + q)^k$的因式，它所对应的部分分式是<br>$$<br>\frac{B_1 x + C_1}{x^2 + px + q} + \frac{B_2 x + C_2}{(x^2 + px + q)^2} + \cdots + \frac{B_k x + C_k}{(x^2 + px + q)^k}.<br>$$<br>把所有部分分式加起来，使之等于$R(x)$. 其中的$A_i, B_i, C_i$为待定的。</p>
+<p>第三步    确定待定系数：一般方法是将所有部分分式同分相加，所得分式的分母即为原分母$Q(x)$，而其分子也应与原分子$P(x)$恒等。于是，按同幂项系数必定相等，得到一组关于待定系数的线性方程，这组方程的解就是需要确定的系数。</p>
+<p><strong>例子</strong>    对$R(x) = \frac{2x^4 - x^3 + 4x^2 + 9x - 10}{x^5 + x^4 - 5x^3 - 2x^2 + 4x - 8}$作部分分式分解。</p>
+<p>解    首先对分母$Q(x) = x^5 + x^4 - 5x^3 - 2x^2 + 4x - 8$作因式分解。因$Q(x)$首项系数为1，且常数项-8的整数因子有$\pm 1, \pm 2, \pm 4, \pm8$，分别带入这8个因子到$Q(x)$发现$\pm 2$为其整数根。</p>
+<p>其次利用综合除法对$Q(x)$按照整数根进行因式分解。</p>
+<table>
+<thead>
+<tr>
+<th>整因子</th>
+<th>最高次项系数</th>
+<th>次高次项系数</th>
+<th>更低一次项系数</th>
+<th>更低一次项系数</th>
+<th>更低一次项系数</th>
+<th>更低一次项系数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>-5</td>
+<td>-2</td>
+<td>4</td>
+<td>-8</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>2（左下角值1乘2）</td>
+<td>6（左下角值3乘2）</td>
+<td>2（左下角值1乘2）</td>
+<td>0（左下角值0乘2）</td>
+<td>8（左下角值4乘2）</td>
+</tr>
+<tr>
+<td>-2</td>
+<td>1（从上上格值1拉下）</td>
+<td>3（上上格1值加上格值2）</td>
+<td>1（上上格-5值加上格值6）</td>
+<td>0（上上格-2值加上格值2）</td>
+<td>4（上上格4值加上格值0）</td>
+<td>0（上上格-8值加上格值8，如果该值为0，说明$x-2$整除$Q(x)$）</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>-2</td>
+<td>-2</td>
+<td>2</td>
+<td>-4</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+<td>2</td>
+<td>0（说明$x-(-2) = x+2$整除$\frac{Q(x)}{x-2} = x^4 + 3x^3 + 1x^2 + 4$</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>得到$Q(x) = (x-2)(x+2)(x^3 + x^2 - x + 2)$</p>
+<p>对于$x^3 + x^2 - x + 2$可检验常数项4的整数分解因子$\pm 1, \pm 2$，发现只有$-2$是其整数根，即$x + 2$能够整除$x^3 + x^2 - x + 2$，利用如上表的综合除法，可以分解如下<br>$$<br>x^3 + x^2 - x + 2 = (x + 2)(x^2 - x + 1).<br>$$<br>因此，对$R(x)$的分母$Q(x)$可以因式分解为如下<br>$$<br>Q(x) = (x - 2)(x + 2)^2(x^2 - x + 1).<br>$$<br>然后，按照本节的有理函数因式分解方法，可写出部分分式分解的待定形式为<br>$$<br>R(x) = \frac{A_0}{x - 2} + \frac{A_1}{x + 2} + \frac{A_2}{(x + 2)^2} + \frac{Bx + C}{x^2 - x + 1}.<br>$$<br>通分后，比较分子与$2x^4 - x^3 + 4x^2 + 9x - 10$的各次项系数，可求得参数$A_0, A_1, A_2, B, C$.</p>
+<p>最后，代入待定形式记得$R(x)$的部分分式分解<br>$$<br>R(x) = \frac{1}{x - 2} + \frac{2}{x + 2} - \frac{1}{(x + 2)^2} - \frac{x - 1}{x^2 - x + 1}.<br>$$<br>一旦完成了部分分式分解，最后归结为求如下两类有理真分式的不定积分：</p>
+<p>(1)  $\int \frac{1}{(x - a)^k} \mathrm{d}x$;    (2) $\int \frac{Lx + M}{(x^2 + ps + q)^k} \mathrm{d}x( p^2 - 4q &lt; 0)$.</p>
+<p>对于（1），<br>$$<br>\int \frac{1}{(x - a)^k} \mathrm{d}x =<br>\begin{cases}<br>\ln |x - a| + C, k = 1, \\<br>\frac{1}{(1 - k)(x - a)^{k - 1}} + C, k &gt; 1.<br>\end{cases}<br>$$<br>对于（2），只要作适当换元（令$t = x + \frac{p}{2}$），便化为<br>$$<br>\int \frac{Lx + M}{(x^2 + px + q)^k} \mathrm{d}x = \int \frac{Lt + N}{(t^2 + r^2)^k}\mathrm{d}t \\<br>= L\int\frac{t}{(t^2 + r^2)^k} \mathrm{d}t + N\int \frac{dt}{(t^2 + r^2)^k},<br>$$<br>其中$r^2 = q - \frac{p^2}{4}, N = M - \frac{p}{2}L.$</p>
+<p>当$k = 1$时，上式右边两个不定积分分别为<br>$$<br>\int \frac{t}{t^2 + r^2}\mathrm{d}t = \frac{1}{2}\ln (t^2 + r^2) + C, \\<br>\int \frac{\mathrm{d}t}{t^2 + r^2} = \frac{1}{r} \arctan \frac{t}{r} + C.<br>$$<br>当$k \geq 2$时，上式右边第一个不定积分为<br>$$<br>\int \frac{t}{t^2 + r^2} \mathrm{d}t = \frac{1}{2(1 - k)(t^2 + r^2)^{k - 1}} + C.<br>$$<br>对于第二个不定积分，记<br>$$<br>I_k = \int \frac{\mathrm{d}t}{(t^2 + r^2)^k},<br>$$<br>可用分部积分法导出递推公式如下:<br>$$<br>I_k = \frac{1}{r^2} \int \frac{(t^2 + r^2) - t^2}{(t^2 + r^2)^k}\mathrm{d}t \\<br>\quad = \frac{1}{r^2}I_{k-1} - \frac{1}{r^2}\int \frac{t^2}{(t^2 + r^2)^k}\mathrm{d}t \\<br>\quad = \frac{1}{r^2}I_{k-1} + \frac{1}{2r^2(k-1)}\int t \mathrm{d}(\frac{1}{(t^2 + r^2)^{k-1}}) \\<br>\quad = \frac{1}{r^2}I_{k-1} + \frac{1}{2r^2(k-1)}[\frac{t}{(t^2 + r^2)^{k-1}} - I_{k-1}].<br>$$<br>经整理得到<br>$$<br>I_k = \frac{t}{2r^2(k-1)(t^2+r^2)^{k-1}} + \frac{2k-3}{2r^2}(k-1)I_{k-1}.<br>$$<br>重复使用上面的递推公式，最终归为计算$I_1$，$I_1$已经上面计算出。把所有这些局部结果代回，并令$t = x + \frac{p}{2}$就完成了对不定积分（2）的计算。</p>
+<h1 id="三角函数有理式的不定积分"><a href="#三角函数有理式的不定积分" class="headerlink" title="三角函数有理式的不定积分"></a>三角函数有理式的不定积分</h1><p>由$u(x), v(x)$及常数经过有限次四则运算所得到的函数称为关于$u(x), v(x)$的有理式，并用$R(u(x), v(x))$表示。</p>
+<p>$\int R(\sin x, \cos x) \mathrm{d}x$ 是三角函数有理式的不定积分。一般使用如下的万能公式，令$t = \tan \frac{x}{2}$,有<br>$$<br>\sin x = \frac{2\sin \frac{x}{2}\cos \frac{x}{2}}{\sin^2\frac{x}{2} + \cos^2 \frac{x}{2}} = \frac{2\tan \frac{x}{2}}{1 + \tan^2 \frac{x}{2}} = \frac{2t}{1 + t^2}, \\<br>\cos x = \frac{\cos^2 \frac{x}{2} - \sin^2\frac{x}{2}}{\sin^2\frac{x}{2} + \cos^2\frac{x}{2}} = \frac{1-\tan^2\frac{x}{2}}{1+\tan^2\frac{x}{2}} = \frac{1-t^2}{1+t^2}, \\<br>\tan x = \frac{\sin x}{\cos x} = \frac{2t}{1-t^2}.<br>$$<br>又<br>$$<br>\mathrm{d}x = \frac{2}{1 + t^2} \mathrm{d}t,<br>$$<br>所以，$\int R(\sin x, \cos x) \mathrm{d}x = \int R(\frac{2t}{1+t^2}, \frac{1-t^2}{1+t^2})\frac{2}{1+t^2} \mathrm{d}t$. 这就是上面的有理函数的不定积分。</p>
+<p>虽然万能公式适用性比较广，但是在某些情况下却不是简便的方法。如在如下类型中<br>$$<br>\int \frac{a \sin^2 x + b\cos^2 x}{c \sin^2 x + d \cos^2 x} \mathrm{d}x,<br>$$<br>（分子分母同除以$\cos^2 x$后令$t = \tan x$）</p>
+<p><strong>通常被积函数是$\sin^2 x, \cos^2 x, \sin x \cos x$的有理式时，采用变换$t = \tan x$往往简便</strong><br>$$<br>\int \frac{a \sin x + b \cos x}{c \sin x + d \cos x} \mathrm{d}x,<br>$$<br>（把分子形式的写为<br>$$<br>a \sin x + b \cos x = A(c \sin x + d \cos x) + B(c \sin x + d \cos x)^{\prime}<br>$$<br>然后，比较系数求出$A, B$，即可化为<br>$$<br>A\int \mathrm{d}x + B\int \frac{\mathrm{d}(c \sin x + d \cos x)}{c \sin x + d \cos x}.<br>$$</p>
+<h1 id="某些无理根式的不定积分"><a href="#某些无理根式的不定积分" class="headerlink" title="某些无理根式的不定积分"></a>某些无理根式的不定积分</h1><h2 id="第一种无理根式"><a href="#第一种无理根式" class="headerlink" title="第一种无理根式"></a>第一种无理根式</h2><p>$\int R(x, \sqrt[n]{\frac{ax + b}{cx + d}}) \mathrm{d}x$ 型不定积分$(ad - bc \neq 0)$。对此只需令$t = \sqrt[n]{\frac{ax + b}{cx + d}}$, 就可化为有理函数的不定积分。</p>
+<h2 id="第二种无理根式"><a href="#第二种无理根式" class="headerlink" title="第二种无理根式"></a>第二种无理根式</h2><p>$\int R(x, \sqrt{ax^2 + bx + c}) \mathrm{d}x$型不定积分（$a &gt; 0$时$b^2 - 4ac \neq 0,\ a &lt; 0$时$b^2 - 4ac &gt; 0$）。由于<br>$$<br>ax^2 + bx + c = a[(x + \frac{b}{2a})^2 + \frac{4ac - b^2}{4a^2}],<br>$$<br>若记$u = x + \frac{b}{2a}, k^2 = |\frac{4ac - b^2}{4a^2}|$，则此二次三项式必属于以下三种情形之一：<br>$$<br>|a|(u^2 + k^2), \quad |a|(u^2 - k^2), \quad |a|(k^2 - u^2).<br>$$<br>因此上述无理根式的不定积分也就转化为以下三种类型之一：<br>$$<br>\int R(u, \sqrt{u^2 \pm k^2}) \mathrm{d}u, \quad \int R(u, \sqrt{k^2 - u^2}) \mathrm{d}u.<br>$$<br>当分别令$u = k\tan t, u = k\sec t, u = k \sin t$后，它们都化为三角有理式的不定积分。</p>
+<p><strong>一般地，二次三项式$ax^2 + bx + c$中若$a&gt;0$，则可令</strong><br>$$<br>\sqrt{ax^2 + bx + c} = \sqrt{a}x \pm t;<br>$$<br><strong>若$c&gt;0$，还可令</strong><br>$$<br>\sqrt{ax^2 + bx + c} = xt \pm \sqrt{c}.<br>$$<br>**这类变换称为<font color=#dd0000dd>欧拉变换</font>**。</p>
+<p>至此，已经学了求不定积分的基本方法，以及某些特殊类型不定积分的求法。需要指出的是，通常所说的“求不定积分”是指<font color=dddddd00>用初等函数的形式把不定积分表示出来</font>。在这个意义下，并不是任何初等函数的不定积分都能“求出来”的，如<br>$$<br>\int e^{\pm x^2} \mathrm{d}x, \quad \int \frac{\mathrm{d}x}{\ln x}, \quad \int \frac{\sin x}{x}\mathrm{d}x, \quad \int \sqrt{1 - k^2 \sin^2 x} \mathrm{d}x \ (0 &lt; k^2 &lt; 1).<br>$$<br>等等，虽然它们都存在，但却无法用初等函数来表示。这一结论是有刘维尔（Liouville）于1835年作出过证明。因此，初等函数的原函数不一定是初等函数。但是，这些函数可以采用定积分形式来表示。</p>
+<p>求不定积分除了使用手动推到的方法，也可以利用某些计算器（如TI-92型）和计算机软件（如Mathemetica, Maple, Python包Sympy）来作。例如使用Python的Sympy包求函数:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sympy <span class="keyword">import</span> *</span><br><span class="line">x = symbols(<span class="string">&#x27;x&#x27;</span>)</span><br><span class="line">expr = sin(x) / x</span><br><span class="line">expr_int = Integral(expr, x)</span><br><span class="line">expr_int</span><br></pre></td></tr></table></figure>
+
+<p>结果显示<br>$$<br>\int \frac{\sin(x)}{x} \mathrm{d}x<br>$$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expr_int.doit()</span><br></pre></td></tr></table></figure>
+
+<p>结果显示<br>$$<br>Si(x)<br>$$<br>值得注意的是，虽然该函数有显示表达式，但却不属于初等函数范畴，其定义式如下<br>$$<br>Si(x) = \int^x_0 \frac{\sin(x)}{x} \mathrm{d}x.<br>$$</p>
+<p>利用python还可以算出<br>$$<br>\int e^{-x^2} \mathrm{d}x = \frac{\sqrt{\pi}\cdot erf(x)}{2}, \\<br>\int e^{x^2} \mathrm{d}x = \frac{\sqrt{\pi}\cdot erfi(x)}{2}, \\<br>\int \frac{1}{\ln x} \mathrm{d}x = li(x), \\<br>\int \sqrt{1 - k^2 \sin^2 x} \mathrm{d}x = E(x|k^2).<br>$$<br>需要注意的是，$\int \sqrt{1 - k^2 \sin^2 x} \mathrm{d}x \ (0 &lt; k^2 &lt; 1)$, 计算花费的时间会长一些，其他都是及时返回结果。</p>
+<h1 id="重要例子"><a href="#重要例子" class="headerlink" title="重要例子"></a>重要例子</h1><p>(1) $\int \frac{\mathrm{d}x}{1 + x^4}$</p>
+<p>解    因为<br>$$<br>1 + x^4 = (1 + 2x^2 + x^4) - 2x^2 \\<br>\quad = (1 + x^2)^2 - (\sqrt{2}x)^2 \\<br>\quad = (1 + \sqrt{2}x + x^2)(1 - \sqrt{2}x + x^2).<br>$$<br>所以，原式子可以化为<br>$$<br>\int \frac{1}{1 + x^4} \mathrm{d}x = \int \frac{1}{(1 + \sqrt{2}x + x^2)(1 -\sqrt{2}x + x^2)} \mathrm{d}x<br>$$<br>然后，再利用有理函数的不定积分方法计算。</p>
+<p>值得注意的，也可以利用如下方法求解。</p>
+<p>解    注意到<br>$$<br>x^2 + \frac{1}{x^2} = (x + \frac{1}{x})^2 - 2 = (x - \frac{1}{x})^2 + 2.<br>$$<br>所以，<br>$$<br>\int \frac{1}{1 + x^4} \mathrm{d}x = \int \frac{\frac{1}{x^2}}{x^2 + \frac{1}{x^2}} \mathrm{d}x = \frac{1}{2}\int \frac{(1+\frac{1}{x^2}) - (1 - \frac{1}{x^2})}{x^2 + \frac{1}{x^2}} \mathrm{d}x \\<br>\quad = \frac{1}{2}[\int \frac{\mathrm{d}(x - \frac{1}{x})}{(x-\frac{1}{x})^2 + 2} - \int \frac{\mathrm{d}(x + \frac{1}{x})}{(x + \frac{1}{x})^2 - 2}] \\<br>\quad = \frac{1}{2}[\frac{1}{\sqrt{2}}\arctan\frac{x-\frac{1}{x}}{\sqrt{2}} - \frac{1}{2\sqrt{2}}\ln |\frac{x + \frac{1}{x} - \sqrt{2}}{x + \frac{1}{x} + \sqrt{2}}|] + C.<br>$$<br>（2）$\int \frac{\mathrm{d}x}{\sqrt{x^2 + x}}$</p>
+<p>解<br>$$<br>\int \frac{\mathrm{d}x}{\sqrt{x^2 + x}} = \int \frac{\mathrm{d}x}{\sqrt{x}\sqrt{x + 1}} = 2\int\frac{\mathrm{d}\sqrt{x}}{\sqrt{(\sqrt{x})^2 + 1}} = 2 \ln |\sqrt{x} + \sqrt{x + 1}| + C.<br>$$<br>利用换元$\sqrt{x} = \tan t$.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Written by:  </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://xujinzh.github.io/2020/04/18/rational-functions-indefinite-integrals/" title="有理函数的不定积分">https://xujinzh.github.io/2020/04/18/rational-functions-indefinite-integrals/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/maths/" rel="tag"><i class="fa fa-tag"></i> maths</a>
+              <a href="/tags/integral/" rel="tag"><i class="fa fa-tag"></i> integral</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/04/16/latex-maths-character/" rel="prev" title="LaTeX 数学符号">
+                  <i class="fa fa-chevron-left"></i> LaTeX 数学符号
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/04/30/codes-open-source-license/" rel="next" title="开源许可协议">
+                  开源许可协议 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f45c300bef10091" async="async"></script>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.6.4/dist/mermaid.min.js', () => {
+    mermaid.init({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    }, '.mermaid');
+  }, window.mermaid);
+}
+</script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      const script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

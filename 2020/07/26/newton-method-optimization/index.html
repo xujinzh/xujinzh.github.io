@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xujinzh.github.io","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":false,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="牛顿法求极小值和方程根">
+<meta property="og:type" content="article">
+<meta property="og:title" content="牛顿方法求解方程根">
+<meta property="og:url" content="https://xujinzh.github.io/2020/07/26/newton-method-optimization/index.html">
+<meta property="og:site_name" content="J Blog">
+<meta property="og:description" content="牛顿法求极小值和方程根">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-07-26T12:31:11.000Z">
+<meta property="article:modified_time" content="2021-11-09T10:42:04.886Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="maths">
+<meta property="article:tag" content="Newton">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2020/07/26/newton-method-optimization/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>牛顿方法求解方程根 | J Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">J Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">Just do it!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">203</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">195</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jinzhongxu@csu.ac.cn" title="E-Mail → mailto:jinzhongxu@csu.ac.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2020/07/26/newton-method-optimization/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+      <meta itemprop="description" content="Just do it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          牛顿方法求解方程根
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-07-26 20:31:11" itemprop="dateCreated datePublished" datetime="2020-07-26T20:31:11+08:00">2020-07-26</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/maths/" itemprop="url" rel="index"><span itemprop="name">maths</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/maths/optimization/" itemprop="url" rel="index"><span itemprop="name">optimization</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>牛顿法求极小值和方程根</p>
+<a id="more"></a>
+
+<p>牛顿法求解函数的极小值，用二阶泰勒展开近似目标函数：<br>$$<br>f(x) \approx f(x_0) + f^{\prime}(x_0)(x - x_0) + \frac{1}{2} f^{\prime\prime}(x_0)(x - x_0)^2 \triangleq g(x)<br>$$<br>要求原函数 $f(x)$ 的极小值，可以用求近似函数 $g(x)$ 的极小值来近似。因为 $g(x)$ 是关于 $x$ 的二次函数，所以令 $ g(x) = 0$ 求极小值点：<br>$$<br>f^{\prime}(x_0) + f^{\prime\prime}(x_0)(x - x_0) = 0<br>$$<br>即<br>$$<br>x = x_0 - \frac{f^{\prime}(x_0)}{f^{\prime\prime}(x_0)}<br>$$<br>得到迭代公式：<br>$$<br>x_n = x_{n - 1} - \frac{f^{\prime}(x_{n - 1})}{f^{\prime\prime}(x_{n - 1})}<br>$$<br><strong>对此公式的解释</strong>：</p>
+<p>求解函数 $f(x)$ 的极小值，相当于求解导函数 $f^{\prime}$ 的零点。对于求函数的零点可以用切线的与 $x$ 轴的交点来迭代计算。首先，选择一个接近函数 $f^{\prime}(x_0)$ 零点的 $x_0$ ，计算相应的 $f^{\prime}(x_0)$ 和切线斜率 $f^{\prime\prime}(x_0)$ 。然后我们计算穿过点 $(x_0, f^{\prime}(x_0))$ 并且斜率为 $f^{\prime\prime}(x_0)$ 的直线和 $x$ 轴的交点的横坐标，也就是求如下方程的解：<br>$$<br>f^{\prime}(x_0) - 0 = f^{\prime\prime}(x_0)(x - x_0)<br>$$<br>我们将求得的点的 $x$ 坐标命名为 $x_1$ ，通常 $x_1$ 会比 $x_0$ 更接近方程 $f^{\prime}(x) = 0$ 的解。因此我们现在可以利用 $x_1$ 开始下一轮迭代。迭代公式可以化简为如下所示：<br>$$<br>x_n = x_{n-1} - \frac{f^{\prime}(x_{n-1})}{f^{\prime\prime}(x_{n-1})}<br>$$<br>转化成求极值点就是上面的导数形式。</p>
+<p><strong>对于多元函数的牛顿法：</strong></p>
+<p><strong>基本牛顿法</strong>（还有阻尼牛顿法以及修正牛顿法）</p>
+<p>设 $f(\boldsymbol{x})$ 具有连续的二阶偏导数，当前迭代点是 $\boldsymbol{x}_k$ 。 $f(\boldsymbol{x})$ 在 $\boldsymbol{x}_k$ 处的Taylor展开为<br>$$<br>f(\boldsymbol{x}_k + \boldsymbol{d}) = f_k + \boldsymbol{g}^T_k \boldsymbol{d} + \frac{1}{2}\boldsymbol{d}^T \boldsymbol{G}_k \boldsymbol{d} + o(|\boldsymbol{d}|^2)<br>$$<br>其中 $ \boldsymbol{d} = \boldsymbol{x} - \boldsymbol{x}_k, f_k = f(\boldsymbol{x}_k)$，$\boldsymbol{g}_k$ 是梯度方向，$\boldsymbol{G}_k$ 是黑塞矩阵。. 在点 $\boldsymbol{x}_k$ 的邻域内，用二次函数<br>$$<br>q_k(\boldsymbol{d}) \triangleq f_k + \boldsymbol{g}^T_k \boldsymbol{d} +<br>\frac{1}{2} \boldsymbol{d}^T \boldsymbol{G}_k \boldsymbol{d}<br>$$<br>近似$f(\boldsymbol{x}_k + \boldsymbol{d})$，求解问题<br>$$<br>\min q_k(\boldsymbol{d}) = f_k + \boldsymbol{g}^T_k \boldsymbol{d} + \frac{1}{2} \boldsymbol{d}^T \boldsymbol{G}_k \boldsymbol{d}<br>$$<br>若 $\boldsymbol{G}_k$ 正定，对向量 $\boldsymbol{d}$ 求导，则方程组<br>$$<br>\boldsymbol{G}_k \boldsymbol{d} = - \boldsymbol{g}_k<br>$$<br>的解 $\boldsymbol{d}_k = - \boldsymbol{G}^{-1}_k \boldsymbol{g}_k$ 为上式的唯一解，我们称上式为Newton方程， $\boldsymbol{d}_k$ 为牛顿方向。用牛顿方向作为迭代方向的最优化方法称为牛顿方法。</p>
+<p>基本牛顿方法指取步长 $\alpha_k = 1$ 的牛顿方法。在不引起混淆的情况下，基本牛顿方法简称为牛顿方法。在牛顿方法中，只要黑塞矩阵（Hessian Matrix）$\boldsymbol{G}_k$ 正定，牛顿方向 $\boldsymbol{d}_k$ 就是下降方向，因为<br>$$<br>\boldsymbol{g}^T_k \boldsymbol{d}_k = -\boldsymbol{g}^T_k\boldsymbol{G}^{-1}_k \boldsymbol{g}_k &lt; 0<br>$$<br>算法（基本牛顿法）</p>
+<p>步1 给出 $ \boldsymbol{x}_0 \in \mathbb{R}^n, \varepsilon &gt; 0, k = 0$ ;</p>
+<p>步2 若终止准则满足，则输出有关信息，停止迭代；</p>
+<p>步3 由牛顿方程计算 $\boldsymbol{d}_k$ ；</p>
+<p>步4 $\boldsymbol{x}_{k + 1} = \boldsymbol{x}_k + \boldsymbol{d}_k, k = k + 1$，转步2.</p>
+<p><strong>牛顿方法的优缺点：</strong></p>
+<p>牛顿方法的收敛性依赖于初始点的选择。当初始点接近极小点时，迭代序列收敛于极小点，并且收敛很快；否则就会出现迭代序列收敛到铵点或极大点的情形，或者在迭代过程中出现矩阵奇异或病态的情形，使线性方程组不能求解或不能很好地求解，导致迭代失败。</p>
+<p>定理（基本牛顿方法的收敛性）设 $f(x) \in \mathbb{C}^2$, $f(x)$   的黑塞矩阵 $G(x)$ 满足 Lipschitz 条件，即存在$\beta &gt; 0$ ，对任给的 $x$ 与 $y$ ，有 $|G(x) - G(y)| \leq \beta |x - y|$ 若 $x_0$ 充分接近 $f(x)$ 的局部极小点 $x^{\star}$ ，且 $G^{\star}$ 正定，则牛顿方法对所有的 $k$ 有定义，并以二阶收敛速度收敛。</p>
+<p>该定理说，只有当迭代点充分接近 $x^\star$ 时，基本牛顿方法的收敛性才能保证。</p>
+<p><strong>优点</strong>：</p>
+<p>1， 当 $x_0$ 充分接近问题的极小点 $x^\star$ 时，方法以二阶收敛速度收敛；</p>
+<p>2， 方法具有二次终止性。</p>
+<p><strong>缺点：</strong></p>
+<p>1， 当 $x_0$ 没有充分接近问题的极小点 $x^\star$ 时，$G_k$ 会出现不正定或奇异的情形，使 ${x_k}$ 不能收敛到 $x^\star$ ，或使迭代无法进行；即使 $G_k$ 正定，也不能保证 ${f_k}$ 单调下降；</p>
+<p>2， 每步迭代需要计算黑塞矩阵，即计算 $\frac{n(n+1)}{2}$ 个二阶偏导数；</p>
+<p>3， 每步迭代需要解一个线性方程组，计算量为 $O(n^3)$ .</p>
+<p>阻尼牛顿方法</p>
+<p>为了改善牛顿方法的局部收敛性，我们可以采用带一维搜索的牛顿方法，即<br>$$<br>x_k = x_{k-1} + \alpha_{k-1}d_{k-1}<br>$$<br>其中，$\alpha_{k-1}$是一维搜索的结果。该方法称为阻尼牛顿方法，此方法能够保证对正定的$G_k$，${f_k}$ 单调下降，即使$x_k$离$x^\star$稍远，该方法产生的点列${x_k}$仍可能收敛至 $x^\star$。 对严格凸函数，采用 Wolfe 准则的阻尼牛顿方法具有全局收敛性。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Written by:  </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://xujinzh.github.io/2020/07/26/newton-method-optimization/" title="牛顿方法求解方程根">https://xujinzh.github.io/2020/07/26/newton-method-optimization/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/maths/" rel="tag"><i class="fa fa-tag"></i> maths</a>
+              <a href="/tags/Newton/" rel="tag"><i class="fa fa-tag"></i> Newton</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/07/26/directional-derivative-and-gradient/" rel="prev" title="方向导数和梯度">
+                  <i class="fa fa-chevron-left"></i> 方向导数和梯度
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/07/27/definite-integral/" rel="next" title="定积分定义">
+                  定积分定义 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f45c300bef10091" async="async"></script>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.6.4/dist/mermaid.min.js', () => {
+    mermaid.init({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    }, '.mermaid');
+  }, window.mermaid);
+}
+</script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      const script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
