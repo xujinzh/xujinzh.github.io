@@ -29,7 +29,7 @@
 <meta property="og:description" content="定积分的所有应用一般总可以安装“分割, 近似求和, 去极限”三个步骤导出所求量的积分形式. 但为简便实用起见, 也常采用本篇介绍的“微元法”. 其实在求旋转体的体积时我们采用微小区间上柱体近似旋转体体积, 但是在求旋转曲面的面积时却不能用旋转体的侧面积近似旋转曲面的侧面积. 就像求弧长时需要用微小区间的弦长近似弧长, 不能用弦长直角边近似一样, 求旋转曲面的表面积不能用圆柱侧面积需要用圆台侧面积近">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-11-07T03:06:14.000Z">
-<meta property="article:modified_time" content="2021-11-09T10:42:04.908Z">
+<meta property="article:modified_time" content="2021-11-10T06:20:20.672Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="maths">
 <meta property="article:tag" content="definite integral">
@@ -258,7 +258,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+        <time title="Modified: 2021-11-10 14:20:20" itemprop="dateModified" datetime="2021-11-10T14:20:20+08:00">2021-11-10</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -302,7 +302,7 @@
 <li>微元法的关键是正确给出 $\Delta \Phi$ 的近似可求量 $\Delta^{\prime} \Phi$. 一般来说, 近似可求量的选取不唯一;</li>
 <li>当我们将 $\Delta^{\prime}\Phi$ 用线性形式 $f(x) \Delta x$ 代替时, 要严格检验 $\Delta^{\prime} \Phi - f(x) \Delta x$ 是否为 $\Delta x$ 的高阶无穷小量, 以保证其对应的积分和的极限是相等的.</li>
 </ul>
-<h1 id="旋转曲面的面积"><a href="#旋转曲面的面积" class="headerlink" title="旋转曲面的面积"></a>旋转曲面的面积</h1><p>设平面光滑曲线 $C$ 的方程为<br>$$<br>y = f(x), x \in [a, b] \ (不妨设 f(x) \geq 0).<br>$$<br>这段曲线绕 $x$ 轴旋转一周得到旋转曲面.</p>
+<h1 id="旋转曲面的面积"><a href="#旋转曲面的面积" class="headerlink" title="旋转曲面的面积"></a>旋转曲面的面积</h1><p>设平面光滑曲线 $C$ 的方程为<br>$$<br>y = f(x), x \in [a, b] \ (\text{不妨设} f(x) \geq 0).<br>$$<br>这段曲线绕 $x$ 轴旋转一周得到旋转曲面.</p>
 <p>通过 $x$ 轴上点 $x$ 与 $x + \Delta x$ 分别作垂直于 $x$ 轴的平面,它们在旋转曲面上截下一条夹在两个圆形截线间的狭带. 当 $\Delta x$ 很小时,此狭带的面积 $\Delta S$ 近似于由这两个圆所确定的圆台的侧面积 $\Delta^{\prime} S$, 即<br>$$<br>\Delta^{\prime} S = \pi [f(x) + f(x + \Delta x)] \sqrt{\Delta x^2 + \Delta y^2} \\<br>= \pi [2f(x) + \Delta y] \sqrt{1 + (\frac{\Delta y}{\Delta x})^2} \Delta x,<br>$$<br>(假设圆柱高$h$, 上下圆面半径$r$, 则圆柱侧面积$S = 2 \pi r h$; 圆台斜边长 $s$, 上圆面半径 $r_1$, 下圆面半径 $r_2$, 则圆台侧面积 $S = 2 \pi \frac{r_1 + r_2}{2} s = \pi (r_1 + r_2) s$)</p>
 <p>其中 $\Delta y = f(x + \Delta x) - f(x)$. 由于<br>$$<br>\lim_{\Delta x \to 0} \Delta y = 0, \\<br>\lim_{\Delta x \to 0} \sqrt{1 + (\frac{\Delta y}{\Delta x})^2} = \sqrt{1 + {f^{ \prime } }^2(x)},<br>$$<br>因此,由 $f^{\prime}(x)$ 的连续性可以保证<br>$$<br>\pi [2f(x) + \Delta y]\sqrt{1 + (\frac{\Delta y}{\Delta x})^2} \Delta x - 2 \pi f(x) \sqrt{1 + {f^{ \prime } }^2(x)} \Delta x = o(\Delta x).<br>$$<br>所以得到<br>$$<br>\Delta^{\prime} S \approx 2 \pi f(x) \sqrt{1 + {f^{ \prime } }^2 (x)} \Delta x,<br>$$</p>
 <p>$$<br>\mathrm{d} S = 2 \pi f(x) \sqrt{1 + {f^{\prime } }^2} \mathrm{d}x,<br>$$</p>
