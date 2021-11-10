@@ -3386,39 +3386,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>利用 nginx 反向代理为 jupyterlab 配置二级网址页面</title>
-    <url>/2020/11/09/jupyterlab-nginx/</url>
-    <content><![CDATA[<p>当服务器配置好 Python, Jupyterlab 后，访问总是通过 8888 端口，出于某些原因，想要为其配置二级页面，这样当想要更改端口时只需要修改一下配置，而不需要再次记忆到底是打开了哪个端口，只需要记住二级页面 web 地址就可以。本篇不介绍如何配置 Jupyterlab，而是假设已经配置好了 Jupyterlab，且申请了域名，直接说如何通过 nginx 配置 Jupyterlab.</p>
-<a id="more"></a>
-
-<h1 id="安装-nginx"><a href="#安装-nginx" class="headerlink" title="安装 nginx"></a>安装 nginx</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install nginx</span><br><span class="line">sudo systemctl status nginx.service</span><br><span class="line">sudo systemctl start nginx.service</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> nginx.service</span><br></pre></td></tr></table></figure>
-
-<h1 id="配置-Jupyterlab"><a href="#配置-Jupyterlab" class="headerlink" title="配置 Jupyterlab"></a>配置 Jupyterlab</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 生成 jupyterlab 配置文件</span></span><br><span class="line">jupyter notebook --generate-config</span><br><span class="line"><span class="comment"># 修改配置</span></span><br><span class="line">vim .jupyter/jupyter_notebook_config.py</span><br><span class="line"><span class="comment"># 修改如下内容</span></span><br><span class="line">c.NotebookApp.base_project_url = <span class="string">&#x27;/jupyter&#x27;</span></span><br><span class="line">c.NotebookApp.ip = <span class="string">&#x27;0.0.0.0&#x27;</span></span><br><span class="line"><span class="comment"># 或者修改如下内容</span></span><br><span class="line">c.NotebookApp.base_url = <span class="string">&#x27;/jupyter&#x27;</span></span><br><span class="line">c.NotebookApp.ip = <span class="string">&#x27;0.0.0.0&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#  配置 nginx</span></span><br><span class="line">cat /etc/nginx/nginx.conf</span><br><span class="line"><span class="comment"># 修改如下内容</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  www.ccc.com;</span><br><span class="line">        location /jupyter &#123;</span><br><span class="line">            proxy_pass          http://127.0.0.1:8888;</span><br><span class="line">            proxy_set_header    Host <span class="variable">$host</span>;</span><br><span class="line">            proxy_set_header    X-Real-Scheme <span class="variable">$scheme</span>;</span><br><span class="line">            proxy_set_header    X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">            proxy_set_header    X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">            proxy_http_version  1.1;</span><br><span class="line">            proxy_set_header    Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">            proxy_set_header    Connection <span class="string">&quot;upgrade&quot;</span>;</span><br><span class="line">            proxy_read_timeout  120s;</span><br><span class="line">            proxy_next_upstream error;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>重启服务器后，在网页上访问地址：<a href="http://www.ccc.com/jupyter">http://www.ccc.com/jupyter</a> (这里是样例地址)，就可以打开 Jupyterlab.</p>
-<p>注意，上面假设已经配置了 Jupyterlab 自启，如果没有可以访问我的其他博文配置。并假设域名已经指向服务器IP地址。</p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><p><a href="https://www.byincd.com/bobjiang/article-0161/">Jupyter Notebook在nginx中无法配置为二级页面的解决办法</a></p>
-</li>
-<li><p><a href="http://blog.wangcaimeng.top/2020/01/31/nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86jupyterlab%E9%85%8D%E7%BD%AE/">nginx反向代理jupyterlab配置</a></p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>linux</tag>
-        <tag>nginx</tag>
-        <tag>jupyter</tag>
-        <tag>jupyterlab</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>jupyterlab 扩展</title>
     <url>/2019/12/31/jupyterlab-extension/</url>
     <content><![CDATA[<h1 id="jupyterlab-代码折叠-Collapsible-Headings"><a href="#jupyterlab-代码折叠-Collapsible-Headings" class="headerlink" title="jupyterlab 代码折叠 - Collapsible_Headings"></a>jupyterlab 代码折叠 - <strong><a href="https://github.com/aquirdTurtle/Collapsible_Headings">Collapsible_Headings</a></strong></h1><p>按照 Github 上扩展安装步骤进行安装</p>
