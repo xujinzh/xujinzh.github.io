@@ -51,9 +51,9 @@
       
         <tags>
             
-            <tag> ubuntu </tag>
-            
             <tag> python </tag>
+            
+            <tag> ubuntu </tag>
             
             <tag> linux </tag>
             
@@ -210,9 +210,9 @@
       
         <tags>
             
-            <tag> maths </tag>
-            
             <tag> python </tag>
+            
+            <tag> maths </tag>
             
             <tag> set </tag>
             
@@ -609,9 +609,9 @@
             
             <tag> dl </tag>
             
-            <tag> ml </tag>
-            
             <tag> python </tag>
+            
+            <tag> ml </tag>
             
             <tag> cv </tag>
             
@@ -799,9 +799,9 @@
             
             <tag> dl </tag>
             
-            <tag> ml </tag>
-            
             <tag> python </tag>
+            
+            <tag> ml </tag>
             
             <tag> cv </tag>
             
@@ -832,9 +832,9 @@
             
             <tag> dl </tag>
             
-            <tag> ml </tag>
-            
             <tag> python </tag>
+            
+            <tag> ml </tag>
             
         </tags>
       
@@ -3099,7 +3099,7 @@
       <link href="/2020/06/22/jupyterlab-plotly/"/>
       <url>/2020/06/22/jupyterlab-plotly/</url>
       
-        <content type="html"><![CDATA[<p>Plotly是一家技术计算公司，总部位于魁北克省的蒙特利尔市，致力于开发在线数据分析和可视化工具。Plotly为个人和协作提供了在线图形，分析和统计工具，以及用于Python，R，MATLAB，Perl，Julia，Arduino和REST的科学图形库。本篇介绍的就是其 Python 画图库plotly，常常在jupyterlab使用plotly进行离线画图时总是出现图形不显示的问题。因为plotly画出的图形比matplotlib更加好看且有交互性，同时，matplotlib画的图形也可以使用plotly转化为同态交互图。所以，希望能够使用plotly画图，并能够在常用软件jupyterlab中使用。</p><a id="more"></a><h1 id="安装plotly"><a href="#安装plotly" class="headerlink" title="安装plotly"></a>安装plotly</h1><p>推荐使用pip安装最新的plotly，</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install plotly</span><br></pre></td></tr></table></figure><h1 id="jupyterlab使用plotly"><a href="#jupyterlab使用plotly" class="headerlink" title="jupyterlab使用plotly"></a>jupyterlab使用plotly</h1><p>在jupyterlab中使用plotly需要安装一些支持扩展，其中 jupyterlab-plotly@ 需要根据最新的plotly版本对应，参考网址<a href="https://plotly.com/python/getting-started/?utm_source=mailchimp-jan-2015&utm_medium=email&utm_campaign=generalemail-jan2015&utm_term=bubble-chart">Python\Getting Started with Plotly</a></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install ipywidgets</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conda install nodejs</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> JupyterLab renderer support</span></span><br><span class="line">jupyter labextension install jupyterlab-plotly@4.8.1</span><br></pre></td></tr></table></figure><p>在  <a href="mailto:&#x6a;&#117;&#x70;&#121;&#116;&#x65;&#x72;&#x6c;&#x61;&#98;&#45;&#x70;&#x6c;&#x6f;&#116;&#x6c;&#x79;&#64;&#52;&#x2e;&#x38;&#x2e;&#x31;">&#x6a;&#117;&#x70;&#121;&#116;&#x65;&#x72;&#x6c;&#x61;&#98;&#45;&#x70;&#x6c;&#x6f;&#116;&#x6c;&#x79;&#64;&#52;&#x2e;&#x38;&#x2e;&#x31;</a>中，需要编译一会，可能会消耗2G多内存，建议内存小的用户创建交换分区。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看安装的jupyterlab扩展</span></span><br><span class="line">jupyter labextension list</span><br></pre></td></tr></table></figure><h1 id="使用plotly画图"><a href="#使用plotly画图" class="headerlink" title="使用plotly画图"></a>使用plotly画图</h1><p>按照上面方法按照后，需要先 log out jupyterlab，然后，在登录进去使用plotly才能正常显示图形。</p><p>更多jupyterlab使用plotly画图，请参考<a href="https://plotly.com/python/getting-started/">官网</a></p><h1 id="无法安装扩展解决办法"><a href="#无法安装扩展解决办法" class="headerlink" title="无法安装扩展解决办法"></a>无法安装扩展解决办法</h1><p>因为 build jupyterlab 扩展时，需要使用 npm 安装一些插件，所以 npm 按照插件成功与否会直接影响 jupyterlab 扩展 build 的成败。下面介绍如何安装 npm 和配置国内源</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt install nodejs</span><br><span class="line"><span class="comment"># 配置淘宝源</span></span><br><span class="line">npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br><span class="line"><span class="comment"># 或者使用工具 nrm 管理源，首先安装 nrm</span></span><br><span class="line">npm install -g nrm</span><br><span class="line"><span class="comment"># 查看可用源</span></span><br><span class="line">nrm ls</span><br><span class="line"><span class="comment"># 切换国内源</span></span><br><span class="line">nrm use taobao</span><br></pre></td></tr></table></figure><p>这样，再次使用</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter lab build</span><br></pre></td></tr></table></figure><p>时，就能够 build 成功了。</p>]]></content>
+        <content type="html"><![CDATA[<p>Plotly是一家技术计算公司，总部位于魁北克省的蒙特利尔市，致力于开发在线数据分析和可视化工具。Plotly为个人和协作提供了在线图形，分析和统计工具，以及用于Python，R，MATLAB，Perl，Julia，Arduino和REST的科学图形库。本篇介绍的就是其 Python 画图库plotly，常常在jupyterlab使用plotly进行离线画图时总是出现图形不显示的问题。因为plotly画出的图形比matplotlib更加好看且有交互性，同时，matplotlib画的图形也可以使用plotly转化为同态交互图。所以，希望能够使用plotly画图，并能够在常用软件jupyterlab中使用。</p><a id="more"></a><h1 id="安装plotly"><a href="#安装plotly" class="headerlink" title="安装plotly"></a>安装plotly</h1><p>推荐使用pip安装最新的plotly，</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install plotly</span><br></pre></td></tr></table></figure><h1 id="jupyterlab使用plotly"><a href="#jupyterlab使用plotly" class="headerlink" title="jupyterlab使用plotly"></a>jupyterlab使用plotly</h1><p>在jupyterlab中使用plotly需要安装一些支持扩展，其中 jupyterlab-plotly@ 需要根据最新的plotly版本对应，参考网址<a href="https://plotly.com/python/getting-started/?utm_source=mailchimp-jan-2015&utm_medium=email&utm_campaign=generalemail-jan2015&utm_term=bubble-chart">Python\Getting Started with Plotly</a></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install ipywidgets</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conda install nodejs</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> JupyterLab renderer support</span></span><br><span class="line">jupyter labextension install jupyterlab-plotly@4.8.1</span><br></pre></td></tr></table></figure><p>在  <a href="mailto:&#106;&#x75;&#x70;&#x79;&#116;&#x65;&#x72;&#108;&#97;&#x62;&#x2d;&#112;&#x6c;&#x6f;&#x74;&#x6c;&#121;&#64;&#x34;&#46;&#x38;&#x2e;&#x31;">&#106;&#x75;&#x70;&#x79;&#116;&#x65;&#x72;&#108;&#97;&#x62;&#x2d;&#112;&#x6c;&#x6f;&#x74;&#x6c;&#121;&#64;&#x34;&#46;&#x38;&#x2e;&#x31;</a>中，需要编译一会，可能会消耗2G多内存，建议内存小的用户创建交换分区。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看安装的jupyterlab扩展</span></span><br><span class="line">jupyter labextension list</span><br></pre></td></tr></table></figure><h1 id="使用plotly画图"><a href="#使用plotly画图" class="headerlink" title="使用plotly画图"></a>使用plotly画图</h1><p>按照上面方法按照后，需要先 log out jupyterlab，然后，在登录进去使用plotly才能正常显示图形。</p><p>更多jupyterlab使用plotly画图，请参考<a href="https://plotly.com/python/getting-started/">官网</a></p><h1 id="无法安装扩展解决办法"><a href="#无法安装扩展解决办法" class="headerlink" title="无法安装扩展解决办法"></a>无法安装扩展解决办法</h1><p>因为 build jupyterlab 扩展时，需要使用 npm 安装一些插件，所以 npm 按照插件成功与否会直接影响 jupyterlab 扩展 build 的成败。下面介绍如何安装 npm 和配置国内源</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt install nodejs</span><br><span class="line"><span class="comment"># 配置淘宝源</span></span><br><span class="line">npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br><span class="line"><span class="comment"># 或者使用工具 nrm 管理源，首先安装 nrm</span></span><br><span class="line">npm install -g nrm</span><br><span class="line"><span class="comment"># 查看可用源</span></span><br><span class="line">nrm ls</span><br><span class="line"><span class="comment"># 切换国内源</span></span><br><span class="line">nrm use taobao</span><br></pre></td></tr></table></figure><p>这样，再次使用</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter lab build</span><br></pre></td></tr></table></figure><p>时，就能够 build 成功了。</p>]]></content>
       
       
       <categories>
@@ -5031,35 +5031,6 @@
     
     
     <entry>
-      <title>三维重建简单综述</title>
-      <link href="/2019/12/21/3d-reconstruction/"/>
-      <url>/2019/12/21/3d-reconstruction/</url>
-      
-        <content type="html"><![CDATA[<p>文章《<a rel="noreferrer noopener" aria-label="基于深度学习的视觉三维重建研究总结（在新窗口打开）" href="https://zhuanlan.zhihu.com/p/79628068" target="_blank">基于深度学习的视觉三维重建研究总结</a>》从三维重建的意义、定义、表示方式、分类开始，总结了深度学习在三维重建方向的最近几年（截至2019年）的进展，分别是</p><a id="more"></a><ol><li>从单张图像恢复深度图的文章《<a rel="noreferrer noopener" aria-label="Depth Map Prediction from a Single Image using a Multi-Scale Deep Network（在新窗口打开）" href="https://arxiv.org/abs/1406.2283" target="_blank">Depth Map Prediction from a Single Image using a Multi-Scale Deep Network</a>》，是深度学习进行三维重建的开山之作，由粗到细并提出尺度不变的损失函数。</li><li>单视图或多视图的体素三维重建文章《<a rel="noreferrer noopener" aria-label="3D-R2N2: A Unified Approach for Single and Multi-view 3D Object Reconstruction（在新窗口打开）" href="https://arxiv.org/abs/1604.00449" target="_blank">3D-R2N2: A Unified Approach for Single and Multi-view 3D Object Reconstruction</a>》结合编码解码网络和LSTM，既可以对单幅图像做三维图像体素重建，又可以对多幅图像做。</li><li>单张RGB图像的点云三维重建文章《<a rel="noreferrer noopener" aria-label="A Point Set Generation Network for 3D Object Reconstruction from a Single Image（在新窗口打开）" href="https://arxiv.org/abs/1612.00603" target="_blank">A Point Set Generation Network for 3D Object Reconstruction from a Single Image</a>》用1024个点云数据表示物体的三维重建，并提出了CD（Chamfer Distance）和 EMD（Earth Mover's Distance）。</li><li>单张RGB图像的Mesh三维重建文章《<a rel="noreferrer noopener" aria-label="Pixel2Mesh: Generating 3D Mesh Models from Single RGB Images（在新窗口打开）" href="https://arxiv.org/abs/1804.01654" target="_blank">Pixel2Mesh: Generating 3D Mesh Models from Single RGB Images</a>》从椭球体Mesh通过深度学习（CNN + GCN） 端到端 变形为对应物体的Mesh三维重建。</li><li>文章《<a rel="noreferrer noopener" aria-label="Mesh R-CNN（在新窗口打开）" href="https://arxiv.org/abs/1906.02739" target="_blank">Mesh R-CNN</a>》使用《<a rel="noreferrer noopener" aria-label="Mask R-CNN（在新窗口打开）" href="https://arxiv.org/abs/1703.06870" target="_blank">Mask R-CNN</a>》框架实现现实图片的物体检测，并为每个检测物体生成三角Mesh。文章使用了图卷积网络GCN和多种损失来训练。</li><li>文章《<a rel="noreferrer noopener" aria-label="Conditional Single-view Shape Generation for Multi-view Stereo Reconstruction（在新窗口打开）" href="https://arxiv.org/abs/1904.06699" target="_blank">Conditional Single-view Shape Generation for Multi-view Stereo Reconstruction</a>》使用条件生成模型对不可见部分进行建模。</li></ol>]]></content>
-      
-      
-      <categories>
-          
-          <category> research </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 3d </tag>
-            
-            <tag> study </tag>
-            
-            <tag> dl </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>三维深度学习简单介绍</title>
       <link href="/2019/12/21/3d-dl-intro/"/>
       <url>/2019/12/21/3d-dl-intro/</url>
@@ -5079,6 +5050,35 @@
             <tag> 3d </tag>
             
             <tag> dl </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>三维重建简单综述</title>
+      <link href="/2019/12/21/3d-reconstruction/"/>
+      <url>/2019/12/21/3d-reconstruction/</url>
+      
+        <content type="html"><![CDATA[<p>文章《<a rel="noreferrer noopener" aria-label="基于深度学习的视觉三维重建研究总结（在新窗口打开）" href="https://zhuanlan.zhihu.com/p/79628068" target="_blank">基于深度学习的视觉三维重建研究总结</a>》从三维重建的意义、定义、表示方式、分类开始，总结了深度学习在三维重建方向的最近几年（截至2019年）的进展，分别是</p><a id="more"></a><ol><li>从单张图像恢复深度图的文章《<a rel="noreferrer noopener" aria-label="Depth Map Prediction from a Single Image using a Multi-Scale Deep Network（在新窗口打开）" href="https://arxiv.org/abs/1406.2283" target="_blank">Depth Map Prediction from a Single Image using a Multi-Scale Deep Network</a>》，是深度学习进行三维重建的开山之作，由粗到细并提出尺度不变的损失函数。</li><li>单视图或多视图的体素三维重建文章《<a rel="noreferrer noopener" aria-label="3D-R2N2: A Unified Approach for Single and Multi-view 3D Object Reconstruction（在新窗口打开）" href="https://arxiv.org/abs/1604.00449" target="_blank">3D-R2N2: A Unified Approach for Single and Multi-view 3D Object Reconstruction</a>》结合编码解码网络和LSTM，既可以对单幅图像做三维图像体素重建，又可以对多幅图像做。</li><li>单张RGB图像的点云三维重建文章《<a rel="noreferrer noopener" aria-label="A Point Set Generation Network for 3D Object Reconstruction from a Single Image（在新窗口打开）" href="https://arxiv.org/abs/1612.00603" target="_blank">A Point Set Generation Network for 3D Object Reconstruction from a Single Image</a>》用1024个点云数据表示物体的三维重建，并提出了CD（Chamfer Distance）和 EMD（Earth Mover's Distance）。</li><li>单张RGB图像的Mesh三维重建文章《<a rel="noreferrer noopener" aria-label="Pixel2Mesh: Generating 3D Mesh Models from Single RGB Images（在新窗口打开）" href="https://arxiv.org/abs/1804.01654" target="_blank">Pixel2Mesh: Generating 3D Mesh Models from Single RGB Images</a>》从椭球体Mesh通过深度学习（CNN + GCN） 端到端 变形为对应物体的Mesh三维重建。</li><li>文章《<a rel="noreferrer noopener" aria-label="Mesh R-CNN（在新窗口打开）" href="https://arxiv.org/abs/1906.02739" target="_blank">Mesh R-CNN</a>》使用《<a rel="noreferrer noopener" aria-label="Mask R-CNN（在新窗口打开）" href="https://arxiv.org/abs/1703.06870" target="_blank">Mask R-CNN</a>》框架实现现实图片的物体检测，并为每个检测物体生成三角Mesh。文章使用了图卷积网络GCN和多种损失来训练。</li><li>文章《<a rel="noreferrer noopener" aria-label="Conditional Single-view Shape Generation for Multi-view Stereo Reconstruction（在新窗口打开）" href="https://arxiv.org/abs/1904.06699" target="_blank">Conditional Single-view Shape Generation for Multi-view Stereo Reconstruction</a>》使用条件生成模型对不可见部分进行建模。</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> research </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 3d </tag>
+            
+            <tag> dl </tag>
+            
+            <tag> study </tag>
             
         </tags>
       
@@ -5655,9 +5655,9 @@
       
         <tags>
             
-            <tag> ubuntu </tag>
-            
             <tag> python </tag>
+            
+            <tag> ubuntu </tag>
             
             <tag> jupyterlab </tag>
             
@@ -5874,11 +5874,11 @@
     
     
     <entry>
-      <title>tags</title>
-      <link href="/tags/index.html"/>
-      <url>/tags/index.html</url>
+      <title>about</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<ol><li>学习的最好方法就是沉迷</li><li>天道酬勤，地道酬善，人道酬诚，商道酬信，业道酬精</li><li>天下难事，必做于易；天下大事，必做于细</li><li>认真就是水平，实干才是能力</li><li>自胜者强</li><li>沉着冷静，理性稳重，万无一失</li></ol><p><img src="https://xu-jinzhong.gitee.io/images/silence.jpg"></p>]]></content>
       
     </entry>
     
@@ -5896,11 +5896,11 @@
     
     
     <entry>
-      <title>about</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
+      <title>tags</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
       
-        <content type="html"><![CDATA[<ol><li>学习的最好方法就是沉迷</li><li>天道酬勤，地道酬善，人道酬诚，商道酬信，业道酬精</li><li>天下难事，必做于易；天下大事，必做于细</li><li>认真就是水平，实干才是能力</li><li>自胜者强</li><li>沉着冷静，理性稳重，万无一失</li></ol><p><img src="https://xu-jinzhong.gitee.io/images/silence.jpg"></p>]]></content>
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
