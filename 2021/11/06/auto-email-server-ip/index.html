@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.1.1">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
@@ -14,15 +16,12 @@
 
 
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-<script class="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"xujinzh.github.io","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":false,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
-  </script>
-
-  <meta name="description" content="我这里有个需求，就是服务器会因为断电等原因关机、重启，导致 IP 地址更改，无法通过 SSH 连接，也不能及时知道电脑何时开机。这里通过撰写 Python  代码，自动检测 IP、开机自动邮件通知。本篇以 Ubuntu 为例。">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.8.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="我这里有个需求，就是服务器会因为断电等原因关机、重启，导致 IP 地址更改，无法通过 SSH 连接，也不能及时知道电脑何时开机。这里通过撰写 Python  代码，自动检测 IP、开机自动邮件通知。本篇以 Ubuntu 为例。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="服务器开机或IP改变自动发送通知邮件">
 <meta property="og:url" content="https://xujinzh.github.io/2021/11/06/auto-email-server-ip/index.html">
@@ -30,7 +29,7 @@
 <meta property="og:description" content="我这里有个需求，就是服务器会因为断电等原因关机、重启，导致 IP 地址更改，无法通过 SSH 连接，也不能及时知道电脑何时开机。这里通过撰写 Python  代码，自动检测 IP、开机自动邮件通知。本篇以 Ubuntu 为例。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-11-06T09:06:26.000Z">
-<meta property="article:modified_time" content="2021-11-09T10:42:04.841Z">
+<meta property="article:modified_time" content="2021-11-10T01:39:47.495Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="ubuntu">
 <meta property="article:tag" content="python">
@@ -42,59 +41,19 @@
 <link rel="canonical" href="https://xujinzh.github.io/2021/11/06/auto-email-server-ip/">
 
 
-<script class="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'en'
-  };
-</script>
 
-  <title>服务器开机或IP改变自动发送通知邮件 | J Blog</title>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://xujinzh.github.io/2021/11/06/auto-email-server-ip/","path":"2021/11/06/auto-email-server-ip/","title":"服务器开机或IP改变自动发送通知邮件"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>服务器开机或IP改变自动发送通知邮件 | J Blog</title>
   
 
 
 
 
-
-
   <noscript>
-  <style>
-  body { margin-top: 2rem; }
-
-  .use-motion .menu-item,
-  .use-motion .sidebar,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header {
-    visibility: visible;
-  }
-
-  .use-motion .header,
-  .use-motion .site-brand-container .toggle,
-  .use-motion .footer { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle,
-  .use-motion .custom-logo-image {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line {
-    transform: scaleX(1);
-  }
-
-  .search-pop-overlay, .sidebar-nav { display: none; }
-  .sidebar-panel { display: block; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -104,7 +63,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
         <span class="toggle-line"></span>
         <span class="toggle-line"></span>
         <span class="toggle-line"></span>
@@ -131,31 +90,11 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
-
-  </li>
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">195</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">19</span></a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">203</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -166,8 +105,7 @@
 
 
   <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
+    <div class="popup search-popup"><div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
@@ -176,11 +114,11 @@
            placeholder="Searching..." spellcheck="false"
            type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div class="search-result-container">
+<div class="search-result-container no-result">
   <div class="search-result-icon">
     <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
@@ -192,7 +130,7 @@
 </div>
         
   
-  <div class="toggle sidebar-toggle">
+  <div class="toggle sidebar-toggle" role="button">
     <span class="toggle-line"></span>
     <span class="toggle-line"></span>
     <span class="toggle-line"></span>
@@ -210,43 +148,41 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E5%86%99-Python-%E4%BB%A3%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">编写 Python 代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%AE%9A%E6%97%B6%E6%A3%80%E6%9F%A5"><span class="nav-number">2.</span> <span class="nav-text">配置定时检查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
-      </section>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E5%86%99-Python-%E4%BB%A3%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">编写 Python 代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%AE%9A%E6%97%B6%E6%A3%80%E6%9F%A5"><span class="nav-number">2.</span> <span class="nav-text">配置定时检查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
 
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
       src="/images/silence.jpg">
   <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
   <div class="site-description" itemprop="description">Just do it!</div>
 </div>
-<div class="site-state-wrap animated">
+<div class="site-state-wrap site-overview-item animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
+        <a href="/archives/">
           <span class="site-state-item-count">203</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-          
+          <a href="/categories/">
         <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
+          <a href="/tags/">
         <span class="site-state-item-count">195</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
-  <div class="links-of-author animated">
+  <div class="links-of-author site-overview-item animated">
       <span class="links-of-author-item">
         <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
@@ -257,13 +193,11 @@
         <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
       </span>
   </div>
-  <div class="cc-license animated" itemprop="license">
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
-  </div>
 
 
 
-      </section>
+        </div>
+      </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -272,7 +206,7 @@
     </header>
 
     
-  <div class="back-to-top">
+  <div class="back-to-top" role="button" aria-label="Back to top">
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
@@ -285,14 +219,16 @@
 
 
     <div class="main-inner post posts-expand">
-      
 
-      
 
-    
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
     <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2021/11/06/auto-email-server-ip/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -304,9 +240,6 @@
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="J Blog">
     </span>
-
-    
-    
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           服务器开机或IP改变自动发送通知邮件
@@ -327,7 +260,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+        <time title="Modified: 2021-11-10 09:39:47" itemprop="dateModified" datetime="2021-11-10T09:39:47+08:00">2021-11-10</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -344,7 +277,7 @@
     </span>
 
   
-    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -366,7 +299,7 @@
 <h1 id="编写-Python-代码"><a href="#编写-Python-代码" class="headerlink" title="编写 Python 代码"></a>编写 Python 代码</h1><p>在目录 <code>/home/jinzhongxu/PythonProjects</code> 下编写 Python 模块 <code>send_message.py</code></p>
 <p>因为在 Ubuntu 系统下，当电脑重启时，目录 <code>/tmp</code> 下的文件会清空</p>
 <p>在 Mail 函数中，<code>sender</code> 为 qq 邮箱，即发送给你通知信息的邮箱；<code>recipients</code> 为接收信息的邮箱，可以通过该登录该邮箱查看收到的通知信息，如 IP 更改、服务器重启等；<code>password</code> 为 qq 邮箱的授权码，<code>smtp_server</code>、<code>port</code> 等都需要到 QQ 邮箱进行认证获取；<code>subject</code> 为邮件主题；<code>text</code> 为邮件内容；<code>attachment</code> 为附件，比如图像、文件等。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># @Author  : Jinzhong Xu</span></span><br><span class="line"><span class="comment"># @Contact : jinzhongxu@csu.ac.cn</span></span><br><span class="line"><span class="comment"># @Time    : 2021/11/5 19:02</span></span><br><span class="line"><span class="comment"># @File    : send_message.py</span></span><br><span class="line"><span class="comment"># @Software: PyCharm</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> smtplib</span><br><span class="line"><span class="keyword">from</span> email <span class="keyword">import</span> encoders</span><br><span class="line"><span class="keyword">from</span> email.header <span class="keyword">import</span> Header</span><br><span class="line"><span class="keyword">from</span> email.mime.base <span class="keyword">import</span> MIMEBase</span><br><span class="line"><span class="keyword">from</span> email.mime.multipart <span class="keyword">import</span> MIMEMultipart</span><br><span class="line"><span class="keyword">from</span> email.mime.text <span class="keyword">import</span> MIMEText</span><br><span class="line"><span class="keyword">from</span> email.utils <span class="keyword">import</span> formataddr, parseaddr</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_temp_ip</span>(<span class="params">current_ip</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    检查是否IP改变和是否是重启状态</span></span><br><span class="line"><span class="string">    :param current_ip: 当前 IP 地址</span></span><br><span class="line"><span class="string">    :return: 是否发送邮件、当前 IP 地址、电脑是否是重启</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    reboot = <span class="literal">False</span></span><br><span class="line">    temp_ip_json_path = <span class="string">&quot;/tmp/ip.json&quot;</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">not</span> os.path.exists(temp_ip_json_path)) <span class="keyword">or</span> (</span><br><span class="line">            <span class="keyword">not</span> os.path.getsize(temp_ip_json_path)</span><br><span class="line">    ):</span><br><span class="line">        reboot = <span class="literal">True</span></span><br><span class="line">        print(<span class="string">&quot;No &#123;&#125;, dump it.&quot;</span>.format(temp_ip_json_path))</span><br><span class="line">        <span class="keyword">with</span> open(temp_ip_json_path, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> jo:</span><br><span class="line">            json.dump(current_ip, jo)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span>, current_ip, reboot</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">with</span> open(temp_ip_json_path, <span class="string">&quot;r&quot;</span>) <span class="keyword">as</span> jo:</span><br><span class="line">            origin_ip = json.load(jo)</span><br><span class="line">        <span class="keyword">if</span> origin_ip == current_ip:</span><br><span class="line">            print(<span class="string">&quot;Current ip &#123;&#125; do not change, no need to send&quot;</span>.format(current_ip))</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span>, current_ip, reboot</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(</span><br><span class="line">                <span class="string">&quot;The ip updated from &#123;&#125; to &#123;&#125;, update it.&quot;</span>.format(origin_ip, current_ip)</span><br><span class="line">            )</span><br><span class="line">            os.remove(temp_ip_json_path)</span><br><span class="line">            <span class="keyword">with</span> open(temp_ip_json_path, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> jo:</span><br><span class="line">                json.dump(current_ip, jo)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span>, current_ip, reboot</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_global_ip</span>():</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    获取电脑的外网 IP 地址</span></span><br><span class="line"><span class="string">    :return: 外围 IP</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)</span><br><span class="line">        s.connect((<span class="string">&quot;8.8.8.8&quot;</span>, <span class="number">80</span>))</span><br><span class="line">        ip = s.getsockname()[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        s.close()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ip</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_status</span>():</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    获取电脑状态，包括是否 IP 改变、是否重启</span></span><br><span class="line"><span class="string">    :return: 是否发送通知邮件</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    global_ips = get_global_ip()</span><br><span class="line">    whether_to_send, send_ip, reboot = get_temp_ip(global_ips)</span><br><span class="line">    send_ip = json.dumps(send_ip)</span><br><span class="line">    <span class="keyword">return</span> whether_to_send, send_ip, reboot</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_format_addr</span>(<span class="params">s</span>):</span></span><br><span class="line">    name, addr = parseaddr(s)</span><br><span class="line">    <span class="keyword">return</span> formataddr((Header(name, <span class="string">&quot;utf-8&quot;</span>).encode(), addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mail</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">        sender=<span class="string">&quot;xxx@qq.com&quot;</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        password=<span class="string">&quot;ZHpxxxg==&quot;</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        recipients=(<span class="params"><span class="string">&quot;jinzhongxu@csu.ac.cn&quot;</span>, </span>),</span></span></span><br><span class="line"><span class="function"><span class="params">        smtp_server=<span class="string">&quot;smtp.qq.com&quot;</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        port=<span class="number">465</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        subject=<span class="string">&quot;服务器 IP 改变&quot;</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        text=<span class="string">&quot;&quot;</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        attachment=(<span class="params"><span class="string">&quot;&quot;</span>,</span>),</span></span></span><br><span class="line"><span class="function"><span class="params"></span>):</span></span><br><span class="line">    msg = MIMEMultipart()</span><br><span class="line">    msg[<span class="string">&quot;From&quot;</span>] = _format_addr(<span class="string">&quot;JinzhongXu-Pythoner &lt;%s&gt;&quot;</span> % sender)</span><br><span class="line">    msg[<span class="string">&quot;To&quot;</span>] = _format_addr(<span class="string">&quot;管理员 &lt;%s&gt;&quot;</span> % <span class="string">&quot;, &quot;</span>.join(list(recipients)))</span><br><span class="line">    msg[<span class="string">&quot;Subject&quot;</span>] = Header(subject, <span class="string">&quot;utf-8&quot;</span>).encode()</span><br><span class="line">    <span class="comment"># 邮件正文是MIMEText:</span></span><br><span class="line">    msg.attach(MIMEText(text, <span class="string">&quot;plain&quot;</span>, <span class="string">&quot;utf-8&quot;</span>))</span><br><span class="line"></span><br><span class="line">    attachment = list(attachment)</span><br><span class="line">    <span class="keyword">if</span> attachment != [<span class="string">&quot;&quot;</span>]:</span><br><span class="line">        <span class="keyword">for</span> i, file_path <span class="keyword">in</span> enumerate(attachment):</span><br><span class="line">            <span class="keyword">with</span> open(file_path, <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                <span class="comment"># 设置附件的MIME和文件名:</span></span><br><span class="line">                file_dir, file_name = os.path.split(os.path.abspath(file_path))</span><br><span class="line">                filename_extension = file_name.split(<span class="string">&quot;.&quot;</span>)</span><br><span class="line">                mime = MIMEBase(<span class="string">&quot;file&quot;</span>, filename_extension[<span class="number">-1</span>], filename=file_name)</span><br><span class="line">                <span class="comment"># 加上必要的头信息:</span></span><br><span class="line">                mime.add_header(<span class="string">&quot;Content-Disposition&quot;</span>, <span class="string">&quot;attachment&quot;</span>, filename=file_name)</span><br><span class="line">                mime.add_header(<span class="string">&quot;Content-ID&quot;</span>, <span class="string">f&quot;&lt;<span class="subst">&#123;i&#125;</span>&gt;&quot;</span>)</span><br><span class="line">                mime.add_header(<span class="string">&quot;X-Attachment-Id&quot;</span>, <span class="string">f&quot;<span class="subst">&#123;i&#125;</span>&quot;</span>)</span><br><span class="line">                <span class="comment"># 把附件的内容读进来:</span></span><br><span class="line">                mime.set_payload(f.read())</span><br><span class="line">                <span class="comment"># 用Base64编码:</span></span><br><span class="line">                encoders.encode_base64(mime)</span><br><span class="line">                <span class="comment"># 添加到MIMEMultipart:</span></span><br><span class="line">                msg.attach(mime)</span><br><span class="line"></span><br><span class="line">    server = smtplib.SMTP_SSL(smtp_server, port)</span><br><span class="line">    <span class="comment"># 控制打印日志</span></span><br><span class="line">    <span class="comment"># server.set_debuglevel(2)</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        server.login(</span><br><span class="line">            sender,</span><br><span class="line">            base64.b64decode(password.encode(), altchars=<span class="literal">None</span>, validate=<span class="literal">False</span>).decode(),</span><br><span class="line">        )</span><br><span class="line">        server.sendmail(sender, list(recipients), msg.as_string())</span><br><span class="line">        logs = <span class="string">f&quot;<span class="subst">&#123;sender&#125;</span> 给 <span class="subst">&#123;<span class="string">&#x27;; &#x27;</span>.join(recipients)&#125;</span> 的邮件发送成功&quot;</span></span><br><span class="line">    <span class="keyword">except</span> smtplib.SMTPException:</span><br><span class="line">        logs = <span class="string">&quot;Error: 无法发送邮件&quot;</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        server.quit()</span><br><span class="line">    <span class="keyword">return</span> logs</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    whether_to_send, global_ips, reboot = get_status()</span><br><span class="line">    <span class="keyword">if</span> whether_to_send <span class="keyword">and</span> reboot:</span><br><span class="line">        mail(subject=<span class="string">&quot;服务器重启成功&quot;</span>, text=<span class="string">f&quot;重启后的IP：<span class="subst">&#123;global_ips&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">elif</span> whether_to_send <span class="keyword">and</span> (<span class="keyword">not</span> reboot):</span><br><span class="line">        mail(text=<span class="string">f&quot;新的IP：<span class="subst">&#123;global_ips&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        print(<span class="string">&quot;wait and no send&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># @Author  : Jinzhong Xu</span></span><br><span class="line"><span class="comment"># @Contact : jinzhongxu@csu.ac.cn</span></span><br><span class="line"><span class="comment"># @Time    : 2021/11/5 19:02</span></span><br><span class="line"><span class="comment"># @File    : send_message.py</span></span><br><span class="line"><span class="comment"># @Software: PyCharm</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> smtplib</span><br><span class="line"><span class="keyword">from</span> email <span class="keyword">import</span> encoders</span><br><span class="line"><span class="keyword">from</span> email.header <span class="keyword">import</span> Header</span><br><span class="line"><span class="keyword">from</span> email.mime.base <span class="keyword">import</span> MIMEBase</span><br><span class="line"><span class="keyword">from</span> email.mime.multipart <span class="keyword">import</span> MIMEMultipart</span><br><span class="line"><span class="keyword">from</span> email.mime.text <span class="keyword">import</span> MIMEText</span><br><span class="line"><span class="keyword">from</span> email.utils <span class="keyword">import</span> formataddr, parseaddr</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_temp_ip</span>(<span class="params">current_ip</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    检查是否 IP 改变和是否是重启状态</span></span><br><span class="line"><span class="string">    :param current_ip: 当前 IP 地址</span></span><br><span class="line"><span class="string">    :return: 是否发送邮件、当前 IP 地址、电脑是否是重启</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    reboot = <span class="literal">False</span></span><br><span class="line">    temp_ip_json_path = <span class="string">&quot;/tmp/ip.json&quot;</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">not</span> os.path.exists(temp_ip_json_path)) <span class="keyword">or</span> (</span><br><span class="line">            <span class="keyword">not</span> os.path.getsize(temp_ip_json_path)</span><br><span class="line">    ):</span><br><span class="line">        reboot = <span class="literal">True</span></span><br><span class="line">        print(<span class="string">&quot;No &#123;&#125;, dump it.&quot;</span>.format(temp_ip_json_path))</span><br><span class="line">        <span class="keyword">with</span> open(temp_ip_json_path, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> jo:</span><br><span class="line">            json.dump(current_ip, jo)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span>, current_ip, reboot</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">with</span> open(temp_ip_json_path, <span class="string">&quot;r&quot;</span>) <span class="keyword">as</span> jo:</span><br><span class="line">            origin_ip = json.load(jo)</span><br><span class="line">        <span class="keyword">if</span> origin_ip == current_ip:</span><br><span class="line">            print(<span class="string">&quot;Current ip &#123;&#125; do not change, no need to send&quot;</span>.format(current_ip))</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span>, current_ip, reboot</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(</span><br><span class="line">                <span class="string">&quot;The ip updated from &#123;&#125; to &#123;&#125;, update it.&quot;</span>.format(origin_ip, current_ip)</span><br><span class="line">            )</span><br><span class="line">            os.remove(temp_ip_json_path)</span><br><span class="line">            <span class="keyword">with</span> open(temp_ip_json_path, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> jo:</span><br><span class="line">                json.dump(current_ip, jo)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span>, current_ip, reboot</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_global_ip</span>():</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    获取电脑的外网 IP 地址</span></span><br><span class="line"><span class="string">    :return: 外网 IP</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)</span><br><span class="line">        s.connect((<span class="string">&quot;8.8.8.8&quot;</span>, <span class="number">80</span>))</span><br><span class="line">        ip = s.getsockname()[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        s.close()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ip</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_status</span>():</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    获取电脑状态，包括是否 IP 改变、是否重启</span></span><br><span class="line"><span class="string">    :return: 是否发送通知邮件</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    global_ips = get_global_ip()</span><br><span class="line">    whether_to_send, send_ip, reboot = get_temp_ip(global_ips)</span><br><span class="line">    send_ip = json.dumps(send_ip)</span><br><span class="line">    <span class="keyword">return</span> whether_to_send, send_ip, reboot</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_format_addr</span>(<span class="params">s</span>):</span></span><br><span class="line">    name, addr = parseaddr(s)</span><br><span class="line">    <span class="keyword">return</span> formataddr((Header(name, <span class="string">&quot;utf-8&quot;</span>).encode(), addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mail</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">        sender=<span class="string">&quot;xxx@qq.com&quot;</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        password=<span class="string">&quot;ZHpxxxg==&quot;</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        recipients=(<span class="params"><span class="string">&quot;jinzhongxu@csu.ac.cn&quot;</span>, </span>),</span></span></span><br><span class="line"><span class="function"><span class="params">        smtp_server=<span class="string">&quot;smtp.qq.com&quot;</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        port=<span class="number">465</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        subject=<span class="string">&quot;服务器 IP 改变&quot;</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        text=<span class="string">&quot;&quot;</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        attachment=(<span class="params"><span class="string">&quot;&quot;</span>,</span>),</span></span></span><br><span class="line"><span class="function"><span class="params"></span>):</span></span><br><span class="line">    msg = MIMEMultipart()</span><br><span class="line">    msg[<span class="string">&quot;From&quot;</span>] = _format_addr(<span class="string">&quot;JinzhongXu-Pythoner &lt;%s&gt;&quot;</span> % sender)</span><br><span class="line">    msg[<span class="string">&quot;To&quot;</span>] = _format_addr(<span class="string">&quot;管理员 &lt;%s&gt;&quot;</span> % <span class="string">&quot;, &quot;</span>.join(list(recipients)))</span><br><span class="line">    msg[<span class="string">&quot;Subject&quot;</span>] = Header(subject, <span class="string">&quot;utf-8&quot;</span>).encode()</span><br><span class="line">    <span class="comment"># 邮件正文是MIMEText:</span></span><br><span class="line">    msg.attach(MIMEText(text, <span class="string">&quot;plain&quot;</span>, <span class="string">&quot;utf-8&quot;</span>))</span><br><span class="line"></span><br><span class="line">    attachment = list(attachment)</span><br><span class="line">    <span class="keyword">if</span> attachment != [<span class="string">&quot;&quot;</span>]:</span><br><span class="line">        <span class="keyword">for</span> i, file_path <span class="keyword">in</span> enumerate(attachment):</span><br><span class="line">            <span class="keyword">with</span> open(file_path, <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                <span class="comment"># 设置附件的MIME和文件名:</span></span><br><span class="line">                file_dir, file_name = os.path.split(os.path.abspath(file_path))</span><br><span class="line">                filename_extension = file_name.split(<span class="string">&quot;.&quot;</span>)</span><br><span class="line">                mime = MIMEBase(<span class="string">&quot;file&quot;</span>, filename_extension[<span class="number">-1</span>], filename=file_name)</span><br><span class="line">                <span class="comment"># 加上必要的头信息:</span></span><br><span class="line">                mime.add_header(<span class="string">&quot;Content-Disposition&quot;</span>, <span class="string">&quot;attachment&quot;</span>, filename=file_name)</span><br><span class="line">                mime.add_header(<span class="string">&quot;Content-ID&quot;</span>, <span class="string">f&quot;&lt;<span class="subst">&#123;i&#125;</span>&gt;&quot;</span>)</span><br><span class="line">                mime.add_header(<span class="string">&quot;X-Attachment-Id&quot;</span>, <span class="string">f&quot;<span class="subst">&#123;i&#125;</span>&quot;</span>)</span><br><span class="line">                <span class="comment"># 把附件的内容读进来:</span></span><br><span class="line">                mime.set_payload(f.read())</span><br><span class="line">                <span class="comment"># 用Base64编码:</span></span><br><span class="line">                encoders.encode_base64(mime)</span><br><span class="line">                <span class="comment"># 添加到MIMEMultipart:</span></span><br><span class="line">                msg.attach(mime)</span><br><span class="line"></span><br><span class="line">    server = smtplib.SMTP_SSL(smtp_server, port)</span><br><span class="line">    <span class="comment"># 控制打印日志</span></span><br><span class="line">    <span class="comment"># server.set_debuglevel(2)</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        server.login(</span><br><span class="line">            sender,</span><br><span class="line">            base64.b64decode(password.encode(), altchars=<span class="literal">None</span>, validate=<span class="literal">False</span>).decode(),</span><br><span class="line">        )</span><br><span class="line">        server.sendmail(sender, list(recipients), msg.as_string())</span><br><span class="line">        logs = <span class="string">f&quot;<span class="subst">&#123;sender&#125;</span> 给 <span class="subst">&#123;<span class="string">&#x27;; &#x27;</span>.join(recipients)&#125;</span> 的邮件发送成功&quot;</span></span><br><span class="line">    <span class="keyword">except</span> smtplib.SMTPException:</span><br><span class="line">        logs = <span class="string">&quot;Error: 无法发送邮件&quot;</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        server.quit()</span><br><span class="line">    <span class="keyword">return</span> logs</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    whether_to_send, global_ips, reboot = get_status()</span><br><span class="line">    <span class="keyword">if</span> whether_to_send <span class="keyword">and</span> reboot:</span><br><span class="line">        mail(subject=<span class="string">&quot;服务器重启成功&quot;</span>, text=<span class="string">f&quot;重启后的IP：<span class="subst">&#123;global_ips&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">elif</span> whether_to_send <span class="keyword">and</span> (<span class="keyword">not</span> reboot):</span><br><span class="line">        mail(text=<span class="string">f&quot;新的IP：<span class="subst">&#123;global_ips&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        print(<span class="string">&quot;wait and no send&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h1 id="配置定时检查"><a href="#配置定时检查" class="headerlink" title="配置定时检查"></a>配置定时检查</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br><span class="line"><span class="comment"># 添加如下内容，每分钟进行 IP 检查和是否是重启状态</span></span><br><span class="line">*/1 * * * * /usr/<span class="built_in">local</span>/miniconda/bin/python /home/jinzhongxu/PythonProjects/send_message.py</span><br></pre></td></tr></table></figure>
 
@@ -384,8 +317,8 @@
 
     <footer class="post-footer">
           <div class="reward-container">
-  <div>Buy me a coffee</div>
-  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+  <div>感谢打赏</div>
+  <button>
     Donate
   </button>
   <div class="post-reward">
@@ -441,47 +374,22 @@
           </div>
     </footer>
   </article>
-  
-  
-  
+</div>
 
 
 
-      
 
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      const commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
 
-    </div>
+
+    <div class="comments gitalk-container"></div>
+</div>
   </main>
 
   <footer class="footer">
     <div class="footer-inner">
-      
 
-      
 
 <div class="copyright">
-  
   &copy; 
   <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
@@ -490,7 +398,7 @@
   <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
 </div>
 <div class="busuanzi-count">
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
       <span class="post-meta-item-icon">
         <i class="fa fa-user"></i>
       </span>
@@ -498,7 +406,7 @@
         <span id="busuanzi_value_site_uv"></span>
       </span>
     </span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
       <span class="post-meta-item-icon">
         <i class="fa fa-eye"></i>
       </span>
@@ -507,7 +415,7 @@
       </span>
     </span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
   <div class="addthis_inline_share_toolbox">
     <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f45c300bef10091" async="async"></script>
@@ -517,116 +425,37 @@
   </footer>
 
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script><script src="/js/pjax.js"></script>
 
   
-  <script>
-    (function(){
-      var bp = document.createElement('script');
-      var curProtocol = window.location.protocol.split(':')[0];
-      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(bp, s);
-    })();
-  </script>
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
 
 
 
-
-  <script src="/js/local-search.js"></script>
-
-
-
-
-
-
-
-
-
-
-<script>
-if (document.querySelectorAll('.mermaid').length) {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.6.4/dist/mermaid.min.js', () => {
-    mermaid.init({
-      theme    : 'forest',
-      logLevel : 3,
-      flowchart: { curve     : 'linear' },
-      gantt    : { axisFormat: '%m/%d/%Y' },
-      sequence : { actorMargin: 50 }
-    }, '.mermaid');
-  }, window.mermaid);
-}
-</script>
+  <script src="/js/third-party/fancybox.js"></script>
 
 
   
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-
-
-
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 
 
   
 
-  
-      <script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      loader: {
-        source: {
-          '[tex]/amsCd': '[tex]/amscd',
-          '[tex]/AMScd': '[tex]/amscd'
-        }
-      },
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              const target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
-        }
-      }
-    };
-    (function () {
-      const script = document.createElement('script');
-      script.src = '//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js';
-      script.defer = true;
-      document.head.appendChild(script);
-    })();
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.typesetClear();
-    MathJax.texReset();
-    MathJax.typeset();
-  }
-</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
 
-    
 
-  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"xujinzh","repo":"xujinzh.github.io","client_id":"695ca5d39e2ba2f9feb5","client_secret":"9d4027af6364ff54595b7a8580977ec58c38a5ae","admin_user":"xujinzh","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"en","js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"24a115c228e8f4e788b40034d244aeb3"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
 
 </body>
 </html>
