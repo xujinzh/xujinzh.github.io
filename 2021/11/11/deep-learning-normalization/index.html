@@ -28,12 +28,15 @@
 <meta property="og:site_name" content="J Blog">
 <meta property="og:description" content="Normalization 在深度学习中常被使用，它能够正则化神经网络中的输出数据，一定程度上消除内部协变量偏移（Internal Covariate Shift），加速网络训练，为初始化网络参数松绑，提高模型精度等。本篇介绍在深度学习中常用的正则化方法。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/layer-norm.png">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-fad3333df9a87c1c4f1db4b20557da6f_720w.jpg">
 <meta property="article:published_time" content="2021-11-11T02:10:57.000Z">
-<meta property="article:modified_time" content="2021-11-11T10:07:26.803Z">
+<meta property="article:modified_time" content="2021-11-11T11:00:22.851Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="dl">
 <meta property="article:tag" content="normalization">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/layer-norm.png">
 
 
 <link rel="canonical" href="https://xujinzh.github.io/2021/11/11/deep-learning-normalization/">
@@ -149,7 +152,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Batch-Normalization"><span class="nav-number">1.</span> <span class="nav-text">Batch Normalization</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Layer-normalization"><span class="nav-number">2.</span> <span class="nav-text">Layer normalization</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Batch-Normalization"><span class="nav-number">1.</span> <span class="nav-text">Batch Normalization</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Layer-normalization"><span class="nav-number">2.</span> <span class="nav-text">Layer normalization</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Instance-normalization-and-Group-normalization"><span class="nav-number">3.</span> <span class="nav-text">Instance normalization and Group normalization</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E8%80%85%E5%9B%BE%E7%A4%BA"><span class="nav-number">4.</span> <span class="nav-text">四者图示</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">5.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -252,7 +255,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2021-11-11 10:10:57 / Modified: 18:07:26" itemprop="dateCreated datePublished" datetime="2021-11-11T10:10:57+08:00">2021-11-11</time>
+      <time title="Created: 2021-11-11 10:10:57 / Modified: 19:00:22" itemprop="dateCreated datePublished" datetime="2021-11-11T10:10:57+08:00">2021-11-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -304,8 +307,14 @@
 <h1 id="Layer-normalization"><a href="#Layer-normalization" class="headerlink" title="Layer normalization"></a>Layer normalization</h1><p>Layer norm （<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1607.06450">Layer Normalization</a>）是由 Geoffrey E. Hinton 等于 16 年提出，来解决 Batch norm 的缺点（不能应用在 RNN 中）。对一个向量来做正则化。首先计算该向量的均值和标准差，然后用该向量的各分量减去均值再除以标准差。说白了，层正则化是针对数据进行该层神经元的正则化。均值分母是该层神经元的个数。</p>
 <p>在批正则化中，隐层神经元有单独的均值和标准差，而在层正则化中，一个隐藏层中的神经元共享相同的均值和标准差。</p>
 <p>训练和推断处理方式一致。</p>
+<p>在卷积网络中，层正则化没有批正则化好，但在 RNN 中层正则化更好。</p>
+<h1 id="Instance-normalization-and-Group-normalization"><a href="#Instance-normalization-and-Group-normalization" class="headerlink" title="Instance normalization and Group normalization"></a>Instance normalization and Group normalization</h1><p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1607.08022.pdf">Instance normalization</a> 是2016年提出的，针对某一次输入某一个神经元的输出（特征图）进行正则化得到的。</p>
+<p>Group Normalization 是由 Yuxin Wu 和 Kaiming He 于2018年在ECCV上发表的文章：<a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_ECCV_2018/papers/Yuxin_Wu_Group_Normalization_ECCV_2018_paper.pdf">Group Normalization</a> 中提出的。它介于 Layer Norm 和 Instance Norm 之间。对通道进行分组，然后分布正则化。效果上较 Batch Norm 要好。</p>
+<h1 id="四者图示"><a href="#四者图示" class="headerlink" title="四者图示"></a>四者图示</h1><p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/layer-norm.png"></p>
+<p><img src="https://pic4.zhimg.com/80/v2-fad3333df9a87c1c4f1db4b20557da6f_720w.jpg"></p>
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html">Understanding the backward pass through Batch Normalization Layer</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/35005794">全面解读Group Normalization-（吴育昕-何恺明 ）</a></li>
 </ol>
 
     </div>
