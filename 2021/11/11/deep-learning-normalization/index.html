@@ -29,7 +29,7 @@
 <meta property="og:description" content="Normalization 在深度学习中常被使用，它能够标准化神经网络中的输出数据，一定程度上消除内部协变量偏移（Internal Covariate Shift），加速网络训练，为初始化网络参数松绑，提高模型精度等。本篇介绍在深度学习中常用的标准化方法。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-11-11T02:10:57.000Z">
-<meta property="article:modified_time" content="2021-11-11T09:07:17.627Z">
+<meta property="article:modified_time" content="2021-11-11T09:09:49.739Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="dl">
 <meta property="article:tag" content="normalization">
@@ -252,7 +252,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2021-11-11 10:10:57 / Modified: 17:07:17" itemprop="dateCreated datePublished" datetime="2021-11-11T10:10:57+08:00">2021-11-11</time>
+      <time title="Created: 2021-11-11 10:10:57 / Modified: 17:09:49" itemprop="dateCreated datePublished" datetime="2021-11-11T10:10:57+08:00">2021-11-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -288,7 +288,7 @@
         <p>Normalization 在深度学习中常被使用，它能够标准化神经网络中的输出数据，一定程度上消除内部协变量偏移（Internal Covariate Shift），加速网络训练，为初始化网络参数松绑，提高模型精度等。本篇介绍在深度学习中常用的标准化方法。</p>
 <a id="more"></a>
 
-<h1 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h1><p><a target="_blank" rel="noopener" href="http://proceedings.mlr.press/v37/ioffe15.html">Batch Normalization</a> 是对输入的的多个向量（即一批向量 $x_i,i=1,⋯,m$），对每个维度（<font color=yellow>特征</font>）上进行标准化，也即每个神经元单独进行一批数据（分量）的标准化。首先计算该维度上的均值和标准差，然后该维度上各个分量减去均值再除以标准差。下面公式都是按照逐元素操作的。说白了，批标准化是针对每个神经元进行批次标准化。均值分母是批次大小。<br>$$<br>\mu_{\mathcal{B}} \leftarrow \frac{1}{m}\sum^m_{i=1} x_i<br>$$</p>
+<h1 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h1><p><a target="_blank" rel="noopener" href="http://proceedings.mlr.press/v37/ioffe15.html">Batch Normalization</a> 是对输入的的多个向量（即一批向量 $x_i,i=1,⋯,m$），对每个维度（<font color=orange>特征</font>）上进行标准化，也即每个神经元单独进行一批数据（分量）的标准化。首先计算该维度上的均值和标准差，然后该维度上各个分量减去均值再除以标准差。下面公式都是按照逐元素操作的。说白了，批标准化是针对每个神经元进行批次标准化。均值分母是批次大小。<br>$$<br>\mu_{\mathcal{B}} \leftarrow \frac{1}{m}\sum^m_{i=1} x_i<br>$$</p>
 <p>$$<br>\sigma^2_{\mathcal B} \leftarrow \frac{1}{m}\sum^m_{i=1}(x_i - \mu_{\mathcal B})^2<br>$$</p>
 <p>$$<br>\hat x_i \leftarrow \frac{x_i - \mu_{\mathcal B}}{\sqrt{\sigma^2_{\mathcal B} + \epsilon}}<br>$$</p>
 <p>$$<br>y^i \leftarrow \gamma \hat x_i + \beta \equiv \mathbf{BN}_{\gamma, \beta}(x_i)<br>$$</p>
