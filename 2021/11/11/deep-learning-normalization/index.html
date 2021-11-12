@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/layer-norm.png">
 <meta property="og:image" content="https://pic4.zhimg.com/80/v2-fad3333df9a87c1c4f1db4b20557da6f_720w.jpg">
 <meta property="article:published_time" content="2021-11-11T02:10:57.000Z">
-<meta property="article:modified_time" content="2021-11-11T11:00:22.851Z">
+<meta property="article:modified_time" content="2021-11-12T01:14:04.574Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="dl">
 <meta property="article:tag" content="normalization">
@@ -253,10 +253,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2021-11-11 10:10:57 / Modified: 19:00:22" itemprop="dateCreated datePublished" datetime="2021-11-11T10:10:57+08:00">2021-11-11</time>
+      <time title="Created: 2021-11-11 10:10:57" itemprop="dateCreated datePublished" datetime="2021-11-11T10:10:57+08:00">2021-11-11</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-11-12 09:14:04" itemprop="dateModified" datetime="2021-11-12T09:14:04+08:00">2021-11-12</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -312,6 +318,12 @@
 <p>Group Normalization 是由 Yuxin Wu 和 Kaiming He 于2018年在ECCV上发表的文章：<a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_ECCV_2018/papers/Yuxin_Wu_Group_Normalization_ECCV_2018_paper.pdf">Group Normalization</a> 中提出的。它介于 Layer Norm 和 Instance Norm 之间。对通道进行分组，然后分布正则化。效果上较 Batch Norm 要好。</p>
 <h1 id="四者图示"><a href="#四者图示" class="headerlink" title="四者图示"></a>四者图示</h1><p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/layer-norm.png"></p>
 <p><img src="https://pic4.zhimg.com/80/v2-fad3333df9a87c1c4f1db4b20557da6f_720w.jpg"></p>
+<ul>
+<li>Batch Norm 在 batch 的维度上正则化，正则化维度为 $[N，H，W]$，对 batch 中对应的 channel 正则化；</li>
+<li>Layer Norm 避开了 batch 维度，正则化的维度为 $[C，H，W]$；</li>
+<li>Instance Norm 正则化的维度为 $[H，W]$；</li>
+<li>Group Norm 介于 Instance Norm 和 Instance Norm 之间，其首先将 channel 分为许多 group，对每一个 group 做正则化。即先将 feature 的维度由 $[N, C, H, W]$ reshape 为 $[N, G，C/G , H, W]$，正则化的维度为 $[C/G , H, W]$.</li>
+</ul>
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html">Understanding the backward pass through Batch Normalization Layer</a></li>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/35005794">全面解读Group Normalization-（吴育昕-何恺明 ）</a></li>
