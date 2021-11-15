@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/self-attention-matrix.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/multi-head-self-attention.png">
 <meta property="article:published_time" content="2021-11-05T01:56:58.000Z">
-<meta property="article:modified_time" content="2021-11-15T09:47:21.893Z">
+<meta property="article:modified_time" content="2021-11-15T09:49:44.430Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="dl">
 <meta property="article:tag" content="cv">
@@ -265,7 +265,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-11-15 17:47:21" itemprop="dateModified" datetime="2021-11-15T17:47:21+08:00">2021-11-15</time>
+        <time title="Modified: 2021-11-15 17:49:44" itemprop="dateModified" datetime="2021-11-15T17:49:44+08:00">2021-11-15</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -310,7 +310,7 @@
 <p>如上图所示，$a^i, i = 1, 2, 3, 4$ 为输入向量，$q^i, i = 1, 2, 3, 4$ 为 query，$k^i, i = 1, 2, 3, 4$ 为 key，$v^i, i=1, 2, 3, 4$ 为 value，后三者分别有输入向量 $a^i$ 得到<br>$$<br>q^i = W^q a^i<br>$$</p>
 <p>$$<br>k^i = W^K a^i<br>$$</p>
 <p>$$<br>v^i = W^v a^i<br>$$</p>
-<p>而 $\alpha_{2, 1}$ 是由 $q^2$ 与 $k^1$ 做 dot product 而得到的，其他依次类推 $\alpha_{2,2}, \alpha_{2, 3}, \alpha_{2, 4}$. 然后，把 $\alpha^{\prime}_{2, i}, i = 1, 2, 3, 4$ 作为系数与 $v^i, i = 1, 2, 3, 4$ 相乘得到 $b^2 = \sum_i \alpha^{\prime}_{2, i} v^i$，对于其他 $b^1, b^3, b^4$ 依次类推。</p>
+<p>而 $\alpha_{2, 1}$ 是由 $q^2$ 与 $k^1$ 做 dot product 而得到的，其他依次类推 $\alpha_{2,2}, \alpha_{2, 3}, \alpha_{2, 4}$. 然后，通过 Sigmoid 激活函数，得到 $\alpha^{\prime}<em>{2,1}$. 把 $\alpha^{\prime}</em>{2, i}, i = 1, 2, 3, 4$ 作为系数与 $v^i, i = 1, 2, 3, 4$ 相乘得到 $b^2 = \sum_i \alpha^{\prime}_{2, i} v^i$，对于其他 $b^1, b^3, b^4$ 依次类推。</p>
 <p>其实，Self-attention 能够利用矩阵简洁表示如下，这也是其并行化计算的原因</p>
 <p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/self-attention-matrix.png"></p>
 <p>这里 $I = (a^i), i = 1, 2, 3, 4$ 为输入向量列，$W^q, W^k, W^v$ 为需要学习的参数矩阵，$Q, K, V$ 分别为 query, key, value 矩阵，$A$ 为 attention 系数，$A^{\prime}$ 为经过 Sigmoid 归一化后的 attention matrix. $O = (b^i), i = 1, 2, 3, 4$ 为 self-attention 输出的向量列。</p>
