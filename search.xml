@@ -7220,7 +7220,7 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
 <p>如上图所示，$a^i, i = 1, 2, 3, 4$ 为输入向量，$q^i, i = 1, 2, 3, 4$ 为 query，$k^i, i = 1, 2, 3, 4$ 为 key，$v^i, i=1, 2, 3, 4$ 为 value，后三者分别有输入向量 $a^i$ 得到<br>$$<br>q^i = W^q a^i<br>$$</p>
 <p>$$<br>k^i = W^K a^i<br>$$</p>
 <p>$$<br>v^i = W^v a^i<br>$$</p>
-<p>对于 $(\alpha^{\prime}<em>{2,1}, \alpha^{\prime}</em>{2,2}, \alpha^{\prime}<em>{2,3}, \alpha^{\prime}</em>{2,4}) = \text{Sigmoid}(\alpha_{2,1}, \alpha_{2,2}, \alpha_{2,3}, \alpha_{2,4})$，而 $\alpha_{2, 1}$ 是由 $q^2$ 与 $k^1$ 做 dot product 而得到的，其他依次类推 $\alpha_{2,2}, \alpha_{2, 3}, \alpha_{2, 4}$. 然后，把 $\alpha^{\prime}_{2, i}, i = 1, 2, 3, 4$ 作为系数与 $v^i, i = 1, 2, 3, 4$ 相乘得到 $b^2$<br>$$<br>b^2 = \sum_i \alpha^{\prime}_{2, i} v^i<br>$$<br>对于其他 $b^1, b^3, b^4$ 依次类推。</p>
+<p>对于 ${\alpha^{\prime}<em>{2,1}, \alpha^{\prime}</em>{2,2}, \alpha^{\prime}<em>{2,3}, \alpha^{\prime}</em>{2,4}} = \text{Sigmoid}({\alpha_{2,1}, \alpha_{2,2}, \alpha_{2,3}, \alpha_{2,4}})$，而 $\alpha_{2, 1}$ 是由 $q^2$ 与 $k^1$ 做 dot product 而得到的，其他依次类推 $\alpha_{2,2}, \alpha_{2, 3}, \alpha_{2, 4}$. 然后，把 $\alpha^{\prime}_{2, i}, i = 1, 2, 3, 4$ 作为系数与 $v^i, i = 1, 2, 3, 4$ 相乘得到 $b^2$<br>$$<br>b^2 = \sum_i \alpha^{\prime}_{2, i} v^i<br>$$<br>对于其他 $b^1, b^3, b^4$ 依次类推。</p>
 <p>其实，Self-attention 能够利用矩阵简洁表示如下，这也是其并行化计算的原因</p>
 <p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/self-attention-matrix.png"></p>
 <p>这里 $I = (a^i), i = 1, 2, 3, 4$ 为输入向量列，$W^q, W^k, W^v$ 为需要学习的参数矩阵，$Q, K, V$ 分别为 query, key, value 矩阵，$A$ 为 attention 系数，$A^{\prime}$ 为经过 Sigmoid 归一化后的 attention matrix. $O = (b^i), i = 1, 2, 3, 4$ 为 self-attention 输出的向量列。</p>
