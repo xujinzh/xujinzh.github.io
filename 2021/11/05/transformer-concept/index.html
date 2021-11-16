@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/decoder.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/cross-attention.png">
 <meta property="article:published_time" content="2021-11-05T01:56:58.000Z">
-<meta property="article:modified_time" content="2021-11-15T10:18:22.245Z">
+<meta property="article:modified_time" content="2021-11-16T03:13:00.065Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="dl">
 <meta property="article:tag" content="cv">
@@ -159,7 +159,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Seq2seq"><span class="nav-number">1.</span> <span class="nav-text">Seq2seq</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Self-attention"><span class="nav-number">1.1.</span> <span class="nav-text">Self-attention</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Encoder"><span class="nav-number">1.2.</span> <span class="nav-text">Encoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Decoder"><span class="nav-number">1.3.</span> <span class="nav-text">Decoder</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">2.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Seq2seq"><span class="nav-number">1.</span> <span class="nav-text">Seq2seq</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Self-attention"><span class="nav-number">2.</span> <span class="nav-text">Self-attention</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Encoder"><span class="nav-number">3.</span> <span class="nav-text">Encoder</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Decoder"><span class="nav-number">4.</span> <span class="nav-text">Decoder</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">5.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -268,7 +268,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-11-15 18:18:22" itemprop="dateModified" datetime="2021-11-15T18:18:22+08:00">2021-11-15</time>
+        <time title="Modified: 2021-11-16 11:13:00" itemprop="dateModified" datetime="2021-11-16T11:13:00+08:00">2021-11-16</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -308,12 +308,13 @@
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">input sequence -&gt; Encoder -&gt; Decoder -&gt; output sequence</span><br></pre></td></tr></table></figure>
 
 <p>如 Transformer 就是该模型的一种。李宏毅老师的课件：<a target="_blank" rel="noopener" href="https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/seq2seq_v9.pdf">Transformer</a></p>
-<h2 id="Self-attention"><a href="#Self-attention" class="headerlink" title="Self-attention"></a>Self-attention</h2><p>self-attention 中文是自注意力，它对于输入的一列向量输出相同数量的一列向量。</p>
+<h1 id="Self-attention"><a href="#Self-attention" class="headerlink" title="Self-attention"></a>Self-attention</h1><p>self-attention 中文是自注意力，它对于输入的一列向量输出相同数量的一列向量。</p>
 <p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/self-attention.png"></p>
-<p>如上图所示，$a^i, i = 1, 2, 3, 4$ 为输入向量，$q^i, i = 1, 2, 3, 4$ 为 query，$k^i, i = 1, 2, 3, 4$ 为 key，$v^i, i=1, 2, 3, 4$ 为 value，后三者分别有输入向量 $a^i$ 得到<br>$$<br>q^i = W^q a^i<br>$$</p>
-<p>$$<br>k^i = W^K a^i<br>$$</p>
+<p>如上图所示，$a^i, i = 1, 2, 3, 4$ 为输入向量（如词嵌入向量），$q^i, i = 1, 2, 3, 4$ 为 query，$k^i, i = 1, 2, 3, 4$ 为 key，$v^i, i=1, 2, 3, 4$ 为 value，后三者分别有输入向量 $a^i$ 得到<br>$$<br>q^i = W^q a^i<br>$$</p>
+<p>$$<br>k^i = W^k a^i<br>$$</p>
 <p>$$<br>v^i = W^v a^i<br>$$</p>
-<p>而 $\alpha_{2, 1}$ 是由 $q^2$ 与 $k^1$ 做 dot product 而得到的，其他依次类推 $\alpha_{2,2}, \alpha_{2, 3}, \alpha_{2, 4}$. 然后，通过 Sigmoid 激活函数，得到  $\alpha^{\prime}_{2, i}, i = 1, 2, 3, 4$ 作为系数与 $v^i, i = 1, 2, 3, 4$ 相乘得到 $b^2 = \sum_i \alpha^{\prime}_{2, i} v^i$，对于其他 $b^1, b^3, b^4$ 依次类推。</p>
+<p>这里，矩阵 $W^q, W^k, W^v$ 是矩阵，但不一定是方阵，一般是行大于列。行数代表输入向量的维数，列代表乘积后输出的向量 $q^i, k^i, v^i$ 维数。</p>
+<p>而 $\alpha_{2, 1}$ 是由 $q^2$ 与 $k^1$ 做 dot product 而得到的，其他依次类推 $\alpha_{2,2}, \alpha_{2, 3}, \alpha_{2, 4}$. 然后，通过 Softmax 激活函数，得到  $\alpha^{\prime}_{2, i}, i = 1, 2, 3, 4$ 作为系数与 $v^i, i = 1, 2, 3, 4$ 相乘得到 $b^2 = \sum_i \alpha^{\prime}_{2, i} v^i$，对于其他 $b^1, b^3, b^4$ 依次类推。</p>
 <p>其实，Self-attention 能够利用矩阵简洁表示如下，这也是其并行化计算的原因</p>
 <p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/self-attention-matrix.png"></p>
 <p>这里 $I = (a^i), i = 1, 2, 3, 4$ 为输入向量列，$W^q, W^k, W^v$ 为需要学习的参数矩阵，$Q, K, V$ 分别为 query, key, value 矩阵，$A$ 为 attention 系数，$A^{\prime}$ 为经过 Sigmoid 归一化后的 attention matrix. $O = (b^i), i = 1, 2, 3, 4$ 为 self-attention 输出的向量列。</p>
@@ -326,17 +327,21 @@
 <p>最后，$b^i = W^0 (b^{i,1}, b^{i,2})^T$ .</p>
 <p>这样，就从 $a^i, i = 1, 2, 3, 4$ 得到 $b^i, i = 1, 2, 3, 4$.</p>
 <p>CNN 和 Self-attention 的关系：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1911.03584.pdf">On The Relationship Between Self-attention And Convolutional Layers</a></p>
-<h2 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h2><p>输入一排向量，输出另一排同样长度的向量。在 Transformer 中的 Encoder 里用的是 <a target="_blank" rel="noopener" href="https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/self_v7.pdf">Self-attention</a>.</p>
+<h1 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h1><p>输入一排向量，输出另一排同样长度的向量。在 Transformer 中的 Encoder 里用的是 <a target="_blank" rel="noopener" href="https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/self_v7.pdf">Self-attention</a>.</p>
 <p> BERT 是仅仅使用 Transformer 的 Encoder 构建起来的。</p>
 <p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/encoder.png"></p>
 <p>Encoder 是由 $N$ 个 self-attention 模块线性拼接而成，输入向量列增加了位置信息。</p>
-<h2 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h2><p>输入是 Encoder 的输出向量和一个 special token （标识开始 BEGIN）。</p>
+<h1 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h1><p>输入是 Encoder 的输出向量和一个 special token （标识开始 BEGIN）。</p>
 <p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/decoder.png"></p>
 <p>Decoder 与 Encoder  的区别是调整为 masked multi-head attention，并在中间增加 cross attention，引入 encoder 的信息。而 masked multi-head attention 是因为后面的单词或向量还未得到，不能像 encoder 里的 multi-head attention 那样使用全面的向量的信息，只能使用已经得到的向量的信息。</p>
 <p>在 cross attention 中，对于 decoder 中 masked multi-head attenion 得到的每一个 $q$ 分别于 encoder 中的 $k^i = W^k a^i, v^i = W^v a^i$ 做 self-attention 操作得到 $v$，如图所示</p>
 <p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/cross-attention.png"></p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>TensorFlow: <a target="_blank" rel="noopener" href="https://github.com/tensorflow/tensor2tensor">tensor2tensor</a></p>
+<p>pyTorch: <a target="_blank" rel="noopener" href="http://nlp.seas.harvard.edu/2018/04/03/attention.html">The Annotated Transformer</a></p>
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://www.seldon.io/what-is-covariate-shift/">What is Covariate Shift?</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/48508221">详解Transformer （Attention Is All You Need）</a></li>
+<li><a target="_blank" rel="noopener" href="http://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer</a></li>
 </ol>
 
     </div>
