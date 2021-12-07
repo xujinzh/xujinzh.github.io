@@ -29,7 +29,7 @@
 <meta property="og:description" content="1, 查看 Linux 某一个文件夹下所有文件，并按从新到旧的时间排序：">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-12-20T12:06:51.000Z">
-<meta property="article:modified_time" content="2021-12-07T07:52:43.058Z">
+<meta property="article:modified_time" content="2021-12-07T07:58:39.445Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="ubuntu">
 <meta property="article:tag" content="linux">
@@ -271,7 +271,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-12-07 15:52:43" itemprop="dateModified" datetime="2021-12-07T15:52:43+08:00">2021-12-07</time>
+        <time title="修改时间：2021-12-07 15:58:39" itemprop="dateModified" datetime="2021-12-07T15:58:39+08:00">2021-12-07</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -323,7 +323,7 @@
 
 <h2 id="6-查看最小的几个个文件："><a href="#6-查看最小的几个个文件：" class="headerlink" title="6, 查看最小的几个个文件："></a>6, 查看最小的几个个文件：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">du -s * | sort -nr | tail <span class="comment"># 默认前10个</span></span><br><span class="line">ls -Slrh | head -n 3 <span class="comment"># 最小的3个</span></span><br><span class="line">du -s * | sort -n | head</span><br></pre></td></tr></table></figure>
 
-<h2 id="7-查看根目录下所有文件的大小"><a href="#7-查看根目录下所有文件的大小" class="headerlink" title="7, 查看根目录下所有文件的大小"></a>7, 查看根目录下所有文件的大小</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 发现哪些文件夹占用磁盘比较多</span></span><br><span class="line">sudo du -h --max-depth=1 /</span><br><span class="line">df -h</span><br><span class="line"><span class="comment"># 不进入文件夹查看文件夹下文件的大小</span></span><br><span class="line">du -h --max-depth=1 archive</span><br></pre></td></tr></table></figure>
+<h2 id="7-查看根目录下所有文件的大小"><a href="#7-查看根目录下所有文件的大小" class="headerlink" title="7, 查看根目录下所有文件的大小"></a>7, 查看根目录下所有文件的大小</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 发现哪些文件夹占用磁盘比较多</span></span><br><span class="line">sudo du -h --max-depth=1 /</span><br><span class="line">df -h</span><br><span class="line"><span class="comment"># 不进入文件夹查看文件夹下文件的大小</span></span><br><span class="line">du -h --max-depth=1 archive</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查看文件夹下子文件夹的大小</span></span><br><span class="line">du -h archive</span><br><span class="line"><span class="comment"># 查看某一个文件夹下所有文件大小和</span></span><br><span class="line">du -h --max-depth=0 archive</span><br><span class="line">du -sh archive</span><br></pre></td></tr></table></figure>
 
 
     </div>
