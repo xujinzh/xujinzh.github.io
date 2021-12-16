@@ -10998,6 +10998,34 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>Python中NotImplementedError的使用</title>
+    <url>/2021/12/16/python-class-notImplementedError/</url>
+    <content><![CDATA[<p>Python 是一种面向对象的编程语言，子类可以继承父类的方法。父类可以通过某种手段限制子类中必须重写父类的指定方法，否则报错。这种手段就是 NotImplementedError.</p>
+<a id="more"></a>
+
+<h1 id="如果子类不重写父类的方法"><a href="#如果子类不重写父类的方法" class="headerlink" title="如果子类不重写父类的方法"></a>如果子类不重写父类的方法</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ParentClass</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">nie_func</span>(<span class="params">self</span>):</span>  <span class="comment"># 要求子类中必须实现该方法，否则在子类实例中不能调用该方法</span></span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError(<span class="string">&quot;parent class nie methods not implemented&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChildClass</span>(<span class="params">ParentClass</span>):</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cc = ChildClass()</span><br><span class="line">cc.nie_func()</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">---------------------------------------------------------------------------</span><br><span class="line">NotImplementedError                       Traceback (most recent call last)</span><br><span class="line">/tmp/ipykernel_46111/<span class="number">872110974.</span>py <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">      <span class="number">9</span> </span><br><span class="line">     <span class="number">10</span> cc = ChildClass()</span><br><span class="line">---&gt; 11 cc.nie_func()</span><br><span class="line"></span><br><span class="line">/tmp/ipykernel_46111/<span class="number">872110974.</span>py <span class="keyword">in</span> nie_func(self)</span><br><span class="line">      <span class="number">1</span> <span class="class"><span class="keyword">class</span> <span class="title">ParentClass</span>:</span></span><br><span class="line">      <span class="number">2</span>     <span class="function"><span class="keyword">def</span> <span class="title">nie_func</span>(<span class="params">self</span>):</span>  <span class="comment"># 要求子类中必须实现该方法，否则在子类实例中不能调用该方法</span></span><br><span class="line">----&gt; 3         raise NotImplementedError(&quot;parent class nie methods not implemented&quot;)</span><br><span class="line">      <span class="number">4</span> </span><br><span class="line">      <span class="number">5</span> </span><br><span class="line"></span><br><span class="line">NotImplementedError: parent <span class="class"><span class="keyword">class</span> <span class="title">nie</span> <span class="title">methods</span> <span class="title">not</span> <span class="title">implemented</span></span></span><br></pre></td></tr></table></figure>
+
+<p>发现报错 NotImplementedError，即没有实现方法的错误。在下面示例中进行修复，在子类中实现父类的方法。</p>
+<h1 id="子类重写父类的方法"><a href="#子类重写父类的方法" class="headerlink" title="子类重写父类的方法"></a>子类重写父类的方法</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ParentClass</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">nie_func</span>(<span class="params">self</span>):</span>  <span class="comment"># 要求子类中必须实现该方法，否则在子类实例中不能调用该方法</span></span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError(<span class="string">&quot;parent class nie methods not implemented&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChildClass</span>(<span class="params">ParentClass</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">nie_func</span>(<span class="params">self</span>):</span>  <span class="comment"># 子类中重新父类方法</span></span><br><span class="line">        print(<span class="string">&quot;child implement tdemo methods&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cc = ChildClass()</span><br><span class="line">cc.nie_func()</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">child implement tdemo methods</span><br></pre></td></tr></table></figure>
+
+<p>发现不再报 NotImplementedError.</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>1.<a href="https://blog.csdn.net/grey_csdn/article/details/77074707">Python编程中NotImplementedError的使用</a></p>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>about</title>
     <url>/about/index.html</url>
     <content><![CDATA[<ol>
