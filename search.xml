@@ -11067,6 +11067,46 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>在 Python 中使用 importlib 和 getattr 动态调用运行函数</title>
+    <url>/2021/12/17/python-importlib-getattr/</url>
+    <content><![CDATA[<p>Python 是一种动态编程语言。在编写 Python 代码时利用 importlib 能够动态的导入需要的模块，利用 getattr 能够获取模块的属性或方法，返回属性值和函数。本篇对它们进行介绍，并给出一个例子展示如何使用它们。</p>
+<a id="more"></a>
+
+<h1 id="importlib"><a href="#importlib" class="headerlink" title="importlib"></a>importlib</h1><p>importlib 是一个模块，使用时需要首先导入该模块。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> importlib</span><br></pre></td></tr></table></figure>
+
+<p>导入模块的方法</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">expr_module = importlib.import_module(<span class="string">&quot;mymodule.test&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="getattr"><a href="#getattr" class="headerlink" title="getattr"></a>getattr</h1><p>getattr 是内置函数，用于返回一个对象属性值。</p>
+<p>如，编写一个类：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.name = <span class="string">&#x27;test&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>获取实例的属性值</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">t = Test()</span><br><span class="line">getattr(t, <span class="string">&#x27;name&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;test&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h1><p>编写模块 primes.py，放到当前目录的 pyscripts 文件夹下</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> numba <span class="keyword">import</span> jit</span><br><span class="line"></span><br><span class="line"><span class="meta">@jit(nopython=True)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isPrime</span>(<span class="params">n</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    判断给定的n是否为素数</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 只需要用n除以2 ~ n/2 + 1 是否能整除</span></span><br><span class="line">    <span class="comment"># 如果有整数整除n，则n不是素数</span></span><br><span class="line">    <span class="comment"># 如果所有的都不能整数n，则n是素数</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>, n // <span class="number">2</span> + <span class="number">1</span>):</span><br><span class="line">        <span class="comment"># 如果余数是0，则表示整除，不是素数，直接返回0</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> (n % i):</span><br><span class="line">            <span class="keyword">return</span> <span class="string">f&quot;<span class="subst">&#123;n&#125;</span>不是素数，是合数&quot;</span></span><br><span class="line">    <span class="comment"># 如果所有的数都不能整除n，则说明n是素数，则返回1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">f&quot;<span class="subst">&#123;n&#125;</span>是素数&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>调用模块，并使用模块的方法（在 notebook 中演示）</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> importlib</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入模块</span></span><br><span class="line">expr_module = importlib.import_module(<span class="string">&#x27;pyscripts.primes&#x27;</span>)</span><br><span class="line"><span class="comment"># 获取模块的方法</span></span><br><span class="line">expr_func = getattr(expr_module, <span class="string">&quot;isPrime&quot;</span>)</span><br><span class="line"><span class="comment"># 使用该方法，判断数值 158963 是否是素数</span></span><br><span class="line">expr_func(<span class="number">158963</span>), expr_func(<span class="number">158863</span>)</span><br></pre></td></tr></table></figure>
+
+<p>结果如下</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">(<span class="string">&#x27;158963不是素数，是合数&#x27;</span>, <span class="string">&#x27;158863是素数&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>about</title>
     <url>/about/index.html</url>
     <content><![CDATA[<ol>
