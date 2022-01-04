@@ -182,6 +182,7 @@ body {
 }
 body {
   background: var(--body-bg-color);
+  box-sizing: border-box;
   color: var(--text-color);
   font-family: Lato, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   font-size: 1em;
@@ -543,6 +544,9 @@ figure.highlight .gutter pre {
 figure.highlight .code pre {
   padding-left: 10px;
   width: 100%;
+}
+figure.highlight .marked {
+  background: rgba(0,0,0,0.3);
 }
 pre .caption,
 pre figcaption {
@@ -1201,6 +1205,7 @@ pre code {
   font-family: Lato, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   font-size: 1.375em;
   font-weight: normal;
+  line-height: 1.5;
   margin: 0;
 }
 .site-subtitle {
@@ -1435,7 +1440,7 @@ pre code {
     transition: visibility 0.4s, opacity 0.4s;
     visibility: hidden;
     width: 100%;
-    z-index: 1100;
+    z-index: 10;
   }
   .sidebar-active .sidebar-dimmer {
     opacity: 0.7;
@@ -1498,7 +1503,7 @@ pre code {
   cursor: pointer;
   opacity: 0.8;
   position: fixed;
-  z-index: 1300;
+  z-index: 30;
   right: 30px;
 }
 @media (max-width: 991px) {
@@ -1789,7 +1794,7 @@ pre code {
   text-align: center;
   top: 0;
   width: 100%;
-  z-index: 1500;
+  z-index: 50;
 }
 .back-to-top {
   font-size: 12px;
@@ -1802,7 +1807,7 @@ pre code {
   cursor: pointer;
   opacity: 0.8;
   position: fixed;
-  z-index: 1300;
+  z-index: 30;
   right: 30px;
   width: 24px;
 }
@@ -1833,7 +1838,7 @@ pre code {
   background: #37c6c0;
   height: 3px;
   position: fixed;
-  z-index: 1500;
+  z-index: 50;
   width: var(--progress);
   left: 0;
   top: 0;
@@ -2591,7 +2596,7 @@ ul.breadcrumb li:last-child {
   transition: visibility 0.4s, background 0.4s;
   visibility: hidden;
   width: 100%;
-  z-index: 1400;
+  z-index: 40;
 }
 .search-active .search-pop-overlay {
   background: rgba(0,0,0,0.3);
@@ -2831,7 +2836,7 @@ mjx-container[display='true'] + br {
   top: 0;
   transition: all 0.2s ease-out;
   width: 320px;
-  z-index: 1200;
+  z-index: 20;
 }
 .sidebar a {
   border-bottom-color: #555;
@@ -2852,7 +2857,7 @@ mjx-container[display='true'] + br {
   vertical-align: middle;
 }
 .links-of-author a::before {
-  background: #9db9fe;
+  background: #d5f422;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
