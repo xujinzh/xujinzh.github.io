@@ -234,7 +234,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2019/12/21/linux-port/">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2019/12/21/linux-memory/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/silence.jpg">
@@ -247,7 +247,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/12/21/linux-port/" class="post-title-link" itemprop="url">Linux端口占用情况查询与释放端口</a>
+          <a href="/2019/12/21/linux-memory/" class="post-title-link" itemprop="url">查看内存消耗排序情况</a>
         </h2>
 
         <div class="post-meta-container">
@@ -287,20 +287,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>查询特定端口占用情况：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@ip-172-26-1-96:/<span class="comment"># netstat -ntulp | grep 8080</span></span><br></pre></td></tr></table></figure>
+          <p>在终端运行如下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -aux | sort -k4nr | head -n 25</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN      5759/filebrowser</span><br></pre></td></tr></table></figure>
+<p>查看占用内存从大到小的25个进程</p>
 
-<p>结果最后一位分别是进程id/进程名，使用如下方法杀死进程：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/12/21/linux-port/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
       
     </div>
 
