@@ -113,6 +113,26 @@
       </tags>
   </entry>
   <entry>
+    <title>给服务器添加交换分区swap 和开启 bbr</title>
+    <url>/2019/12/20/add-swap/</url>
+    <content><![CDATA[<p>有时候，购买的云服务器不会自动给创建交换分区，如何自己建立交换分区呢，使用下面命令创建交换分区，可以更改大小，比如1G更改为2G，一般交换分区是内存的2倍足矣。本篇以 Debian 系统为例，建议以 root 身份运行本篇中的命令。</p>
+<a id="more"></a>
+
+<h1 id="添加交换分区"><a href="#添加交换分区" class="headerlink" title="添加交换分区"></a>添加交换分区</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo swapon --show</span><br><span class="line">free -h</span><br><span class="line">df -h</span><br><span class="line">sudo fallocate -l 1G /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">sudo chmod 600 /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">sudo mkswap /swapfile</span><br><span class="line">sudo swapon /swapfile</span><br><span class="line">sudo swapon --show</span><br><span class="line">free -h</span><br><span class="line">sudo cp /etc/fstab /etc/fstab.bak</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/swapfile none swap sw 0 0&#x27;</span> | sudo tee -a /etc/fstab</span><br><span class="line">cat /proc/sys/vm/swappiness</span><br><span class="line">sudo sysctl vm.swappiness=10</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.swappiness=10&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">cat /proc/sys/vm/vfs_cache_pressure</span><br><span class="line">sudo sysctl vm.vfs_cache_pressure=50</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.vfs_cache_pressure=50&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
+
+<p>使用 top 或 htop 命令，可以查看交换分区是否创建成功。</p>
+<h1 id="开启-bbr"><a href="#开启-bbr" class="headerlink" title="开启 bbr"></a>开启 bbr</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.core.default_qdisc=fq&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv4.tcp_congestion_control=bbr&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl -p</span><br><span class="line">sysctl net.ipv4.tcp_available_congestion_control</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否开启成功</span></span><br><span class="line">lsmod | grep bbr</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>swap</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>机器学习优化算法：从SGD到Adam</title>
     <url>/2020/05/30/ai-optimizer/</url>
     <content><![CDATA[<p>机器学习是实现人工智能的一种有效方法，当构建好模型后，需要使用优化器迭代学习模型参数，常用的有随机梯度下降法（SGD）和 Adam，下面总结一下各种的优缺点，并介绍一点优化器的演变过程。</p>
@@ -189,26 +209,6 @@
       <tags>
         <tag>optimizer</tag>
         <tag>ml</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>给服务器添加交换分区swap 和开启 bbr</title>
-    <url>/2019/12/20/add-swap/</url>
-    <content><![CDATA[<p>有时候，购买的云服务器不会自动给创建交换分区，如何自己建立交换分区呢，使用下面命令创建交换分区，可以更改大小，比如1G更改为2G，一般交换分区是内存的2倍足矣。本篇以 Debian 系统为例，建议以 root 身份运行本篇中的命令。</p>
-<a id="more"></a>
-
-<h1 id="添加交换分区"><a href="#添加交换分区" class="headerlink" title="添加交换分区"></a>添加交换分区</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo swapon --show</span><br><span class="line">free -h</span><br><span class="line">df -h</span><br><span class="line">sudo fallocate -l 1G /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">sudo chmod 600 /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">sudo mkswap /swapfile</span><br><span class="line">sudo swapon /swapfile</span><br><span class="line">sudo swapon --show</span><br><span class="line">free -h</span><br><span class="line">sudo cp /etc/fstab /etc/fstab.bak</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/swapfile none swap sw 0 0&#x27;</span> | sudo tee -a /etc/fstab</span><br><span class="line">cat /proc/sys/vm/swappiness</span><br><span class="line">sudo sysctl vm.swappiness=10</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.swappiness=10&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">cat /proc/sys/vm/vfs_cache_pressure</span><br><span class="line">sudo sysctl vm.vfs_cache_pressure=50</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.vfs_cache_pressure=50&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
-
-<p>使用 top 或 htop 命令，可以查看交换分区是否创建成功。</p>
-<h1 id="开启-bbr"><a href="#开启-bbr" class="headerlink" title="开启 bbr"></a>开启 bbr</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.core.default_qdisc=fq&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv4.tcp_congestion_control=bbr&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl -p</span><br><span class="line">sysctl net.ipv4.tcp_available_congestion_control</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否开启成功</span></span><br><span class="line">lsmod | grep bbr</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>swap</tag>
       </tags>
   </entry>
   <entry>
@@ -419,6 +419,43 @@
       </tags>
   </entry>
   <entry>
+    <title>Linux 系统中的开机自启命令简单介绍</title>
+    <url>/2020/06/12/auto-start-command-in-linux/</url>
+    <content><![CDATA[<p>Linux 系统可以通过命令行，有效简便快捷的启动程序、设置开机自启的程序等，并且，往往有多个命令可以达到这一效果。但是，需要我们了解这些命令并知悉它们之间的区别，下面主要简单的总结一下，以下代码以 Ubuntu18.04 为例</p>
+<a id="more"></a>
+
+<h1 id="启动程序命令"><a href="#启动程序命令" class="headerlink" title="启动程序命令"></a>启动程序命令</h1><h2 id="etc-init-d-appname"><a href="#etc-init-d-appname" class="headerlink" title="/etc/init.d/appname"></a>/etc/init.d/appname</h2><p>常用方法：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看ssh服务状态</span></span><br><span class="line">/etc/init.d/ssh status   </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动ssh服务，注意需要sudo权限</span></span><br><span class="line">sudo /etc/init.d/ssh start</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭ssh服务</span></span><br><span class="line">sudo /etc/init.d/ssh stop</span><br></pre></td></tr></table></figure>
+
+<p>/etc/init.d/ 其实是一个目录，里面存放的都是系统启动时需要运行或关闭的命令，这些命令常常通过软连接，连接到各级启动级别的文件夹中，如 /etc/rc3.d/，通过下面介绍的命令 update-rc.d 和 systemctl 可以设置开机启动或关闭</p>
+<h2 id="service"><a href="#service" class="headerlink" title="service"></a>service</h2><p>常用方法：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看防火墙状态</span></span><br><span class="line">service ufw status</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭防火墙，注意sudo权限</span></span><br><span class="line">sudo service ufw stop</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动防火墙</span></span><br><span class="line">sudo service ssh start</span><br></pre></td></tr></table></figure>
+
+<p>service 是一个运行 System V 的 init script，它其实是运行 /etc/init.d 和  /{lib,run,etc}/systemd/system 中的命令或程序，对于 /etc/init.d/ 就是等同于上面介绍的命令 /etc/init.d/appname</p>
+<h2 id="systemctl"><a href="#systemctl" class="headerlink" title="systemctl"></a>systemctl</h2><p>常用方法：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看zabbix-agent运行状态</span></span><br><span class="line">systemctl status zabbix-agent.service</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭zabbix-agent</span></span><br><span class="line">systemctl stop zabbix-agent.service</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动zabbix-agent</span></span><br><span class="line">systemctl start zabbix-agent.service</span><br></pre></td></tr></table></figure>
+
+<p>该命令非常强大，不仅可以启动程序，还可以设置程序开机自启等，不过在 Ubuntu 14.04等之前的系统中未有该命令。在 Centos、Redhat 等系统中，设置程序开机自启的有 chkconfig 等，不过，现在逐渐被抛弃。功能上 systemctl = service + chkconfig</p>
+<h1 id="设置开机自启命令"><a href="#设置开机自启命令" class="headerlink" title="设置开机自启命令"></a>设置开机自启命令</h1><h2 id="update-rc-d"><a href="#update-rc-d" class="headerlink" title="update-rc.d"></a>update-rc.d</h2><p>常用方法：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 取消开机启动zabbix-agent，从/etc/rcN.d中清除到/etc/init.d/zabbix-agent链接</span></span><br><span class="line">update-rc.d -f zabbix-agent remove</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置默认启动级别的zabbix-agent开机自启</span></span><br><span class="line">update-rc.d zabbix-agent defaults</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置zabbix-agent开机自启</span></span><br><span class="line">update-rc.d zabbix-agent enable</span><br></pre></td></tr></table></figure>
+
+<h2 id="chkconfig"><a href="#chkconfig" class="headerlink" title="chkconfig"></a>chkconfig</h2><p>常用方法：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 设置开机启动zabbix-agent</span></span><br><span class="line">chkconfig --add zabbix-agent</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置开机不启动zabbix-agent</span></span><br><span class="line">chkconfig --del zabbix-agent</span><br></pre></td></tr></table></figure>
+
+<p>在 Debian、Ubuntu上无该命令，在Centos、RedHat上可以使用</p>
+<h2 id="systemctl-1"><a href="#systemctl-1" class="headerlink" title="systemctl"></a>systemctl</h2><p>常用方法：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 开机启动ssh服务</span></span><br><span class="line">systemctl enable ssh.socket</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 开机不启动ssh服务</span></span><br><span class="line">systemctl disable ssh.socket</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看zabbix-agent是否开机启动</span></span><br><span class="line">systemctl list-unit-files | grep zabbix-agent</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux 中的 awk 命令</title>
     <url>/2021/09/06/awk-command-language/</url>
     <content><![CDATA[<p>awk 是一个处理文本的应用程序，也是一门语言。基本上所有的 Linux 发行版都自带该程序。它依次处理文件的每一行，并读取里面的每一个字段，尤其是日志文件、CSV文件等。本篇介绍 awk 如何在命令行上使用，以 Debian 10.8 为例。</p>
@@ -458,43 +495,6 @@
       <tags>
         <tag>linux</tag>
         <tag>awk</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux 系统中的开机自启命令简单介绍</title>
-    <url>/2020/06/12/auto-start-command-in-linux/</url>
-    <content><![CDATA[<p>Linux 系统可以通过命令行，有效简便快捷的启动程序、设置开机自启的程序等，并且，往往有多个命令可以达到这一效果。但是，需要我们了解这些命令并知悉它们之间的区别，下面主要简单的总结一下，以下代码以 Ubuntu18.04 为例</p>
-<a id="more"></a>
-
-<h1 id="启动程序命令"><a href="#启动程序命令" class="headerlink" title="启动程序命令"></a>启动程序命令</h1><h2 id="etc-init-d-appname"><a href="#etc-init-d-appname" class="headerlink" title="/etc/init.d/appname"></a>/etc/init.d/appname</h2><p>常用方法：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看ssh服务状态</span></span><br><span class="line">/etc/init.d/ssh status   </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动ssh服务，注意需要sudo权限</span></span><br><span class="line">sudo /etc/init.d/ssh start</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭ssh服务</span></span><br><span class="line">sudo /etc/init.d/ssh stop</span><br></pre></td></tr></table></figure>
-
-<p>/etc/init.d/ 其实是一个目录，里面存放的都是系统启动时需要运行或关闭的命令，这些命令常常通过软连接，连接到各级启动级别的文件夹中，如 /etc/rc3.d/，通过下面介绍的命令 update-rc.d 和 systemctl 可以设置开机启动或关闭</p>
-<h2 id="service"><a href="#service" class="headerlink" title="service"></a>service</h2><p>常用方法：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看防火墙状态</span></span><br><span class="line">service ufw status</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭防火墙，注意sudo权限</span></span><br><span class="line">sudo service ufw stop</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动防火墙</span></span><br><span class="line">sudo service ssh start</span><br></pre></td></tr></table></figure>
-
-<p>service 是一个运行 System V 的 init script，它其实是运行 /etc/init.d 和  /{lib,run,etc}/systemd/system 中的命令或程序，对于 /etc/init.d/ 就是等同于上面介绍的命令 /etc/init.d/appname</p>
-<h2 id="systemctl"><a href="#systemctl" class="headerlink" title="systemctl"></a>systemctl</h2><p>常用方法：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看zabbix-agent运行状态</span></span><br><span class="line">systemctl status zabbix-agent.service</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭zabbix-agent</span></span><br><span class="line">systemctl stop zabbix-agent.service</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动zabbix-agent</span></span><br><span class="line">systemctl start zabbix-agent.service</span><br></pre></td></tr></table></figure>
-
-<p>该命令非常强大，不仅可以启动程序，还可以设置程序开机自启等，不过在 Ubuntu 14.04等之前的系统中未有该命令。在 Centos、Redhat 等系统中，设置程序开机自启的有 chkconfig 等，不过，现在逐渐被抛弃。功能上 systemctl = service + chkconfig</p>
-<h1 id="设置开机自启命令"><a href="#设置开机自启命令" class="headerlink" title="设置开机自启命令"></a>设置开机自启命令</h1><h2 id="update-rc-d"><a href="#update-rc-d" class="headerlink" title="update-rc.d"></a>update-rc.d</h2><p>常用方法：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 取消开机启动zabbix-agent，从/etc/rcN.d中清除到/etc/init.d/zabbix-agent链接</span></span><br><span class="line">update-rc.d -f zabbix-agent remove</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置默认启动级别的zabbix-agent开机自启</span></span><br><span class="line">update-rc.d zabbix-agent defaults</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置zabbix-agent开机自启</span></span><br><span class="line">update-rc.d zabbix-agent enable</span><br></pre></td></tr></table></figure>
-
-<h2 id="chkconfig"><a href="#chkconfig" class="headerlink" title="chkconfig"></a>chkconfig</h2><p>常用方法：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 设置开机启动zabbix-agent</span></span><br><span class="line">chkconfig --add zabbix-agent</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置开机不启动zabbix-agent</span></span><br><span class="line">chkconfig --del zabbix-agent</span><br></pre></td></tr></table></figure>
-
-<p>在 Debian、Ubuntu上无该命令，在Centos、RedHat上可以使用</p>
-<h2 id="systemctl-1"><a href="#systemctl-1" class="headerlink" title="systemctl"></a>systemctl</h2><p>常用方法：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 开机启动ssh服务</span></span><br><span class="line">systemctl enable ssh.socket</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 开机不启动ssh服务</span></span><br><span class="line">systemctl disable ssh.socket</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看zabbix-agent是否开机启动</span></span><br><span class="line">systemctl list-unit-files | grep zabbix-agent</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>linux</tag>
       </tags>
   </entry>
   <entry>
@@ -588,32 +588,6 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
-    <title>Clion 运行 C 出现 cmake-build-debug 找不到的解决方法</title>
-    <url>/2021/04/08/c-remote-cmake-debug/</url>
-    <content><![CDATA[<p>使用 Clion 连接远程服务器，利用服务器上的 c 编译器、make、cmake 进行 C 开发非常方便高效，但是，有时候编译时会出现 cmake-build-debug 找不到，导致无法编译运行 C 代码。下面给出解决方法。</p>
-<a id="more"></a>
-
-<p>使用远程服务器时，已经自动将本地的 CMakeLists.txt、main.c 和 其他 .c 文件同步到服务器上，但是，无法同步本地的 cmake-build-debug 文件夹，该文件夹是编译运行 C 程序的。尝试通过两种方法解决。</p>
-<h1 id="手动远程服务器上生成"><a href="#手动远程服务器上生成" class="headerlink" title="手动远程服务器上生成"></a>手动远程服务器上生成</h1><p>首先通过 SSH 连接到远程服务器上，并 cd 到 C 工程目录，然后，创建文件夹 cmake-build-debug</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir cmake-build-debug</span><br></pre></td></tr></table></figure>
-
-<p>最后，使用服务器的 cmake 生成 make 文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> cmake-build-debug</span><br><span class="line">cmake ..</span><br></pre></td></tr></table></figure>
-
-<h1 id="在-Clion-上自动生成"><a href="#在-Clion-上自动生成" class="headerlink" title="在 Clion 上自动生成"></a>在 Clion 上自动生成</h1><p>其实 Clion 上给出了自动生成 make file 的工具。</p>
-<p>在 Clion 窗口最下面一行，找到 CMake，然后点击 CMake 窗口左上角的同步（Reload CMake Project），此时，会在远程服务器上自动生成 make file，即 cmake-build-debug 文件夹。</p>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>c/c++</category>
-      </categories>
-      <tags>
-        <tag>c</tag>
-        <tag>cmake</tag>
-        <tag>clion</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>微积分基本定理和定积分计算</title>
     <url>/2020/09/19/basic-theorem-of-calculus-and-calculation-of-definite-integral/</url>
     <content><![CDATA[<p>首先给出一个结论：连续函数必定存在原函数。</p>
@@ -659,6 +633,32 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
         <tag>maths</tag>
         <tag>definite integral</tag>
         <tag>integral</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Clion 运行 C 出现 cmake-build-debug 找不到的解决方法</title>
+    <url>/2021/04/08/c-remote-cmake-debug/</url>
+    <content><![CDATA[<p>使用 Clion 连接远程服务器，利用服务器上的 c 编译器、make、cmake 进行 C 开发非常方便高效，但是，有时候编译时会出现 cmake-build-debug 找不到，导致无法编译运行 C 代码。下面给出解决方法。</p>
+<a id="more"></a>
+
+<p>使用远程服务器时，已经自动将本地的 CMakeLists.txt、main.c 和 其他 .c 文件同步到服务器上，但是，无法同步本地的 cmake-build-debug 文件夹，该文件夹是编译运行 C 程序的。尝试通过两种方法解决。</p>
+<h1 id="手动远程服务器上生成"><a href="#手动远程服务器上生成" class="headerlink" title="手动远程服务器上生成"></a>手动远程服务器上生成</h1><p>首先通过 SSH 连接到远程服务器上，并 cd 到 C 工程目录，然后，创建文件夹 cmake-build-debug</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir cmake-build-debug</span><br></pre></td></tr></table></figure>
+
+<p>最后，使用服务器的 cmake 生成 make 文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> cmake-build-debug</span><br><span class="line">cmake ..</span><br></pre></td></tr></table></figure>
+
+<h1 id="在-Clion-上自动生成"><a href="#在-Clion-上自动生成" class="headerlink" title="在 Clion 上自动生成"></a>在 Clion 上自动生成</h1><p>其实 Clion 上给出了自动生成 make file 的工具。</p>
+<p>在 Clion 窗口最下面一行，找到 CMake，然后点击 CMake 窗口左上角的同步（Reload CMake Project），此时，会在远程服务器上自动生成 make file，即 cmake-build-debug 文件夹。</p>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>c/c++</category>
+      </categories>
+      <tags>
+        <tag>c</tag>
+        <tag>cmake</tag>
+        <tag>clion</tag>
       </tags>
   </entry>
   <entry>
@@ -886,28 +886,6 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
-    <title>Centos 安装 htop</title>
-    <url>/2020/01/02/centos-install-htop/</url>
-    <content><![CDATA[<p>htop 是一个非常优秀好用的命令来查看系统运行情况，在Ubuntu上可以非常简单的使用命令</p>
-<a id="more"></a>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update &amp;&amp; apt install htop</span><br></pre></td></tr></table></figure>
-
-<p>安装htop</p>
-<p>但是，在Centos 7等上却不能简单的使用一条命令安装htop，下面给出完整的命令来在Centos 7上安装htop</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum install epel-release -y</span><br><span class="line"></span><br><span class="line">sudo yum update -y</span><br><span class="line"></span><br><span class="line">sudo yum install htop -y</span><br></pre></td></tr></table></figure>
-
-<p>到此，就正常安装了htop在Centos 7上，可以在终端运行 htop 命令来查看是否安装成功。</p>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>centos</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Centos远程SSH保持在线方法</title>
     <url>/2020/03/21/centos-ssh-client-alive/</url>
     <content><![CDATA[<p>Centos 安全可靠，但是远程通过SSH连接Centos服务器时，总是会出现过一段时间不用或隔夜第二天断开的情况，这是由于Centos的SSH服务配置项设置导致的，可以修改相应的配置项来保证Centos通过SSH连接时不自动断开。</p>
@@ -947,27 +925,25 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
-    <title>SSH远程连接Centos出现cannot change locale (UTF-8)</title>
-    <url>/2020/03/12/centos-utf8-ssh/</url>
-    <content><![CDATA[<p>Centos是一个优秀的安全的linux发行版，但是，当我使用Mac终端SSH远程连接Centos服务器时却出现如下警告：</p>
-<p>-bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory=</p>
-<p>这里给出解决该问题的方法：</p>
+    <title>Centos 安装 htop</title>
+    <url>/2020/01/02/centos-install-htop/</url>
+    <content><![CDATA[<p>htop 是一个非常优秀好用的命令来查看系统运行情况，在Ubuntu上可以非常简单的使用命令</p>
 <a id="more"></a>
 
-<p>在Centos服务器上，进入</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/environment</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update &amp;&amp; apt install htop</span><br></pre></td></tr></table></figure>
 
-<p>添加如下代码</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">LANG=en_US.utf-8</span><br><span class="line">LC_ALL=en_US.utf-8</span><br></pre></td></tr></table></figure>
+<p>安装htop</p>
+<p>但是，在Centos 7等上却不能简单的使用一条命令安装htop，下面给出完整的命令来在Centos 7上安装htop</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum install epel-release -y</span><br><span class="line"></span><br><span class="line">sudo yum update -y</span><br><span class="line"></span><br><span class="line">sudo yum install htop -y</span><br></pre></td></tr></table></figure>
 
-<p>再次通过SSH连接时就不会出现上述警告了。</p>
+<p>到此，就正常安装了htop在Centos 7上，可以在终端运行 htop 命令来查看是否安装成功。</p>
 ]]></content>
       <categories>
         <category>technology</category>
       </categories>
       <tags>
+        <tag>linux</tag>
         <tag>centos</tag>
-        <tag>ssh</tag>
       </tags>
   </entry>
   <entry>
@@ -995,6 +971,30 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </categories>
       <tags>
         <tag>chrome</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SSH远程连接Centos出现cannot change locale (UTF-8)</title>
+    <url>/2020/03/12/centos-utf8-ssh/</url>
+    <content><![CDATA[<p>Centos是一个优秀的安全的linux发行版，但是，当我使用Mac终端SSH远程连接Centos服务器时却出现如下警告：</p>
+<p>-bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory=</p>
+<p>这里给出解决该问题的方法：</p>
+<a id="more"></a>
+
+<p>在Centos服务器上，进入</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/environment</span><br></pre></td></tr></table></figure>
+
+<p>添加如下代码</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">LANG=en_US.utf-8</span><br><span class="line">LC_ALL=en_US.utf-8</span><br></pre></td></tr></table></figure>
+
+<p>再次通过SSH连接时就不会出现上述警告了。</p>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>centos</tag>
+        <tag>ssh</tag>
       </tags>
   </entry>
   <entry>
@@ -1049,49 +1049,6 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
-    <title>清理 Linux 系统内存 Cache</title>
-    <url>/2021/06/20/clear-linux-memory-cache/</url>
-    <content><![CDATA[<p>每个 Linux 系统都有三个选项可以在不中断任何进程或服务的情况下清除缓存。本篇代码以 root 身份在 Ubuntu 18.04演示。</p>
-<a id="more"></a>
-
-<h1 id="仅清除页面缓存-Clear-PageCache-only"><a href="#仅清除页面缓存-Clear-PageCache-only" class="headerlink" title="仅清除页面缓存(Clear PageCache only)"></a>仅清除页面缓存(Clear PageCache only)</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync; <span class="built_in">echo</span> 1 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
-
-<h1 id="清除目录项和inode-Clear-dentries-and-inodes"><a href="#清除目录项和inode-Clear-dentries-and-inodes" class="headerlink" title="清除目录项和inode(Clear dentries and inodes)"></a>清除目录项和inode(Clear dentries and inodes)</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync; <span class="built_in">echo</span> 2 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
-
-<h1 id="清理三者-Clear-PageCache-dentries-and-inodes"><a href="#清理三者-Clear-PageCache-dentries-and-inodes" class="headerlink" title="清理三者(Clear PageCache, dentries and inodes)"></a>清理三者(Clear PageCache, dentries and inodes)</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync; <span class="built_in">echo</span> 3 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
-
-<p>同步 (<code>sync</code>) 将刷新文件系统缓冲区。命令以 “;” 分隔依次运行。在执行序列中的下一个命令之前，shell 等待每个命令终止。正如内核文档中提到的，写入 drop_cache 将清除缓存而不杀死任何应用程序/服务，命令 echo 正在执行写入文件的工作。</p>
-<p>如果您必须清除磁盘缓存，第一个命令在企业和生产中是最安全的“…echo 1 &gt; …”。只会清除 PageCache。不建议在生产中使用“…echo 3 &gt;”上方的第三个选项，直到您知道自己在做什么，因为它会清除 PageCache、dentries 和 inode。</p>
-<h1 id="定时清理缓存"><a href="#定时清理缓存" class="headerlink" title="定时清理缓存"></a>定时清理缓存</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim clearcache.sh</span><br></pre></td></tr></table></figure>
-
-<p>写入如下内容</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># Note, we are using &quot;echo 3&quot;, but it is not recommended in production instead use &quot;echo 1&quot;</span></span><br><span class="line">sync</span><br><span class="line"><span class="built_in">echo</span> 3 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod 755 clearcache.sh</span><br></pre></td></tr></table></figure>
-
-<p>以 root 身份创建定时清理任务</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
-
-<p>写入如下内容，每天0点，12点，18点的0分清理缓存</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">0  0,12,18  *  *  *  /path/to/clearcache.sh</span><br></pre></td></tr></table></figure>
-
-<p><font size=5 color=red>不建议定时清理RAM</font></p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="https://www.tecmint.com/clear-ram-memory-cache-buffer-and-swap-space-on-linux/">How to Clear RAM Memory Cache, Buffer and Swap Space on Linux</a></li>
-<li><a href="https://colobu.com/2015/10/31/How-to-Clear-RAM-Memory-Cache-Buffer-and-Swap-Space-on-Linux/">在 Linux 上如何清除内存的 Cache、Buffer 和交换空间</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>linux</tag>
-        <tag>centos</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>使用 filebrowser 和 Nginx 在 VPS 搭建云盘</title>
     <url>/2020/11/19/cloud-by-filebrowser-and-nginx/</url>
     <content><![CDATA[<p>个人云盘能够方便存储个人文档，特别是没有上传下载速度限制，可以灵活扩展容量，具有更好的私密性。当具有远程服务器（如VPS）时，可以使用 <a href="https://filebrowser.org/">filebrowser</a> 搭建个人云盘。结合 <a href="https://nginx.org/en/linux_packages.html#Debian">Nginx</a> 实现个性化网页快速访问。下面分别介绍如何在远程服务器上安装 Nginx, filebrowser, 以及他们的配置。本篇以 Debian 10 为例，Ubuntu 系统类似， CentOS 系统需要切换相应命令，但一般是将 apt 更改为 yum.</p>
@@ -1134,6 +1091,49 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
         <tag>filebrowser</tag>
         <tag>nginx</tag>
         <tag>vps</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>清理 Linux 系统内存 Cache</title>
+    <url>/2021/06/20/clear-linux-memory-cache/</url>
+    <content><![CDATA[<p>每个 Linux 系统都有三个选项可以在不中断任何进程或服务的情况下清除缓存。本篇代码以 root 身份在 Ubuntu 18.04演示。</p>
+<a id="more"></a>
+
+<h1 id="仅清除页面缓存-Clear-PageCache-only"><a href="#仅清除页面缓存-Clear-PageCache-only" class="headerlink" title="仅清除页面缓存(Clear PageCache only)"></a>仅清除页面缓存(Clear PageCache only)</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync; <span class="built_in">echo</span> 1 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
+
+<h1 id="清除目录项和inode-Clear-dentries-and-inodes"><a href="#清除目录项和inode-Clear-dentries-and-inodes" class="headerlink" title="清除目录项和inode(Clear dentries and inodes)"></a>清除目录项和inode(Clear dentries and inodes)</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync; <span class="built_in">echo</span> 2 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
+
+<h1 id="清理三者-Clear-PageCache-dentries-and-inodes"><a href="#清理三者-Clear-PageCache-dentries-and-inodes" class="headerlink" title="清理三者(Clear PageCache, dentries and inodes)"></a>清理三者(Clear PageCache, dentries and inodes)</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync; <span class="built_in">echo</span> 3 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
+
+<p>同步 (<code>sync</code>) 将刷新文件系统缓冲区。命令以 “;” 分隔依次运行。在执行序列中的下一个命令之前，shell 等待每个命令终止。正如内核文档中提到的，写入 drop_cache 将清除缓存而不杀死任何应用程序/服务，命令 echo 正在执行写入文件的工作。</p>
+<p>如果您必须清除磁盘缓存，第一个命令在企业和生产中是最安全的“…echo 1 &gt; …”。只会清除 PageCache。不建议在生产中使用“…echo 3 &gt;”上方的第三个选项，直到您知道自己在做什么，因为它会清除 PageCache、dentries 和 inode。</p>
+<h1 id="定时清理缓存"><a href="#定时清理缓存" class="headerlink" title="定时清理缓存"></a>定时清理缓存</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim clearcache.sh</span><br></pre></td></tr></table></figure>
+
+<p>写入如下内容</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># Note, we are using &quot;echo 3&quot;, but it is not recommended in production instead use &quot;echo 1&quot;</span></span><br><span class="line">sync</span><br><span class="line"><span class="built_in">echo</span> 3 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod 755 clearcache.sh</span><br></pre></td></tr></table></figure>
+
+<p>以 root 身份创建定时清理任务</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+
+<p>写入如下内容，每天0点，12点，18点的0分清理缓存</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">0  0,12,18  *  *  *  /path/to/clearcache.sh</span><br></pre></td></tr></table></figure>
+
+<p><font size=5 color=red>不建议定时清理RAM</font></p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://www.tecmint.com/clear-ram-memory-cache-buffer-and-swap-space-on-linux/">How to Clear RAM Memory Cache, Buffer and Swap Space on Linux</a></li>
+<li><a href="https://colobu.com/2015/10/31/How-to-Clear-RAM-Memory-Cache-Buffer-and-Swap-Space-on-Linux/">在 Linux 上如何清除内存的 Cache、Buffer 和交换空间</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>linux</tag>
+        <tag>centos</tag>
       </tags>
   </entry>
   <entry>
@@ -1666,94 +1666,6 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
-    <title>一个脚本启动、关闭和查看大数据处理平台集群Zookeeper、Kafka等</title>
-    <url>/2020/03/28/daemons-scirpts-for-zookeepr-etc/</url>
-    <content><![CDATA[<p>对于分布式大数据处理框架，如Zookeeper、Kafka、Storm等，在启动、关闭、查看状态时都需要一个一个的去各节点机器上查看，效率非常低，这里给出一个脚本，用于管理大数据处理框架如Zookeeper集群，具体脚本代码参看我的GitHub网站：<a href="https://github.com/xujinzh/archive/tree/master/big-data">https://github.com/xujinzh/archive/tree/master/big-data</a>    </p>
-<a id="more"></a>
-
-<p>命令使用说明，这里假设Zookeeper集群部署在box0, box1, box2上，我们在本地可以通过ssh连接这些集群服务器。在本地运行shell脚本。注意，这里的脚本需要你修改为自己的启动参数，如用户名，启动初始位置等。可以通过vim zks-daemons.sh来修改相应内容。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(base) jinzhongxu@jinzhongxu-PowerEdge-R740:~/Documents/daemons$ ./zks-daemons.sh status</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /home/jinzhongxu/zookeeper/bin/../conf/zoo.cfg</span><br><span class="line">Mode: leader</span><br><span class="line">Zookeeper node is box0, run status <span class="built_in">command</span>.</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /home/jinzhongxu/zookeeper/bin/../conf/zoo.cfg</span><br><span class="line">Mode: follower</span><br><span class="line">Zookeeper node is box1, run status <span class="built_in">command</span>.</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /home/jinzhongxu/zookeeper/bin/../conf/zoo.cfg</span><br><span class="line">Mode: follower</span><br><span class="line">Zookeeper node is box2, run status <span class="built_in">command</span>.</span><br></pre></td></tr></table></figure>
-
-<p>可以发现，box0被选为leader，box1和box2为follower.</p>
-<p>同样的，我们可以关闭zookeeper集群</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./zks-daemons.sh stop</span><br></pre></td></tr></table></figure>
-
-<p>启动Zookeeper集群</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./zks-daemons.sh start</span><br></pre></td></tr></table></figure>
-
-<p>类似的，我们可以使用脚本管理Kafka集群等。</p>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>big data</tag>
-        <tag>shell</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>计算机视觉方向顶级会议和顶级期刊</title>
-    <url>/2019/12/21/cv-sci/</url>
-    <content><![CDATA[<p>计算机视觉（Computer Vision，简称CV）方向是一个非常热门的方向，有关CV的会议和期刊因此也有很多，这里我介绍CV方向的三个顶级会议和两个顶级期刊。</p>
-<h2>三大顶会</h2>
-<p>CV方向的顶级会议包括国际计算机视觉大会（IEEE International Conference on Computer Vision，简称ICCV）、欧洲计算机视觉会议（European Conference on Computer Vision，简称ECCV）、国际计算机视觉与模式识别会议（Conference on Computer Vision and Pattern Recognition，简称CVPR），下面分别介绍它们。</p>
-<ol><li><strong>ICCV</strong> <br>
-ICCV是由电气电子工程师学会（Institute of Electrical and Electronics Engineers，简称IEEE）于1987年发起和主办，隔一年举行一次，因此都是在奇数年举行。会议通常需要4-5天，最近有延长的趋势，举办地不固定，今年（2019年）ICCV将于10月27日（星期日）到11月2日（星期六）在韩国首尔举办，投稿截止日期是4月22日，关于本届会议信息参见<a href="http://iccv2019.thecvf.com/">官网</a>。</li><li><strong>ECCV</strong> <br>
-ECCV<a href="https://link.springer.com/conference/eccv">论文集</a>由 Springer Science+Business Media出版，隔一年举行一次，都是在偶数年举行，与ICCV正好错开。会议通常需要5-6天，举办地固定在欧洲范围内，去年（2018年）ECCV于9月8日-14日在德国慕尼黑举办，该届论文集参加网站<a href="http://openaccess.thecvf.com/ECCV2018.py">cvf</a>。</li><li><strong>CVPR</strong><br>
-CVPR是由Takeo Kanade 和 Dana Ballard于1983年首次在华盛顿举办，1985年后主要由IEEE举行，每年一次，都是在美国举行。会议通常需要5-6天，CVPR于2019年6月16日-20日在美国加州长滩举行，回顾<a href="http://cvpr2019.thecvf.com/">网站</a>，下一届将于2020年6月13日（星期六）-19日（星期五）举行。</li></ol>
-<h2>两大顶刊</h2>
-<p>CV方向的顶级期刊包括模式分析与机器智能汇刊（IEEE Transactions on Pattern Analysis and Machine Intelligence，简称PAMI）、计算机视觉国际期刊（International Journal of Computer Vision，简称IJCV），下面分别介绍它们。</p>
-<ol><li><strong>PAMI</strong> <br>
-PAMI自1979年由IEEE学会出版，属月刊，主编是Sven J. Dickinson（多伦多大学），2018年影响因子是17.730，<a href="http://mjl.clarivate.com/cgi-bin/jrnlst/jlresults.cgi?PC=K&amp;ISSN=0162-8828">SCI</a>收录。它涵盖了计算机视觉和图像理解，模式分析和识别以及机器智能的研究，机器学习，搜索技术，文档和手写分析，医学图像分析，视频和图像序列分析，基于内容的图像和视频检索，以及面部和手势识别。<a href="https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=34">投稿</a>及了解更多参见<a href="https://www.computer.org/csdl/journal/tp">官网</a>。</li><li><strong>IJCV</strong><br>
-IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie Mellon University, USA ）、Svetlana Lazebnik （University of Illinois at Urbana-Champaign, USA）、Xiaoou Tang（Chinese University of Hong Kong, Hong Kong），2017、2018年影响因子分别是11.541、6.071，<a href="http://mjl.clarivate.com/cgi-bin/jrnlst/jlresults.cgi?PC=K&amp;ISSN=*0920-5691">SCI</a>收录。它涵盖计算机视觉的数学，物理和计算方面：图像形成，处理，分析和解释；机器学习技术；统计方法；传感器。及其应用：基于图像的渲染，计算机图形，机器人，照片解释，图像检索，视频分析和注释，多媒体等。投稿及了解更多参见<a href="https://www.springer.com/computer/image+processing/journal/11263">官网</a>。</li></ol>
-<p>以上汇总的是目前CV方向比较重要的会议和期刊，关注它们可以获得该方向的最新进展。</p>]]></content>
-      <categories>
-        <category>research</category>
-      </categories>
-      <tags>
-        <tag>cv</tag>
-        <tag>sci</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>机器学习中的数据划分技巧</title>
-    <url>/2020/08/17/data-spliting-technique-in-machine-learning/</url>
-    <content><![CDATA[<p>机器学习中划分数据集的主要目的是为了避免过拟合。</p>
-<p>在机器学习领域，为了避免过拟合和模型选择偏差常常划分数据集为三类：</p>
-<ol>
-<li><p>训练集（training set）</p>
-</li>
-<li><p>验证集（cross-validation set or development set or dev set）</p>
-</li>
-<li><p>测试集（testing set）</p>
-<a id="more"></a>
-
-</li>
-</ol>
-<p>我们尝试在训练集上构建模型，然后在验证集上尽可能优化超参数。最后，在我们的模型准备好后，在测试集上评估我们的模型。</p>
-<p>对于机器学习算法研究员，有时候会省略测试集。测试集旨在对算法在现实世界中数据上进行无偏估计，此时，整个数据集分为两部分。将数据集分为两部分的研究员通常将验证集称为测试集。</p>
-<h1 id="训练集"><a href="#训练集" class="headerlink" title="训练集"></a>训练集</h1><p>用于拟合模型的数据样本，即我们用于训练模型的数据集的实际子集（在神经网络的中估算权重和偏差）。该模型从该数据中学习并优化模型参数。</p>
-<h1 id="验证集"><a href="#验证集" class="headerlink" title="验证集"></a>验证集</h1><p>我们通过最小化交叉验证集上的误差来选择适当的模型或多项式的阶数（如果仅使用回归模型）。</p>
-<h1 id="测试集"><a href="#测试集" class="headerlink" title="测试集"></a>测试集</h1><p>用于对训练数据集上的最终模型进行无偏评估的数据样本。仅在使用训练集和验证集对模型进行完全训练之后，才使用它。因此，测试集是一种用于一旦将模型部署在现实场景使用时将遇到的情况评估集。</p>
-<p>该测试集通常用于评估Kaggle或Analytics Vidhya的竞赛中的不同模型。通常，在机器学习黑客马拉松中，交叉验证集会与训练集一起发布，而实际测试集只会在比赛即将结束时才发布，而测试集上模型的得分决定了优胜者。</p>
-<h1 id="如何划分数据集"><a href="#如何划分数据集" class="headerlink" title="如何划分数据集"></a>如何划分数据集</h1><p>答案通常在于数据集本身。比例是根据我们可用数据的大小和类型（对于时间序列数据，拆分技术有所不同）确定的。</p>
-<p>如果我们的数据集的大小在100到1000000之间，则将其按60:20:20的比例进行分配。即60％的数据将进入训练集，20％的数据将进入验证集，其余数据将进入测试集。 如果数据集的大小大于一百万，那么我们可以将其拆分为类似98：1：1或99：0.5：0.5的大小。</p>
-<p>决定分割率的主要目的是所有三个集合都应具有原始数据集的总体趋势。如果我们的研究员收集的数据很少，那么最终我们可能会选择一些偏向于仅在研究员收集数据表现的趋势的模型。训练集也是如此-太少的数据会使模型偏向仅在数据集的那个子集中发现的某些趋势。</p>
-<p>我们部署的模型不过是估算器，用于了解数据中的统计趋势。因此，重要的是用于学习的数据以及用于验证或测试模型的数据应遵循尽可能相似的统计分布。尽可能完美地实现这一目标的方法之一是随机选择子集（这里是训练集，验证集和/或测试集）。例如，假设您正在进行人脸检测项目，并且人脸训练图片是从网络上拍摄的，而验证/测试图片是从用户手机中获取的，那么训练集和验证/测试集的属性将不匹配。</p>
-<p>一种划分训练集、验证集、测试集为0.6，0.2，0.2的方法如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入scikit-learn中数据集划分包</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line"><span class="comment"># 随机划分20%的数据样本为测试集</span></span><br><span class="line">x, x_test, y, y_test = train_test_split(data, labels, test_size=<span class="number">0.2</span>, train_size=<span class="number">0.8</span>, random_state=<span class="number">3</span>)</span><br><span class="line"><span class="comment"># 随机划分剩下（80%）的25%为验证集（整个样本的20%=80%*25%）和75%为训练集（整个样本的60%=80%*75%）</span></span><br><span class="line">x_train, x_cross_validation, y_train, y_cross_validation = train_test_split(x, y, test_size=<span class="number">0.25</span>, train_size=<span class="number">0.75</span>, random_state=<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>research</category>
-        <category>machine learning</category>
-      </categories>
-      <tags>
-        <tag>ml</tag>
-        <tag>data</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>视觉目标跟踪算法简介</title>
     <url>/2021/08/20/cv-ot-algorithms-intro/</url>
     <content><![CDATA[<p>单目标跟踪是指给定第一帧目标框的情况下，在视频的后续帧中自动地给出目标的位置和大小。难点在于复杂场景下目标姿态变化、环境光照变化、尺寸变化、背景干扰、遮挡等，以及实际应用中需要满足实时性。</p>
@@ -1811,6 +1723,94 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <tag>ml</tag>
         <tag>vot</tag>
         <tag>cv</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机视觉方向顶级会议和顶级期刊</title>
+    <url>/2019/12/21/cv-sci/</url>
+    <content><![CDATA[<p>计算机视觉（Computer Vision，简称CV）方向是一个非常热门的方向，有关CV的会议和期刊因此也有很多，这里我介绍CV方向的三个顶级会议和两个顶级期刊。</p>
+<h2>三大顶会</h2>
+<p>CV方向的顶级会议包括国际计算机视觉大会（IEEE International Conference on Computer Vision，简称ICCV）、欧洲计算机视觉会议（European Conference on Computer Vision，简称ECCV）、国际计算机视觉与模式识别会议（Conference on Computer Vision and Pattern Recognition，简称CVPR），下面分别介绍它们。</p>
+<ol><li><strong>ICCV</strong> <br>
+ICCV是由电气电子工程师学会（Institute of Electrical and Electronics Engineers，简称IEEE）于1987年发起和主办，隔一年举行一次，因此都是在奇数年举行。会议通常需要4-5天，最近有延长的趋势，举办地不固定，今年（2019年）ICCV将于10月27日（星期日）到11月2日（星期六）在韩国首尔举办，投稿截止日期是4月22日，关于本届会议信息参见<a href="http://iccv2019.thecvf.com/">官网</a>。</li><li><strong>ECCV</strong> <br>
+ECCV<a href="https://link.springer.com/conference/eccv">论文集</a>由 Springer Science+Business Media出版，隔一年举行一次，都是在偶数年举行，与ICCV正好错开。会议通常需要5-6天，举办地固定在欧洲范围内，去年（2018年）ECCV于9月8日-14日在德国慕尼黑举办，该届论文集参加网站<a href="http://openaccess.thecvf.com/ECCV2018.py">cvf</a>。</li><li><strong>CVPR</strong><br>
+CVPR是由Takeo Kanade 和 Dana Ballard于1983年首次在华盛顿举办，1985年后主要由IEEE举行，每年一次，都是在美国举行。会议通常需要5-6天，CVPR于2019年6月16日-20日在美国加州长滩举行，回顾<a href="http://cvpr2019.thecvf.com/">网站</a>，下一届将于2020年6月13日（星期六）-19日（星期五）举行。</li></ol>
+<h2>两大顶刊</h2>
+<p>CV方向的顶级期刊包括模式分析与机器智能汇刊（IEEE Transactions on Pattern Analysis and Machine Intelligence，简称PAMI）、计算机视觉国际期刊（International Journal of Computer Vision，简称IJCV），下面分别介绍它们。</p>
+<ol><li><strong>PAMI</strong> <br>
+PAMI自1979年由IEEE学会出版，属月刊，主编是Sven J. Dickinson（多伦多大学），2018年影响因子是17.730，<a href="http://mjl.clarivate.com/cgi-bin/jrnlst/jlresults.cgi?PC=K&amp;ISSN=0162-8828">SCI</a>收录。它涵盖了计算机视觉和图像理解，模式分析和识别以及机器智能的研究，机器学习，搜索技术，文档和手写分析，医学图像分析，视频和图像序列分析，基于内容的图像和视频检索，以及面部和手势识别。<a href="https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=34">投稿</a>及了解更多参见<a href="https://www.computer.org/csdl/journal/tp">官网</a>。</li><li><strong>IJCV</strong><br>
+IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie Mellon University, USA ）、Svetlana Lazebnik （University of Illinois at Urbana-Champaign, USA）、Xiaoou Tang（Chinese University of Hong Kong, Hong Kong），2017、2018年影响因子分别是11.541、6.071，<a href="http://mjl.clarivate.com/cgi-bin/jrnlst/jlresults.cgi?PC=K&amp;ISSN=*0920-5691">SCI</a>收录。它涵盖计算机视觉的数学，物理和计算方面：图像形成，处理，分析和解释；机器学习技术；统计方法；传感器。及其应用：基于图像的渲染，计算机图形，机器人，照片解释，图像检索，视频分析和注释，多媒体等。投稿及了解更多参见<a href="https://www.springer.com/computer/image+processing/journal/11263">官网</a>。</li></ol>
+<p>以上汇总的是目前CV方向比较重要的会议和期刊，关注它们可以获得该方向的最新进展。</p>]]></content>
+      <categories>
+        <category>research</category>
+      </categories>
+      <tags>
+        <tag>cv</tag>
+        <tag>sci</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一个脚本启动、关闭和查看大数据处理平台集群Zookeeper、Kafka等</title>
+    <url>/2020/03/28/daemons-scirpts-for-zookeepr-etc/</url>
+    <content><![CDATA[<p>对于分布式大数据处理框架，如Zookeeper、Kafka、Storm等，在启动、关闭、查看状态时都需要一个一个的去各节点机器上查看，效率非常低，这里给出一个脚本，用于管理大数据处理框架如Zookeeper集群，具体脚本代码参看我的GitHub网站：<a href="https://github.com/xujinzh/archive/tree/master/big-data">https://github.com/xujinzh/archive/tree/master/big-data</a>    </p>
+<a id="more"></a>
+
+<p>命令使用说明，这里假设Zookeeper集群部署在box0, box1, box2上，我们在本地可以通过ssh连接这些集群服务器。在本地运行shell脚本。注意，这里的脚本需要你修改为自己的启动参数，如用户名，启动初始位置等。可以通过vim zks-daemons.sh来修改相应内容。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(base) jinzhongxu@jinzhongxu-PowerEdge-R740:~/Documents/daemons$ ./zks-daemons.sh status</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /home/jinzhongxu/zookeeper/bin/../conf/zoo.cfg</span><br><span class="line">Mode: leader</span><br><span class="line">Zookeeper node is box0, run status <span class="built_in">command</span>.</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /home/jinzhongxu/zookeeper/bin/../conf/zoo.cfg</span><br><span class="line">Mode: follower</span><br><span class="line">Zookeeper node is box1, run status <span class="built_in">command</span>.</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /home/jinzhongxu/zookeeper/bin/../conf/zoo.cfg</span><br><span class="line">Mode: follower</span><br><span class="line">Zookeeper node is box2, run status <span class="built_in">command</span>.</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，box0被选为leader，box1和box2为follower.</p>
+<p>同样的，我们可以关闭zookeeper集群</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./zks-daemons.sh stop</span><br></pre></td></tr></table></figure>
+
+<p>启动Zookeeper集群</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./zks-daemons.sh start</span><br></pre></td></tr></table></figure>
+
+<p>类似的，我们可以使用脚本管理Kafka集群等。</p>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>big data</tag>
+        <tag>shell</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习中的数据划分技巧</title>
+    <url>/2020/08/17/data-spliting-technique-in-machine-learning/</url>
+    <content><![CDATA[<p>机器学习中划分数据集的主要目的是为了避免过拟合。</p>
+<p>在机器学习领域，为了避免过拟合和模型选择偏差常常划分数据集为三类：</p>
+<ol>
+<li><p>训练集（training set）</p>
+</li>
+<li><p>验证集（cross-validation set or development set or dev set）</p>
+</li>
+<li><p>测试集（testing set）</p>
+<a id="more"></a>
+
+</li>
+</ol>
+<p>我们尝试在训练集上构建模型，然后在验证集上尽可能优化超参数。最后，在我们的模型准备好后，在测试集上评估我们的模型。</p>
+<p>对于机器学习算法研究员，有时候会省略测试集。测试集旨在对算法在现实世界中数据上进行无偏估计，此时，整个数据集分为两部分。将数据集分为两部分的研究员通常将验证集称为测试集。</p>
+<h1 id="训练集"><a href="#训练集" class="headerlink" title="训练集"></a>训练集</h1><p>用于拟合模型的数据样本，即我们用于训练模型的数据集的实际子集（在神经网络的中估算权重和偏差）。该模型从该数据中学习并优化模型参数。</p>
+<h1 id="验证集"><a href="#验证集" class="headerlink" title="验证集"></a>验证集</h1><p>我们通过最小化交叉验证集上的误差来选择适当的模型或多项式的阶数（如果仅使用回归模型）。</p>
+<h1 id="测试集"><a href="#测试集" class="headerlink" title="测试集"></a>测试集</h1><p>用于对训练数据集上的最终模型进行无偏评估的数据样本。仅在使用训练集和验证集对模型进行完全训练之后，才使用它。因此，测试集是一种用于一旦将模型部署在现实场景使用时将遇到的情况评估集。</p>
+<p>该测试集通常用于评估Kaggle或Analytics Vidhya的竞赛中的不同模型。通常，在机器学习黑客马拉松中，交叉验证集会与训练集一起发布，而实际测试集只会在比赛即将结束时才发布，而测试集上模型的得分决定了优胜者。</p>
+<h1 id="如何划分数据集"><a href="#如何划分数据集" class="headerlink" title="如何划分数据集"></a>如何划分数据集</h1><p>答案通常在于数据集本身。比例是根据我们可用数据的大小和类型（对于时间序列数据，拆分技术有所不同）确定的。</p>
+<p>如果我们的数据集的大小在100到1000000之间，则将其按60:20:20的比例进行分配。即60％的数据将进入训练集，20％的数据将进入验证集，其余数据将进入测试集。 如果数据集的大小大于一百万，那么我们可以将其拆分为类似98：1：1或99：0.5：0.5的大小。</p>
+<p>决定分割率的主要目的是所有三个集合都应具有原始数据集的总体趋势。如果我们的研究员收集的数据很少，那么最终我们可能会选择一些偏向于仅在研究员收集数据表现的趋势的模型。训练集也是如此-太少的数据会使模型偏向仅在数据集的那个子集中发现的某些趋势。</p>
+<p>我们部署的模型不过是估算器，用于了解数据中的统计趋势。因此，重要的是用于学习的数据以及用于验证或测试模型的数据应遵循尽可能相似的统计分布。尽可能完美地实现这一目标的方法之一是随机选择子集（这里是训练集，验证集和/或测试集）。例如，假设您正在进行人脸检测项目，并且人脸训练图片是从网络上拍摄的，而验证/测试图片是从用户手机中获取的，那么训练集和验证/测试集的属性将不匹配。</p>
+<p>一种划分训练集、验证集、测试集为0.6，0.2，0.2的方法如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入scikit-learn中数据集划分包</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line"><span class="comment"># 随机划分20%的数据样本为测试集</span></span><br><span class="line">x, x_test, y, y_test = train_test_split(data, labels, test_size=<span class="number">0.2</span>, train_size=<span class="number">0.8</span>, random_state=<span class="number">3</span>)</span><br><span class="line"><span class="comment"># 随机划分剩下（80%）的25%为验证集（整个样本的20%=80%*25%）和75%为训练集（整个样本的60%=80%*75%）</span></span><br><span class="line">x_train, x_cross_validation, y_train, y_cross_validation = train_test_split(x, y, test_size=<span class="number">0.25</span>, train_size=<span class="number">0.75</span>, random_state=<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>research</category>
+        <category>machine learning</category>
+      </categories>
+      <tags>
+        <tag>ml</tag>
+        <tag>data</tag>
       </tags>
   </entry>
   <entry>
@@ -1964,6 +1964,70 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>docker 简单介绍</title>
+    <url>/2020/11/05/docker-simple/</url>
+    <content><![CDATA[<p>docker 容器技术使得开发测试非常方便，自2013年发布至今，一直广受瞩目。软件开发最大的麻烦事之一，就是环境配置。虚拟机虽然能够解决上面问题，但是有如下缺点：1.<strong>资源占用多</strong>，2.<strong>冗余步骤多</strong>，3. <strong>启动慢</strong>；由于虚拟机存在这些缺点，Linux 发展出了另一种虚拟化技术：Linux 容器（Linux Containers，缩写为 LXC）。<strong>Linux 容器不是模拟一个完整的操作系统，而是对进程进行隔离。</strong>或者说，在正常进程的外面套了一个<a href="https://opensource.com/article/18/1/history-low-level-container-runtimes">保护层</a>。对于容器里面的进程来说，它接触到的各种资源都是虚拟的，从而实现与底层系统的隔离。由于容器是进程级别的，相比虚拟机有很多优势。1.<strong>启动快</strong>, 2,<strong>资源占用少</strong>,3.<strong>体积小</strong>.总之，容器有点像轻量级的虚拟机，能够提供虚拟化的环境，但是成本开销小得多。<strong>Docker 属于 Linux 容器的一种封装，提供简单易用的容器使用接口。</strong>它是目前最流行的 Linux 容器解决方案。下面介绍2020年08月以后，如何安装使用docker，本篇以 Windows 10 wsl 2 Ubuntu-20.04 为例。</p>
+<a id="more"></a>
+
+<h1 id="Docker-的主要用途，目前有三大类。"><a href="#Docker-的主要用途，目前有三大类。" class="headerlink" title="Docker 的主要用途，目前有三大类。"></a>Docker 的主要用途，目前有三大类。</h1><p><strong>（1）提供一次性的环境。</strong>比如，本地测试他人的软件、持续集成的时候提供单元测试和构建的环境。</p>
+<p><strong>（2）提供弹性的云服务。</strong>因为 Docker 容器可以随开随关，很适合动态扩容和缩容。</p>
+<p><strong>（3）组建微服务架构。</strong>通过多个容器，一台机器可以跑多个服务，因此在本机就可以模拟出微服务架构。</p>
+<h1 id="docker安装"><a href="#docker安装" class="headerlink" title="docker安装"></a>docker安装</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line"><span class="comment"># 安装 apt 依赖包，用于通过HTTPS来获取仓库</span></span><br><span class="line">sudo apt-get install \</span><br><span class="line">    apt-transport-https \</span><br><span class="line">    ca-certificates \</span><br><span class="line">    curl \</span><br><span class="line">    gnupg-agent \</span><br><span class="line">    software-properties-common</span><br><span class="line"><span class="comment"># 添加 Docker 的官方 GPG 密钥：</span></span><br><span class="line">curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/gpg | sudo apt-key add -</span><br><span class="line"><span class="comment"># 验证秘钥</span></span><br><span class="line">sudo apt-key fingerprint 0EBFCD88</span><br><span class="line">sudo add-apt-repository \</span><br><span class="line">   <span class="string">&quot;deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/ \</span></span><br><span class="line"><span class="string">  <span class="subst">$(lsb_release -cs)</span> \</span></span><br><span class="line"><span class="string">  stable&quot;</span></span><br><span class="line"> </span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install docker-ce docker-ce-cli containerd.io</span><br><span class="line">sudo service docker status</span><br><span class="line">sudo service docker restart</span><br><span class="line"><span class="comment"># 把常用用户添加到docker组，这样运行docker命令时不需要添加sudo，但需重启终端。注意，service命令时仍然需要sudo</span></span><br><span class="line">sudo usermod -a -G docker jinzhongxu</span><br><span class="line">sudo docker run hello-world</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证是否安装成功。查看版本信息</span></span><br><span class="line">docker version</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">docker info</span><br></pre></td></tr></table></figure>
+
+<h1 id="docker使用"><a href="#docker使用" class="headerlink" title="docker使用"></a>docker使用</h1><p>因某些原因，需要给docker添加国内镜像，方法如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/docker/daemon.json</span><br><span class="line"><span class="comment"># 添加如下内容</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [<span class="string">&quot;https://registry.docker-cn.com&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;http://hub-mirror.c.163.com&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;https://cr.console.aliyun.com/&quot;</span>],</span><br><span class="line">  <span class="string">&quot;insecure-registries&quot;</span>: [],</span><br><span class="line">  <span class="string">&quot;debug&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="string">&quot;experimental&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 测试</span></span><br><span class="line">docker pull tensorflow/tensorflow:latest</span><br></pre></td></tr></table></figure>
+
+<h1 id="image"><a href="#image" class="headerlink" title="image"></a>image</h1><p><strong>Docker 把应用程序及其依赖，打包在 image 文件里面。</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 从 docker 官方拉取 image 文件 hello-world</span></span><br><span class="line">docker image pull hello-world</span><br><span class="line"><span class="comment"># 运行这个 image 文件。该命令具有自动抓取 image 文件的功能。如果发现本地没有指定的 image 文件，就会从仓库自动抓取。因此，前面的 docker image pull 命令并不是必需的步骤。</span></span><br><span class="line">docker container run hello-world</span><br><span class="line"><span class="comment"># 查看下载到本地的镜像文件</span></span><br><span class="line">docker image ls</span><br><span class="line"><span class="comment"># 为本地的 image 标注用户名和版本。username 为 hub.docker.com 或 cloud.docker.com 注册的账户</span></span><br><span class="line">docker image tag (IMAGE ID) (username)/(repository):(tag)</span><br><span class="line"><span class="comment"># 也可以不标注用户名，重新构建一下 image 文件。</span></span><br><span class="line">docker image build -t (username)/(repository):(tag) .</span><br><span class="line"><span class="comment"># 发布 image 文件。</span></span><br><span class="line">docker image push (username)/(repository):(tag)</span><br><span class="line"><span class="comment"># 删除不需要的本地镜像文件</span></span><br><span class="line">docker image rm (IMAGE ID)</span><br></pre></td></tr></table></figure>
+
+<h1 id="container"><a href="#container" class="headerlink" title="container"></a>container</h1><p><strong>image 文件生成的容器实例，本身也是一个文件，称为容器(Container)文件。</strong>也就是说，一旦容器生成，就会同时存在两个文件： image 文件和容器文件。而且关闭容器并不会删除容器文件，只是容器停止运行而已。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看运行的容器</span></span><br><span class="line">docker ps</span><br><span class="line">docker container ls</span><br><span class="line"><span class="comment"># 查看所有运行过的容器，包括正在运行的和停止运行的</span></span><br><span class="line">docker ps -a</span><br><span class="line">docker container ls -all</span><br><span class="line"><span class="comment"># 把运行的容器关闭. 相当于向容器里面的主进程发出 SIGTERM 信号，然后过一段时间再发出 SIGKILL 信号。</span></span><br><span class="line">docker stop &#123;CONTAINER ID&#125;</span><br><span class="line">docker container stop &#123;CONTAINER ID&#125;</span><br><span class="line"><span class="comment"># 把运行的容器关闭. 相当于向容器里面的主进程发出 SIGKILL 信号</span></span><br><span class="line">docker <span class="built_in">kill</span> &#123;CONTAINER ID&#125;</span><br><span class="line">docker container <span class="built_in">kill</span> &#123;CONTAINER ID&#125;</span><br><span class="line"><span class="comment"># 把停止运行的容器打开</span></span><br><span class="line">docker start &#123;CONTAINER ID&#125;</span><br><span class="line">docker container start &#123;CONTAINER ID&#125;</span><br><span class="line"><span class="comment"># 查看 docker 容器的输出，即容器里面 Shell 的标准输出。</span></span><br><span class="line">docker container logs &#123;CONTAINER ID&#125;</span><br><span class="line"><span class="comment"># 从正在运行的 Docker 容器里面，将文件拷贝到本机。下面是拷贝到当前目录的写法。</span></span><br><span class="line">docker container cp &#123;CONTAINER ID&#125;:&#123;/path/to/file&#125; .</span><br><span class="line"><span class="comment"># 进入运行中的ubuntu容器</span></span><br><span class="line"><span class="comment"># 推荐大家使用 docker exec 命令，因为此退出容器终端，不会导致容器的停止。</span></span><br><span class="line"><span class="comment"># 使用 docker attach &#123;CONTAINER ID&#125;，当退出容器终端时，将导致容器停止。</span></span><br><span class="line">docker <span class="built_in">exec</span> -it &#123;CONTAINER ID&#125; /bin/bash</span><br><span class="line"><span class="comment"># 以后台（-d）方式打开新的容器并命名</span></span><br><span class="line">docker run -itd --name=<span class="string">&#x27;centos&#x27;</span> &#123;IMAGE ID&#125; /bin/bash</span><br><span class="line"><span class="comment"># 删除不需要的容器</span></span><br><span class="line">docker container rm &#123;CONTAINER ID&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意:</p>
+<ol>
+<li>CONTAINER ID 和 IMAGE ID 只需要输入前几个字符，只要能够唯一识别它们；</li>
+<li>docker image 根据 image 文件生成容器的实例。同一个 image 文件，可以生成多个同时运行的容器实例。image 文件可以看作是容器的模板；</li>
+<li>image 是二进制文件。实际开发中，一个 image 文件往往通过继承另一个 image 文件，加上一些个性化设置而生成。举例来说，你可以在 Ubuntu 的 image 基础上，往里面加入 Apache 服务器，形成你的 image；</li>
+<li>一般来说，为了节省时间，我们应该尽量使用别人制作好的 image 文件，而不是自己制作。即使要定制，也应该基于别人的 image 文件进行加工，而不是从零开始制作；</li>
+</ol>
+<h1 id="制作docker-image"><a href="#制作docker-image" class="headerlink" title="制作docker image"></a>制作docker image</h1><p>需要用到 Dockerfile 文件。它是一个文本文件，用来配置 image。Docker 根据 该文件生成二进制的 image 文件。</p>
+<p>首先，克隆项目</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/xxx/demos.git</span><br><span class="line"><span class="built_in">cd</span> demos</span><br></pre></td></tr></table></figure>
+
+<p>在项目的根目录下，新建一个文本文件<code>.dockerignore</code>, 把要排除的文件或文件夹路径按行写到文件里，参考如下，即说明那些不需要打包进入 image 文件。如果你没有路径要排除，这个文件可以不新建。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">.git</span><br><span class="line">node_modules</span><br><span class="line">npm-debug.log</span><br></pre></td></tr></table></figure>
+
+<p>在项目的根目录下，新建一个文本文件 Dockerfile，</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">FROM node:11</span><br><span class="line">COPY . /app</span><br><span class="line">WORKDIR /app</span><br><span class="line">RUN npm install --registry=https://registry.npm.taobao.org</span><br><span class="line">EXPOSE 3000</span><br><span class="line">CMD node demos/01.js</span><br></pre></td></tr></table></figure>
+
+<p>说明如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">FROM node:11：该 image 文件继承官方的 node image，冒号表示标签，这里标签是 11，即 11 版本的 node。</span><br><span class="line">COPY . /app：将当前目录下的所有文件（除了.dockerignore 排除的路径），都拷贝进入 image 文件的/app目录。</span><br><span class="line">WORKDIR /app：指定接下来的工作路径为 /app。</span><br><span class="line">RUN npm install：在/app目录下，运行 npm install 命令安装依赖。注意，安装后所有的依赖，都将打包进入 image 文件。</span><br><span class="line">EXPOSE 3000：将容器 3000 端口暴露出来， 允许外部连接这个端口。</span><br><span class="line">CMD node demos/01.js：表示容器启动后自动执行 node demos/01.js。RUN命令与CMD命令的区别在哪里？简单说，RUN命令在 image 文件的构建阶段执行，执行结果都会打包进入 image 文件；CMD命令则是在容器启动后执行。另外，一个 Dockerfile 可以包含多个 RUN 命令，但是只能有一个 CMD 命令。注意，指定了 CMD 命令以后，docker container run 命令就不能附加命令了（比如前面的 /bin/bash），否则它会覆盖 CMD 命令。</span><br></pre></td></tr></table></figure>
+
+<p>创建 image 文件. 有了 Dockerfile 文件以后，就可以使用<code>docker image build</code>命令创建 image 文件了。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker image build -t demo .</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">docker image build -t demo:0.0.1 .</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>-t</code>参数用来指定 image 文件的名字，后面还可以用冒号指定标签。如果不指定，默认的标签就是<code>latest</code>。最后的那个点表示 Dockerfile 文件所在的路径，上例是当前路径，所以是一个点。</p>
+<p>如果运行成功，就可以看到新生成的 image 文件<code>demo</code>了。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker image ls</span><br></pre></td></tr></table></figure>
+
+<p>发布 image 的命令参考上面。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><p><a href="https://www.cnblogs.com/StivenYang/p/13843397.html">docker国内镜像源</a></p>
+</li>
+<li><p><a href="https://www.ruanyifeng.com/blog/2018/02/docker-tutorial.html">Docker 入门教程</a></p>
+</li>
+<li><p><a href="https://www.ruanyifeng.com/blog/2018/02/docker-wordpress-tutorial.html">Docker 微服务教程</a></p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>深度学习的 GPU 环境的配置</title>
     <url>/2019/12/21/dl-gpu/</url>
     <content><![CDATA[<p>本篇介绍如何安装 nvidia drivers（GPU显卡驱动），cuda toolkit（GPU 通用并行计算架构） 和 cudnn（深度学习模型专用库），以 ubuntu18.04 为例，下载的软件选择 runfile(local) 版本。</p>
@@ -2039,70 +2103,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <tag>gpu</tag>
         <tag>cuda</tag>
         <tag>nvcc</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>docker 简单介绍</title>
-    <url>/2020/11/05/docker-simple/</url>
-    <content><![CDATA[<p>docker 容器技术使得开发测试非常方便，自2013年发布至今，一直广受瞩目。软件开发最大的麻烦事之一，就是环境配置。虚拟机虽然能够解决上面问题，但是有如下缺点：1.<strong>资源占用多</strong>，2.<strong>冗余步骤多</strong>，3. <strong>启动慢</strong>；由于虚拟机存在这些缺点，Linux 发展出了另一种虚拟化技术：Linux 容器（Linux Containers，缩写为 LXC）。<strong>Linux 容器不是模拟一个完整的操作系统，而是对进程进行隔离。</strong>或者说，在正常进程的外面套了一个<a href="https://opensource.com/article/18/1/history-low-level-container-runtimes">保护层</a>。对于容器里面的进程来说，它接触到的各种资源都是虚拟的，从而实现与底层系统的隔离。由于容器是进程级别的，相比虚拟机有很多优势。1.<strong>启动快</strong>, 2,<strong>资源占用少</strong>,3.<strong>体积小</strong>.总之，容器有点像轻量级的虚拟机，能够提供虚拟化的环境，但是成本开销小得多。<strong>Docker 属于 Linux 容器的一种封装，提供简单易用的容器使用接口。</strong>它是目前最流行的 Linux 容器解决方案。下面介绍2020年08月以后，如何安装使用docker，本篇以 Windows 10 wsl 2 Ubuntu-20.04 为例。</p>
-<a id="more"></a>
-
-<h1 id="Docker-的主要用途，目前有三大类。"><a href="#Docker-的主要用途，目前有三大类。" class="headerlink" title="Docker 的主要用途，目前有三大类。"></a>Docker 的主要用途，目前有三大类。</h1><p><strong>（1）提供一次性的环境。</strong>比如，本地测试他人的软件、持续集成的时候提供单元测试和构建的环境。</p>
-<p><strong>（2）提供弹性的云服务。</strong>因为 Docker 容器可以随开随关，很适合动态扩容和缩容。</p>
-<p><strong>（3）组建微服务架构。</strong>通过多个容器，一台机器可以跑多个服务，因此在本机就可以模拟出微服务架构。</p>
-<h1 id="docker安装"><a href="#docker安装" class="headerlink" title="docker安装"></a>docker安装</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line"><span class="comment"># 安装 apt 依赖包，用于通过HTTPS来获取仓库</span></span><br><span class="line">sudo apt-get install \</span><br><span class="line">    apt-transport-https \</span><br><span class="line">    ca-certificates \</span><br><span class="line">    curl \</span><br><span class="line">    gnupg-agent \</span><br><span class="line">    software-properties-common</span><br><span class="line"><span class="comment"># 添加 Docker 的官方 GPG 密钥：</span></span><br><span class="line">curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/gpg | sudo apt-key add -</span><br><span class="line"><span class="comment"># 验证秘钥</span></span><br><span class="line">sudo apt-key fingerprint 0EBFCD88</span><br><span class="line">sudo add-apt-repository \</span><br><span class="line">   <span class="string">&quot;deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/ \</span></span><br><span class="line"><span class="string">  <span class="subst">$(lsb_release -cs)</span> \</span></span><br><span class="line"><span class="string">  stable&quot;</span></span><br><span class="line"> </span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install docker-ce docker-ce-cli containerd.io</span><br><span class="line">sudo service docker status</span><br><span class="line">sudo service docker restart</span><br><span class="line"><span class="comment"># 把常用用户添加到docker组，这样运行docker命令时不需要添加sudo，但需重启终端。注意，service命令时仍然需要sudo</span></span><br><span class="line">sudo usermod -a -G docker jinzhongxu</span><br><span class="line">sudo docker run hello-world</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证是否安装成功。查看版本信息</span></span><br><span class="line">docker version</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">docker info</span><br></pre></td></tr></table></figure>
-
-<h1 id="docker使用"><a href="#docker使用" class="headerlink" title="docker使用"></a>docker使用</h1><p>因某些原因，需要给docker添加国内镜像，方法如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/docker/daemon.json</span><br><span class="line"><span class="comment"># 添加如下内容</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [<span class="string">&quot;https://registry.docker-cn.com&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;http://hub-mirror.c.163.com&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;https://cr.console.aliyun.com/&quot;</span>],</span><br><span class="line">  <span class="string">&quot;insecure-registries&quot;</span>: [],</span><br><span class="line">  <span class="string">&quot;debug&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="string">&quot;experimental&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 测试</span></span><br><span class="line">docker pull tensorflow/tensorflow:latest</span><br></pre></td></tr></table></figure>
-
-<h1 id="image"><a href="#image" class="headerlink" title="image"></a>image</h1><p><strong>Docker 把应用程序及其依赖，打包在 image 文件里面。</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 从 docker 官方拉取 image 文件 hello-world</span></span><br><span class="line">docker image pull hello-world</span><br><span class="line"><span class="comment"># 运行这个 image 文件。该命令具有自动抓取 image 文件的功能。如果发现本地没有指定的 image 文件，就会从仓库自动抓取。因此，前面的 docker image pull 命令并不是必需的步骤。</span></span><br><span class="line">docker container run hello-world</span><br><span class="line"><span class="comment"># 查看下载到本地的镜像文件</span></span><br><span class="line">docker image ls</span><br><span class="line"><span class="comment"># 为本地的 image 标注用户名和版本。username 为 hub.docker.com 或 cloud.docker.com 注册的账户</span></span><br><span class="line">docker image tag (IMAGE ID) (username)/(repository):(tag)</span><br><span class="line"><span class="comment"># 也可以不标注用户名，重新构建一下 image 文件。</span></span><br><span class="line">docker image build -t (username)/(repository):(tag) .</span><br><span class="line"><span class="comment"># 发布 image 文件。</span></span><br><span class="line">docker image push (username)/(repository):(tag)</span><br><span class="line"><span class="comment"># 删除不需要的本地镜像文件</span></span><br><span class="line">docker image rm (IMAGE ID)</span><br></pre></td></tr></table></figure>
-
-<h1 id="container"><a href="#container" class="headerlink" title="container"></a>container</h1><p><strong>image 文件生成的容器实例，本身也是一个文件，称为容器(Container)文件。</strong>也就是说，一旦容器生成，就会同时存在两个文件： image 文件和容器文件。而且关闭容器并不会删除容器文件，只是容器停止运行而已。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看运行的容器</span></span><br><span class="line">docker ps</span><br><span class="line">docker container ls</span><br><span class="line"><span class="comment"># 查看所有运行过的容器，包括正在运行的和停止运行的</span></span><br><span class="line">docker ps -a</span><br><span class="line">docker container ls -all</span><br><span class="line"><span class="comment"># 把运行的容器关闭. 相当于向容器里面的主进程发出 SIGTERM 信号，然后过一段时间再发出 SIGKILL 信号。</span></span><br><span class="line">docker stop &#123;CONTAINER ID&#125;</span><br><span class="line">docker container stop &#123;CONTAINER ID&#125;</span><br><span class="line"><span class="comment"># 把运行的容器关闭. 相当于向容器里面的主进程发出 SIGKILL 信号</span></span><br><span class="line">docker <span class="built_in">kill</span> &#123;CONTAINER ID&#125;</span><br><span class="line">docker container <span class="built_in">kill</span> &#123;CONTAINER ID&#125;</span><br><span class="line"><span class="comment"># 把停止运行的容器打开</span></span><br><span class="line">docker start &#123;CONTAINER ID&#125;</span><br><span class="line">docker container start &#123;CONTAINER ID&#125;</span><br><span class="line"><span class="comment"># 查看 docker 容器的输出，即容器里面 Shell 的标准输出。</span></span><br><span class="line">docker container logs &#123;CONTAINER ID&#125;</span><br><span class="line"><span class="comment"># 从正在运行的 Docker 容器里面，将文件拷贝到本机。下面是拷贝到当前目录的写法。</span></span><br><span class="line">docker container cp &#123;CONTAINER ID&#125;:&#123;/path/to/file&#125; .</span><br><span class="line"><span class="comment"># 进入运行中的ubuntu容器</span></span><br><span class="line"><span class="comment"># 推荐大家使用 docker exec 命令，因为此退出容器终端，不会导致容器的停止。</span></span><br><span class="line"><span class="comment"># 使用 docker attach &#123;CONTAINER ID&#125;，当退出容器终端时，将导致容器停止。</span></span><br><span class="line">docker <span class="built_in">exec</span> -it &#123;CONTAINER ID&#125; /bin/bash</span><br><span class="line"><span class="comment"># 以后台（-d）方式打开新的容器并命名</span></span><br><span class="line">docker run -itd --name=<span class="string">&#x27;centos&#x27;</span> &#123;IMAGE ID&#125; /bin/bash</span><br><span class="line"><span class="comment"># 删除不需要的容器</span></span><br><span class="line">docker container rm &#123;CONTAINER ID&#125;</span><br></pre></td></tr></table></figure>
-
-<p>注意:</p>
-<ol>
-<li>CONTAINER ID 和 IMAGE ID 只需要输入前几个字符，只要能够唯一识别它们；</li>
-<li>docker image 根据 image 文件生成容器的实例。同一个 image 文件，可以生成多个同时运行的容器实例。image 文件可以看作是容器的模板；</li>
-<li>image 是二进制文件。实际开发中，一个 image 文件往往通过继承另一个 image 文件，加上一些个性化设置而生成。举例来说，你可以在 Ubuntu 的 image 基础上，往里面加入 Apache 服务器，形成你的 image；</li>
-<li>一般来说，为了节省时间，我们应该尽量使用别人制作好的 image 文件，而不是自己制作。即使要定制，也应该基于别人的 image 文件进行加工，而不是从零开始制作；</li>
-</ol>
-<h1 id="制作docker-image"><a href="#制作docker-image" class="headerlink" title="制作docker image"></a>制作docker image</h1><p>需要用到 Dockerfile 文件。它是一个文本文件，用来配置 image。Docker 根据 该文件生成二进制的 image 文件。</p>
-<p>首先，克隆项目</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/xxx/demos.git</span><br><span class="line"><span class="built_in">cd</span> demos</span><br></pre></td></tr></table></figure>
-
-<p>在项目的根目录下，新建一个文本文件<code>.dockerignore</code>, 把要排除的文件或文件夹路径按行写到文件里，参考如下，即说明那些不需要打包进入 image 文件。如果你没有路径要排除，这个文件可以不新建。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">.git</span><br><span class="line">node_modules</span><br><span class="line">npm-debug.log</span><br></pre></td></tr></table></figure>
-
-<p>在项目的根目录下，新建一个文本文件 Dockerfile，</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">FROM node:11</span><br><span class="line">COPY . /app</span><br><span class="line">WORKDIR /app</span><br><span class="line">RUN npm install --registry=https://registry.npm.taobao.org</span><br><span class="line">EXPOSE 3000</span><br><span class="line">CMD node demos/01.js</span><br></pre></td></tr></table></figure>
-
-<p>说明如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">FROM node:11：该 image 文件继承官方的 node image，冒号表示标签，这里标签是 11，即 11 版本的 node。</span><br><span class="line">COPY . /app：将当前目录下的所有文件（除了.dockerignore 排除的路径），都拷贝进入 image 文件的/app目录。</span><br><span class="line">WORKDIR /app：指定接下来的工作路径为 /app。</span><br><span class="line">RUN npm install：在/app目录下，运行 npm install 命令安装依赖。注意，安装后所有的依赖，都将打包进入 image 文件。</span><br><span class="line">EXPOSE 3000：将容器 3000 端口暴露出来， 允许外部连接这个端口。</span><br><span class="line">CMD node demos/01.js：表示容器启动后自动执行 node demos/01.js。RUN命令与CMD命令的区别在哪里？简单说，RUN命令在 image 文件的构建阶段执行，执行结果都会打包进入 image 文件；CMD命令则是在容器启动后执行。另外，一个 Dockerfile 可以包含多个 RUN 命令，但是只能有一个 CMD 命令。注意，指定了 CMD 命令以后，docker container run 命令就不能附加命令了（比如前面的 /bin/bash），否则它会覆盖 CMD 命令。</span><br></pre></td></tr></table></figure>
-
-<p>创建 image 文件. 有了 Dockerfile 文件以后，就可以使用<code>docker image build</code>命令创建 image 文件了。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker image build -t demo .</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">docker image build -t demo:0.0.1 .</span><br></pre></td></tr></table></figure>
-
-<p>上面代码中，<code>-t</code>参数用来指定 image 文件的名字，后面还可以用冒号指定标签。如果不指定，默认的标签就是<code>latest</code>。最后的那个点表示 Dockerfile 文件所在的路径，上例是当前路径，所以是一个点。</p>
-<p>如果运行成功，就可以看到新生成的 image 文件<code>demo</code>了。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker image ls</span><br></pre></td></tr></table></figure>
-
-<p>发布 image 的命令参考上面。</p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><p><a href="https://www.cnblogs.com/StivenYang/p/13843397.html">docker国内镜像源</a></p>
-</li>
-<li><p><a href="https://www.ruanyifeng.com/blog/2018/02/docker-tutorial.html">Docker 入门教程</a></p>
-</li>
-<li><p><a href="https://www.ruanyifeng.com/blog/2018/02/docker-wordpress-tutorial.html">Docker 微服务教程</a></p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
       </tags>
   </entry>
   <entry>
@@ -3141,37 +3141,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>关于 HEXO 博客搜索功能不稳定问题</title>
-    <url>/2021/11/10/hexo-search-disorder/</url>
-    <content><![CDATA[<p>Hexo + GitHub (or VPS) + Markdown 搭配完成博文撰写与发布，记录个人每天学习到的知识以及产生的灵感，是非常方便的。但是，最近发现我的博客出现搜索功能紊乱的问题，有些博文明明存在却搜索不到。因此，经过长时间的探索发现一种解决方法。特此记录下来。</p>
-<a id="more"></a>
-
-<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>在登录到博客网站后，想要通过关键字搜索某篇博文，搜索不到，但是确信博文是存在的。经过一页一页翻找，确实找到了博文。断定搜索功能失效。</p>
-<p>尝试，在本地重新生成和部署</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> blog</span><br><span class="line">hexo clean</span><br><span class="line">hexo generate </span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>再重新打开博文进行搜索，发现可以使用。但是，写完博文后再次生成部署，发现搜索功能又失效。</p>
-<h1 id="定位问题"><a href="#定位问题" class="headerlink" title="定位问题"></a>定位问题</h1><p>通过网站直接访问搜索网页： <a href="https://xujinzh.github.io/search.xml">https://xujinzh.github.io/search.xml</a></p>
-<p>发现在顶部有红色错误提示，第$i$行和第$j$列，字符编码错误。</p>
-<p>在本地打开 <code>public/search.xml</code> 的第 $i$ 行和第 $j$ 列，看看它属于哪篇博文。</p>
-<p>在博文中检查是否有不合法的字符出现。清除掉它们。</p>
-<h1 id="重新生成和部署"><a href="#重新生成和部署" class="headerlink" title="重新生成和部署"></a>重新生成和部署</h1><p>清理完所有非法字符后，建议先清除，然后再重新生成和部署</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> blog</span><br><span class="line"><span class="comment"># 先清除</span></span><br><span class="line">hexo clean</span><br><span class="line">hexo g -d</span><br></pre></td></tr></table></figure>
-
-<p>之后，在博客上发现搜索功能恢复。重试多次清除、生成和部署后，都能够准确搜索。</p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="https://blog.csdn.net/Strong997/article/details/104887353">Hexo本地搜索失效</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-        <tag>search</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>如何进行目标跟踪</title>
     <url>/2020/08/24/how-to-object-tracking/</url>
     <content><![CDATA[<p>前一篇我们介绍了目标跟踪的基本原理是定义目标、生成候选框、提取特征、匹配最优候选框。根据这一原理，本篇介绍如何具体进行目标跟踪。</p>
@@ -3205,6 +3174,37 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>vot</tag>
         <tag>cv</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>关于 HEXO 博客搜索功能不稳定问题</title>
+    <url>/2021/11/10/hexo-search-disorder/</url>
+    <content><![CDATA[<p>Hexo + GitHub (or VPS) + Markdown 搭配完成博文撰写与发布，记录个人每天学习到的知识以及产生的灵感，是非常方便的。但是，最近发现我的博客出现搜索功能紊乱的问题，有些博文明明存在却搜索不到。因此，经过长时间的探索发现一种解决方法。特此记录下来。</p>
+<a id="more"></a>
+
+<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>在登录到博客网站后，想要通过关键字搜索某篇博文，搜索不到，但是确信博文是存在的。经过一页一页翻找，确实找到了博文。断定搜索功能失效。</p>
+<p>尝试，在本地重新生成和部署</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> blog</span><br><span class="line">hexo clean</span><br><span class="line">hexo generate </span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>再重新打开博文进行搜索，发现可以使用。但是，写完博文后再次生成部署，发现搜索功能又失效。</p>
+<h1 id="定位问题"><a href="#定位问题" class="headerlink" title="定位问题"></a>定位问题</h1><p>通过网站直接访问搜索网页： <a href="https://xujinzh.github.io/search.xml">https://xujinzh.github.io/search.xml</a></p>
+<p>发现在顶部有红色错误提示，第$i$行和第$j$列，字符编码错误。</p>
+<p>在本地打开 <code>public/search.xml</code> 的第 $i$ 行和第 $j$ 列，看看它属于哪篇博文。</p>
+<p>在博文中检查是否有不合法的字符出现。清除掉它们。</p>
+<h1 id="重新生成和部署"><a href="#重新生成和部署" class="headerlink" title="重新生成和部署"></a>重新生成和部署</h1><p>清理完所有非法字符后，建议先清除，然后再重新生成和部署</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> blog</span><br><span class="line"><span class="comment"># 先清除</span></span><br><span class="line">hexo clean</span><br><span class="line">hexo g -d</span><br></pre></td></tr></table></figure>
+
+<p>之后，在博客上发现搜索功能恢复。重试多次清除、生成和部署后，都能够准确搜索。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://blog.csdn.net/Strong997/article/details/104887353">Hexo本地搜索失效</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>search</tag>
       </tags>
   </entry>
   <entry>
@@ -3781,6 +3781,26 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>设置 Jupyter Cell Proxy</title>
+    <url>/2021/08/31/jupyter-cell-proxy/</url>
+    <content><![CDATA[<p>Jupyter Notebook/Lab 提供了交互式的 Python 等编程范式，下面介绍一种设置 Proxy 的方法，方便 Python 代码的运行。</p>
+<a id="more"></a>
+
+<p>只需要在 Jupyter Notebook/Lab 第一个 Cell 上添加如下代码即可：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入模块</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment"># 设置代理</span></span><br><span class="line">proxy = <span class="string">&#x27;http://127.0.0.1:1080&#x27;</span></span><br><span class="line">os.environ[<span class="string">&#x27;http_proxy&#x27;</span>] = proxy</span><br><span class="line">os.environ[<span class="string">&#x27;HTTP_PROXY&#x27;</span>] = proxy</span><br><span class="line">os.environ[<span class="string">&#x27;https_proxy&#x27;</span>] = proxy</span><br><span class="line">os.environ[<span class="string">&#x27;HTTPS_PROXY&#x27;</span>] = proxy</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>jupyter</tag>
+        <tag>proxy</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>在 Jupyter 中使用 Matlab</title>
     <url>/2021/07/27/jupyter-kernel-matlab/</url>
     <content><![CDATA[<p>Jupyter 为创建交互式脚本提供了一个强大且广泛的平台，在这里介绍一种在 Jupyter 中调用 Matlab 的方法。假设已经安装了 Miniconda 或者 Anaconda， Matlab 版本是 2020a，安装在路径：<code>/usr/local/MATLAB</code> 下。</p>
@@ -3831,26 +3851,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <tag>jupyter</tag>
         <tag>notebook</tag>
         <tag>pdf</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>设置 Jupyter Cell Proxy</title>
-    <url>/2021/08/31/jupyter-cell-proxy/</url>
-    <content><![CDATA[<p>Jupyter Notebook/Lab 提供了交互式的 Python 等编程范式，下面介绍一种设置 Proxy 的方法，方便 Python 代码的运行。</p>
-<a id="more"></a>
-
-<p>只需要在 Jupyter Notebook/Lab 第一个 Cell 上添加如下代码即可：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入模块</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment"># 设置代理</span></span><br><span class="line">proxy = <span class="string">&#x27;http://127.0.0.1:1080&#x27;</span></span><br><span class="line">os.environ[<span class="string">&#x27;http_proxy&#x27;</span>] = proxy</span><br><span class="line">os.environ[<span class="string">&#x27;HTTP_PROXY&#x27;</span>] = proxy</span><br><span class="line">os.environ[<span class="string">&#x27;https_proxy&#x27;</span>] = proxy</span><br><span class="line">os.environ[<span class="string">&#x27;HTTPS_PROXY&#x27;</span>] = proxy</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>jupyter</tag>
-        <tag>proxy</tag>
       </tags>
   </entry>
   <entry>
@@ -4107,39 +4107,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>利用 nginx 反向代理为 jupyterlab 配置二级网址页面</title>
-    <url>/2020/11/09/jupyterlab-nginx/</url>
-    <content><![CDATA[<p>当服务器配置好 Python, Jupyterlab 后，访问总是通过 8888 端口，出于某些原因，想要为其配置二级页面，这样当想要更改端口时只需要修改一下配置，而不需要再次记忆到底是打开了哪个端口，只需要记住二级页面 web 地址就可以。本篇不介绍如何配置 Jupyterlab，而是假设已经配置好了 Jupyterlab，且申请了域名，直接说如何通过 nginx 配置 Jupyterlab.</p>
-<a id="more"></a>
-
-<h1 id="安装-nginx"><a href="#安装-nginx" class="headerlink" title="安装 nginx"></a>安装 nginx</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install nginx</span><br><span class="line">sudo systemctl status nginx.service</span><br><span class="line">sudo systemctl start nginx.service</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> nginx.service</span><br></pre></td></tr></table></figure>
-
-<h1 id="配置-Jupyterlab"><a href="#配置-Jupyterlab" class="headerlink" title="配置 Jupyterlab"></a>配置 Jupyterlab</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 生成 jupyterlab 配置文件</span></span><br><span class="line">jupyter notebook --generate-config</span><br><span class="line"><span class="comment"># 修改配置</span></span><br><span class="line">vim .jupyter/jupyter_notebook_config.py</span><br><span class="line"><span class="comment"># 修改如下内容</span></span><br><span class="line">c.NotebookApp.base_project_url = <span class="string">&#x27;/jupyter&#x27;</span></span><br><span class="line">c.NotebookApp.ip = <span class="string">&#x27;0.0.0.0&#x27;</span></span><br><span class="line"><span class="comment"># 或者修改如下内容</span></span><br><span class="line">c.NotebookApp.base_url = <span class="string">&#x27;/jupyter&#x27;</span></span><br><span class="line">c.NotebookApp.ip = <span class="string">&#x27;0.0.0.0&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#  配置 nginx</span></span><br><span class="line">cat /etc/nginx/nginx.conf</span><br><span class="line"><span class="comment"># 修改如下内容</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  www.googj.com;</span><br><span class="line">        location /jupyter &#123;</span><br><span class="line">            proxy_pass          http://127.0.0.1:8888;</span><br><span class="line">            proxy_set_header    Host <span class="variable">$host</span>;</span><br><span class="line">            proxy_set_header    X-Real-Scheme <span class="variable">$scheme</span>;</span><br><span class="line">            proxy_set_header    X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">            proxy_set_header    X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">            proxy_http_version  1.1;</span><br><span class="line">            proxy_set_header    Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">            proxy_set_header    Connection <span class="string">&quot;upgrade&quot;</span>;</span><br><span class="line">            proxy_read_timeout  120s;</span><br><span class="line">            proxy_next_upstream error;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>重启服务器后，在网页上访问地址：<a href="http://www.googj.com/jupyter">http://www.googj.com/jupyter</a> (这里是样例地址)，就可以打开 Jupyterlab.</p>
-<p>注意，上面假设已经配置了 Jupyterlab 自启，如果没有可以访问我的其他博文配置。并假设域名已经指向服务器IP地址。</p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><p><a href="https://www.byincd.com/bobjiang/article-0161/">Jupyter Notebook在nginx中无法配置为二级页面的解决办法</a></p>
-</li>
-<li><p><a href="http://blog.wangcaimeng.top/2020/01/31/nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86jupyterlab%E9%85%8D%E7%BD%AE/">nginx反向代理jupyterlab配置</a></p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>linux</tag>
-        <tag>nginx</tag>
-        <tag>jupyter</tag>
-        <tag>jupyterlab</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>jupyterlab 扩展</title>
     <url>/2019/12/31/jupyterlab-extension/</url>
     <content><![CDATA[<h1 id="jupyterlab-代码折叠-Collapsible-Headings"><a href="#jupyterlab-代码折叠-Collapsible-Headings" class="headerlink" title="jupyterlab 代码折叠 - Collapsible_Headings"></a>jupyterlab 代码折叠 - <strong><a href="https://github.com/aquirdTurtle/Collapsible_Headings">Collapsible_Headings</a></strong></h1><p>按照 Github 上扩展安装步骤进行安装</p>
@@ -4208,6 +4175,39 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>利用 nginx 反向代理为 jupyterlab 配置二级网址页面</title>
+    <url>/2020/11/09/jupyterlab-nginx/</url>
+    <content><![CDATA[<p>当服务器配置好 Python, Jupyterlab 后，访问总是通过 8888 端口，出于某些原因，想要为其配置二级页面，这样当想要更改端口时只需要修改一下配置，而不需要再次记忆到底是打开了哪个端口，只需要记住二级页面 web 地址就可以。本篇不介绍如何配置 Jupyterlab，而是假设已经配置好了 Jupyterlab，且申请了域名，直接说如何通过 nginx 配置 Jupyterlab.</p>
+<a id="more"></a>
+
+<h1 id="安装-nginx"><a href="#安装-nginx" class="headerlink" title="安装 nginx"></a>安装 nginx</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install nginx</span><br><span class="line">sudo systemctl status nginx.service</span><br><span class="line">sudo systemctl start nginx.service</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> nginx.service</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置-Jupyterlab"><a href="#配置-Jupyterlab" class="headerlink" title="配置 Jupyterlab"></a>配置 Jupyterlab</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 生成 jupyterlab 配置文件</span></span><br><span class="line">jupyter notebook --generate-config</span><br><span class="line"><span class="comment"># 修改配置</span></span><br><span class="line">vim .jupyter/jupyter_notebook_config.py</span><br><span class="line"><span class="comment"># 修改如下内容</span></span><br><span class="line">c.NotebookApp.base_project_url = <span class="string">&#x27;/jupyter&#x27;</span></span><br><span class="line">c.NotebookApp.ip = <span class="string">&#x27;0.0.0.0&#x27;</span></span><br><span class="line"><span class="comment"># 或者修改如下内容</span></span><br><span class="line">c.NotebookApp.base_url = <span class="string">&#x27;/jupyter&#x27;</span></span><br><span class="line">c.NotebookApp.ip = <span class="string">&#x27;0.0.0.0&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#  配置 nginx</span></span><br><span class="line">cat /etc/nginx/nginx.conf</span><br><span class="line"><span class="comment"># 修改如下内容</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  www.googj.com;</span><br><span class="line">        location /jupyter &#123;</span><br><span class="line">            proxy_pass          http://127.0.0.1:8888;</span><br><span class="line">            proxy_set_header    Host <span class="variable">$host</span>;</span><br><span class="line">            proxy_set_header    X-Real-Scheme <span class="variable">$scheme</span>;</span><br><span class="line">            proxy_set_header    X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">            proxy_set_header    X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">            proxy_http_version  1.1;</span><br><span class="line">            proxy_set_header    Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">            proxy_set_header    Connection <span class="string">&quot;upgrade&quot;</span>;</span><br><span class="line">            proxy_read_timeout  120s;</span><br><span class="line">            proxy_next_upstream error;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>重启服务器后，在网页上访问地址：<a href="http://www.googj.com/jupyter">http://www.googj.com/jupyter</a> (这里是样例地址)，就可以打开 Jupyterlab.</p>
+<p>注意，上面假设已经配置了 Jupyterlab 自启，如果没有可以访问我的其他博文配置。并假设域名已经指向服务器IP地址。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><p><a href="https://www.byincd.com/bobjiang/article-0161/">Jupyter Notebook在nginx中无法配置为二级页面的解决办法</a></p>
+</li>
+<li><p><a href="http://blog.wangcaimeng.top/2020/01/31/nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86jupyterlab%E9%85%8D%E7%BD%AE/">nginx反向代理jupyterlab配置</a></p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>linux</tag>
+        <tag>nginx</tag>
+        <tag>jupyter</tag>
+        <tag>jupyterlab</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JupyterLab 中 Pandas 打印行列省略问题</title>
     <url>/2021/10/20/jupyterlab-pandas-omission/</url>
     <content><![CDATA[<p>在 JupyterLab 中书写 Python 代码非常的方便，交互性强，并且能够书写 Markdown 文档等。但是，使用其处理 Pandas 的 DataFrame 对象时，当表格数据行或列太大时，打印时总是显示不全，在中间出现一些省略号，这使得想要查看所有内容时不是太方便，下面给出一种方法，能够显示所有的行和列。</p>
@@ -4234,6 +4234,76 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <tag>jupyter</tag>
         <tag>jupyterlab</tag>
         <tag>pandas</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python jupyter lab 开机自启动</title>
+    <url>/2019/12/20/jupyterlab-startup/</url>
+    <content><![CDATA[<h2 id="generate-config"><a href="#generate-config" class="headerlink" title="generate config"></a>generate config</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter notebook --generate-config</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;c.NotebookApp.ip = &#x27;0.0.0.0&#x27;&quot;</span> &gt;&gt; ~/.jupyter/jupyter_notebook_config.py</span><br></pre></td></tr></table></figure>
+
+<h2 id="activate-service-开机自启"><a href="#activate-service-开机自启" class="headerlink" title="activate service 开机自启"></a>activate service 开机自启</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/systemd/system/jupyter.service</span><br></pre></td></tr></table></figure>
+<p>添加如下代码，并保存</p>
+<a id="more"></a>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Jupyter Notebook</span><br><span class="line">After=network.target</span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">ExecStart=/home/jinzhongxu/miniconda3/bin/jupyter-lab --config=/home/jinzhongxu/.jupyter/jupyter_notebook_config.py --no-browser</span><br><span class="line">User=jinzhongxu</span><br><span class="line">Group=jinzhongxu</span><br><span class="line">WorkingDirectory=/home/jinzhongxu/</span><br><span class="line">Restart=always</span><br><span class="line">RestartSec=10</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<h2 id="enable-jupyter"><a href="#enable-jupyter" class="headerlink" title="enable jupyter"></a>enable jupyter</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> jupyter</span><br><span class="line">systemctl start jupyter</span><br></pre></td></tr></table></figure>
+
+<p>其他程序或服务，也可以使用上面的方法，需要注意两点：</p>
+<ol>
+<li>系统版本不能太低，如 Ubuntu 14.04等，因为该系统没有 systemd</li>
+<li>jupyter.service 中的 ExecStart 后面的命令不能使用 ~jinzhongxu，必须使用绝对路径</li>
+</ol>
+<p>一个例子：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/systemd/system/frpc.service</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=frpc daemon</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">ExecStart=/home/jinzhongxu/.frp.local/frpc -c /home/jinzhongxu/.frp.local/frpc.ini</span><br><span class="line"><span class="meta">#</span><span class="bash">ExecStart=/home/jinzhongxu/.frp.local/frp <span class="comment"># 这种方法不可行，其中 frp 即 frp.sh，里面就是</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> nohup /home/jinzhongxu/.frp.local/frpc -c /home/jinzhongxu/.frp.local/frpc.ini &gt; <span class="built_in">log</span> &amp;</span></span><br><span class="line">User=jinzhongxu</span><br><span class="line">Group=jinzhongxu</span><br><span class="line">WorkingDirectory=/home/jinzhongxu/.frp.local/</span><br><span class="line">Restart=always</span><br><span class="line">RestartSec=10</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo systemctl start frpc.service</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> frpc.service</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>ubuntu</tag>
+        <tag>jupyterlab</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>jupyterlab安装plotly</title>
+    <url>/2020/06/22/jupyterlab-plotly/</url>
+    <content><![CDATA[<p>Plotly是一家技术计算公司，总部位于魁北克省的蒙特利尔市，致力于开发在线数据分析和可视化工具。Plotly为个人和协作提供了在线图形，分析和统计工具，以及用于Python，R，MATLAB，Perl，Julia，Arduino和REST的科学图形库。本篇介绍的就是其 Python 画图库plotly，常常在jupyterlab使用plotly进行离线画图时总是出现图形不显示的问题。因为plotly画出的图形比matplotlib更加好看且有交互性，同时，matplotlib画的图形也可以使用plotly转化为同态交互图。所以，希望能够使用plotly画图，并能够在常用软件jupyterlab中使用。</p>
+<a id="more"></a>
+
+<h1 id="安装plotly"><a href="#安装plotly" class="headerlink" title="安装plotly"></a>安装plotly</h1><p>推荐使用pip安装最新的plotly，</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip install plotly</span><br></pre></td></tr></table></figure>
+
+<h1 id="jupyterlab使用plotly"><a href="#jupyterlab使用plotly" class="headerlink" title="jupyterlab使用plotly"></a>jupyterlab使用plotly</h1><p>在jupyterlab中使用plotly需要安装一些支持扩展，其中 jupyterlab-plotly@ 需要根据最新的plotly版本对应，参考网址<a href="https://plotly.com/python/getting-started/?utm_source=mailchimp-jan-2015&utm_medium=email&utm_campaign=generalemail-jan2015&utm_term=bubble-chart">Python\Getting Started with Plotly</a></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip install ipywidgets</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">conda install nodejs</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> JupyterLab renderer support</span></span><br><span class="line">jupyter labextension install jupyterlab-plotly@4.8.1</span><br></pre></td></tr></table></figure>
+
+<p>在  <a href="mailto:&#106;&#117;&#x70;&#121;&#x74;&#x65;&#x72;&#x6c;&#97;&#x62;&#45;&#x70;&#x6c;&#x6f;&#x74;&#x6c;&#x79;&#64;&#x34;&#46;&#56;&#x2e;&#x31;">&#106;&#117;&#x70;&#121;&#x74;&#x65;&#x72;&#x6c;&#97;&#x62;&#45;&#x70;&#x6c;&#x6f;&#x74;&#x6c;&#x79;&#64;&#x34;&#46;&#56;&#x2e;&#x31;</a>中，需要编译一会，可能会消耗2G多内存，建议内存小的用户创建交换分区。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看安装的jupyterlab扩展</span></span><br><span class="line">jupyter labextension list</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用plotly画图"><a href="#使用plotly画图" class="headerlink" title="使用plotly画图"></a>使用plotly画图</h1><p>按照上面方法按照后，需要先 log out jupyterlab，然后，在登录进去使用plotly才能正常显示图形。</p>
+<p>更多jupyterlab使用plotly画图，请参考<a href="https://plotly.com/python/getting-started/">官网</a></p>
+<h1 id="无法安装扩展解决办法"><a href="#无法安装扩展解决办法" class="headerlink" title="无法安装扩展解决办法"></a>无法安装扩展解决办法</h1><p>因为 build jupyterlab 扩展时，需要使用 npm 安装一些插件，所以 npm 按照插件成功与否会直接影响 jupyterlab 扩展 build 的成败。下面介绍如何安装 npm 和配置国内源</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt install nodejs</span><br><span class="line"><span class="comment"># 配置淘宝源</span></span><br><span class="line">npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br><span class="line"><span class="comment"># 或者使用工具 nrm 管理源，首先安装 nrm</span></span><br><span class="line">npm install -g nrm</span><br><span class="line"><span class="comment"># 查看可用源</span></span><br><span class="line">nrm ls</span><br><span class="line"><span class="comment"># 切换国内源</span></span><br><span class="line">nrm use taobao</span><br></pre></td></tr></table></figure>
+
+<p>这样，再次使用</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter lab build</span><br></pre></td></tr></table></figure>
+
+<p>时，就能够 build 成功了。</p>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>jupyterlab</tag>
+        <tag>plotly</tag>
       </tags>
   </entry>
   <entry>
@@ -4309,76 +4379,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>big data</tag>
         <tag>kafka</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python jupyter lab 开机自启动</title>
-    <url>/2019/12/20/jupyterlab-startup/</url>
-    <content><![CDATA[<h2 id="generate-config"><a href="#generate-config" class="headerlink" title="generate config"></a>generate config</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter notebook --generate-config</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;c.NotebookApp.ip = &#x27;0.0.0.0&#x27;&quot;</span> &gt;&gt; ~/.jupyter/jupyter_notebook_config.py</span><br></pre></td></tr></table></figure>
-
-<h2 id="activate-service-开机自启"><a href="#activate-service-开机自启" class="headerlink" title="activate service 开机自启"></a>activate service 开机自启</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/systemd/system/jupyter.service</span><br></pre></td></tr></table></figure>
-<p>添加如下代码，并保存</p>
-<a id="more"></a>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Jupyter Notebook</span><br><span class="line">After=network.target</span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">ExecStart=/home/jinzhongxu/miniconda3/bin/jupyter-lab --config=/home/jinzhongxu/.jupyter/jupyter_notebook_config.py --no-browser</span><br><span class="line">User=jinzhongxu</span><br><span class="line">Group=jinzhongxu</span><br><span class="line">WorkingDirectory=/home/jinzhongxu/</span><br><span class="line">Restart=always</span><br><span class="line">RestartSec=10</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
-
-<h2 id="enable-jupyter"><a href="#enable-jupyter" class="headerlink" title="enable jupyter"></a>enable jupyter</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> jupyter</span><br><span class="line">systemctl start jupyter</span><br></pre></td></tr></table></figure>
-
-<p>其他程序或服务，也可以使用上面的方法，需要注意两点：</p>
-<ol>
-<li>系统版本不能太低，如 Ubuntu 14.04等，因为该系统没有 systemd</li>
-<li>jupyter.service 中的 ExecStart 后面的命令不能使用 ~jinzhongxu，必须使用绝对路径</li>
-</ol>
-<p>一个例子：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/systemd/system/frpc.service</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=frpc daemon</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">ExecStart=/home/jinzhongxu/.frp.local/frpc -c /home/jinzhongxu/.frp.local/frpc.ini</span><br><span class="line"><span class="meta">#</span><span class="bash">ExecStart=/home/jinzhongxu/.frp.local/frp <span class="comment"># 这种方法不可行，其中 frp 即 frp.sh，里面就是</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> nohup /home/jinzhongxu/.frp.local/frpc -c /home/jinzhongxu/.frp.local/frpc.ini &gt; <span class="built_in">log</span> &amp;</span></span><br><span class="line">User=jinzhongxu</span><br><span class="line">Group=jinzhongxu</span><br><span class="line">WorkingDirectory=/home/jinzhongxu/.frp.local/</span><br><span class="line">Restart=always</span><br><span class="line">RestartSec=10</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo systemctl start frpc.service</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> frpc.service</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>ubuntu</tag>
-        <tag>jupyterlab</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>jupyterlab安装plotly</title>
-    <url>/2020/06/22/jupyterlab-plotly/</url>
-    <content><![CDATA[<p>Plotly是一家技术计算公司，总部位于魁北克省的蒙特利尔市，致力于开发在线数据分析和可视化工具。Plotly为个人和协作提供了在线图形，分析和统计工具，以及用于Python，R，MATLAB，Perl，Julia，Arduino和REST的科学图形库。本篇介绍的就是其 Python 画图库plotly，常常在jupyterlab使用plotly进行离线画图时总是出现图形不显示的问题。因为plotly画出的图形比matplotlib更加好看且有交互性，同时，matplotlib画的图形也可以使用plotly转化为同态交互图。所以，希望能够使用plotly画图，并能够在常用软件jupyterlab中使用。</p>
-<a id="more"></a>
-
-<h1 id="安装plotly"><a href="#安装plotly" class="headerlink" title="安装plotly"></a>安装plotly</h1><p>推荐使用pip安装最新的plotly，</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip install plotly</span><br></pre></td></tr></table></figure>
-
-<h1 id="jupyterlab使用plotly"><a href="#jupyterlab使用plotly" class="headerlink" title="jupyterlab使用plotly"></a>jupyterlab使用plotly</h1><p>在jupyterlab中使用plotly需要安装一些支持扩展，其中 jupyterlab-plotly@ 需要根据最新的plotly版本对应，参考网址<a href="https://plotly.com/python/getting-started/?utm_source=mailchimp-jan-2015&utm_medium=email&utm_campaign=generalemail-jan2015&utm_term=bubble-chart">Python\Getting Started with Plotly</a></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip install ipywidgets</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">conda install nodejs</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> JupyterLab renderer support</span></span><br><span class="line">jupyter labextension install jupyterlab-plotly@4.8.1</span><br></pre></td></tr></table></figure>
-
-<p>在  <a href="mailto:&#106;&#x75;&#x70;&#121;&#116;&#101;&#x72;&#108;&#x61;&#x62;&#45;&#112;&#108;&#x6f;&#116;&#108;&#x79;&#64;&#52;&#x2e;&#x38;&#46;&#x31;">&#106;&#x75;&#x70;&#121;&#116;&#101;&#x72;&#108;&#x61;&#x62;&#45;&#112;&#108;&#x6f;&#116;&#108;&#x79;&#64;&#52;&#x2e;&#x38;&#46;&#x31;</a>中，需要编译一会，可能会消耗2G多内存，建议内存小的用户创建交换分区。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看安装的jupyterlab扩展</span></span><br><span class="line">jupyter labextension list</span><br></pre></td></tr></table></figure>
-
-<h1 id="使用plotly画图"><a href="#使用plotly画图" class="headerlink" title="使用plotly画图"></a>使用plotly画图</h1><p>按照上面方法按照后，需要先 log out jupyterlab，然后，在登录进去使用plotly才能正常显示图形。</p>
-<p>更多jupyterlab使用plotly画图，请参考<a href="https://plotly.com/python/getting-started/">官网</a></p>
-<h1 id="无法安装扩展解决办法"><a href="#无法安装扩展解决办法" class="headerlink" title="无法安装扩展解决办法"></a>无法安装扩展解决办法</h1><p>因为 build jupyterlab 扩展时，需要使用 npm 安装一些插件，所以 npm 按照插件成功与否会直接影响 jupyterlab 扩展 build 的成败。下面介绍如何安装 npm 和配置国内源</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt install nodejs</span><br><span class="line"><span class="comment"># 配置淘宝源</span></span><br><span class="line">npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br><span class="line"><span class="comment"># 或者使用工具 nrm 管理源，首先安装 nrm</span></span><br><span class="line">npm install -g nrm</span><br><span class="line"><span class="comment"># 查看可用源</span></span><br><span class="line">nrm ls</span><br><span class="line"><span class="comment"># 切换国内源</span></span><br><span class="line">nrm use taobao</span><br></pre></td></tr></table></figure>
-
-<p>这样，再次使用</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter lab build</span><br></pre></td></tr></table></figure>
-
-<p>时，就能够 build 成功了。</p>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>jupyterlab</tag>
-        <tag>plotly</tag>
       </tags>
   </entry>
   <entry>
@@ -4646,29 +4646,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>Linux端口占用情况查询与释放端口</title>
-    <url>/2019/12/21/linux-port/</url>
-    <content><![CDATA[<p>查询特定端口占用情况：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ip-172-26-1-96:/<span class="comment"># netstat -ntulp | grep 8080</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN      5759/filebrowser</span><br></pre></td></tr></table></figure>
-
-<p>结果最后一位分别是进程id/进程名，使用如下方法杀死进程：</p>
-<a id="more"></a>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ip-172-26-1-96:/<span class="comment"># kill 5759</span></span><br></pre></td></tr></table></figure>
-
-<p>再次查看端口得到释放</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ip-172-26-1-96:/<span class="comment"># netstat -ntulp | grep 8080</span></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>port</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>查看内存消耗排序情况</title>
     <url>/2019/12/21/linux-memory/</url>
     <content><![CDATA[<p>在终端运行如下命令</p>
@@ -4715,6 +4692,64 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>linux</tag>
         <tag>port</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux端口占用情况查询与释放端口</title>
+    <url>/2019/12/21/linux-port/</url>
+    <content><![CDATA[<p>查询特定端口占用情况：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ip-172-26-1-96:/<span class="comment"># netstat -ntulp | grep 8080</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN      5759/filebrowser</span><br></pre></td></tr></table></figure>
+
+<p>结果最后一位分别是进程id/进程名，使用如下方法杀死进程：</p>
+<a id="more"></a>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ip-172-26-1-96:/<span class="comment"># kill 5759</span></span><br></pre></td></tr></table></figure>
+
+<p>再次查看端口得到释放</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ip-172-26-1-96:/<span class="comment"># netstat -ntulp | grep 8080</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>port</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux 文件按大小或时间排序</title>
+    <url>/2019/12/20/linux-sort-file/</url>
+    <content><![CDATA[<h2 id="1-查看-Linux-某一个文件夹下所有文件，并按从新到旧的时间排序："><a href="#1-查看-Linux-某一个文件夹下所有文件，并按从新到旧的时间排序：" class="headerlink" title="1, 查看 Linux 某一个文件夹下所有文件，并按从新到旧的时间排序："></a>1, 查看 Linux 某一个文件夹下所有文件，并按从新到旧的时间排序：</h2><a id="more"></a>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ls -tl</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="2-从旧到新的时间排序："><a href="#2-从旧到新的时间排序：" class="headerlink" title="2, 从旧到新的时间排序："></a>2, 从旧到新的时间排序：</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ls -tlr</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="3-查看-Linux-某一个文件夹下所有文件，并按文件大小从大到小排序"><a href="#3-查看-Linux-某一个文件夹下所有文件，并按文件大小从大到小排序" class="headerlink" title="3, 查看 Linux 某一个文件夹下所有文件，并按文件大小从大到小排序:"></a>3, 查看 Linux 某一个文件夹下所有文件，并按文件大小从大到小排序:</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 对于子文件夹，则只有文件夹的大小，不会计算整个子文件夹下所有文件的大小</span></span><br><span class="line">ls -Sl</span><br><span class="line">ls -Slh</span><br><span class="line"><span class="comment"># 同时会计算文件夹下子文件夹所有文件的大小，参与排序</span></span><br><span class="line">du -s * | sort -nr</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="4-从小到大排序："><a href="#4-从小到大排序：" class="headerlink" title="4, 从小到大排序："></a>4, 从小到大排序：</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ls -Slr</span><br><span class="line">ls -Slhr</span><br><span class="line">du -s * | sort -n</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="5-查看最大的前几个文件"><a href="#5-查看最大的前几个文件" class="headerlink" title="5, 查看最大的前几个文件"></a>5, 查看最大的前几个文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">du -s * | sort -nr | head <span class="comment"># 默认前10个</span></span><br><span class="line">ls -Slh | head -n 3  <span class="comment"># 最大的3个</span></span><br><span class="line">du -s * | sort -n | tail</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="6-查看最小的几个个文件："><a href="#6-查看最小的几个个文件：" class="headerlink" title="6, 查看最小的几个个文件："></a>6, 查看最小的几个个文件：</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">du -s * | sort -nr | tail <span class="comment"># 默认前10个</span></span><br><span class="line">ls -Slrh | head -n 3 <span class="comment"># 最小的3个</span></span><br><span class="line">du -s * | sort -n | head</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-查看根目录下所有文件的大小"><a href="#7-查看根目录下所有文件的大小" class="headerlink" title="7, 查看根目录下所有文件的大小"></a>7, 查看根目录下所有文件的大小</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 发现哪些文件夹占用磁盘比较多</span></span><br><span class="line">sudo du -h --max-depth=1 /</span><br><span class="line">df -h</span><br><span class="line"><span class="comment"># 不进入文件夹查看文件夹下文件的大小</span></span><br><span class="line">du -h --max-depth=1 archive</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查看文件夹下子文件夹的大小</span></span><br><span class="line">du -h archive</span><br><span class="line"><span class="comment"># 查看某一个文件夹下所有文件大小和</span></span><br><span class="line">du -h --max-depth=0 archive</span><br><span class="line">du -sh archive</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>linux</tag>
+        <tag>ls</tag>
       </tags>
   </entry>
   <entry>
@@ -4777,41 +4812,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>Linux 文件按大小或时间排序</title>
-    <url>/2019/12/20/linux-sort-file/</url>
-    <content><![CDATA[<h2 id="1-查看-Linux-某一个文件夹下所有文件，并按从新到旧的时间排序："><a href="#1-查看-Linux-某一个文件夹下所有文件，并按从新到旧的时间排序：" class="headerlink" title="1, 查看 Linux 某一个文件夹下所有文件，并按从新到旧的时间排序："></a>1, 查看 Linux 某一个文件夹下所有文件，并按从新到旧的时间排序：</h2><a id="more"></a>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ls -tl</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="2-从旧到新的时间排序："><a href="#2-从旧到新的时间排序：" class="headerlink" title="2, 从旧到新的时间排序："></a>2, 从旧到新的时间排序：</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ls -tlr</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="3-查看-Linux-某一个文件夹下所有文件，并按文件大小从大到小排序"><a href="#3-查看-Linux-某一个文件夹下所有文件，并按文件大小从大到小排序" class="headerlink" title="3, 查看 Linux 某一个文件夹下所有文件，并按文件大小从大到小排序:"></a>3, 查看 Linux 某一个文件夹下所有文件，并按文件大小从大到小排序:</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 对于子文件夹，则只有文件夹的大小，不会计算整个子文件夹下所有文件的大小</span></span><br><span class="line">ls -Sl</span><br><span class="line">ls -Slh</span><br><span class="line"><span class="comment"># 同时会计算文件夹下子文件夹所有文件的大小，参与排序</span></span><br><span class="line">du -s * | sort -nr</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="4-从小到大排序："><a href="#4-从小到大排序：" class="headerlink" title="4, 从小到大排序："></a>4, 从小到大排序：</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ls -Slr</span><br><span class="line">ls -Slhr</span><br><span class="line">du -s * | sort -n</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="5-查看最大的前几个文件"><a href="#5-查看最大的前几个文件" class="headerlink" title="5, 查看最大的前几个文件"></a>5, 查看最大的前几个文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">du -s * | sort -nr | head <span class="comment"># 默认前10个</span></span><br><span class="line">ls -Slh | head -n 3  <span class="comment"># 最大的3个</span></span><br><span class="line">du -s * | sort -n | tail</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="6-查看最小的几个个文件："><a href="#6-查看最小的几个个文件：" class="headerlink" title="6, 查看最小的几个个文件："></a>6, 查看最小的几个个文件：</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">du -s * | sort -nr | tail <span class="comment"># 默认前10个</span></span><br><span class="line">ls -Slrh | head -n 3 <span class="comment"># 最小的3个</span></span><br><span class="line">du -s * | sort -n | head</span><br></pre></td></tr></table></figure>
-
-<h2 id="7-查看根目录下所有文件的大小"><a href="#7-查看根目录下所有文件的大小" class="headerlink" title="7, 查看根目录下所有文件的大小"></a>7, 查看根目录下所有文件的大小</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 发现哪些文件夹占用磁盘比较多</span></span><br><span class="line">sudo du -h --max-depth=1 /</span><br><span class="line">df -h</span><br><span class="line"><span class="comment"># 不进入文件夹查看文件夹下文件的大小</span></span><br><span class="line">du -h --max-depth=1 archive</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查看文件夹下子文件夹的大小</span></span><br><span class="line">du -h archive</span><br><span class="line"><span class="comment"># 查看某一个文件夹下所有文件大小和</span></span><br><span class="line">du -h --max-depth=0 archive</span><br><span class="line">du -sh archive</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>linux</tag>
-        <tag>ls</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Linux 终端显示配置</title>
     <url>/2019/12/20/linux-terminal-color/</url>
     <content><![CDATA[<p>Linux 终端配置成比较突出的颜色，有助于快速定位和美化终端，下面是配置个人比较喜欢的终端显示的方法，以Ubuntu为例：</p>
@@ -4862,6 +4862,40 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>在 Linux 上设置不同的语言和时区</title>
+    <url>/2020/12/30/locale-linux-language/</url>
+    <content><![CDATA[<p>Linux 系统语言的设置至关重要，当设置不匹配的语言时，严重影响使用的效率。如在系统上没有设置中文时，大多出现乱码、数字等情况，使得使用的体验感大幅下降。下面介绍在 Debian, CentOS 等系统上设置中文或其他语言的方法。本篇命令以 root 身份运行。</p>
+<a id="more"></a>
+
+<h1 id="Debian-类"><a href="#Debian-类" class="headerlink" title="Debian 类"></a>Debian 类</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt install locale</span><br><span class="line">dpkg-reconfigure locales</span><br><span class="line"><span class="comment"># 使用空格选择相应的语言，使用上下键移动光标</span></span><br><span class="line"><span class="comment"># 选择好需要安装的语言后，使用 TAB 键切换到 ok</span></span><br><span class="line"><span class="comment"># 使用上下键选择默认的使用的语言</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装成功后，需重启系统</span></span><br><span class="line">shutdown -r now</span><br><span class="line"><span class="comment"># 使用下面命令查看是否生效</span></span><br><span class="line">locale</span><br><span class="line"><span class="comment"># 使用下面命令查看安装的语言</span></span><br><span class="line">locale -a</span><br></pre></td></tr></table></figure>
+
+<p>设置时区</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dpkg-reconfigure tzdata</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="CentOS"><a href="#CentOS" class="headerlink" title="CentOS"></a>CentOS</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum update</span><br><span class="line"><span class="comment"># 查看目前系统语言</span></span><br><span class="line">localectl status</span><br><span class="line"><span class="comment"># 或者通过如下命令也可以查看</span></span><br><span class="line">cat /etc/locale.conf</span><br><span class="line"><span class="comment"># 查看系统中安装了哪些语言</span></span><br><span class="line">localectl list-locales</span><br><span class="line"><span class="comment"># 查看系统中安装了哪些英文语言</span></span><br><span class="line">localectl list-locales | grep en_</span><br><span class="line"><span class="comment"># 设置默认语言为 en_GB.utf8</span></span><br><span class="line">localectl <span class="built_in">set</span>-locale LANG=en_GB.utf8</span><br><span class="line"><span class="comment"># 查看修改默认语言是否成功</span></span><br><span class="line">localectl status</span><br><span class="line"><span class="comment"># 更过使用帮助</span></span><br><span class="line">localectl --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<p>设置时区</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">timedatectl <span class="built_in">set</span>-timezone Asia/Shanghai</span><br><span class="line"><span class="comment"># 如何知道有那些时区可以设置，可以使用如下命令查看</span></span><br><span class="line">ls /usr/share/zoneinfo</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a href="https://www.rosehosting.com/blog/how-to-set-up-system-locale-on-centos-7/">How to Set Up System Locale on CentOS 7</a></p>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>linux</tag>
+        <tag>centos</tag>
+        <tag>debian</tag>
+        <tag>locale</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Windows 和 Ubuntu 查看网卡 Mac 地址和硬盘序列号的方法</title>
     <url>/2020/06/12/mac-addr-and-serial-number/</url>
     <content><![CDATA[<h1 id="Windows-系统"><a href="#Windows-系统" class="headerlink" title="Windows 系统"></a>Windows 系统</h1><h2 id="Windows-系统查看网卡的-Mac-地址方法"><a href="#Windows-系统查看网卡的-Mac-地址方法" class="headerlink" title="Windows 系统查看网卡的 Mac 地址方法"></a>Windows 系统查看网卡的 Mac 地址方法</h2><p>打开 CMD，输入</p>
@@ -4898,63 +4932,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>ubuntu</tag>
         <tag>windows</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在 Linux 上设置不同的语言和时区</title>
-    <url>/2020/12/30/locale-linux-language/</url>
-    <content><![CDATA[<p>Linux 系统语言的设置至关重要，当设置不匹配的语言时，严重影响使用的效率。如在系统上没有设置中文时，大多出现乱码、数字等情况，使得使用的体验感大幅下降。下面介绍在 Debian, CentOS 等系统上设置中文或其他语言的方法。本篇命令以 root 身份运行。</p>
-<a id="more"></a>
-
-<h1 id="Debian-类"><a href="#Debian-类" class="headerlink" title="Debian 类"></a>Debian 类</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt install locale</span><br><span class="line">dpkg-reconfigure locales</span><br><span class="line"><span class="comment"># 使用空格选择相应的语言，使用上下键移动光标</span></span><br><span class="line"><span class="comment"># 选择好需要安装的语言后，使用 TAB 键切换到 ok</span></span><br><span class="line"><span class="comment"># 使用上下键选择默认的使用的语言</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装成功后，需重启系统</span></span><br><span class="line">shutdown -r now</span><br><span class="line"><span class="comment"># 使用下面命令查看是否生效</span></span><br><span class="line">locale</span><br><span class="line"><span class="comment"># 使用下面命令查看安装的语言</span></span><br><span class="line">locale -a</span><br></pre></td></tr></table></figure>
-
-<p>设置时区</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dpkg-reconfigure tzdata</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="CentOS"><a href="#CentOS" class="headerlink" title="CentOS"></a>CentOS</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum update</span><br><span class="line"><span class="comment"># 查看目前系统语言</span></span><br><span class="line">localectl status</span><br><span class="line"><span class="comment"># 或者通过如下命令也可以查看</span></span><br><span class="line">cat /etc/locale.conf</span><br><span class="line"><span class="comment"># 查看系统中安装了哪些语言</span></span><br><span class="line">localectl list-locales</span><br><span class="line"><span class="comment"># 查看系统中安装了哪些英文语言</span></span><br><span class="line">localectl list-locales | grep en_</span><br><span class="line"><span class="comment"># 设置默认语言为 en_GB.utf8</span></span><br><span class="line">localectl <span class="built_in">set</span>-locale LANG=en_GB.utf8</span><br><span class="line"><span class="comment"># 查看修改默认语言是否成功</span></span><br><span class="line">localectl status</span><br><span class="line"><span class="comment"># 更过使用帮助</span></span><br><span class="line">localectl --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
-
-<p>设置时区</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">timedatectl <span class="built_in">set</span>-timezone Asia/Shanghai</span><br><span class="line"><span class="comment"># 如何知道有那些时区可以设置，可以使用如下命令查看</span></span><br><span class="line">ls /usr/share/zoneinfo</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a href="https://www.rosehosting.com/blog/how-to-set-up-system-locale-on-centos-7/">How to Set Up System Locale on CentOS 7</a></p>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>linux</tag>
-        <tag>centos</tag>
-        <tag>debian</tag>
-        <tag>locale</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用命令行更改苹果电脑的 hostname</title>
-    <url>/2021/12/12/mac-book-pro-change-hostname/</url>
-    <content><![CDATA[<p>更改苹果电脑名称可在系统便好设置里的共享编辑更改，但重启后终端上却没有发生变化，这篇介绍 Mac Book Pro 更改终端 hostname 方法。</p>
-<a id="more"></a>
-
-<p>打开终端，运行如下命令，其中 <code>newhostname</code>为你想设置的新名字。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scutil --<span class="built_in">set</span> ComputerName <span class="string">&quot;newhostname&quot;</span></span><br><span class="line">scutil --<span class="built_in">set</span> LocalHostName <span class="string">&quot;newhostname&quot;</span></span><br><span class="line">scutil --<span class="built_in">set</span> HostName <span class="string">&quot;newhostname&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>查看设置后的名字。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scutil --get HostName</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">hostname</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>mac</category>
-      </categories>
-      <tags>
-        <tag>terminal</tag>
-        <tag>mbp</tag>
-        <tag>hostname</tag>
       </tags>
   </entry>
   <entry>
@@ -4995,6 +4972,29 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>mac</tag>
         <tag>launchctl</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用命令行更改苹果电脑的 hostname</title>
+    <url>/2021/12/12/mac-book-pro-change-hostname/</url>
+    <content><![CDATA[<p>更改苹果电脑名称可在系统便好设置里的共享编辑更改，但重启后终端上却没有发生变化，这篇介绍 Mac Book Pro 更改终端 hostname 方法。</p>
+<a id="more"></a>
+
+<p>打开终端，运行如下命令，其中 <code>newhostname</code>为你想设置的新名字。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scutil --<span class="built_in">set</span> ComputerName <span class="string">&quot;newhostname&quot;</span></span><br><span class="line">scutil --<span class="built_in">set</span> LocalHostName <span class="string">&quot;newhostname&quot;</span></span><br><span class="line">scutil --<span class="built_in">set</span> HostName <span class="string">&quot;newhostname&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>查看设置后的名字。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scutil --get HostName</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">hostname</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>mac</category>
+      </categories>
+      <tags>
+        <tag>terminal</tag>
+        <tag>mbp</tag>
+        <tag>hostname</tag>
       </tags>
   </entry>
   <entry>
@@ -5094,6 +5094,31 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>Mac 电脑设置 shell 脚本开机自启</title>
+    <url>/2021/01/10/mac-startup-shell/</url>
+    <content><![CDATA[<p>苹果电脑 Mac 无论是运行流畅度，还是界面都给用户一种非常完美的感受。在 Linux 系统上设置开机自启脚本有很多教程，在 Mac 上如何开机自启 shell 脚本呢，这里介绍一种方法。</p>
+<a id="more"></a>
+
+<h1 id="编写脚本"><a href="#编写脚本" class="headerlink" title="编写脚本"></a>编写脚本</h1><p>这里以脚本 test.sh 为例，该脚本具体如下，即在开机时在用户桌面创建 success 空文件。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/Desktop</span><br><span class="line">touch success</span><br></pre></td></tr></table></figure>
+
+<p>写入上面内容后，保存为 test.sh，把脚本文件放在用户桌面。</p>
+<h1 id="设置权限"><a href="#设置权限" class="headerlink" title="设置权限"></a>设置权限</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo chmod 777 test.sh</span><br></pre></td></tr></table></figure>
+
+<h1 id="修改文件打开方式"><a href="#修改文件打开方式" class="headerlink" title="修改文件打开方式"></a>修改文件打开方式</h1><p>在桌面找到 test.sh 文件，右键找到‘显示简介’， 将打开方式修改为‘终端’，共享和权限将所有权限打开，即设置 staff 和 everyone 的权限为读与写。</p>
+<h1 id="配置开机启动"><a href="#配置开机启动" class="headerlink" title="配置开机启动"></a>配置开机启动</h1><p>进入系统偏好设置，找到用户与群组，打开小锁，找到当前用户的登录项，将 test.sh 添加到登录项，并把隐藏选型卡勾选。重启系统即可。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a href="https://blog.csdn.net/linhai1028/article/details/80220423">mac设置shell脚本开机自启动</a></p>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>mac</category>
+      </categories>
+      <tags>
+        <tag>shell</tag>
+        <tag>mac</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>流形</title>
     <url>/2020/12/03/manifolds/</url>
     <content><![CDATA[<p><strong>流形</strong>（Manifolds）是可以局部欧几里得空间的一个拓扑空间，是欧几里得空间中的曲线、曲面等概念的推广。欧几里得空间就是最简单的流形的实例。地球表面这样的球面则是一个稍微复杂的例子。一般的流形可以通过把许多平直的片折弯并粘连而成。</p>
@@ -5125,31 +5150,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <tag>maths</tag>
         <tag>manifolds</tag>
         <tag>topology</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Mac 电脑设置 shell 脚本开机自启</title>
-    <url>/2021/01/10/mac-startup-shell/</url>
-    <content><![CDATA[<p>苹果电脑 Mac 无论是运行流畅度，还是界面都给用户一种非常完美的感受。在 Linux 系统上设置开机自启脚本有很多教程，在 Mac 上如何开机自启 shell 脚本呢，这里介绍一种方法。</p>
-<a id="more"></a>
-
-<h1 id="编写脚本"><a href="#编写脚本" class="headerlink" title="编写脚本"></a>编写脚本</h1><p>这里以脚本 test.sh 为例，该脚本具体如下，即在开机时在用户桌面创建 success 空文件。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/Desktop</span><br><span class="line">touch success</span><br></pre></td></tr></table></figure>
-
-<p>写入上面内容后，保存为 test.sh，把脚本文件放在用户桌面。</p>
-<h1 id="设置权限"><a href="#设置权限" class="headerlink" title="设置权限"></a>设置权限</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo chmod 777 test.sh</span><br></pre></td></tr></table></figure>
-
-<h1 id="修改文件打开方式"><a href="#修改文件打开方式" class="headerlink" title="修改文件打开方式"></a>修改文件打开方式</h1><p>在桌面找到 test.sh 文件，右键找到‘显示简介’， 将打开方式修改为‘终端’，共享和权限将所有权限打开，即设置 staff 和 everyone 的权限为读与写。</p>
-<h1 id="配置开机启动"><a href="#配置开机启动" class="headerlink" title="配置开机启动"></a>配置开机启动</h1><p>进入系统偏好设置，找到用户与群组，打开小锁，找到当前用户的登录项，将 test.sh 添加到登录项，并把隐藏选型卡勾选。重启系统即可。</p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a href="https://blog.csdn.net/linhai1028/article/details/80220423">mac设置shell脚本开机自启动</a></p>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>mac</category>
-      </categories>
-      <tags>
-        <tag>shell</tag>
-        <tag>mac</tag>
       </tags>
   </entry>
   <entry>
@@ -5781,6 +5781,39 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>OpenCV (Python) 中 BGR 和 RGB 的转换</title>
+    <url>/2021/10/03/opencv-rgb-bgr/</url>
+    <content><![CDATA[<p>在目标跟踪中经常会使用到 OpenCV 和 Pillow 库等来处理图像。但是，它们处理图像的方式有所不同，比如 OpenCV 把图像看作一个 <code>ndarray</code> 数组对象，而 Pillow 把图像看作一个自定义的 <code>Image</code> 对象；OpenCV 中图像是以 <code>BGR</code> (blue, green , red) 顺序存储的，而 Pillow 中的图像是以 <code>RGB</code> (red, green , blue) 存储的。因此，如果想要同时使用两种库的函数，需要进行相应的 <code>BGR</code> 和 <code>RGB</code> 的转换。</p>
+<a id="more"></a>
+
+<p>OpenCV 中图像的 <code>BGR</code> 和 <code>RGB</code> 的转换可以有两种方法：</p>
+<ol>
+<li>通过 OpenCV 内置的 <code>cvtColor()</code> 函数;</li>
+<li>直接改变 <code>ndarray</code> 的存储顺序。</li>
+</ol>
+<h1 id="图像读取与写入"><a href="#图像读取与写入" class="headerlink" title="图像读取与写入"></a>图像读取与写入</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入包</span></span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"><span class="comment"># OpenCV 中以 BGR 的顺序读取图像 ndarray 对象，以同样方式写入。</span></span><br><span class="line"><span class="comment"># 打开时才可正常显示</span></span><br><span class="line">im_bgr_cv = cv2.imread(<span class="string">&#x27;data/lena.jpg&#x27;</span>)</span><br><span class="line">cv2.imwrite(<span class="string">&#x27;data/dst/lena_bgr_cv.jpg&#x27;</span>, im_bgr_cv)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Pillow 以 RGB 的顺序读取图像 Image 对象，以同样方式写入</span></span><br><span class="line"><span class="comment"># 打开时才可正常显示</span></span><br><span class="line">im_rgb_pil = Image.fromarray(im_bgr_cv[:, :, ::<span class="number">-1</span>])</span><br><span class="line">im_rgb_pil = Image.fromarray(im_bgr_cv[:, :, [<span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>]])</span><br><span class="line">im_rgb_pil = Image.fromarray(cv2.cvtColor(im_bgr_cv, cv2.COLOR_BGR2RGB))</span><br><span class="line">im_rgb_pil.save(<span class="string">&#x27;data/dst/lena_rgb_pil.jpg&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="cvtColor-转化-BGR-和-RGB"><a href="#cvtColor-转化-BGR-和-RGB" class="headerlink" title="cvtColor() 转化 BGR 和 RGB"></a>cvtColor() 转化 BGR 和 RGB</h1><p>在 OpenCV 中, 不同的颜色空间(如 <code>RGB, BGR, HSV</code>) 可以利用函数 <code>cvtColor()</code> 函数进行转换</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">dst = cv2.cvtColor(src, code)</span><br><span class="line"><span class="comment"># src 表示转换前的图像</span></span><br><span class="line"><span class="comment"># dst 表示转换后的图像</span></span><br><span class="line"><span class="comment"># code 表示转换方式, 如 cv2.COLOR_BGR2RGB、cv2.COLOR_RGB2GBR</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="BGR-转换为-RGB"><a href="#BGR-转换为-RGB" class="headerlink" title="BGR 转换为 RGB"></a>BGR 转换为 RGB</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">im_rgb_cv = cv2.cvtColor(im_bgr_cv, cv2.COLOR_BGR2RGB)</span><br><span class="line">im_rgb_pil = Image.fromarray(im_rgb_cv)</span><br><span class="line"><span class="comment"># 在 Pillow 中处理</span></span><br><span class="line">im_rgb_pil.save(<span class="string">&#x27;data/dst/lena_rgb_pillow.jpg&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="RGB-转换为-BGR"><a href="#RGB-转换为-BGR" class="headerlink" title="RGB 转换为 BGR"></a>RGB 转换为 BGR</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">im_rgb_pillow = Image.open(<span class="string">&#x27;data/src/lena.jpg&#x27;</span>)</span><br><span class="line">im_bgr = cv2.cvtColor(np.array(im_rgb_pillow), cv2.COLOR_RGB2BGR)</span><br><span class="line"><span class="comment"># 在 OpenCV 中处理</span></span><br><span class="line">cv2.imwrite(<span class="string">&#x27;data/dst/lena_bgr_cv_2.jpg&#x27;</span>, im_bgr)</span><br></pre></td></tr></table></figure>
+
+<h1 id="直接在-ndarray-中转换"><a href="#直接在-ndarray-中转换" class="headerlink" title="直接在 ndarray 中转换"></a>直接在 ndarray 中转换</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">im_bgr = cv2.imread(<span class="string">&#x27;data/src/lena.jpg&#x27;</span>)</span><br><span class="line"></span><br><span class="line">im_rgb = im_bgr[:, :, [<span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>]]</span><br><span class="line">Image.fromarray(im_rgb).save(<span class="string">&#x27;data/dst/lena_swap.jpg&#x27;</span>)</span><br><span class="line"></span><br><span class="line">im_rgb = im_bgr[:, :, ::<span class="number">-1</span>]</span><br><span class="line">Image.fromarray(im_rgb).save(<span class="string">&#x27;data/dst/lena_swap_2.jpg&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>1.<a href="https://note.nkmk.me/en/python-opencv-bgr-rgb-cvtcolor/">Convert BGR and RGB with Python, OpenCV (cvtColor)</a></p>
+]]></content>
+      <categories>
+        <category>research</category>
+        <category>object tracking</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>opencv</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Python为pip使用其他源来安装包</title>
     <url>/2020/02/19/pip-pypi-tuna/</url>
     <content><![CDATA[<p>Python 是一种非常优秀的编程语言，特别是在人工智能中研发中使用很多，Python包索引（缩写为PyPI，也称为Cheese Shop）是Python的官方第三方软件存储库。其使用pip命令来管理软件安装。</p>
@@ -5845,36 +5878,41 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>OpenCV (Python) 中 BGR 和 RGB 的转换</title>
-    <url>/2021/10/03/opencv-rgb-bgr/</url>
-    <content><![CDATA[<p>在目标跟踪中经常会使用到 OpenCV 和 Pillow 库等来处理图像。但是，它们处理图像的方式有所不同，比如 OpenCV 把图像看作一个 <code>ndarray</code> 数组对象，而 Pillow 把图像看作一个自定义的 <code>Image</code> 对象；OpenCV 中图像是以 <code>BGR</code> (blue, green , red) 顺序存储的，而 Pillow 中的图像是以 <code>RGB</code> (red, green , blue) 存储的。因此，如果想要同时使用两种库的函数，需要进行相应的 <code>BGR</code> 和 <code>RGB</code> 的转换。</p>
+    <title>定积分的性质</title>
+    <url>/2020/09/12/properties-of-definite-integral/</url>
+    <content><![CDATA[<p>了解定积分的性质可以帮助我们方便计算定积分，提高计算的速度。</p>
 <a id="more"></a>
 
-<p>OpenCV 中图像的 <code>BGR</code> 和 <code>RGB</code> 的转换可以有两种方法：</p>
-<ol>
-<li>通过 OpenCV 内置的 <code>cvtColor()</code> 函数;</li>
-<li>直接改变 <code>ndarray</code> 的存储顺序。</li>
-</ol>
-<h1 id="图像读取与写入"><a href="#图像读取与写入" class="headerlink" title="图像读取与写入"></a>图像读取与写入</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入包</span></span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"><span class="comment"># OpenCV 中以 BGR 的顺序读取图像 ndarray 对象，以同样方式写入。</span></span><br><span class="line"><span class="comment"># 打开时才可正常显示</span></span><br><span class="line">im_bgr_cv = cv2.imread(<span class="string">&#x27;data/lena.jpg&#x27;</span>)</span><br><span class="line">cv2.imwrite(<span class="string">&#x27;data/dst/lena_bgr_cv.jpg&#x27;</span>, im_bgr_cv)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Pillow 以 RGB 的顺序读取图像 Image 对象，以同样方式写入</span></span><br><span class="line"><span class="comment"># 打开时才可正常显示</span></span><br><span class="line">im_rgb_pil = Image.fromarray(im_bgr_cv[:, :, ::<span class="number">-1</span>])</span><br><span class="line">im_rgb_pil = Image.fromarray(im_bgr_cv[:, :, [<span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>]])</span><br><span class="line">im_rgb_pil = Image.fromarray(cv2.cvtColor(im_bgr_cv, cv2.COLOR_BGR2RGB))</span><br><span class="line">im_rgb_pil.save(<span class="string">&#x27;data/dst/lena_rgb_pil.jpg&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="cvtColor-转化-BGR-和-RGB"><a href="#cvtColor-转化-BGR-和-RGB" class="headerlink" title="cvtColor() 转化 BGR 和 RGB"></a>cvtColor() 转化 BGR 和 RGB</h1><p>在 OpenCV 中, 不同的颜色空间(如 <code>RGB, BGR, HSV</code>) 可以利用函数 <code>cvtColor()</code> 函数进行转换</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">dst = cv2.cvtColor(src, code)</span><br><span class="line"><span class="comment"># src 表示转换前的图像</span></span><br><span class="line"><span class="comment"># dst 表示转换后的图像</span></span><br><span class="line"><span class="comment"># code 表示转换方式, 如 cv2.COLOR_BGR2RGB、cv2.COLOR_RGB2GBR</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="BGR-转换为-RGB"><a href="#BGR-转换为-RGB" class="headerlink" title="BGR 转换为 RGB"></a>BGR 转换为 RGB</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">im_rgb_cv = cv2.cvtColor(im_bgr_cv, cv2.COLOR_BGR2RGB)</span><br><span class="line">im_rgb_pil = Image.fromarray(im_rgb_cv)</span><br><span class="line"><span class="comment"># 在 Pillow 中处理</span></span><br><span class="line">im_rgb_pil.save(<span class="string">&#x27;data/dst/lena_rgb_pillow.jpg&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<h2 id="RGB-转换为-BGR"><a href="#RGB-转换为-BGR" class="headerlink" title="RGB 转换为 BGR"></a>RGB 转换为 BGR</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">im_rgb_pillow = Image.open(<span class="string">&#x27;data/src/lena.jpg&#x27;</span>)</span><br><span class="line">im_bgr = cv2.cvtColor(np.array(im_rgb_pillow), cv2.COLOR_RGB2BGR)</span><br><span class="line"><span class="comment"># 在 OpenCV 中处理</span></span><br><span class="line">cv2.imwrite(<span class="string">&#x27;data/dst/lena_bgr_cv_2.jpg&#x27;</span>, im_bgr)</span><br></pre></td></tr></table></figure>
-
-<h1 id="直接在-ndarray-中转换"><a href="#直接在-ndarray-中转换" class="headerlink" title="直接在 ndarray 中转换"></a>直接在 ndarray 中转换</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">im_bgr = cv2.imread(<span class="string">&#x27;data/src/lena.jpg&#x27;</span>)</span><br><span class="line"></span><br><span class="line">im_rgb = im_bgr[:, :, [<span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>]]</span><br><span class="line">Image.fromarray(im_rgb).save(<span class="string">&#x27;data/dst/lena_swap.jpg&#x27;</span>)</span><br><span class="line"></span><br><span class="line">im_rgb = im_bgr[:, :, ::<span class="number">-1</span>]</span><br><span class="line">Image.fromarray(im_rgb).save(<span class="string">&#x27;data/dst/lena_swap_2.jpg&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>1.<a href="https://note.nkmk.me/en/python-opencv-bgr-rgb-cvtcolor/">Convert BGR and RGB with Python, OpenCV (cvtColor)</a></p>
+<h1 id="定积分的基本性质"><a href="#定积分的基本性质" class="headerlink" title="定积分的基本性质"></a>定积分的基本性质</h1><p><strong>性质1</strong>    若$f$在$[a,b]$上可积，$k$为常数，则$kf$在$[a,b]$上也可积，且<br>$$<br>\int^b_a k f(x) \mathrm{d}x = k \int^b_a f(x) \mathrm{d}x.<br>$$<br><strong>性质2</strong>    若$f,g$都在$[a,b]$上可积，则$f\pm g$在$[a,b]$上也可积，且<br>$$<br>\int^b_a [f(x) \pm g(x)] \mathrm{d}x = \int^b_a f(x) \mathrm{d}x \pm \int^b_a g(x) \mathrm{d}x.<br>$$<br><strong>线性性质</strong><br>$$<br>\int^b_a [\alpha f(x) + \beta g(x)] \mathrm{d}x = \alpha \int^b_a f(x) \mathrm{d}x + \beta \int^b_a g(x) \mathrm{d}x.<br>$$<br>其中$\alpha, \beta$为常数。</p>
+<p><strong>性质3</strong>    若$f,g$都在$[a,b]$上可积，则$f\cdot g$在$[a,b]$上也可积。但一般情形下<br>$$<br>\int^b_a f(x)g(x)\mathrm{d}x \neq \int^b_a f(x)\mathrm{d}x \cdot \int^b_a g(x)\mathrm{d}x.<br>$$<br><strong>性质4</strong>    $f$在$[a,b]$上可积的充要条件是任给$c\in (a,b)$，$f$在$[a,c]$与$[c,b]$上都可积。此时又有等式<br>$$<br>\int^b_a f(x) \mathrm{d}x = \int^c_a f(x) \mathrm{d}x + \int^b_c f(x) \mathrm{d}x.<br>$$<br>性质4称为关于积分区间的可加性。当$f(x)\geq 0$时，其几何意义就是曲边梯形面积的可加性。</p>
+<p><strong>注意</strong>：按定积分的定义，记号 $\int^b_a f(x) \mathrm{d}x$ 只有当 $a&lt;b$ 时才有意义，而当 $a=b$ 或 $a&gt;b$ 时本来是没有意义的。但为了运用上的方便，对它作如下规定：</p>
+<p><strong>规定1</strong>    当$a=b$时，令$\int^a_a f(x) \mathrm{d}x = 0$;</p>
+<p><strong>规定2</strong>    当$a&gt;b$时，令$\int^b_a f(x) \mathrm{d}x = -\int^a_b f(x) \mathrm{d}x$.</p>
+<p>有了这些规定以后，性质4对于$a,b,c$的任何大小顺序都能成立。</p>
+<p><strong>性质5</strong>    设$f$为$[a,b]$上的可积函数。若$f(x)\geq 0, x\in[a,b]$，则<br>$$<br>\int^b_a f(x) \mathrm{d}x \geq 0.<br>$$<br><strong>推理（积分不等式性）</strong>    若$f$与$g$为$[a,b]$上的两个可积函数，且$f(x)\leq g(x), x\in [a,b]$，则有<br>$$<br>\int^b_a f(x) \mathrm{d}x \leq \int^b_a g(x) \mathrm{d}x.<br>$$<br><strong>性质6</strong>    若$f$在$[a,b]$上可积，则$|f|$在$[a,b]$上也可积，且<br>$$<br>\left \vert \int^b_a f(x) \mathrm{d} x \right \vert \leq \int^b_a \left \vert f(x) \right \vert \mathrm{d} x.<br>$$<br><strong>注意：这个性质的逆命题一般不成立</strong>，例如<br>$$<br>f(x) =<br>\begin{cases}<br>1, x \in Q, \\<br>-1, x \in Q^C<br>\end{cases}<br>$$<br>在$[0,1]$上不可及（类似于狄利克雷函数）；但$|f(x)|\equiv 1$，它在$[0,1]$上可积。</p>
+<p><strong>命题</strong>    假设$f$为一非负可积函数，只要它在某一点$x_0$处连续，且$f(x_0) &gt; 0$，那么必有$\int^b_a f(x) \mathrm{d}x &gt; 0$.</p>
+<p><strong>注意：可积函数必有连续点。</strong></p>
+<p>可积等价于几乎处处连续。</p>
+<p>连续具有局部保号性：如果$f$在$[a,b]$上连续，在点$x_0 \in (a,b)$处，$f(x_0)&gt;0$，那么存在一个$\delta &gt; 0$，使得$f(x) &gt; 0, x \in [x_0 - \delta, x_0 + \delta]$.</p>
+<h1 id="积分中值定理"><a href="#积分中值定理" class="headerlink" title="积分中值定理"></a>积分中值定理</h1><p><strong>定理 9.7 （积分第一中值定理）</strong>    若$f$在$[a,b]$上连续，则至少存在一点$\xi \in [a,b]$，使得<br>$$<br>\int^b_a f(x) \mathrm{d} x = f(\xi) (b - a).<br>$$<br><strong>定理 9.8 （推广的积分第一中值定理）</strong>    若$f$与$g$都在$[a,b]$上连续，且$g(x)$在$[a,b]$上不变号，则至少存在一点$\xi \in [a,b]$，使得<br>$$<br>\int^b_a f(x)g(x) \mathrm{d}x = f(\xi) \int^b_a g(x) \mathrm{d}x.<br>$$</p>
+<h1 id="重要习题"><a href="#重要习题" class="headerlink" title="重要习题"></a>重要习题</h1><ul>
+<li><p>若$f$与$g$都在$[a,b]$上可积，则<br>$$<br>\lim_{| T | \to 0} \sum^n_{i=1} f(\xi_i)g(\eta_i) \Delta x_i = \int^b_a f(x)g(x) \mathrm{d}x.<br>$$<br>其中$\xi_i, \eta_i$是$T$所属小区间$\Delta_i$中的任意两点，$i=1,2,\cdots,n$.</p>
+</li>
+<li><p>设$f$与$g$都在$[a,b]$上可积，则<br>$$<br>M(x) = \max_{x\in[a,b]} {f(x), g(x)}, m(x) = \min_{x\in[a,b]}{f(x),g(x)}<br>$$<br>在$[a,b]$上都可积。</p>
+</li>
+<li><p>设$f$在$[a,b]$上可积，且在$[a,b]$上满足$|f(x)|\geq m &gt; 0$，则$\frac{1}{f}$在$[a,b]$上也可积。</p>
+</li>
+<li><p>若$f$与$g$都在$[a,b]$上可积，且$g(x)$在$[a,b]$上不变号，$M,m$分别为$f(x)$在$[a,b]$上的上、下确界，则比存在某实数$\mu(m\leq \mu \leq M)$，使得<br>$$<br>\int^b_a f(x)g(x)\mathrm{d}x = \mu \int^b_a g(x) \mathrm{d}x.<br>$$</p>
+</li>
+</ul>
 ]]></content>
       <categories>
-        <category>research</category>
-        <category>object tracking</category>
+        <category>maths</category>
+        <category>mathematical analysis</category>
       </categories>
       <tags>
-        <tag>python</tag>
-        <tag>opencv</tag>
+        <tag>maths</tag>
+        <tag>integral</tag>
       </tags>
   </entry>
   <entry>
@@ -5942,44 +5980,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>python</tag>
         <tag>pycharm</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>定积分的性质</title>
-    <url>/2020/09/12/properties-of-definite-integral/</url>
-    <content><![CDATA[<p>了解定积分的性质可以帮助我们方便计算定积分，提高计算的速度。</p>
-<a id="more"></a>
-
-<h1 id="定积分的基本性质"><a href="#定积分的基本性质" class="headerlink" title="定积分的基本性质"></a>定积分的基本性质</h1><p><strong>性质1</strong>    若$f$在$[a,b]$上可积，$k$为常数，则$kf$在$[a,b]$上也可积，且<br>$$<br>\int^b_a k f(x) \mathrm{d}x = k \int^b_a f(x) \mathrm{d}x.<br>$$<br><strong>性质2</strong>    若$f,g$都在$[a,b]$上可积，则$f\pm g$在$[a,b]$上也可积，且<br>$$<br>\int^b_a [f(x) \pm g(x)] \mathrm{d}x = \int^b_a f(x) \mathrm{d}x \pm \int^b_a g(x) \mathrm{d}x.<br>$$<br><strong>线性性质</strong><br>$$<br>\int^b_a [\alpha f(x) + \beta g(x)] \mathrm{d}x = \alpha \int^b_a f(x) \mathrm{d}x + \beta \int^b_a g(x) \mathrm{d}x.<br>$$<br>其中$\alpha, \beta$为常数。</p>
-<p><strong>性质3</strong>    若$f,g$都在$[a,b]$上可积，则$f\cdot g$在$[a,b]$上也可积。但一般情形下<br>$$<br>\int^b_a f(x)g(x)\mathrm{d}x \neq \int^b_a f(x)\mathrm{d}x \cdot \int^b_a g(x)\mathrm{d}x.<br>$$<br><strong>性质4</strong>    $f$在$[a,b]$上可积的充要条件是任给$c\in (a,b)$，$f$在$[a,c]$与$[c,b]$上都可积。此时又有等式<br>$$<br>\int^b_a f(x) \mathrm{d}x = \int^c_a f(x) \mathrm{d}x + \int^b_c f(x) \mathrm{d}x.<br>$$<br>性质4称为关于积分区间的可加性。当$f(x)\geq 0$时，其几何意义就是曲边梯形面积的可加性。</p>
-<p><strong>注意</strong>：按定积分的定义，记号 $\int^b_a f(x) \mathrm{d}x$ 只有当 $a&lt;b$ 时才有意义，而当 $a=b$ 或 $a&gt;b$ 时本来是没有意义的。但为了运用上的方便，对它作如下规定：</p>
-<p><strong>规定1</strong>    当$a=b$时，令$\int^a_a f(x) \mathrm{d}x = 0$;</p>
-<p><strong>规定2</strong>    当$a&gt;b$时，令$\int^b_a f(x) \mathrm{d}x = -\int^a_b f(x) \mathrm{d}x$.</p>
-<p>有了这些规定以后，性质4对于$a,b,c$的任何大小顺序都能成立。</p>
-<p><strong>性质5</strong>    设$f$为$[a,b]$上的可积函数。若$f(x)\geq 0, x\in[a,b]$，则<br>$$<br>\int^b_a f(x) \mathrm{d}x \geq 0.<br>$$<br><strong>推理（积分不等式性）</strong>    若$f$与$g$为$[a,b]$上的两个可积函数，且$f(x)\leq g(x), x\in [a,b]$，则有<br>$$<br>\int^b_a f(x) \mathrm{d}x \leq \int^b_a g(x) \mathrm{d}x.<br>$$<br><strong>性质6</strong>    若$f$在$[a,b]$上可积，则$|f|$在$[a,b]$上也可积，且<br>$$<br>\left \vert \int^b_a f(x) \mathrm{d} x \right \vert \leq \int^b_a \left \vert f(x) \right \vert \mathrm{d} x.<br>$$<br><strong>注意：这个性质的逆命题一般不成立</strong>，例如<br>$$<br>f(x) =<br>\begin{cases}<br>1, x \in Q, \\<br>-1, x \in Q^C<br>\end{cases}<br>$$<br>在$[0,1]$上不可及（类似于狄利克雷函数）；但$|f(x)|\equiv 1$，它在$[0,1]$上可积。</p>
-<p><strong>命题</strong>    假设$f$为一非负可积函数，只要它在某一点$x_0$处连续，且$f(x_0) &gt; 0$，那么必有$\int^b_a f(x) \mathrm{d}x &gt; 0$.</p>
-<p><strong>注意：可积函数必有连续点。</strong></p>
-<p>可积等价于几乎处处连续。</p>
-<p>连续具有局部保号性：如果$f$在$[a,b]$上连续，在点$x_0 \in (a,b)$处，$f(x_0)&gt;0$，那么存在一个$\delta &gt; 0$，使得$f(x) &gt; 0, x \in [x_0 - \delta, x_0 + \delta]$.</p>
-<h1 id="积分中值定理"><a href="#积分中值定理" class="headerlink" title="积分中值定理"></a>积分中值定理</h1><p><strong>定理 9.7 （积分第一中值定理）</strong>    若$f$在$[a,b]$上连续，则至少存在一点$\xi \in [a,b]$，使得<br>$$<br>\int^b_a f(x) \mathrm{d} x = f(\xi) (b - a).<br>$$<br><strong>定理 9.8 （推广的积分第一中值定理）</strong>    若$f$与$g$都在$[a,b]$上连续，且$g(x)$在$[a,b]$上不变号，则至少存在一点$\xi \in [a,b]$，使得<br>$$<br>\int^b_a f(x)g(x) \mathrm{d}x = f(\xi) \int^b_a g(x) \mathrm{d}x.<br>$$</p>
-<h1 id="重要习题"><a href="#重要习题" class="headerlink" title="重要习题"></a>重要习题</h1><ul>
-<li><p>若$f$与$g$都在$[a,b]$上可积，则<br>$$<br>\lim_{| T | \to 0} \sum^n_{i=1} f(\xi_i)g(\eta_i) \Delta x_i = \int^b_a f(x)g(x) \mathrm{d}x.<br>$$<br>其中$\xi_i, \eta_i$是$T$所属小区间$\Delta_i$中的任意两点，$i=1,2,\cdots,n$.</p>
-</li>
-<li><p>设$f$与$g$都在$[a,b]$上可积，则<br>$$<br>M(x) = \max_{x\in[a,b]} {f(x), g(x)}, m(x) = \min_{x\in[a,b]}{f(x),g(x)}<br>$$<br>在$[a,b]$上都可积。</p>
-</li>
-<li><p>设$f$在$[a,b]$上可积，且在$[a,b]$上满足$|f(x)|\geq m &gt; 0$，则$\frac{1}{f}$在$[a,b]$上也可积。</p>
-</li>
-<li><p>若$f$与$g$都在$[a,b]$上可积，且$g(x)$在$[a,b]$上不变号，$M,m$分别为$f(x)$在$[a,b]$上的上、下确界，则比存在某实数$\mu(m\leq \mu \leq M)$，使得<br>$$<br>\int^b_a f(x)g(x)\mathrm{d}x = \mu \int^b_a g(x) \mathrm{d}x.<br>$$</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>maths</category>
-        <category>mathematical analysis</category>
-      </categories>
-      <tags>
-        <tag>maths</tag>
-        <tag>integral</tag>
       </tags>
   </entry>
   <entry>
@@ -6092,10 +6092,11 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
 <h1 id="os-stat"><a href="#os-stat" class="headerlink" title="os.stat"></a>os.stat</h1><p>使用该函数能够获得文件的大小，单位为字节</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">os.stat(file_path).st_size</span><br></pre></td></tr></table></figure>
 
-<h1 id="打开文件读取文件，获得大小"><a href="#打开文件读取文件，获得大小" class="headerlink" title="打开文件读取文件，获得大小"></a>打开文件读取文件，获得大小</h1><p>使用该函数能够获得文件的大小，单位为字节</p>
+<h1 id="打开文件读取文件，获得大小"><a href="#打开文件读取文件，获得大小" class="headerlink" title="打开文件读取文件，获得大小"></a>打开文件读取文件，获得大小</h1><p>使用该方法能够获得文件的大小，单位为字节</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(file_path, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.seek(<span class="number">0</span>, os.SEEK_END)</span><br><span class="line">    print(f.tell())</span><br></pre></td></tr></table></figure>
 
-<h1 id="使用-pathlib-Path-file-path-stat"><a href="#使用-pathlib-Path-file-path-stat" class="headerlink" title="使用 pathlib.Path(file_path).stat()"></a>使用 pathlib.Path(file_path).stat()</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"></span><br><span class="line">Path(file_path).stat().st_size</span><br></pre></td></tr></table></figure>
+<h1 id="使用-pathlib-Path-file-path-stat"><a href="#使用-pathlib-Path-file-path-stat" class="headerlink" title="使用 pathlib.Path(file_path).stat()"></a>使用 pathlib.Path(file_path).stat()</h1><p>使用该方法能够获得文件的大小，单位为字节</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"></span><br><span class="line">Path(file_path).stat().st_size</span><br></pre></td></tr></table></figure>
 
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a href="https://www.geeksforgeeks.org/how-to-get-file-size-in-python/">How to get file size in Python?</a></li>
@@ -6330,6 +6331,34 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>Python 打印颜色设置</title>
+    <url>/2021/04/25/python-print-color/</url>
+    <content><![CDATA[<p>使用 Python 的 print 方法可以打印输出字符串，通过如下方法可以设置打印字符串的字体颜色和背景颜色。</p>
+<a id="more"></a>
+
+<h1 id="字体颜色"><a href="#字体颜色" class="headerlink" title="字体颜色"></a>字体颜色</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&quot;\033[1;30m 字体颜色：白色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;31m 字体颜色：红色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;32m 字体颜色：深黄色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;33m 字体颜色：浅黄色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;34m 字体颜色：蓝色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;35m 字体颜色：淡紫色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;36m 字体颜色：青色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;37m 字体颜色：灰色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;38m 字体颜色：浅灰色\033[0m&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="背景颜色"><a href="#背景颜色" class="headerlink" title="背景颜色"></a>背景颜色</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&quot;背景颜色：白色   \033[1;40m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：红色   \033[1;41m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：深黄色 \033[1;42m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：浅黄色 \033[1;43m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：蓝色   \033[1;44m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：淡紫色 \033[1;45m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：青色   \033[1;46m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：灰色   \033[1;47m    \033[0m&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="Windows-CMD-显示颜色方法"><a href="#Windows-CMD-显示颜色方法" class="headerlink" title="Windows CMD 显示颜色方法"></a>Windows CMD 显示颜色方法</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> platform</span><br><span class="line"><span class="comment"># 如果平台系统是 &#x27;Linux&#x27;，则不需要此设置</span></span><br><span class="line"><span class="keyword">if</span> platform.system() == <span class="string">&#x27;Windows&#x27;</span>:</span><br><span class="line">    os.system(<span class="string">&#x27;color FF&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://blog.csdn.net/ever_peng/article/details/91492491">python print字体颜色 print背景颜色</a> </li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>color</tag>
+        <tag>print</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>把 Python 的 print 函数输出到文件</title>
     <url>/2021/11/28/python-print-to-file/</url>
     <content><![CDATA[<p>利用 Python 的 print 函数可以方便的打印输出，但是，这些输出不能够很好的给别人传看，特别是打印行数较多，又不便更改原模块的代码时。这里，给出一个方法，不动原模块，将打印输出到文件中。</p>
@@ -6358,34 +6387,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </categories>
       <tags>
         <tag>python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python 打印颜色设置</title>
-    <url>/2021/04/25/python-print-color/</url>
-    <content><![CDATA[<p>使用 Python 的 print 方法可以打印输出字符串，通过如下方法可以设置打印字符串的字体颜色和背景颜色。</p>
-<a id="more"></a>
-
-<h1 id="字体颜色"><a href="#字体颜色" class="headerlink" title="字体颜色"></a>字体颜色</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&quot;\033[1;30m 字体颜色：白色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;31m 字体颜色：红色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;32m 字体颜色：深黄色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;33m 字体颜色：浅黄色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;34m 字体颜色：蓝色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;35m 字体颜色：淡紫色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;36m 字体颜色：青色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;37m 字体颜色：灰色\033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\033[1;38m 字体颜色：浅灰色\033[0m&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="背景颜色"><a href="#背景颜色" class="headerlink" title="背景颜色"></a>背景颜色</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&quot;背景颜色：白色   \033[1;40m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：红色   \033[1;41m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：深黄色 \033[1;42m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：浅黄色 \033[1;43m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：蓝色   \033[1;44m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：淡紫色 \033[1;45m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：青色   \033[1;46m    \033[0m&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;背景颜色：灰色   \033[1;47m    \033[0m&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="Windows-CMD-显示颜色方法"><a href="#Windows-CMD-显示颜色方法" class="headerlink" title="Windows CMD 显示颜色方法"></a>Windows CMD 显示颜色方法</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> platform</span><br><span class="line"><span class="comment"># 如果平台系统是 &#x27;Linux&#x27;，则不需要此设置</span></span><br><span class="line"><span class="keyword">if</span> platform.system() == <span class="string">&#x27;Windows&#x27;</span>:</span><br><span class="line">    os.system(<span class="string">&#x27;color FF&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="https://blog.csdn.net/ever_peng/article/details/91492491">python print字体颜色 print背景颜色</a> </li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>color</tag>
-        <tag>print</tag>
       </tags>
   </entry>
   <entry>
@@ -7174,6 +7175,53 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>Linux 批处理：修改文件名和文件内容</title>
+    <url>/2021/02/09/rename-and-sed/</url>
+    <content><![CDATA[<p>在 Linux 系统上，包含有大量相同字段的文件名，想要把这些字段（中文字段）改成其他字段（数字或其他英文字段），因为某些程序的需要，不支持中文文件名，此时可以使用命令 rename 批量修改文件名。当文件中包含有大量相同字段，想要修改，但是，收到修改又比较浪费时间。此时，可以使用命令 sed 完成。</p>
+<a id="more"></a>
+
+<h1 id="rename"><a href="#rename" class="headerlink" title="rename"></a>rename</h1><p>在 linux 系统中重命名文件，经常用到 mv命令，批量重命名文件 rename 是最好的选择。</p>
+<p>linux的 rename命令有两个版本，一个是c语言版本的，一个是perl语言版本的，判断方法：输入man rename </p>
+<h2 id="C语言版本"><a href="#C语言版本" class="headerlink" title="C语言版本"></a>C语言版本</h2><figure class="highlight html"><table><tr><td class="code"><pre><span class="line">rename 原字符串 新字符串 文件名</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rename 第三阶段 3 *</span><br><span class="line"><span class="comment"># * 代表所有字符</span></span><br><span class="line"><span class="comment"># ？代表单个字符</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Perl语言版本"><a href="#Perl语言版本" class="headerlink" title="Perl语言版本"></a>Perl语言版本</h2><figure class="highlight html"><table><tr><td class="code"><pre><span class="line">rename &#x27;s/原字符串/新字符串/&#x27; 文件名</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rename <span class="string">&#x27;s/第三阶段/3/&#x27;</span> *</span><br><span class="line">rename <span class="string">&quot;s/$/.txt/&quot;</span> * //把所有的文件名都以txt结尾</span><br></pre></td></tr></table></figure>
+
+<h1 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h1><p>linux下批量替换文件内容</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 针对单个文件</span></span><br><span class="line">sed -i <span class="string">&quot;s/查找字段/替换字段/g&quot;</span> 文件名</span><br><span class="line"><span class="comment"># 针对目录下的所有文件</span></span><br><span class="line">sed -i <span class="string">&quot;s/查找字段/替换字段/g&quot;</span> `grep 查找字段 -rl 路径`</span><br><span class="line"><span class="comment"># r 表示递归</span></span><br><span class="line"><span class="comment"># l 表示 -files-with-matches</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sed -i <span class="string">&quot;s/www.baidu.com/baidu.com/g&quot;</span> file.config</span><br><span class="line">sed -i <span class="string">&quot;s/www.baidu.com/baidu.com/g&quot;</span> `grep www.baidu.com -rl /home`</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><p><a href="https://blog.51cto.com/jiemian/1846951">linux下rename命令用法详解(重命名文件)</a></p>
+</li>
+<li><p><a href="https://wangchujiang.com/linux-command/c/rename.html">rename</a></p>
+</li>
+<li><p><a href="http://einverne.github.io/post/2018/01/rename-files-batch.html">每天学习一个命令: rename 批量修改文件名</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/hnlyyk/article/details/49299909">linux下批量替换文件内容</a></p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>rename</tag>
+        <tag>sed</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux 关机和重启命令</title>
     <url>/2020/03/27/restart-and-shutdown/</url>
     <content><![CDATA[<p>重新启动Linux系统和关闭Linux系统推荐使用shutdown命令。</p>
@@ -7256,31 +7304,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>如何求解方程$\sin(x)=2$</title>
-    <url>/2019/12/21/sinx/</url>
-    <content><![CDATA[<head>
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-            tex2jax: {
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-            inlineMath: [['$','$']]
-            }
-        });
-    </script>
-</head>
-
-<p>如何求解方程<br>$$<br>\sin(x)=2<br>$$<br>该方程有多少个解?</p>
-]]></content>
-      <categories>
-        <category>maths</category>
-      </categories>
-      <tags>
-        <tag>maths</tag>
-        <tag>sin</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>在服务器上搭建个人网盘</title>
     <url>/2019/12/21/server-pan/</url>
     <content><![CDATA[<p>本篇通过 <a href="https://filebrowser.xyz/installation">filebrowser</a> 在服务器上搭建个人网盘.</p>
@@ -7312,34 +7335,28 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>使用SSH连接GitHub</title>
-    <url>/2020/01/08/ssh-git/</url>
-    <content><![CDATA[<p>在本地开发代码时，需要push本地代码到GitHub仓库时，总是需要输入用户名和秘密，这导致了开发的效率降低，也不安全。那有一种方式可以快速高效且安全的连接到GitHub仓库，并提交代码，那就是使用SSH连接GitHub仓库，下面给出如何从手动输入秘密切换到使用SSH连接GitHub仓库。</p>
-<a id="more"></a>
+    <title>如何求解方程$\sin(x)=2$</title>
+    <url>/2019/12/21/sinx/</url>
+    <content><![CDATA[<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            inlineMath: [['$','$']]
+            }
+        });
+    </script>
+</head>
 
-<h1 id="添加SSH公钥到GitHub账号下"><a href="#添加SSH公钥到GitHub账号下" class="headerlink" title="添加SSH公钥到GitHub账号下"></a>添加SSH公钥到GitHub账号下</h1><p>假设使用的是Ubuntu系统，将用户下的公钥拷贝粘贴到GitHub账号下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-
-<p>拷贝所有内容到GitHub主页—右上角Settings—左侧SSH and GPG keys—SSH keys—New SSH key—随便写个名字在title栏，并粘贴刚刚拷贝的内容到key栏中—Add SSH key</p>
-<h1 id="测试能否正确通过SSH连接GitHub"><a href="#测试能否正确通过SSH连接GitHub" class="headerlink" title="测试能否正确通过SSH连接GitHub"></a>测试能否正确通过SSH连接GitHub</h1><p>在终端中输入一下命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-<p>如果出现 Hi your-user-name! You’ve successfully authenticated, but GitHub does not provide shell access. 证明正确通过SSH连接GitHub</p>
-<h1 id="添加本地仓库"><a href="#添加本地仓库" class="headerlink" title="添加本地仓库"></a>添加本地仓库</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git remote rm origin</span><br><span class="line"></span><br><span class="line">git remote add origin git@github.com:user-name/your-repo-name.git</span><br></pre></td></tr></table></figure>
-
-<h1 id="push-本地代码到仓库"><a href="#push-本地代码到仓库" class="headerlink" title="push 本地代码到仓库"></a>push 本地代码到仓库</h1><p>正确完成以上步骤后，第一次push本地代码，需要使用如下命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push --<span class="built_in">set</span>-upstream origin master</span><br></pre></td></tr></table></figure>
-
-<p>以后，就可以直接使用如下命令进行提交代码到远程仓库</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push</span><br></pre></td></tr></table></figure>
-
+<p>如何求解方程<br>$$<br>\sin(x)=2<br>$$<br>该方程有多少个解?</p>
 ]]></content>
       <categories>
-        <category>technology</category>
+        <category>maths</category>
       </categories>
       <tags>
-        <tag>ssh</tag>
-        <tag>github</tag>
+        <tag>maths</tag>
+        <tag>sin</tag>
       </tags>
   </entry>
   <entry>
@@ -7379,6 +7396,37 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>centos</tag>
         <tag>ssh</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用SSH连接GitHub</title>
+    <url>/2020/01/08/ssh-git/</url>
+    <content><![CDATA[<p>在本地开发代码时，需要push本地代码到GitHub仓库时，总是需要输入用户名和秘密，这导致了开发的效率降低，也不安全。那有一种方式可以快速高效且安全的连接到GitHub仓库，并提交代码，那就是使用SSH连接GitHub仓库，下面给出如何从手动输入秘密切换到使用SSH连接GitHub仓库。</p>
+<a id="more"></a>
+
+<h1 id="添加SSH公钥到GitHub账号下"><a href="#添加SSH公钥到GitHub账号下" class="headerlink" title="添加SSH公钥到GitHub账号下"></a>添加SSH公钥到GitHub账号下</h1><p>假设使用的是Ubuntu系统，将用户下的公钥拷贝粘贴到GitHub账号下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+
+<p>拷贝所有内容到GitHub主页—右上角Settings—左侧SSH and GPG keys—SSH keys—New SSH key—随便写个名字在title栏，并粘贴刚刚拷贝的内容到key栏中—Add SSH key</p>
+<h1 id="测试能否正确通过SSH连接GitHub"><a href="#测试能否正确通过SSH连接GitHub" class="headerlink" title="测试能否正确通过SSH连接GitHub"></a>测试能否正确通过SSH连接GitHub</h1><p>在终端中输入一下命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<p>如果出现 Hi your-user-name! You’ve successfully authenticated, but GitHub does not provide shell access. 证明正确通过SSH连接GitHub</p>
+<h1 id="添加本地仓库"><a href="#添加本地仓库" class="headerlink" title="添加本地仓库"></a>添加本地仓库</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git remote rm origin</span><br><span class="line"></span><br><span class="line">git remote add origin git@github.com:user-name/your-repo-name.git</span><br></pre></td></tr></table></figure>
+
+<h1 id="push-本地代码到仓库"><a href="#push-本地代码到仓库" class="headerlink" title="push 本地代码到仓库"></a>push 本地代码到仓库</h1><p>正确完成以上步骤后，第一次push本地代码，需要使用如下命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push --<span class="built_in">set</span>-upstream origin master</span><br></pre></td></tr></table></figure>
+
+<p>以后，就可以直接使用如下命令进行提交代码到远程仓库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>ssh</tag>
+        <tag>github</tag>
       </tags>
   </entry>
   <entry>
@@ -7562,53 +7610,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>ubuntu</tag>
         <tag>bbr</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux 批处理：修改文件名和文件内容</title>
-    <url>/2021/02/09/rename-and-sed/</url>
-    <content><![CDATA[<p>在 Linux 系统上，包含有大量相同字段的文件名，想要把这些字段（中文字段）改成其他字段（数字或其他英文字段），因为某些程序的需要，不支持中文文件名，此时可以使用命令 rename 批量修改文件名。当文件中包含有大量相同字段，想要修改，但是，收到修改又比较浪费时间。此时，可以使用命令 sed 完成。</p>
-<a id="more"></a>
-
-<h1 id="rename"><a href="#rename" class="headerlink" title="rename"></a>rename</h1><p>在 linux 系统中重命名文件，经常用到 mv命令，批量重命名文件 rename 是最好的选择。</p>
-<p>linux的 rename命令有两个版本，一个是c语言版本的，一个是perl语言版本的，判断方法：输入man rename </p>
-<h2 id="C语言版本"><a href="#C语言版本" class="headerlink" title="C语言版本"></a>C语言版本</h2><figure class="highlight html"><table><tr><td class="code"><pre><span class="line">rename 原字符串 新字符串 文件名</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rename 第三阶段 3 *</span><br><span class="line"><span class="comment"># * 代表所有字符</span></span><br><span class="line"><span class="comment"># ？代表单个字符</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Perl语言版本"><a href="#Perl语言版本" class="headerlink" title="Perl语言版本"></a>Perl语言版本</h2><figure class="highlight html"><table><tr><td class="code"><pre><span class="line">rename &#x27;s/原字符串/新字符串/&#x27; 文件名</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rename <span class="string">&#x27;s/第三阶段/3/&#x27;</span> *</span><br><span class="line">rename <span class="string">&quot;s/$/.txt/&quot;</span> * //把所有的文件名都以txt结尾</span><br></pre></td></tr></table></figure>
-
-<h1 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h1><p>linux下批量替换文件内容</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 针对单个文件</span></span><br><span class="line">sed -i <span class="string">&quot;s/查找字段/替换字段/g&quot;</span> 文件名</span><br><span class="line"><span class="comment"># 针对目录下的所有文件</span></span><br><span class="line">sed -i <span class="string">&quot;s/查找字段/替换字段/g&quot;</span> `grep 查找字段 -rl 路径`</span><br><span class="line"><span class="comment"># r 表示递归</span></span><br><span class="line"><span class="comment"># l 表示 -files-with-matches</span></span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sed -i <span class="string">&quot;s/www.baidu.com/baidu.com/g&quot;</span> file.config</span><br><span class="line">sed -i <span class="string">&quot;s/www.baidu.com/baidu.com/g&quot;</span> `grep www.baidu.com -rl /home`</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><p><a href="https://blog.51cto.com/jiemian/1846951">linux下rename命令用法详解(重命名文件)</a></p>
-</li>
-<li><p><a href="https://wangchujiang.com/linux-command/c/rename.html">rename</a></p>
-</li>
-<li><p><a href="http://einverne.github.io/post/2018/01/rename-files-batch.html">每天学习一个命令: rename 批量修改文件名</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/hnlyyk/article/details/49299909">linux下批量替换文件内容</a></p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>rename</tag>
-        <tag>sed</tag>
       </tags>
   </entry>
   <entry>
@@ -7998,35 +7999,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>同步与异步</title>
-    <url>/2020/03/18/synchronous-asynchronous/</url>
-    <content><![CDATA[<p>Synchronous（同步）和Asynchronous（异步）是编程时比较重要的一个概念。而且，同步与异步的概念与我们日常生活中的含义不同，容易导致误解。这里给出计算机科学上两者的解释。</p>
-<a id="more"></a>
-
-<h1 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h1><p>同步类似于实时打电话。什么意思，就是必须同时在线。用计算机术语就是单线程模式，函数或方法调用后，必须等待直接结束，等到返回值后才能释放资源。</p>
-<p>同步属于阻塞模式。</p>
-<p>一个实际的例子是，用户登录，需要对用户验证完成后才能登录系统。</p>
-<p>效率低。</p>
-<h1 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h1><p>异步类似于分时发短信。就是可以不用同时在线，有空闲时再处理。用计算机术语就是多线程模式，函数或方法调用后，无需等待，可以去执行其他任务。</p>
-<p>异步属于非阻塞模式。</p>
-<p>一个实际的例子是，页面数据加载过程，不需要等所有数据获取后再显示页面。</p>
-<p>效率高。</p>
-<p><strong>参考资料：</strong></p>
-<ol>
-<li><a href="https://blog.csdn.net/tennysonsky/article/details/45111623">同步和异步的区别</a></li>
-<li><a href="https://blog.csdn.net/shiyong1949/article/details/80854656">计算机领域中的同步（Synchronous）和异步（Asynchronous）</a></li>
-<li><a href="https://www.jianshu.com/p/ee2dcd1ccfc6">简述同步和异步的区别</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>computer</tag>
-        <tag>compile</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>为Centos 或Ubuntu添加交换分区swap</title>
     <url>/2020/03/10/swap-linux/</url>
     <content><![CDATA[<p>Centos 或者 Ubuntu的交换分区swap，类似于Windows系统的虚拟内存，能够在系统内存不足时，利用一部分硬盘空间虚拟出内存空间，解决内存不足的问题。下面分别给出如何为Centos 和 Ubuntu增加交换分区。</p>
@@ -8084,6 +8056,35 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <tag>ubuntu</tag>
         <tag>swap</tag>
         <tag>centos</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>同步与异步</title>
+    <url>/2020/03/18/synchronous-asynchronous/</url>
+    <content><![CDATA[<p>Synchronous（同步）和Asynchronous（异步）是编程时比较重要的一个概念。而且，同步与异步的概念与我们日常生活中的含义不同，容易导致误解。这里给出计算机科学上两者的解释。</p>
+<a id="more"></a>
+
+<h1 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h1><p>同步类似于实时打电话。什么意思，就是必须同时在线。用计算机术语就是单线程模式，函数或方法调用后，必须等待直接结束，等到返回值后才能释放资源。</p>
+<p>同步属于阻塞模式。</p>
+<p>一个实际的例子是，用户登录，需要对用户验证完成后才能登录系统。</p>
+<p>效率低。</p>
+<h1 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h1><p>异步类似于分时发短信。就是可以不用同时在线，有空闲时再处理。用计算机术语就是多线程模式，函数或方法调用后，无需等待，可以去执行其他任务。</p>
+<p>异步属于非阻塞模式。</p>
+<p>一个实际的例子是，页面数据加载过程，不需要等所有数据获取后再显示页面。</p>
+<p>效率高。</p>
+<p><strong>参考资料：</strong></p>
+<ol>
+<li><a href="https://blog.csdn.net/tennysonsky/article/details/45111623">同步和异步的区别</a></li>
+<li><a href="https://blog.csdn.net/shiyong1949/article/details/80854656">计算机领域中的同步（Synchronous）和异步（Asynchronous）</a></li>
+<li><a href="https://www.jianshu.com/p/ee2dcd1ccfc6">简述同步和异步的区别</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>computer</tag>
+        <tag>compile</tag>
       </tags>
   </entry>
   <entry>
@@ -8599,6 +8600,27 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>Ubuntu卸载cuda</title>
+    <url>/2020/02/20/uninstall-cuda/</url>
+    <content><![CDATA[<p>当使用Ubuntu运行深度学习模型时，有时候会出现一些错误，有可能是因为cuda版本不匹配或较旧导致的，所以需要我们卸载Ubuntu系统安装的cuda驱动，重新安装，下面一些代码是以Ubuntu18.04为例来卸载cuda</p>
+<a id="more"></a>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt --purge remove cuda</span><br><span class="line">sudo apt autoremove</span><br><span class="line">sudo apt --purge remove cuda*</span><br></pre></td></tr></table></figure>
+
+<p>有时，还需要进入路径/usr/local，并删除文件夹cuda</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rm -rf /usr/<span class="built_in">local</span>/cuda*</span><br></pre></td></tr></table></figure>
+
+<p>至此，就完全卸载了cuda。</p>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>cuda</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>手动更新 oh-my-zsh</title>
     <url>/2021/10/08/update-oh-my-zsh/</url>
     <content><![CDATA[<p>我比较喜欢使用 zsh，特别是搭配 <a href="https://ohmyz.sh/">Oh My ZSH</a>，它有很多方便的功能以及各种主题。但它不会自动更新，特别是 Mac 上很少关闭 Terminal 导致oh-my-zsh 不是最新的。下面介绍一种手动更新 oh-my-zsh 的方法。</p>
@@ -8622,27 +8644,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>shell</tag>
         <tag>zsh</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Ubuntu卸载cuda</title>
-    <url>/2020/02/20/uninstall-cuda/</url>
-    <content><![CDATA[<p>当使用Ubuntu运行深度学习模型时，有时候会出现一些错误，有可能是因为cuda版本不匹配或较旧导致的，所以需要我们卸载Ubuntu系统安装的cuda驱动，重新安装，下面一些代码是以Ubuntu18.04为例来卸载cuda</p>
-<a id="more"></a>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt --purge remove cuda</span><br><span class="line">sudo apt autoremove</span><br><span class="line">sudo apt --purge remove cuda*</span><br></pre></td></tr></table></figure>
-
-<p>有时，还需要进入路径/usr/local，并删除文件夹cuda</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rm -rf /usr/<span class="built_in">local</span>/cuda*</span><br></pre></td></tr></table></figure>
-
-<p>至此，就完全卸载了cuda。</p>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>cuda</tag>
       </tags>
   </entry>
   <entry>
@@ -9020,6 +9021,30 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>开启 wsl 上的 cron 服务</title>
+    <url>/2022/01/08/wsl-cron/</url>
+    <content><![CDATA[<p>wsl 是 windows 的 linux 子系统，使得在 windows 上使用 linux 非常丝滑，而不用安装虚拟机。但是，有些服务在 wsl 默认是关闭的，需要设置才能使用。下面介绍如何在 wsl ubuntu 上开启使用 cron，cron 能够进行定时任务的执行。</p>
+<a id="more"></a>
+
+<h1 id="用户添加到-crontab-组"><a href="#用户添加到-crontab-组" class="headerlink" title="用户添加到 crontab 组"></a>用户添加到 crontab 组</h1><p>命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo usermod -a -G crontab jinzhongxu</span><br></pre></td></tr></table></figure>
+
+<h1 id="开启-cron-服务"><a href="#开启-cron-服务" class="headerlink" title="开启 cron 服务"></a>开启 cron 服务</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo service cron start</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">sudo /etc/init.d/cron start</span><br></pre></td></tr></table></figure>
+
+<h1 id="设置开机自启-cron-服务"><a href="#设置开机自启-cron-服务" class="headerlink" title="设置开机自启 cron 服务"></a>设置开机自启 cron 服务</h1><p>访问我的另一篇博文: <a href="https://xujinzh.github.io/2020/07/20/wsl-shell-startup/">Windows10 子系统开机自启动SSH等服务</a>，把如下命令添加到 wsl.vbs 中:</p>
+<figure class="highlight vb"><table><tr><td class="code"><pre><span class="line">ws.run <span class="string">&quot;wsl -d Ubuntu -u root /etc/init.d/cron start&quot;</span>, vbhide</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>windows</category>
+      </categories>
+      <tags>
+        <tag>wsl</tag>
+        <tag>cron</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Windows 10 子系统 wsl 关闭和重启电脑方法</title>
     <url>/2020/09/28/windows10-wsl-shutdown/</url>
     <content><![CDATA[<p>使用 Windows 10 的子系统能够非常方便的体验到 Linux 系统的简洁美（方便开发），同时也能够体验到 Windows10 图形界面的直接美（方便使用常用软件）。Windows 10 结合 WSL 能够在一定程度上消除了装载虚拟机的时间。但 WSL 只有终端界面没有图形界面，那么如何通过 WSL 关闭 Windows 10呢？这里以 Ubuntu-18.04 为例介绍。</p>
@@ -9047,30 +9072,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>windows</tag>
         <tag>wsl</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>开启 wsl 上的 cron 服务</title>
-    <url>/2022/01/08/wsl-cron/</url>
-    <content><![CDATA[<p>wsl 是 windows 的 linux 子系统，使得在 windows 上使用 linux 非常丝滑，而不用安装虚拟机。但是，有些服务在 wsl 默认是关闭的，需要设置才能使用。下面介绍如何在 wsl ubuntu 上开启使用 cron，cron 能够进行定时任务的执行。</p>
-<a id="more"></a>
-
-<h1 id="用户添加到-crontab-组"><a href="#用户添加到-crontab-组" class="headerlink" title="用户添加到 crontab 组"></a>用户添加到 crontab 组</h1><p>命令如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo usermod -a -G crontab jinzhongxu</span><br></pre></td></tr></table></figure>
-
-<h1 id="开启-cron-服务"><a href="#开启-cron-服务" class="headerlink" title="开启 cron 服务"></a>开启 cron 服务</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo service cron start</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">sudo /etc/init.d/cron start</span><br></pre></td></tr></table></figure>
-
-<h1 id="设置开机自启-cron-服务"><a href="#设置开机自启-cron-服务" class="headerlink" title="设置开机自启 cron 服务"></a>设置开机自启 cron 服务</h1><p>访问我的另一篇博文: <a href="https://xujinzh.github.io/2020/07/20/wsl-shell-startup/">Windows10 子系统开机自启动SSH等服务</a>，把如下命令添加到 wsl.vbs 中:</p>
-<figure class="highlight vb"><table><tr><td class="code"><pre><span class="line">ws.run <span class="string">&quot;wsl -d Ubuntu -u root /etc/init.d/cron start&quot;</span>, vbhide</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>windows</category>
-      </categories>
-      <tags>
-        <tag>wsl</tag>
-        <tag>cron</tag>
       </tags>
   </entry>
   <entry>
@@ -9260,44 +9261,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>Linux 压缩(解压缩)命令 zip(unzip) 和 rar(unrar)</title>
-    <url>/2019/12/20/zip-and-rar/</url>
-    <content><![CDATA[<p>zip 和 rar 都是常有的压缩命令，特别是在 Windows 上压缩的 zip 或 rar 文件，上传到 Linux 系统上时，需要解压缩，下面介绍如何在 Linux 上使用命令 zip (unzip) 和 rar (unrar) 进行压缩和解压缩。</p>
-<a id="more"></a>
-
-<h1 id="zip压缩"><a href="#zip压缩" class="headerlink" title="zip压缩 "></a><font size=7 color=red>zip压缩 </font></h1><h2 id="zip-压缩多个文件或目录到一个压缩包"><a href="#zip-压缩多个文件或目录到一个压缩包" class="headerlink" title="zip 压缩多个文件或目录到一个压缩包"></a>zip 压缩多个文件或目录到一个压缩包</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">zip -r file.zip wordcount.jar /home/jayzonxu/flink</span><br></pre></td></tr></table></figure>
-
-<h2 id="zip-压缩同后缀的文件到一个压缩包"><a href="#zip-压缩同后缀的文件到一个压缩包" class="headerlink" title="zip 压缩同后缀的文件到一个压缩包"></a>zip 压缩同后缀的文件到一个压缩包</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">zip file.zip *.jpeg</span><br></pre></td></tr></table></figure>
-
-<h1 id="unzip-解压缩"><a href="#unzip-解压缩" class="headerlink" title="unzip 解压缩"></a><font size=7 color=orange>unzip 解压缩</font></h1><h2 id="unzip-解压缩文件"><a href="#unzip-解压缩文件" class="headerlink" title="unzip 解压缩文件"></a>unzip 解压缩文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">unzip file.zip</span><br></pre></td></tr></table></figure>
-
-<h1 id="rar-压缩"><a href="#rar-压缩" class="headerlink" title="rar 压缩"></a><font size=7 color=red>rar 压缩</font></h1><h2 id="编译安装-rar"><a href="#编译安装-rar" class="headerlink" title="编译安装 rar"></a>编译安装 rar</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://www.rarlab.com/rar/rarlinux-x64-6.0.2.tar.gz</span><br><span class="line">tar -xzf rarlinux-x64-6.0.2.tar.gz</span><br><span class="line"><span class="built_in">cd</span> rar</span><br><span class="line">sudo make</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="把所有文件压缩到-all-rar"><a href="#把所有文件压缩到-all-rar" class="headerlink" title="把所有文件压缩到 all.rar"></a>把所有文件压缩到 all.rar</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rar a file.rar *.jpeg filename.zip wordcount.jar /home/jayzonxu/flink</span><br></pre></td></tr></table></figure>
-
-<h1 id="unrar-解压缩"><a href="#unrar-解压缩" class="headerlink" title="unrar 解压缩"></a><font size=7 color=orange>unrar 解压缩</font></h1><h2 id="unrar-解压缩文件"><a href="#unrar-解压缩文件" class="headerlink" title="unrar 解压缩文件"></a>unrar 解压缩文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">unrar e file.rar</span><br><span class="line">unrar x file.rar</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="https://www.cnblogs.com/findumars/p/8244997.html">Linux中如何安装RAR</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>shell</tag>
-        <tag>debian</tag>
-        <tag>zip</tag>
-        <tag>rar</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Ubuntu14.04机器上安装 Zabbix 监控</title>
     <url>/2020/06/12/zabbix-ubuntu14/</url>
     <content><![CDATA[<p>Zabbix 在 Ubuntu14.04 上使用会收到一些限制，特别是，在本地集群，无法连接互联网时，安装可能会遇到一些坑，下面简单记录一下，并给出解决方案</p>
@@ -9368,6 +9331,44 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>ubuntu</tag>
         <tag>zabbix</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux 压缩(解压缩)命令 zip(unzip) 和 rar(unrar)</title>
+    <url>/2019/12/20/zip-and-rar/</url>
+    <content><![CDATA[<p>zip 和 rar 都是常有的压缩命令，特别是在 Windows 上压缩的 zip 或 rar 文件，上传到 Linux 系统上时，需要解压缩，下面介绍如何在 Linux 上使用命令 zip (unzip) 和 rar (unrar) 进行压缩和解压缩。</p>
+<a id="more"></a>
+
+<h1 id="zip压缩"><a href="#zip压缩" class="headerlink" title="zip压缩 "></a><font size=7 color=red>zip压缩 </font></h1><h2 id="zip-压缩多个文件或目录到一个压缩包"><a href="#zip-压缩多个文件或目录到一个压缩包" class="headerlink" title="zip 压缩多个文件或目录到一个压缩包"></a>zip 压缩多个文件或目录到一个压缩包</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">zip -r file.zip wordcount.jar /home/jayzonxu/flink</span><br></pre></td></tr></table></figure>
+
+<h2 id="zip-压缩同后缀的文件到一个压缩包"><a href="#zip-压缩同后缀的文件到一个压缩包" class="headerlink" title="zip 压缩同后缀的文件到一个压缩包"></a>zip 压缩同后缀的文件到一个压缩包</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">zip file.zip *.jpeg</span><br></pre></td></tr></table></figure>
+
+<h1 id="unzip-解压缩"><a href="#unzip-解压缩" class="headerlink" title="unzip 解压缩"></a><font size=7 color=orange>unzip 解压缩</font></h1><h2 id="unzip-解压缩文件"><a href="#unzip-解压缩文件" class="headerlink" title="unzip 解压缩文件"></a>unzip 解压缩文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">unzip file.zip</span><br></pre></td></tr></table></figure>
+
+<h1 id="rar-压缩"><a href="#rar-压缩" class="headerlink" title="rar 压缩"></a><font size=7 color=red>rar 压缩</font></h1><h2 id="编译安装-rar"><a href="#编译安装-rar" class="headerlink" title="编译安装 rar"></a>编译安装 rar</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://www.rarlab.com/rar/rarlinux-x64-6.0.2.tar.gz</span><br><span class="line">tar -xzf rarlinux-x64-6.0.2.tar.gz</span><br><span class="line"><span class="built_in">cd</span> rar</span><br><span class="line">sudo make</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="把所有文件压缩到-all-rar"><a href="#把所有文件压缩到-all-rar" class="headerlink" title="把所有文件压缩到 all.rar"></a>把所有文件压缩到 all.rar</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rar a file.rar *.jpeg filename.zip wordcount.jar /home/jayzonxu/flink</span><br></pre></td></tr></table></figure>
+
+<h1 id="unrar-解压缩"><a href="#unrar-解压缩" class="headerlink" title="unrar 解压缩"></a><font size=7 color=orange>unrar 解压缩</font></h1><h2 id="unrar-解压缩文件"><a href="#unrar-解压缩文件" class="headerlink" title="unrar 解压缩文件"></a>unrar 解压缩文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">unrar e file.rar</span><br><span class="line">unrar x file.rar</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://www.cnblogs.com/findumars/p/8244997.html">Linux中如何安装RAR</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>shell</tag>
+        <tag>debian</tag>
+        <tag>zip</tag>
+        <tag>rar</tag>
       </tags>
   </entry>
   <entry>
@@ -11555,12 +11556,12 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
   </entry>
   <entry>
     <title></title>
-    <url>/categories/index.html</url>
+    <url>/tags/index.html</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title></title>
-    <url>/tags/index.html</url>
+    <url>/categories/index.html</url>
     <content><![CDATA[]]></content>
   </entry>
 </search>

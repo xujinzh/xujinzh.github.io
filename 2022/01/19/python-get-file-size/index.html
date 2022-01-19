@@ -29,7 +29,7 @@
 <meta property="og:description" content="Python 是非常优秀的编程语言，开发效率高。在 Shell 中可以非常方便的使用 ls -l filepath 获得文件的大小，那么在 Python 中如何获取文件的大小呢，下面给出4中方法。假设我们的文件路径是 file_path &#x3D; &#39;&#x2F;test-file.txt&#39;.">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-01-19T02:54:44.000Z">
-<meta property="article:modified_time" content="2022-01-19T03:03:27.703Z">
+<meta property="article:modified_time" content="2022-01-19T03:09:38.869Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary">
@@ -263,7 +263,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-01-19 10:54:44 / 修改时间：11:03:27" itemprop="dateCreated datePublished" datetime="2022-01-19T10:54:44+08:00">2022-01-19</time>
+      <time title="创建时间：2022-01-19 10:54:44 / 修改时间：11:09:38" itemprop="dateCreated datePublished" datetime="2022-01-19T10:54:44+08:00">2022-01-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -305,10 +305,11 @@
 <h1 id="os-stat"><a href="#os-stat" class="headerlink" title="os.stat"></a>os.stat</h1><p>使用该函数能够获得文件的大小，单位为字节</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">os.stat(file_path).st_size</span><br></pre></td></tr></table></figure>
 
-<h1 id="打开文件读取文件，获得大小"><a href="#打开文件读取文件，获得大小" class="headerlink" title="打开文件读取文件，获得大小"></a>打开文件读取文件，获得大小</h1><p>使用该函数能够获得文件的大小，单位为字节</p>
+<h1 id="打开文件读取文件，获得大小"><a href="#打开文件读取文件，获得大小" class="headerlink" title="打开文件读取文件，获得大小"></a>打开文件读取文件，获得大小</h1><p>使用该方法能够获得文件的大小，单位为字节</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(file_path, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.seek(<span class="number">0</span>, os.SEEK_END)</span><br><span class="line">    print(f.tell())</span><br></pre></td></tr></table></figure>
 
-<h1 id="使用-pathlib-Path-file-path-stat"><a href="#使用-pathlib-Path-file-path-stat" class="headerlink" title="使用 pathlib.Path(file_path).stat()"></a>使用 pathlib.Path(file_path).stat()</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"></span><br><span class="line">Path(file_path).stat().st_size</span><br></pre></td></tr></table></figure>
+<h1 id="使用-pathlib-Path-file-path-stat"><a href="#使用-pathlib-Path-file-path-stat" class="headerlink" title="使用 pathlib.Path(file_path).stat()"></a>使用 pathlib.Path(file_path).stat()</h1><p>使用该方法能够获得文件的大小，单位为字节</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"></span><br><span class="line">Path(file_path).stat().st_size</span><br></pre></td></tr></table></figure>
 
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/how-to-get-file-size-in-python/">How to get file size in Python?</a></li>
