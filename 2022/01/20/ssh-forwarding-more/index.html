@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.9.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="我这里有个需求，就是如何将公司局域网内的服务器A开发的网站开放到互联网上。公司局域网的服务器A能够通过主路由器访问互联网，但却没有公网 IP，因此，无法在互联网上直接访问A上的网页。通过 SSH 远程端口转发可以实现这一目的。借此，本篇汇总记录一下 SSH 转发的相关知识。本篇以Ubuntu18.04为例。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSH 转发的汇总">
+<meta property="og:url" content="https://xujinzh.github.io/2022/01/20/ssh-forwarding-more/index.html">
+<meta property="og:site_name" content="J Blog">
+<meta property="og:description" content="我这里有个需求，就是如何将公司局域网内的服务器A开发的网站开放到互联网上。公司局域网的服务器A能够通过主路由器访问互联网，但却没有公网 IP，因此，无法在互联网上直接访问A上的网页。通过 SSH 远程端口转发可以实现这一目的。借此，本篇汇总记录一下 SSH 转发的相关知识。本篇以Ubuntu18.04为例。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-20T06:24:00.000Z">
+<meta property="article:modified_time" content="2022-01-20T09:27:54.347Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="ssh">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2022/01/20/ssh-forwarding-more/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xujinzh.github.io/2022/01/20/ssh-forwarding-more/","path":"2022/01/20/ssh-forwarding-more/","title":"SSH 转发的汇总"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SSH 转发的汇总 | J Blog</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">J Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">209</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">21</span></a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">228</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SSH-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">SSH 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="nav-number">2.</span> <span class="nav-text">本地端口转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="nav-number">3.</span> <span class="nav-text">远程端口转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="nav-number">4.</span> <span class="nav-text">动态端口转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7%E7%9A%84SSH%E7%99%BB%E5%BD%95"><span class="nav-number">5.</span> <span class="nav-text">退出其他用户的SSH登录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">众妙之门</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">228</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">209</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jinzhongxu@csu.ac.cn" title="E-Mail → mailto:jinzhongxu@csu.ac.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.mathscv.com/aws" title="JupyterHub → https:&#x2F;&#x2F;www.mathscv.com&#x2F;aws" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>JupyterHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.mathscv.com/cloud" title="iCloud → https:&#x2F;&#x2F;www.mathscv.com&#x2F;cloud" rel="noopener" target="_blank"><i class="fab fa-google fa-fw"></i>iCloud</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://xujinzh.github.io/" title="JBlog-GitHub → https:&#x2F;&#x2F;xujinzh.github.io"><i class="fab fa-github fa-fw"></i>JBlog-GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.mathscv.com/" title="JBlog-MathsCV → https:&#x2F;&#x2F;www.mathscv.com" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>JBlog-MathsCV</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2022/01/20/ssh-forwarding-more/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+      <meta itemprop="description" content="众妙之门">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SSH 转发的汇总
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-01-20 14:24:00 / 修改时间：17:27:54" itemprop="dateCreated datePublished" datetime="2022-01-20T14:24:00+08:00">2022-01-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/ssh/" itemprop="url" rel="index"><span itemprop="name">ssh</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>我这里有个需求，就是如何将公司局域网内的服务器A开发的网站开放到互联网上。公司局域网的服务器A能够通过主路由器访问互联网，但却没有公网 IP，因此，无法在互联网上直接访问A上的网页。通过 SSH 远程端口转发可以实现这一目的。借此，本篇汇总记录一下 SSH 转发的相关知识。本篇以Ubuntu18.04为例。</p>
+<a id="more"></a>
+
+<h1 id="SSH-简介"><a href="#SSH-简介" class="headerlink" title="SSH 简介"></a>SSH 简介</h1><p>如今，SSH 在 Linux/MacOS/Windows 上是标配的软件工具。事实上，SSH 是一种网络协议，由芬兰学者 Tatu Ylonen 于 1995 年设计，用于主机之间的加密登录，将登录信息全部加密。现如今，针对该协议开发有各种实现，有商业的，也有开源的，如 OpenSSH 等。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 SSH 以用户 username 登录到主机 host_ip 上</span></span><br><span class="line">ssh username@host_ip</span><br><span class="line"><span class="comment"># 指定端口登录</span></span><br><span class="line">ssh -p 2222 uername@host_ip</span><br></pre></td></tr></table></figure>
+
+<p><strong>端口可以在 host_ip 上进行修改，方法如下：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在配置文件中修改</span></span><br><span class="line">sudo vim /etc/ssh/sshd_config</span><br><span class="line"><span class="comment"># 添加如下内容</span></span><br><span class="line">Port 2222</span><br><span class="line"><span class="comment"># 重启SSHD</span></span><br><span class="line">sudo systemctl restart sshd.service</span><br></pre></td></tr></table></figure>
+
+<p>常用的 SSH 登录方式有两种，一种是口令密码登录，一种是密钥认证登录。</p>
+<p>口令密码登录：常常第一次登录主机时，为了防止中间人攻击，都会有系统警告提示，包含有128位的公钥指纹（原指纹是RSA算法生成的1024位的，经过MD5加密后得到128位）。当确认无误后，输入 yes，然后输入密码，即可登录，此时，本地电脑会将带访问主机的公钥记录在 ~/.ssh/known_hosts 之中，下次连接时，就不会有警告提示了。</p>
+<p>密钥认证登录：密钥登录首先需要本机的 ~/.ssh/ 目录下生成密钥文件（可不对私钥设置口令passphrase），包含公钥 id_rsa.pub 和 私钥 id_rsa</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+
+<p>将公钥拷贝到待访问主机上即可，方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 id_rsa.pub 拷贝到 host_ip 的用户 username 下的 .ssh/authorized_keys 文件中</span></span><br><span class="line"><span class="comment"># .ssh/authorized_keys 的权限一般是 600</span></span><br><span class="line">ssh-copy-id username@host_ip</span><br></pre></td></tr></table></figure>
+
+<p>这样下次登录就不用输入口令密码。</p>
+<p>使用如下命令，可以查看 ssh 命令的各参数含义：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man ssh</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-p: 表示指定端口（注意在 scp 中指定端口是使用大写的 -P），port</li>
+<li>-L: 表示本地端口转发，local</li>
+<li>-R: 表示远程端口转发，remote</li>
+<li>-D: 表示动态端口转发，dynamic</li>
+<li>-N: 表示只进行数据转发，不进行命令输入（Do not execute a remote command.  This is useful for just forwarding ports.）</li>
+<li>-T: 表示不分配伪终端 tty（Disable pseudo-terminal allocation.）</li>
+<li>-g: 表示允许远端主机连接本地主机的转发端口（Allows remote hosts to connect to local forwarded ports.）</li>
+<li>-f: 表示在后台运行（Requests ssh to go to background just before command execution. ）用 kill 进程 ID 关闭</li>
+<li>-q: 表示静默模式，不显示警告和诊断信息（Quiet mode.  Causes most warning and diagnostic messages to be suppressed.）</li>
+</ul>
+<h1 id="本地端口转发"><a href="#本地端口转发" class="headerlink" title="本地端口转发"></a>本地端口转发</h1><p>当远端主机（IP 地址是 1. 2. 3. X，有用户 jinzhongxu）上有个服务运行在 8000 端口（比如 jupyterhub），但是，我想要在本地（127.0.0.1）的端口（8008）访问，可以使用如下方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L 8008:127.0.0.1:8000 -NT jinzhongxu@1.2.3.X</span><br></pre></td></tr></table></figure>
+
+<p>此时，在本地浏览器打开地址：<a target="_blank" rel="noopener" href="http://127.0.0.1:8008/">http://127.0.0.1:8008</a> 就可以直接访问。这就是一种简单的本地端口转发。它将远端主机的某个端口转发到本地主机的某个端口上，访问本地端口就相当于访问远端主机的端口。</p>
+<p>类似的，可以将远端主机的 22 端口绑定到本机的 2222 端口，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L 2222:127.0.0.1:22 -NT jinzhongxu@1.2.3.X</span><br></pre></td></tr></table></figure>
+
+<p>这样，就可以直接 SSH 到本地的 2222 端口连接到远端主机的终端</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -p 2222 localhost</span><br></pre></td></tr></table></figure>
+
+<p>其实，本地端口转发的功能远不止这样，它的完整形式是下面样子：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L local_port:remote_target_ip:remote_target_port -NT username@remote_ip</span><br></pre></td></tr></table></figure>
+
+<p>以本地主机运行上面的命令，可以将远端目标主机 remote_target_ip 的指定端口 remote_target_port 经过另一个远端主机 remote_ip （俗称跳板机）绑定到本地主机的指定端口 local_port 上。这样，在本地访问端口 local_port，就相当于访问远端目标主机 remote_target_ip 的端口 remote_target_port。</p>
+<p>本地端口转发的使用场景就是：</p>
+<ol>
+<li>本地主机想直接访问本地端口来访问远端主机的端口；</li>
+<li>本地主机无法直接访问远端目标主机的端口，经过跳板机实现访问远端目标主机的端口。此时要求，本地主机能够访问跳板机，跳板机能够访问远端目标主机。</li>
+</ol>
+<p>其实场景1是场景2的特殊情况，此时，远端目标主机就是跳板机的 localhost 或 127.0.0.1，而 remote_ip 为公网 ip 或本地主机可访问的内网 ip，场景1常常使用在将远端主机的端口映射到本地主机上的情况。</p>
+<p>本地端口转发一般采用 HTTP 协议。</p>
+<h1 id="远程端口转发"><a href="#远程端口转发" class="headerlink" title="远程端口转发"></a>远程端口转发</h1><p>本地主机（127.0.0.1）上有个服务运行在 8000 端口（比如 jupyterhub），但是，我想要在远端主机（IP 地址是 1. 2. 3. X，有用户 jinzhongxu）的端口（8008）访问，可以使用如下方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -R 8008:localhost:8000 -NT jinzhongxu@1.2.3.X</span><br></pre></td></tr></table></figure>
+
+<p>此时，就可以在浏览器打开地址： <a target="_blank" rel="noopener" href="http://1.2.3.x:8008/">http://1.2.3.X:8008</a> 访问本地主机的 jupyterhub 服务了。这就是一种简单的远程端口转发。它将本地主机的某个端口转发到远端主机的某个端口上，访问远端主机端口就相当于访问本地主机的端口。</p>
+<p>类似的，可以将本地的 80 端口远程转发到远端主机的 80 端口，这样，访问远端主机的 IP 地址，就可以直接访问本地的网站。这常常是基于对网站安全性考虑的，对远端主机（常常是 VPS ）安全性（如数据丢失等）不相信，但又想把网站开发给大家访问，或者因为地理原因，有些人无法直接访问本地的网站，只能通过互联网访问，此时，就需要进行远程端口转发，将本地端口绑定到远端端口，通过公网 IP 访问。此时，命令常常如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -R 80:localhost:80 -NT jinzhongxu@1.2.3.X</span><br></pre></td></tr></table></figure>
+
+<p>此时，直接访问地址：<a target="_blank" rel="noopener" href="http://1.2.3.x/">http://1.2.3.X</a> 就可以打开网站。</p>
+<p>有时候，因为家庭网络和公司网络都是局域网，没有公网 IP，但都能访问互联网，在阿里云上海开通了一个具有公网 IP：1.2.3.X 的 VPS，想要实现在家访问公司里的个人办公电脑或服务器 A，就可以首先在 A 上开启远程端口转发：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -R 2222:localhost:22 -NT -g -f jinzhongxu@1.2.3.X</span><br></pre></td></tr></table></figure>
+
+<p>回到家，通过 SSH 访问 VPS 的端口 2222 就可以访问公司服务器 A：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -p 2222 jinzhongxu@1.2.3.X</span><br></pre></td></tr></table></figure>
+
+<p>此示例的详细描述可参考我的另一篇文章：<a href="https://xujinzh.github.io/2022/01/19/ssh-forwarding-service/">SSH 转发的一些记录</a> </p>
+<p>其实，远程端口转发的功能远不止这样，它的完整形式是下面样子：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -R remote_port:target_ip:target_port -NT username@remote_ip</span><br></pre></td></tr></table></figure>
+
+<p>以本地主机运行上面的命令，可以将目标主机 target_ip 的指定端口 target_port 经过本地主机（俗称跳板机）绑定到远端主机的指定端口 remote_port 上。这样，在远端访问端口 remote_port，就相当于访问目标主机 target_ip 的端口 target_port。</p>
+<p>远程端口转发的使用场景就是：</p>
+<ol>
+<li>直接访问远端主机的端口实现访问本地主机的端口；</li>
+<li>远端主机无法直接访问目标主机的端口，经过本地跳板机实现访问目标主机的端口。此时，要求本地跳板机能够访问目标主机机和远端主机。</li>
+</ol>
+<p>其实场景1是场景2的特殊情况，此时，目标主机就是跳板机的 localhost 或 127.0.0.1，而远端主机 remote_ip 为公网 ip 或本地主机可访问的内网 ip，场景1常常使用在将本地主机的端口映射到远端主机上的情况。</p>
+<p>远程端口转发一般采用 HTTP 协议。</p>
+<h1 id="动态端口转发"><a href="#动态端口转发" class="headerlink" title="动态端口转发"></a>动态端口转发</h1><p>动态端口转发常采用如下形式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -D 8000 jinzhongxu@remote_ip -NT</span><br></pre></td></tr></table></figure>
+
+<p>将本地的 8000 端口绑定到远端主机 remote_ip 上。</p>
+<p>动态端口转发一般采用 SOCKS(5) 协议。</p>
+<h1 id="退出其他用户的SSH登录"><a href="#退出其他用户的SSH登录" class="headerlink" title="退出其他用户的SSH登录"></a>退出其他用户的SSH登录</h1><p>查看在线登录用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">w</span><br></pre></td></tr></table></figure>
+
+<p>查看自己使用的终端</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">who am i</span><br></pre></td></tr></table></figure>
+
+<p>退出非法登录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pkill -<span class="built_in">kill</span> -t pts/x</span><br></pre></td></tr></table></figure>
+
+<p>强制退出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pkill -o -t pts/x</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html">SSH原理与运用（一）：远程登录</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2011/12/ssh_port_forwarding.html">SSH原理与运用（二）：远程操作与端口转发</a></li>
+<li><a target="_blank" rel="noopener" href="https://jeremyxu2010.github.io/2018/12/ssh%E7%9A%84%E4%B8%89%E7%A7%8D%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/">SSH的三种端口转发</a></li>
+<li><a target="_blank" rel="noopener" href="https://wangdoc.com/ssh/port-forwarding.html">SSH 端口转发</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/perlin/1119539"><strong>Linux踢出其他正在SSH登陆用户</strong></a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>感谢打赏</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://xujinzh.github.io/2022/01/20/ssh-forwarding-more/" title="SSH 转发的汇总">https://xujinzh.github.io/2022/01/20/ssh-forwarding-more/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ssh/" rel="tag"><i class="fa fa-tag"></i> ssh</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/01/19/ssh-forwarding-service/" rel="prev" title="SSH 转发的一些记录">
+                  <i class="fa fa-chevron-left"></i> SSH 转发的一些记录
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f45c300bef10091" async="async"></script>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"xujinzh","repo":"xujinzh.github.io","client_id":"695ca5d39e2ba2f9feb5","client_secret":"9d4027af6364ff54595b7a8580977ec58c38a5ae","admin_user":"xujinzh","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"34592aedebbe6da38f6e9686da899887"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
