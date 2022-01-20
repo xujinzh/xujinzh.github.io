@@ -21,15 +21,15 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.9.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="我这里有个需求，就是如何将公司局域网内的服务器A开发的网站开放到互联网上。公司局域网的服务器A能够通过主路由器访问互联网，但却没有公网 IP，因此，无法在互联网上直接访问A上的网页。通过 SSH 远程端口转发可以实现这一目的。借此，本篇汇总记录一下 SSH 转发的相关知识。本篇以Ubuntu18.04为例。">
+<meta name="description" content="我这里有个需求，就是如何将公司局域网内的服务器A开发的网站开放到互联网上。公司局域网的服务器A能够通过主路由器访问互联网，但却没有公网 IP，因此，无法在互联网上直接访问A上的网页。通过 SSH 远程端口转发可以实现这一目的。借此，本篇汇总记录一下 SSH 转发的相关知识。本篇以 Ubuntu18.04 为例。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SSH 转发的汇总">
 <meta property="og:url" content="https://xujinzh.github.io/2022/01/20/ssh-forwarding-more/index.html">
 <meta property="og:site_name" content="J Blog">
-<meta property="og:description" content="我这里有个需求，就是如何将公司局域网内的服务器A开发的网站开放到互联网上。公司局域网的服务器A能够通过主路由器访问互联网，但却没有公网 IP，因此，无法在互联网上直接访问A上的网页。通过 SSH 远程端口转发可以实现这一目的。借此，本篇汇总记录一下 SSH 转发的相关知识。本篇以Ubuntu18.04为例。">
+<meta property="og:description" content="我这里有个需求，就是如何将公司局域网内的服务器A开发的网站开放到互联网上。公司局域网的服务器A能够通过主路由器访问互联网，但却没有公网 IP，因此，无法在互联网上直接访问A上的网页。通过 SSH 远程端口转发可以实现这一目的。借此，本篇汇总记录一下 SSH 转发的相关知识。本篇以 Ubuntu18.04 为例。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-01-20T06:24:00.000Z">
-<meta property="article:modified_time" content="2022-01-20T09:27:54.347Z">
+<meta property="article:modified_time" content="2022-01-20T10:07:12.234Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="ssh">
 <meta name="twitter:card" content="summary">
@@ -90,7 +90,7 @@
         <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
         <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
         <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">209</span></a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">21</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">20</span></a></li>
         <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">228</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
@@ -169,7 +169,7 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -263,7 +263,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-01-20 14:24:00 / 修改时间：17:27:54" itemprop="dateCreated datePublished" datetime="2022-01-20T14:24:00+08:00">2022-01-20</time>
+      <time title="创建时间：2022-01-20 14:24:00 / 修改时间：18:07:12" itemprop="dateCreated datePublished" datetime="2022-01-20T14:24:00+08:00">2022-01-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -275,7 +275,7 @@
         </span>
           ，
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/technology/ssh/" itemprop="url" rel="index"><span itemprop="name">ssh</span></a>
+          <a href="/categories/technology/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
         </span>
     </span>
 
@@ -296,7 +296,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>我这里有个需求，就是如何将公司局域网内的服务器A开发的网站开放到互联网上。公司局域网的服务器A能够通过主路由器访问互联网，但却没有公网 IP，因此，无法在互联网上直接访问A上的网页。通过 SSH 远程端口转发可以实现这一目的。借此，本篇汇总记录一下 SSH 转发的相关知识。本篇以Ubuntu18.04为例。</p>
+        <p>我这里有个需求，就是如何将公司局域网内的服务器A开发的网站开放到互联网上。公司局域网的服务器A能够通过主路由器访问互联网，但却没有公网 IP，因此，无法在互联网上直接访问A上的网页。通过 SSH 远程端口转发可以实现这一目的。借此，本篇汇总记录一下 SSH 转发的相关知识。本篇以 Ubuntu18.04 为例。</p>
 <a id="more"></a>
 
 <h1 id="SSH-简介"><a href="#SSH-简介" class="headerlink" title="SSH 简介"></a>SSH 简介</h1><p>如今，SSH 在 Linux/MacOS/Windows 上是标配的软件工具。事实上，SSH 是一种网络协议，由芬兰学者 Tatu Ylonen 于 1995 年设计，用于主机之间的加密登录，将登录信息全部加密。现如今，针对该协议开发有各种实现，有商业的，也有开源的，如 OpenSSH 等。</p>
@@ -306,8 +306,8 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在配置文件中修改</span></span><br><span class="line">sudo vim /etc/ssh/sshd_config</span><br><span class="line"><span class="comment"># 添加如下内容</span></span><br><span class="line">Port 2222</span><br><span class="line"><span class="comment"># 重启SSHD</span></span><br><span class="line">sudo systemctl restart sshd.service</span><br></pre></td></tr></table></figure>
 
 <p>常用的 SSH 登录方式有两种，一种是口令密码登录，一种是密钥认证登录。</p>
-<p>口令密码登录：常常第一次登录主机时，为了防止中间人攻击，都会有系统警告提示，包含有128位的公钥指纹（原指纹是RSA算法生成的1024位的，经过MD5加密后得到128位）。当确认无误后，输入 yes，然后输入密码，即可登录，此时，本地电脑会将带访问主机的公钥记录在 ~/.ssh/known_hosts 之中，下次连接时，就不会有警告提示了。</p>
-<p>密钥认证登录：密钥登录首先需要本机的 ~/.ssh/ 目录下生成密钥文件（可不对私钥设置口令passphrase），包含公钥 id_rsa.pub 和 私钥 id_rsa</p>
+<p>口令密码登录：常常第一次登录主机时，为了防止中间人攻击，都会有系统警告提示，包含有 128 位的公钥指纹（原指纹是RSA算法生成的 1024 位的，经过 MD5 加密后得到 128 位）。当确认无误后，输入 <code>yes</code>，然后输入密码，即可登录，此时，本地电脑会将带访问主机的公钥记录在 <code>~/.ssh/known_hosts</code> 之中，下次连接时，就不会有警告提示了。</p>
+<p>密钥认证登录：密钥登录首先需要本机的 <code>~/.ssh/</code> 目录下生成密钥文件（可不对私钥设置口令 passphrase ），包含公钥 <code>id_rsa.pub</code> 和 私钥 <code>id_rsa</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
 
 <p>将公钥拷贝到待访问主机上即可，方法如下：</p>
@@ -347,7 +347,7 @@
 <li>本地主机想直接访问本地端口来访问远端主机的端口；</li>
 <li>本地主机无法直接访问远端目标主机的端口，经过跳板机实现访问远端目标主机的端口。此时要求，本地主机能够访问跳板机，跳板机能够访问远端目标主机。</li>
 </ol>
-<p>其实场景1是场景2的特殊情况，此时，远端目标主机就是跳板机的 localhost 或 127.0.0.1，而 remote_ip 为公网 ip 或本地主机可访问的内网 ip，场景1常常使用在将远端主机的端口映射到本地主机上的情况。</p>
+<p>其实场景 1 是场景 2 的特殊情况，此时，远端目标主机就是跳板机的 localhost 或 127.0.0.1，而 remote_ip 为公网 ip 或本地主机可访问的内网 ip，场景 1 常常使用在将远端主机的端口映射到本地主机上的情况。</p>
 <p>本地端口转发一般采用 HTTP 协议。</p>
 <h1 id="远程端口转发"><a href="#远程端口转发" class="headerlink" title="远程端口转发"></a>远程端口转发</h1><p>本地主机（127.0.0.1）上有个服务运行在 8000 端口（比如 jupyterhub），但是，我想要在远端主机（IP 地址是 1. 2. 3. X，有用户 jinzhongxu）的端口（8008）访问，可以使用如下方法：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -R 8008:localhost:8000 -NT jinzhongxu@1.2.3.X</span><br></pre></td></tr></table></figure>
@@ -373,7 +373,7 @@
 <li>直接访问远端主机的端口实现访问本地主机的端口；</li>
 <li>远端主机无法直接访问目标主机的端口，经过本地跳板机实现访问目标主机的端口。此时，要求本地跳板机能够访问目标主机机和远端主机。</li>
 </ol>
-<p>其实场景1是场景2的特殊情况，此时，目标主机就是跳板机的 localhost 或 127.0.0.1，而远端主机 remote_ip 为公网 ip 或本地主机可访问的内网 ip，场景1常常使用在将本地主机的端口映射到远端主机上的情况。</p>
+<p>其实场景 1 是场景 2 的特殊情况，此时，目标主机就是跳板机的 localhost 或 127.0.0.1，而远端主机 remote_ip 为公网 ip 或本地主机可访问的内网 ip，场景 1 常常使用在将本地主机的端口映射到远端主机上的情况。</p>
 <p>远程端口转发一般采用 HTTP 协议。</p>
 <h1 id="动态端口转发"><a href="#动态端口转发" class="headerlink" title="动态端口转发"></a>动态端口转发</h1><p>动态端口转发常采用如下形式：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -D 8000 jinzhongxu@remote_ip -NT</span><br></pre></td></tr></table></figure>
