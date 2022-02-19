@@ -29,7 +29,7 @@
 <meta property="og:description" content="FFmpeg 是一个非常受欢迎的、完备的、跨平台的、开源的用于处理多媒体内容（如音频、视频、字幕及其他相关元数据）的库和工具集。本篇介绍 FFmpeg 的相关概念和基本使用方法。所有命令以 Ubuntu 为例进行介绍，Windows 和 Mac 同样适用。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-02-19T06:40:01.000Z">
-<meta property="article:modified_time" content="2022-02-19T10:25:24.041Z">
+<meta property="article:modified_time" content="2022-02-19T10:49:50.310Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="ffmpeg">
 <meta property="article:tag" content="video">
@@ -150,7 +150,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#FFmpeg-%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">FFmpeg 安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">2.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#FFmpeg-%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">FFmpeg 安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">容器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E6%A0%BC%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">编码格式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">编码器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ffmpeg-%E5%91%BD%E4%BB%A4%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">ffmpeg 命令的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%A7%86%E9%A2%91%E5%85%83%E4%BF%A1%E6%81%AF"><span class="nav-number">5.1.</span> <span class="nav-text">查看视频元信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%94%B9%E5%AE%B9%E5%99%A8%E6%A0%BC%E5%BC%8F%EF%BC%88%E6%89%A9%E5%B1%95%E5%90%8D%E6%94%B9%E5%8F%98%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">更改容器格式（扩展名改变）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%94%B9%E7%BC%96%E7%A0%81%E6%A0%BC%E5%BC%8F%EF%BC%88%E6%89%A9%E5%B1%95%E5%90%8D%E5%8F%AF%E4%B8%8D%E5%8F%98%EF%BC%89"><span class="nav-number">5.3.</span> <span class="nav-text">更改编码格式（扩展名可不变）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -268,7 +268,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-02-19 14:40:01 / 修改时间：18:25:24" itemprop="dateCreated datePublished" datetime="2022-02-19T14:40:01+08:00">2022-02-19</time>
+      <time title="创建时间：2022-02-19 14:40:01 / 修改时间：18:49:50" itemprop="dateCreated datePublished" datetime="2022-02-19T14:40:01+08:00">2022-02-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -304,10 +304,75 @@
         <p><a target="_blank" rel="noopener" href="https://www.ffmpeg.org/">FFmpeg</a> 是一个非常受欢迎的、完备的、跨平台的、<a target="_blank" rel="noopener" href="https://github.com/FFmpeg/FFmpeg">开源的</a>用于处理多媒体内容（如音频、视频、字幕及其他相关元数据）的库和工具集。本篇介绍 FFmpeg 的相关概念和基本使用方法。所有命令以 Ubuntu 为例进行介绍，Windows 和 Mac 同样适用。</p>
 <a id="more"></a>
 
-<h1 id="FFmpeg-安装"><a href="#FFmpeg-安装" class="headerlink" title="FFmpeg 安装"></a>FFmpeg 安装</h1><p>想要使用 FFmpeg，必须首先安装它。Ubuntu（Centos 安装 FFmpeg的方法参考我的另一篇：<a href="https://xujinzh.github.io/2020/03/10/centos-ffmpeg/?highlight=ffmpeg">Centos安装ffmpeg</a>。Ubuntu 切换镜像源的方法参考我的另一篇：<a href="https://xujinzh.github.io/2022/02/19/ubuntu-change-source-list/">ubuntu 更改镜像源</a>） 安装 FFmpeg 非常方便，命令如下：</p>
+<h1 id="FFmpeg-安装"><a href="#FFmpeg-安装" class="headerlink" title="FFmpeg 安装"></a>FFmpeg 安装</h1><p>想要使用 FFmpeg (Linux中对应的程序为 <code>ffmpeg</code>)，必须首先安装它。Ubuntu（Centos 安装 FFmpeg的方法参考我的另一篇：<a href="https://xujinzh.github.io/2020/03/10/centos-ffmpeg/?highlight=ffmpeg">Centos安装ffmpeg</a>。Ubuntu 切换镜像源的方法参考我的另一篇：<a href="https://xujinzh.github.io/2022/02/19/ubuntu-change-source-list/">ubuntu 更改镜像源</a>） 安装 FFmpeg 非常方便，命令如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install ffmpeg</span><br></pre></td></tr></table></figure>
 
+<h1 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h1><p>在介绍 FFmpeg 处理视频之前，我们需要对视频有个了解。从计算上来说，视频文件是一个容器（container）</p>
+<p>，在该容器中包含了视频（图片序列，无声音）、音频、字幕等内容。</p>
+<p>常见的视频容器有如下几种，常常以文件后缀名来反映其容器格式：</p>
+<ul>
+<li>MP4：常用</li>
+<li>MKV：更清晰</li>
+<li>WebM：体积更小</li>
+<li>AVI：较久远</li>
+</ul>
+<p>FFmpeg 支持很多种容器，使用如下命令可查看它支持的格式有哪些：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -formats</span><br></pre></td></tr></table></figure>
 
+<h1 id="编码格式"><a href="#编码格式" class="headerlink" title="编码格式"></a>编码格式</h1><p>无论是视频还是音频都需要进行编码。不同的编码有不同的压缩率。编码可以将视频文件变得更小，但一定程度上会丢失信息，导致清晰度降低。</p>
+<p>常用的视频编码格式：</p>
+<ul>
+<li>H.265：mp4 中常用</li>
+<li>H.264：mp4 中常用。更普遍</li>
+<li>H.262</li>
+<li>VP9：webm 中常用</li>
+<li>VP8</li>
+<li>AV1</li>
+</ul>
+<p>常用的音频编码格式：</p>
+<ul>
+<li>MP3</li>
+<li>AAC</li>
+</ul>
+<p>使用如下命令，可以查看 FFmpeg 支持的编码格式（包括视频和音频）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -codecs</span><br></pre></td></tr></table></figure>
+
+<h1 id="编码器"><a href="#编码器" class="headerlink" title="编码器"></a>编码器</h1><p>有了编码方法，需要一些程序或软件来实现文件（视频或音频）的编码，这就是编码器。</p>
+<p>FFmpeg 中内置的视频编码器有：</p>
+<ul>
+<li>libx264：最流行的开源 H.264 编码器</li>
+<li>NVENC：基于 NVIDIA GPU 的 H.264 编码器</li>
+<li>libx265：开源的 HEVC 编码器</li>
+<li>libvpx：谷歌的 VP8 和 VP9 编码器</li>
+<li>libaom：AV1 编码器</li>
+</ul>
+<p>FFmpeg 中内置的音频编码器有：</p>
+<ul>
+<li>libfdk-aac</li>
+<li>aac</li>
+</ul>
+<h1 id="ffmpeg-命令的使用"><a href="#ffmpeg-命令的使用" class="headerlink" title="ffmpeg 命令的使用"></a>ffmpeg 命令的使用</h1><p>ffmpeg 命令的格式如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg [全局参数] [输入文件参数] -i 输入文件 [输出文件参数] [输出文件]</span><br></pre></td></tr></table></figure>
+
+<p>常用的参数有</p>
+<ul>
+<li><code>-c</code>：指定编码器</li>
+<li><code>-c copy</code>：直接复制，不经过重新编码（这样比较快）</li>
+<li><code>-c:v</code>：指定视频编码器</li>
+<li><code>-c:a</code>：指定音频编码器</li>
+<li><code>-i</code>：指定输入文件</li>
+<li><code>-an</code>：去除音频流</li>
+<li><code>-vn</code>： 去除视频流</li>
+<li><code>-preset</code>：指定输出的视频质量，会影响文件的生成速度，有以下几个可用的值 ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow。</li>
+<li><code>-y</code>：不经过确认，输出时直接覆盖同名文件。</li>
+</ul>
+<h2 id="查看视频元信息"><a href="#查看视频元信息" class="headerlink" title="查看视频元信息"></a>查看视频元信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i input.mp4</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不显示 ffmpeg 基本信息，只显示视频相关信息</span></span><br><span class="line">ffmpeg -i input.mp4 -hide_banner</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="更改容器格式（扩展名改变）"><a href="#更改容器格式（扩展名改变）" class="headerlink" title="更改容器格式（扩展名改变）"></a>更改容器格式（扩展名改变）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把 avi 视频转换为 mp4 视频</span></span><br><span class="line">ffmpeg -i input.avi output.mp4</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 webm 视频转换为 mp4 视频</span></span><br><span class="line">ffmpeg -i input.webm output.mp4</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 mkv 视频转换为 mp4 视频</span></span><br><span class="line">ffmpeg -i input.mkv output.mp4</span><br></pre></td></tr></table></figure>
+
+<h2 id="更改编码格式（扩展名可不变）"><a href="#更改编码格式（扩展名可不变）" class="headerlink" title="更改编码格式（扩展名可不变）"></a>更改编码格式（扩展名可不变）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把 H.265 更改为 H.264 编码，（这里以 MP4 容器输入文件 input.mp4 为例，其他容器格式也可以）</span></span><br><span class="line">ffmpeg -i input.mp4 -c:v libx264 output.mp4</span><br></pre></td></tr></table></figure>
 
 
 

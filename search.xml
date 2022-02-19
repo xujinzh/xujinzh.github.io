@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>三维深度学习简单介绍</title>
+    <url>/2019/12/21/3d-dl-intro/</url>
+    <content><![CDATA[<p>文章《<a rel="noreferrer noopener" aria-label="超越像素平面：聚焦3D深度学习的现在和未来（在新窗口打开）" href="https://www.jiqizhixin.com/articles/091203" target="_blank">超越像素平面：聚焦 3D 深度学习的现在和未来</a>》（英文版对应《<a rel="noreferrer noopener" aria-label="Beyond the pixel plane: sensing and learning in 3D（在新窗口打开）" href="https://thegradient.pub/beyond-the-pixel-plane-sensing-and-learning-in-3d/" target="_blank">Beyond the pixel plane: sensing and learning in 3D</a>》）中介绍了三维数据的获取，表示，以及三维深度学习的进展。</p>
+<a id="more"></a>
+
+<p>三维数据的获取可以通过</p>
+<ol>
+<li>立体视觉系统（多目相机）</li>
+<li>RGB-D（结构光和 TOF）</li>
+</ol>
+<p>三维数据的表示形式包含</p>
+<ol>
+<li>点云数据</li>
+<li>体素网格点</li>
+<li>多边形网格</li>
+<li>多视角表示</li>
+</ol>
+<p>三维深度学习最新研究趋势</p>
+<ul>
+<li>以基于点云数据为研究对象的 PointNet 为开端，流行的方法是结合点云数据和多视角的二维图像数据作为深度学习网络的输入</li>
+</ul>
+]]></content>
+      <categories>
+        <category>research</category>
+      </categories>
+      <tags>
+        <tag>3d</tag>
+        <tag>dl</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>牛顿-莱布尼茨公式</title>
     <url>/2020/08/15/Newton-Leibniz-formula/</url>
     <content><![CDATA[<p>牛顿-莱布尼茨公式不仅为定积分提供了一个有效的计算方法，而且是联系不定积分和定积分的桥梁。</p>
@@ -39,28 +70,8 @@
       </categories>
       <tags>
         <tag>3d</tag>
-        <tag>study</tag>
         <tag>dl</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>给服务器添加交换分区swap 和开启 bbr</title>
-    <url>/2019/12/20/add-swap/</url>
-    <content><![CDATA[<p>有时候，购买的云服务器不会自动给创建交换分区，如何自己建立交换分区呢，使用下面命令创建交换分区，可以更改大小，比如1G更改为2G，一般交换分区是内存的2倍足矣。本篇以 Debian 系统为例，建议以 root 身份运行本篇中的命令。</p>
-<a id="more"></a>
-
-<h1 id="添加交换分区"><a href="#添加交换分区" class="headerlink" title="添加交换分区"></a>添加交换分区</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo swapon --show</span><br><span class="line">free -h</span><br><span class="line">df -h</span><br><span class="line">sudo fallocate -l 1G /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">sudo chmod 600 /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">sudo mkswap /swapfile</span><br><span class="line">sudo swapon /swapfile</span><br><span class="line">sudo swapon --show</span><br><span class="line">free -h</span><br><span class="line">sudo cp /etc/fstab /etc/fstab.bak</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/swapfile none swap sw 0 0&#x27;</span> | sudo tee -a /etc/fstab</span><br><span class="line">cat /proc/sys/vm/swappiness</span><br><span class="line">sudo sysctl vm.swappiness=10</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.swappiness=10&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">cat /proc/sys/vm/vfs_cache_pressure</span><br><span class="line">sudo sysctl vm.vfs_cache_pressure=50</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.vfs_cache_pressure=50&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
-
-<p>使用 top 或 htop 命令，可以查看交换分区是否创建成功。</p>
-<h1 id="开启-bbr"><a href="#开启-bbr" class="headerlink" title="开启 bbr"></a>开启 bbr</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.core.default_qdisc=fq&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv4.tcp_congestion_control=bbr&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl -p</span><br><span class="line">sysctl net.ipv4.tcp_available_congestion_control</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否开启成功</span></span><br><span class="line">lsmod | grep bbr</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>swap</tag>
+        <tag>study</tag>
       </tags>
   </entry>
   <entry>
@@ -99,6 +110,26 @@
       <tags>
         <tag>python</tag>
         <tag>copy</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>给服务器添加交换分区swap 和开启 bbr</title>
+    <url>/2019/12/20/add-swap/</url>
+    <content><![CDATA[<p>有时候，购买的云服务器不会自动给创建交换分区，如何自己建立交换分区呢，使用下面命令创建交换分区，可以更改大小，比如1G更改为2G，一般交换分区是内存的2倍足矣。本篇以 Debian 系统为例，建议以 root 身份运行本篇中的命令。</p>
+<a id="more"></a>
+
+<h1 id="添加交换分区"><a href="#添加交换分区" class="headerlink" title="添加交换分区"></a>添加交换分区</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo swapon --show</span><br><span class="line">free -h</span><br><span class="line">df -h</span><br><span class="line">sudo fallocate -l 1G /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">sudo chmod 600 /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">sudo mkswap /swapfile</span><br><span class="line">sudo swapon /swapfile</span><br><span class="line">sudo swapon --show</span><br><span class="line">free -h</span><br><span class="line">sudo cp /etc/fstab /etc/fstab.bak</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/swapfile none swap sw 0 0&#x27;</span> | sudo tee -a /etc/fstab</span><br><span class="line">cat /proc/sys/vm/swappiness</span><br><span class="line">sudo sysctl vm.swappiness=10</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.swappiness=10&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">cat /proc/sys/vm/vfs_cache_pressure</span><br><span class="line">sudo sysctl vm.vfs_cache_pressure=50</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.vfs_cache_pressure=50&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
+
+<p>使用 top 或 htop 命令，可以查看交换分区是否创建成功。</p>
+<h1 id="开启-bbr"><a href="#开启-bbr" class="headerlink" title="开启 bbr"></a>开启 bbr</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.core.default_qdisc=fq&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv4.tcp_congestion_control=bbr&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl -p</span><br><span class="line">sysctl net.ipv4.tcp_available_congestion_control</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否开启成功</span></span><br><span class="line">lsmod | grep bbr</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>swap</tag>
       </tags>
   </entry>
   <entry>
@@ -181,77 +212,6 @@
       </tags>
   </entry>
   <entry>
-    <title>三维深度学习简单介绍</title>
-    <url>/2019/12/21/3d-dl-intro/</url>
-    <content><![CDATA[<p>文章《<a rel="noreferrer noopener" aria-label="超越像素平面：聚焦3D深度学习的现在和未来（在新窗口打开）" href="https://www.jiqizhixin.com/articles/091203" target="_blank">超越像素平面：聚焦 3D 深度学习的现在和未来</a>》（英文版对应《<a rel="noreferrer noopener" aria-label="Beyond the pixel plane: sensing and learning in 3D（在新窗口打开）" href="https://thegradient.pub/beyond-the-pixel-plane-sensing-and-learning-in-3d/" target="_blank">Beyond the pixel plane: sensing and learning in 3D</a>》）中介绍了三维数据的获取，表示，以及三维深度学习的进展。</p>
-<a id="more"></a>
-
-<p>三维数据的获取可以通过</p>
-<ol>
-<li>立体视觉系统（多目相机）</li>
-<li>RGB-D（结构光和 TOF）</li>
-</ol>
-<p>三维数据的表示形式包含</p>
-<ol>
-<li>点云数据</li>
-<li>体素网格点</li>
-<li>多边形网格</li>
-<li>多视角表示</li>
-</ol>
-<p>三维深度学习最新研究趋势</p>
-<ul>
-<li>以基于点云数据为研究对象的 PointNet 为开端，流行的方法是结合点云数据和多视角的二维图像数据作为深度学习网络的输入</li>
-</ul>
-]]></content>
-      <categories>
-        <category>research</category>
-      </categories>
-      <tags>
-        <tag>3d</tag>
-        <tag>dl</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在 Ubuntu 上删除软件和清理配置文件</title>
-    <url>/2021/10/27/apt-remove-package-and-configurations/</url>
-    <content><![CDATA[<p>在 Ubuntu（或其他 Debian 类系统）上安装卸载软件常常都是通过包管理器 apt (或 apt-get) 来实现的。通过 apt remove packagename 和 apt purge packagename 都可以卸载软件，那么它们都有什么区别呢，它们都做了什么呢？本篇进行简单介绍。</p>
-<a id="more"></a>
-
-<h1 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h1><p>使用命令 </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt remove packagename </span><br></pre></td></tr></table></figure>
-
-<p>确实能够卸载软件，但是，它会保留软件的配置文件信息。当下次再次安装该软件时，将会检索到保留的配置文件，安装时将会跳过软件的配置环节。</p>
-<h1 id="dpkg"><a href="#dpkg" class="headerlink" title="dpkg"></a>dpkg</h1><p>使用命令 <code>dpkg --list packagename</code> 可以查看软件的信息，如</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ dpkg --list python</span><br><span class="line">Desired=Unknown/Install/Remove/Purge/Hold</span><br><span class="line">| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend</span><br><span class="line">|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)</span><br><span class="line">||/ Name                     Version           Architecture      Description</span><br><span class="line">+++-========================-=================-=================-======================================================</span><br><span class="line">ii  python                   2.7.15~rc1-1      amd64             interactive high-level object-oriented language</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">not</span>-installed    - The package <span class="keyword">is</span> <span class="keyword">not</span> installed on this system</span><br><span class="line">config-files     - Only the configuration files are deployed to this system</span><br><span class="line">half-installed   - The installation of the package has been started, but <span class="keyword">not</span> completed</span><br><span class="line">unpacked         - The package <span class="keyword">is</span> unpacked, but <span class="keyword">not</span> configured</span><br><span class="line">half-configured  - The package <span class="keyword">is</span> unpacked <span class="keyword">and</span> configuration has started but <span class="keyword">not</span> completed</span><br><span class="line">triggers-awaited - The package awaits trigger processing by another package</span><br><span class="line">triggers-pending - The package has been triggered</span><br><span class="line">installed        - The packaged <span class="keyword">is</span> unpacked <span class="keyword">and</span> configured OK</span><br></pre></td></tr></table></figure>
-
-<p>当使用命令 <code>apt remove packagename</code> 卸载包后，再使用 <code>dpkg --list packagename</code> 可以看到出现 “rc”，而不是 “ii”，表示卸载（remove）和保留配置文件（config-files）。</p>
-<p>那么如何清理配置文件呢？或者在卸载时同时清空配置文件信息，这样下次安装时能够重新安装并重新配置，使用下面的命令。</p>
-<h1 id="purge"><a href="#purge" class="headerlink" title="purge"></a>purge</h1><p>使用命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt purge packagename</span><br></pre></td></tr></table></figure>
-
-<p>能够同时卸载软件和清理软件配置。</p>
-<p>在 Ubuntu 上，很多人会使用 apt autoremove 命令，此命令能够清理多余的软件包，但是，却将配置文件保留在系统中，应慎用。建议以后多使用命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt purge packagename</span><br><span class="line">apt --purge remove packagename</span><br></pre></td></tr></table></figure>
-
-<p>当然，如果想要保留配置文件，建议直接使用 </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt remove packagename</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="http://bencane.com/2014/08/18/removing-packages-and-configurations-with-apt-get/">Removing packages and configurations with apt-get</a></li>
-<li><a href="https://www.jianshu.com/p/f6176973b56f">关于apt-get remove 与 apt-get purge</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>ubuntu</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>不定积分</title>
     <url>/2020/03/24/antiderivative-or-indefinite-integral/</url>
     <content><![CDATA[<p>积分法属于微分法的逆运算，就像减法是加法的逆运算，除法是乘法的逆运算一样。</p>
@@ -299,6 +259,46 @@
       <tags>
         <tag>antiderivatiive</tag>
         <tag>indefinite integral</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在 Ubuntu 上删除软件和清理配置文件</title>
+    <url>/2021/10/27/apt-remove-package-and-configurations/</url>
+    <content><![CDATA[<p>在 Ubuntu（或其他 Debian 类系统）上安装卸载软件常常都是通过包管理器 apt (或 apt-get) 来实现的。通过 apt remove packagename 和 apt purge packagename 都可以卸载软件，那么它们都有什么区别呢，它们都做了什么呢？本篇进行简单介绍。</p>
+<a id="more"></a>
+
+<h1 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h1><p>使用命令 </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt remove packagename </span><br></pre></td></tr></table></figure>
+
+<p>确实能够卸载软件，但是，它会保留软件的配置文件信息。当下次再次安装该软件时，将会检索到保留的配置文件，安装时将会跳过软件的配置环节。</p>
+<h1 id="dpkg"><a href="#dpkg" class="headerlink" title="dpkg"></a>dpkg</h1><p>使用命令 <code>dpkg --list packagename</code> 可以查看软件的信息，如</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ dpkg --list python</span><br><span class="line">Desired=Unknown/Install/Remove/Purge/Hold</span><br><span class="line">| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend</span><br><span class="line">|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)</span><br><span class="line">||/ Name                     Version           Architecture      Description</span><br><span class="line">+++-========================-=================-=================-======================================================</span><br><span class="line">ii  python                   2.7.15~rc1-1      amd64             interactive high-level object-oriented language</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">not</span>-installed    - The package <span class="keyword">is</span> <span class="keyword">not</span> installed on this system</span><br><span class="line">config-files     - Only the configuration files are deployed to this system</span><br><span class="line">half-installed   - The installation of the package has been started, but <span class="keyword">not</span> completed</span><br><span class="line">unpacked         - The package <span class="keyword">is</span> unpacked, but <span class="keyword">not</span> configured</span><br><span class="line">half-configured  - The package <span class="keyword">is</span> unpacked <span class="keyword">and</span> configuration has started but <span class="keyword">not</span> completed</span><br><span class="line">triggers-awaited - The package awaits trigger processing by another package</span><br><span class="line">triggers-pending - The package has been triggered</span><br><span class="line">installed        - The packaged <span class="keyword">is</span> unpacked <span class="keyword">and</span> configured OK</span><br></pre></td></tr></table></figure>
+
+<p>当使用命令 <code>apt remove packagename</code> 卸载包后，再使用 <code>dpkg --list packagename</code> 可以看到出现 “rc”，而不是 “ii”，表示卸载（remove）和保留配置文件（config-files）。</p>
+<p>那么如何清理配置文件呢？或者在卸载时同时清空配置文件信息，这样下次安装时能够重新安装并重新配置，使用下面的命令。</p>
+<h1 id="purge"><a href="#purge" class="headerlink" title="purge"></a>purge</h1><p>使用命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt purge packagename</span><br></pre></td></tr></table></figure>
+
+<p>能够同时卸载软件和清理软件配置。</p>
+<p>在 Ubuntu 上，很多人会使用 apt autoremove 命令，此命令能够清理多余的软件包，但是，却将配置文件保留在系统中，应慎用。建议以后多使用命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt purge packagename</span><br><span class="line">apt --purge remove packagename</span><br></pre></td></tr></table></figure>
+
+<p>当然，如果想要保留配置文件，建议直接使用 </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt remove packagename</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="http://bencane.com/2014/08/18/removing-packages-and-configurations-with-apt-get/">Removing packages and configurations with apt-get</a></li>
+<li><a href="https://www.jianshu.com/p/f6176973b56f">关于apt-get remove 与 apt-get purge</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>ubuntu</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
       </tags>
   </entry>
   <entry>
@@ -374,8 +374,8 @@
         <category>python</category>
       </categories>
       <tags>
-        <tag>ubuntu</tag>
         <tag>python</tag>
+        <tag>ubuntu</tag>
         <tag>linux</tag>
         <tag>mail</tag>
       </tags>
@@ -412,8 +412,8 @@
         <category>python</category>
       </categories>
       <tags>
-        <tag>ubuntu</tag>
         <tag>python</tag>
+        <tag>ubuntu</tag>
         <tag>linux</tag>
         <tag>mail</tag>
       </tags>
@@ -995,33 +995,6 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
-    <title>Chrome 添加扩展程序</title>
-    <url>/2020/03/12/chrome-add-extension/</url>
-    <content><![CDATA[<p>Chrome是一款非常优秀的浏览器，再配合上扩展程序或插件，可谓是如虎添翼。但是由于不能够直接登录谷歌扩展程序商店直接添加扩展程序，那么这里给出一个将已经下载或自己编写好的扩展程序添加到Chrome浏览器插件的一种方法。</p>
-<a id="more"></a>
-
-<blockquote>
-<ol>
-<li><p>将扩展程序的类型由 .crx 更改为 .zip，然后解压缩该文件到一个文件夹中 ；</p>
-</li>
-<li><p>打开谷歌扩展程序管理页，即 chrome://extensons ；</p>
-</li>
-<li><p>将右上角的开发者模式（Developer mode）打开 ；</p>
-</li>
-<li><p>点击左上角的上传解压缩文件（Load unpacked），选择刚刚解压缩的 zip 文件夹。</p>
-</li>
-</ol>
-</blockquote>
-<p>这样就将手动下载或自己编写的扩展程序添加为Chrome插件了。</p>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>chrome</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>目标跟踪算法的分类</title>
     <url>/2020/08/24/classification-of-object-tracking/</url>
     <content><![CDATA[<p>目标跟踪算法按照不同的分类方法可以分为很多类别，如按提取的特征分类、特征提取方法分类、最优候选框匹配模型分类等。研究者大多是按照最优候选框匹配模型分类，这里也按此给出目标跟踪的算法分类。</p>
@@ -1046,6 +1019,76 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       <tags>
         <tag>vot</tag>
         <tag>cv</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>清理 Linux 系统内存 Cache</title>
+    <url>/2021/06/20/clear-linux-memory-cache/</url>
+    <content><![CDATA[<p>每个 Linux 系统都有三个选项可以在不中断任何进程或服务的情况下清除缓存。本篇代码以 root 身份在 Ubuntu 18.04演示。</p>
+<a id="more"></a>
+
+<h1 id="仅清除页面缓存-Clear-PageCache-only"><a href="#仅清除页面缓存-Clear-PageCache-only" class="headerlink" title="仅清除页面缓存(Clear PageCache only)"></a>仅清除页面缓存(Clear PageCache only)</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync; <span class="built_in">echo</span> 1 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
+
+<h1 id="清除目录项和inode-Clear-dentries-and-inodes"><a href="#清除目录项和inode-Clear-dentries-and-inodes" class="headerlink" title="清除目录项和inode(Clear dentries and inodes)"></a>清除目录项和inode(Clear dentries and inodes)</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync; <span class="built_in">echo</span> 2 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
+
+<h1 id="清理三者-Clear-PageCache-dentries-and-inodes"><a href="#清理三者-Clear-PageCache-dentries-and-inodes" class="headerlink" title="清理三者(Clear PageCache, dentries and inodes)"></a>清理三者(Clear PageCache, dentries and inodes)</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync; <span class="built_in">echo</span> 3 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
+
+<p>同步 (<code>sync</code>) 将刷新文件系统缓冲区。命令以 “;” 分隔依次运行。在执行序列中的下一个命令之前，shell 等待每个命令终止。正如内核文档中提到的，写入 drop_cache 将清除缓存而不杀死任何应用程序/服务，命令 echo 正在执行写入文件的工作。</p>
+<p>如果您必须清除磁盘缓存，第一个命令在企业和生产中是最安全的“…echo 1 &gt; …”。只会清除 PageCache。不建议在生产中使用“…echo 3 &gt;”上方的第三个选项，直到您知道自己在做什么，因为它会清除 PageCache、dentries 和 inode。</p>
+<h1 id="定时清理缓存"><a href="#定时清理缓存" class="headerlink" title="定时清理缓存"></a>定时清理缓存</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim clearcache.sh</span><br></pre></td></tr></table></figure>
+
+<p>写入如下内容</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># Note, we are using &quot;echo 3&quot;, but it is not recommended in production instead use &quot;echo 1&quot;</span></span><br><span class="line">sync</span><br><span class="line"><span class="built_in">echo</span> 3 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod 755 clearcache.sh</span><br></pre></td></tr></table></figure>
+
+<p>以 root 身份创建定时清理任务</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+
+<p>写入如下内容，每天0点，12点，18点的0分清理缓存</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">0  0,12,18  *  *  *  /path/to/clearcache.sh</span><br></pre></td></tr></table></figure>
+
+<p><font size=5 color=red>不建议定时清理RAM</font></p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://www.tecmint.com/clear-ram-memory-cache-buffer-and-swap-space-on-linux/">How to Clear RAM Memory Cache, Buffer and Swap Space on Linux</a></li>
+<li><a href="https://colobu.com/2015/10/31/How-to-Clear-RAM-Memory-Cache-Buffer-and-Swap-Space-on-Linux/">在 Linux 上如何清除内存的 Cache、Buffer 和交换空间</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>linux</tag>
+        <tag>centos</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Chrome 添加扩展程序</title>
+    <url>/2020/03/12/chrome-add-extension/</url>
+    <content><![CDATA[<p>Chrome是一款非常优秀的浏览器，再配合上扩展程序或插件，可谓是如虎添翼。但是由于不能够直接登录谷歌扩展程序商店直接添加扩展程序，那么这里给出一个将已经下载或自己编写好的扩展程序添加到Chrome浏览器插件的一种方法。</p>
+<a id="more"></a>
+
+<blockquote>
+<ol>
+<li><p>将扩展程序的类型由 .crx 更改为 .zip，然后解压缩该文件到一个文件夹中 ；</p>
+</li>
+<li><p>打开谷歌扩展程序管理页，即 chrome://extensons ；</p>
+</li>
+<li><p>将右上角的开发者模式（Developer mode）打开 ；</p>
+</li>
+<li><p>点击左上角的上传解压缩文件（Load unpacked），选择刚刚解压缩的 zip 文件夹。</p>
+</li>
+</ol>
+</blockquote>
+<p>这样就将手动下载或自己编写的扩展程序添加为Chrome插件了。</p>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>chrome</tag>
       </tags>
   </entry>
   <entry>
@@ -1091,49 +1134,6 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
         <tag>filebrowser</tag>
         <tag>nginx</tag>
         <tag>vps</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>清理 Linux 系统内存 Cache</title>
-    <url>/2021/06/20/clear-linux-memory-cache/</url>
-    <content><![CDATA[<p>每个 Linux 系统都有三个选项可以在不中断任何进程或服务的情况下清除缓存。本篇代码以 root 身份在 Ubuntu 18.04演示。</p>
-<a id="more"></a>
-
-<h1 id="仅清除页面缓存-Clear-PageCache-only"><a href="#仅清除页面缓存-Clear-PageCache-only" class="headerlink" title="仅清除页面缓存(Clear PageCache only)"></a>仅清除页面缓存(Clear PageCache only)</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync; <span class="built_in">echo</span> 1 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
-
-<h1 id="清除目录项和inode-Clear-dentries-and-inodes"><a href="#清除目录项和inode-Clear-dentries-and-inodes" class="headerlink" title="清除目录项和inode(Clear dentries and inodes)"></a>清除目录项和inode(Clear dentries and inodes)</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync; <span class="built_in">echo</span> 2 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
-
-<h1 id="清理三者-Clear-PageCache-dentries-and-inodes"><a href="#清理三者-Clear-PageCache-dentries-and-inodes" class="headerlink" title="清理三者(Clear PageCache, dentries and inodes)"></a>清理三者(Clear PageCache, dentries and inodes)</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync; <span class="built_in">echo</span> 3 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
-
-<p>同步 (<code>sync</code>) 将刷新文件系统缓冲区。命令以 “;” 分隔依次运行。在执行序列中的下一个命令之前，shell 等待每个命令终止。正如内核文档中提到的，写入 drop_cache 将清除缓存而不杀死任何应用程序/服务，命令 echo 正在执行写入文件的工作。</p>
-<p>如果您必须清除磁盘缓存，第一个命令在企业和生产中是最安全的“…echo 1 &gt; …”。只会清除 PageCache。不建议在生产中使用“…echo 3 &gt;”上方的第三个选项，直到您知道自己在做什么，因为它会清除 PageCache、dentries 和 inode。</p>
-<h1 id="定时清理缓存"><a href="#定时清理缓存" class="headerlink" title="定时清理缓存"></a>定时清理缓存</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim clearcache.sh</span><br></pre></td></tr></table></figure>
-
-<p>写入如下内容</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># Note, we are using &quot;echo 3&quot;, but it is not recommended in production instead use &quot;echo 1&quot;</span></span><br><span class="line">sync</span><br><span class="line"><span class="built_in">echo</span> 3 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod 755 clearcache.sh</span><br></pre></td></tr></table></figure>
-
-<p>以 root 身份创建定时清理任务</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
-
-<p>写入如下内容，每天0点，12点，18点的0分清理缓存</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">0  0,12,18  *  *  *  /path/to/clearcache.sh</span><br></pre></td></tr></table></figure>
-
-<p><font size=5 color=red>不建议定时清理RAM</font></p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="https://www.tecmint.com/clear-ram-memory-cache-buffer-and-swap-space-on-linux/">How to Clear RAM Memory Cache, Buffer and Swap Space on Linux</a></li>
-<li><a href="https://colobu.com/2015/10/31/How-to-Clear-RAM-Memory-Cache-Buffer-and-Swap-Space-on-Linux/">在 Linux 上如何清除内存的 Cache、Buffer 和交换空间</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>linux</tag>
-        <tag>centos</tag>
       </tags>
   </entry>
   <entry>
@@ -1211,6 +1211,35 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
+    <title>开源许可协议</title>
+    <url>/2020/04/30/codes-open-source-license/</url>
+    <content><![CDATA[<p>开源许可协议有很多，常见的如：MIT, BSD, Apache, LGPL, GPL，它们之间的关系可以参见阮一峰的<a href="https://www.ruanyifeng.com/blog/2011/05/how_to_choose_free_software_licenses.html">如何选择开源许可证？</a></p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/other/open-source-license.png"></p>
+<a id="more"></a>
+
+<p>该图是乌克兰程序员 Paul Bagwell 制作的分析图，阮一峰将其转化为中文版。此外，也可以参考GitHub提供的网站<a href="http://choosealicense.online/">选择一个开源软件协议</a>，英文版有<a href="https://choosealicense.com/">Choose an open source license</a>获取更多信息。下面对某些开源许可协议（证）进行介绍。</p>
+<h1 id="没有License"><a href="#没有License" class="headerlink" title="没有License"></a>没有License</h1><p>没有 Licence 默认是被版权保护。想让大家使用，就需要选择一个合适的开源许可协议。</p>
+<h1 id="MIT"><a href="#MIT" class="headerlink" title="MIT"></a>MIT</h1><p>MIT 是最宽泛、最自由，没有任何限制。可以售卖、可以使用作者名促销等。</p>
+<h1 id="BSD"><a href="#BSD" class="headerlink" title="BSD"></a>BSD</h1><p>相对自由，与 Apache 差不多，教 MIT 严格一些，不允许使用作者名促销，需要保护版权。</p>
+<h1 id="GPL"><a href="#GPL" class="headerlink" title="GPL"></a>GPL</h1><p>最严格，基于 GPL 协议的代码而开发的代码，以及修改的代码，都必须遵守 GPL 协议发布。GPL 也包含不同的版本，对权力进行适当的放开，其中 GPL  v3 是最严格的、最激进的，它也是 GPL 之父 Richard Stallman 不断在宣传和推进的开源许可协议。</p>
+<h1 id="GUN"><a href="#GUN" class="headerlink" title="GUN"></a>GUN</h1><p>GNU 是 Lesser General Public License ，GNU 是一种较宽松通用公共许可证 。</p>
+<h1 id="给-GitHub-代码仓库添加开源许可协议"><a href="#给-GitHub-代码仓库添加开源许可协议" class="headerlink" title="给 GitHub 代码仓库添加开源许可协议"></a>给 GitHub 代码仓库添加开源许可协议</h1><h2 id="新创建一个仓库的情况"><a href="#新创建一个仓库的情况" class="headerlink" title="新创建一个仓库的情况"></a>新创建一个仓库的情况</h2><p>可以直接在创建仓库时选择自己喜欢的开源许可协议即可。</p>
+<h2 id="旧仓库增加开源许可协议"><a href="#旧仓库增加开源许可协议" class="headerlink" title="旧仓库增加开源许可协议"></a>旧仓库增加开源许可协议</h2><ol>
+<li>进入 GitHub 该仓库主页，点击 “ Create new file ”; </li>
+<li>输入文件名 ” LICENSE “, 然后点击右侧 “ Choose a license template “ ;</li>
+<li>选择协议后，点击右侧的 “ Review and submit ”;</li>
+<li>在 “ Commit  new file ” 下 输入 “ Create LICENSE ” 或者你喜欢的描述，点击 “ Commit directly to the master branch. ” 前面的圆点，再点击 “ Commit new file ” 提交即可。  </li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>license</tag>
+        <tag>github</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Colab 使用本地 Jupyter Notebook 内核运行时</title>
     <url>/2020/09/01/colab-with-local-jupyter-notebook/</url>
     <content><![CDATA[<p>众所周知，Colab 是一个美观、工具齐全、编写 Python 代码方便的网页版 notebook，结合本地运行时能够提高代码开发效率。注意本篇使用的 Jupyterlab 版本小于3.</p>
@@ -1278,35 +1307,6 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
-    <title>开源许可协议</title>
-    <url>/2020/04/30/codes-open-source-license/</url>
-    <content><![CDATA[<p>开源许可协议有很多，常见的如：MIT, BSD, Apache, LGPL, GPL，它们之间的关系可以参见阮一峰的<a href="https://www.ruanyifeng.com/blog/2011/05/how_to_choose_free_software_licenses.html">如何选择开源许可证？</a></p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/other/open-source-license.png"></p>
-<a id="more"></a>
-
-<p>该图是乌克兰程序员 Paul Bagwell 制作的分析图，阮一峰将其转化为中文版。此外，也可以参考GitHub提供的网站<a href="http://choosealicense.online/">选择一个开源软件协议</a>，英文版有<a href="https://choosealicense.com/">Choose an open source license</a>获取更多信息。下面对某些开源许可协议（证）进行介绍。</p>
-<h1 id="没有License"><a href="#没有License" class="headerlink" title="没有License"></a>没有License</h1><p>没有 Licence 默认是被版权保护。想让大家使用，就需要选择一个合适的开源许可协议。</p>
-<h1 id="MIT"><a href="#MIT" class="headerlink" title="MIT"></a>MIT</h1><p>MIT 是最宽泛、最自由，没有任何限制。可以售卖、可以使用作者名促销等。</p>
-<h1 id="BSD"><a href="#BSD" class="headerlink" title="BSD"></a>BSD</h1><p>相对自由，与 Apache 差不多，教 MIT 严格一些，不允许使用作者名促销，需要保护版权。</p>
-<h1 id="GPL"><a href="#GPL" class="headerlink" title="GPL"></a>GPL</h1><p>最严格，基于 GPL 协议的代码而开发的代码，以及修改的代码，都必须遵守 GPL 协议发布。GPL 也包含不同的版本，对权力进行适当的放开，其中 GPL  v3 是最严格的、最激进的，它也是 GPL 之父 Richard Stallman 不断在宣传和推进的开源许可协议。</p>
-<h1 id="GUN"><a href="#GUN" class="headerlink" title="GUN"></a>GUN</h1><p>GNU 是 Lesser General Public License ，GNU 是一种较宽松通用公共许可证 。</p>
-<h1 id="给-GitHub-代码仓库添加开源许可协议"><a href="#给-GitHub-代码仓库添加开源许可协议" class="headerlink" title="给 GitHub 代码仓库添加开源许可协议"></a>给 GitHub 代码仓库添加开源许可协议</h1><h2 id="新创建一个仓库的情况"><a href="#新创建一个仓库的情况" class="headerlink" title="新创建一个仓库的情况"></a>新创建一个仓库的情况</h2><p>可以直接在创建仓库时选择自己喜欢的开源许可协议即可。</p>
-<h2 id="旧仓库增加开源许可协议"><a href="#旧仓库增加开源许可协议" class="headerlink" title="旧仓库增加开源许可协议"></a>旧仓库增加开源许可协议</h2><ol>
-<li>进入 GitHub 该仓库主页，点击 “ Create new file ”; </li>
-<li>输入文件名 ” LICENSE “, 然后点击右侧 “ Choose a license template “ ;</li>
-<li>选择协议后，点击右侧的 “ Review and submit ”;</li>
-<li>在 “ Commit  new file ” 下 输入 “ Create LICENSE ” 或者你喜欢的描述，点击 “ Commit directly to the master branch. ” 前面的圆点，再点击 “ Commit new file ” 提交即可。  </li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>license</tag>
-        <tag>github</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>常用不定积分公式</title>
     <url>/2020/07/18/commonly-used-indefinite-integral/</url>
     <content><![CDATA[<p>这里给出一些常用的不定积分公式。</p>
@@ -1330,6 +1330,36 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       <tags>
         <tag>antiderivatiive</tag>
         <tag>indefinite integral</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>实数集的完备性</title>
+    <url>/2020/03/20/completeness-of-real-number/</url>
+    <content><![CDATA[<p>在数学分析中，实数集的完备性表现为六个定理，分别是实数集合的确界原理、数列的单调有界定理、区间套定理、数列的致密性定理与聚点定理、柯西收敛准则、有限覆盖定理。  它们称为<font color='dd0000'>实数完备性基本定理</font>。  </p>
+<a id="more"></a>
+
+<h1 id="区间套定理"><a href="#区间套定理" class="headerlink" title="区间套定理"></a>区间套定理</h1><p><strong>定义 1</strong> &emsp; 设闭区间列${[a_n, b_n]}$具有如下性质：</p>
+<p>&emsp; 1. $[a_n, b_n] \supset [a_{n + 1}, b_{n + 1}], \ n = 1, 2, \cdots$;</p>
+<p>&emsp; 2. $\lim_{n \to \infty}(b_n - a_n) = 0$,</p>
+<p>则称${[a_n, b_n]}$为<strong>闭区间套</strong>，简称为<strong>区间套</strong>。  </p>
+<p><strong>定理 7.1</strong> &emsp; （区间套定理）&emsp; 若${[a_n, b_n]}$是一个区间套，则在实数系中存在唯一的一个点$\xi$，使得$\xi \in [a_n, b_n], \ n = 1, 2, \cdots$，即<br>$$<br>a_n \leq \xi \leq b_n, \ n = 1, 2, \cdots.<br>$$<br><strong>推论</strong> &emsp; 若$\xi \in [a_n, b_n], (n = 1, 2, \cdots)$是区间套${[a_n, b_n]}$所确定的点，则对任给的$\varepsilon &gt; 0$，存在$N &gt; 0$，使得当$n &gt; N$时有<br>$$<br>[a_n, b_n] \subset U(\xi; \varepsilon).<br>$$<br><font color='dd00dd'>注意：这里的区间套是闭区间</font>。  </p>
+<h1 id="聚点定理"><a href="#聚点定理" class="headerlink" title="聚点定理"></a>聚点定理</h1><p><strong>定义 2</strong> &emsp; 设$S$为数轴上的点集，$\xi$为定点（它可以属于$S$，也可以不属于$S$）。若$\xi$的任何邻域上都含有$S$中无穷多个点，则称$\xi$为点集$S$的一个聚点。  </p>
+<p>另外两个等价定义：</p>
+<p><strong>定义 $2^{\prime}$</strong> &emsp; 对于点集$S$，若点$\xi$的任何$\varepsilon$邻域上都含有$S$中异于$\xi$的点，即$U^o(\xi; \varepsilon) \cap S \neq \varnothing$，则称$\xi$为$S$的一个聚点。</p>
+<p><strong>定义$2^{\prime\prime}$</strong> &emsp; 若存在各项互异的收敛数列${ x_n } \subset S$，则其极限$\lim_{n \to \infty} x_n = \xi$称为$S$的一个聚点。  </p>
+<p><strong>定理 7.2</strong> &emsp; (魏尔斯特拉斯（Weierstrass）聚点定理) &emsp; 实轴上的任一有界无限点集$S$至少有一个聚点。  </p>
+<h1 id="开覆盖定理"><a href="#开覆盖定理" class="headerlink" title="开覆盖定理"></a>开覆盖定理</h1><p><strong>定义 3</strong> &emsp; 设$S$为数轴上的点集，$H$为开区间的集合（即$H$的每一个元素都是形如$(\alpha, \beta)$的开区间）。若$S$中任何一点都含在$H$中至少一个开区间内，则称$H$为$S$的一个开覆盖，或称$H$覆盖$S$。若$H$中开区间的个数是无限（有限）的，则称$H$为$S$的一个无限开覆盖（有限开覆盖）。  </p>
+<p><strong>定理 7.3</strong> &emsp; (海涅-博雷尔（Heine-Borel）有限覆盖定理) &emsp; 设$H$为闭区间$[a, b]$的一个（无限）开覆盖，则从$H$中可选出有限个开区间来覆盖$[a, b]$.  </p>
+<p><font color='dd0000'>注意：涉及到有限开覆盖定理首先尝试反证法</font>  。  </p>
+]]></content>
+      <categories>
+        <category>maths</category>
+        <category>mathematical analysis</category>
+      </categories>
+      <tags>
+        <tag>maths</tag>
+        <tag>completeness</tag>
+        <tag>real number</tag>
       </tags>
   </entry>
   <entry>
@@ -1380,36 +1410,6 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       <tags>
         <tag>python</tag>
         <tag>conda</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>实数集的完备性</title>
-    <url>/2020/03/20/completeness-of-real-number/</url>
-    <content><![CDATA[<p>在数学分析中，实数集的完备性表现为六个定理，分别是实数集合的确界原理、数列的单调有界定理、区间套定理、数列的致密性定理与聚点定理、柯西收敛准则、有限覆盖定理。  它们称为<font color='dd0000'>实数完备性基本定理</font>。  </p>
-<a id="more"></a>
-
-<h1 id="区间套定理"><a href="#区间套定理" class="headerlink" title="区间套定理"></a>区间套定理</h1><p><strong>定义 1</strong> &emsp; 设闭区间列${[a_n, b_n]}$具有如下性质：</p>
-<p>&emsp; 1. $[a_n, b_n] \supset [a_{n + 1}, b_{n + 1}], \ n = 1, 2, \cdots$;</p>
-<p>&emsp; 2. $\lim_{n \to \infty}(b_n - a_n) = 0$,</p>
-<p>则称${[a_n, b_n]}$为<strong>闭区间套</strong>，简称为<strong>区间套</strong>。  </p>
-<p><strong>定理 7.1</strong> &emsp; （区间套定理）&emsp; 若${[a_n, b_n]}$是一个区间套，则在实数系中存在唯一的一个点$\xi$，使得$\xi \in [a_n, b_n], \ n = 1, 2, \cdots$，即<br>$$<br>a_n \leq \xi \leq b_n, \ n = 1, 2, \cdots.<br>$$<br><strong>推论</strong> &emsp; 若$\xi \in [a_n, b_n], (n = 1, 2, \cdots)$是区间套${[a_n, b_n]}$所确定的点，则对任给的$\varepsilon &gt; 0$，存在$N &gt; 0$，使得当$n &gt; N$时有<br>$$<br>[a_n, b_n] \subset U(\xi; \varepsilon).<br>$$<br><font color='dd00dd'>注意：这里的区间套是闭区间</font>。  </p>
-<h1 id="聚点定理"><a href="#聚点定理" class="headerlink" title="聚点定理"></a>聚点定理</h1><p><strong>定义 2</strong> &emsp; 设$S$为数轴上的点集，$\xi$为定点（它可以属于$S$，也可以不属于$S$）。若$\xi$的任何邻域上都含有$S$中无穷多个点，则称$\xi$为点集$S$的一个聚点。  </p>
-<p>另外两个等价定义：</p>
-<p><strong>定义 $2^{\prime}$</strong> &emsp; 对于点集$S$，若点$\xi$的任何$\varepsilon$邻域上都含有$S$中异于$\xi$的点，即$U^o(\xi; \varepsilon) \cap S \neq \varnothing$，则称$\xi$为$S$的一个聚点。</p>
-<p><strong>定义$2^{\prime\prime}$</strong> &emsp; 若存在各项互异的收敛数列${ x_n } \subset S$，则其极限$\lim_{n \to \infty} x_n = \xi$称为$S$的一个聚点。  </p>
-<p><strong>定理 7.2</strong> &emsp; (魏尔斯特拉斯（Weierstrass）聚点定理) &emsp; 实轴上的任一有界无限点集$S$至少有一个聚点。  </p>
-<h1 id="开覆盖定理"><a href="#开覆盖定理" class="headerlink" title="开覆盖定理"></a>开覆盖定理</h1><p><strong>定义 3</strong> &emsp; 设$S$为数轴上的点集，$H$为开区间的集合（即$H$的每一个元素都是形如$(\alpha, \beta)$的开区间）。若$S$中任何一点都含在$H$中至少一个开区间内，则称$H$为$S$的一个开覆盖，或称$H$覆盖$S$。若$H$中开区间的个数是无限（有限）的，则称$H$为$S$的一个无限开覆盖（有限开覆盖）。  </p>
-<p><strong>定理 7.3</strong> &emsp; (海涅-博雷尔（Heine-Borel）有限覆盖定理) &emsp; 设$H$为闭区间$[a, b]$的一个（无限）开覆盖，则从$H$中可选出有限个开区间来覆盖$[a, b]$.  </p>
-<p><font color='dd0000'>注意：涉及到有限开覆盖定理首先尝试反证法</font>  。  </p>
-]]></content>
-      <categories>
-        <category>maths</category>
-        <category>mathematical analysis</category>
-      </categories>
-      <tags>
-        <tag>maths</tag>
-        <tag>completeness</tag>
-        <tag>real number</tag>
       </tags>
   </entry>
   <entry>
@@ -1541,40 +1541,6 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
-    <title>分组卷积、深度卷积和全局深度卷积</title>
-    <url>/2021/07/02/convolution-classification-group-depthwise/</url>
-    <content><![CDATA[<p>卷积能够提取图像特征，不同的卷积操作能够获得不同的效果，同时有些卷积能够降低待学习的参数量，达到正则化的目的。</p>
-<a id="more"></a>
-
-<h1 id="分组卷积"><a href="#分组卷积" class="headerlink" title="分组卷积"></a>分组卷积</h1><p>分组卷积（Group Convolution）最早见于2012年 ImageNet 竞赛中的 AlexNet 网路中，被用来切分网络，使得模型能够在2个GPU上并行运行，AlexNet 的网络结构如下：</p>
-<p><img src="https://s2.ax1x.com/2019/01/08/FLPm1P.png"></p>
-<h2 id="分组卷积的定义"><a href="#分组卷积的定义" class="headerlink" title="分组卷积的定义"></a>分组卷积的定义</h2><p>对于常规卷积，如果输入的特征图是 $C * H * W$，卷积核个数是 $N$，输出特征图的数量也是 $N$，其与卷积核的数量相同。假设卷积和的尺寸是 $C * K * K$，那么 $N$ 个卷积核的总参数量为 $N * C * K * K$，输入特征图与输出特征图的连接方式如下左图：</p>
-<p><img src="https://s2.ax1x.com/2019/01/08/FLPc1x.png"></p>
-<p>分组卷积是对输入特征图先分组，然后每组分别卷积。假设输入特征图的尺寸仍为 $C * H * W$，输出特征图的数量为 $N$个，如果要分成 $G$ 个组，则每组的输入特征数量为  $\frac{C}{G}$，每组的输出特征图数量为 $\frac{N}{G}$，每个卷积核的尺寸为 $\frac{C}{G} * K * K$，卷积核的总数仍为 $N$个，每组的卷积核数量为 $\frac{N}{G}$，卷积核只与其同组的输入特征图进行卷积，卷积核的总参数量为 $N * \frac{C}{G} * K * K$，可见，总参数量减少为原来的 $\frac{1}{G}$，输入特征图与输出特征图的连接方式如上右图。针对 group1 （group2, group3 相同）的输入特征图是4个，因此其卷积核的通道数为4，输出特征图的通道数为2，表示有两个卷积核，卷积核不与其他组的输入特征图做卷积，只与同组的特征图卷积。</p>
-<h2 id="分组卷积的意义"><a href="#分组卷积的意义" class="headerlink" title="分组卷积的意义"></a>分组卷积的意义</h2><ol>
-<li><font size=3 color=red>减少参数量，分成 $G$组，则该层的参数量减少为原来的 $\frac{1}{G}$</font></li>
-<li>分组卷积可以看成是 structured sparse，每个卷积核的尺寸从 $C * K * K$ 变为 $\frac{C}{G} * K *K$，可以将其余的 $(C - \frac{C}{G}) * K * K$的参数视为 0，有时甚至可以在减少参数量的同时获得更好的效果（相当于正则化）</li>
-<li>当分组数量等于输出特征图的数量时，即每一个通道的输入特征图一个分组，输出特征图的数量等于输入特征图的数量，即 $G = N = C$，$N$ 个卷积核每个尺寸为 $1 * K * K$是，分组卷积 Group Convolution 就变成了深度卷积 Depthwise Convolution，参数量进一步减少，参加 <a href="https://arxiv.org/abs/1704.04861">MobileNet</a>, <a href="https://arxiv.org/abs/1610.02357">Xception</a>. 如下图所示</li>
-</ol>
-<p><img src="https://s2.ax1x.com/2019/01/08/FLkxED.png"></p>
-<ol start="4">
-<li><p>更进一步，如果分组数 $G = N = C$，即每个通道一个分组，同时卷积核的尺寸与输入特征图的尺寸相同，即 $K = H = W$，则输出特征图为 $C * 1 * 1$，得到长度为 $C$ 的向量，此时称之为  Global Depthwise Convolution (GDC)，参加 <a href="https://arxiv.org/abs/1804.07573">MobileFaceNet</a>，可以看成是全局加权池化，与 Global Average Pooling (GAP) 的不同之处在于 GDC 给每个位置赋予可学习的权重（对于已经对齐的图像很有效，比如人脸，中心位置和边界位置的权重自然应该不同），而 GAP 每个位置的权重相同，全局取平均，如下图所示</p>
-<p><img src="https://s2.ax1x.com/2019/01/08/FLEneK.png"></p>
-</li>
-</ol>
-<h1 id="参考连接"><a href="#参考连接" class="headerlink" title="参考连接"></a>参考连接</h1><ol>
-<li><a href="https://www.cnblogs.com/shine-lee/p/10243114.html">Group Convolution分组卷积，以及Depthwise Convolution和Global Depthwise Convolution</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>research</category>
-        <category>object tracking</category>
-      </categories>
-      <tags>
-        <tag>convolution</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>深度学习中不同的卷积操作</title>
     <url>/2020/11/03/convolution-in-deep-learning/</url>
     <content><![CDATA[<p>本篇参考<a href="https://towardsdatascience.com/types-of-convolutions-in-deep-learning-717013397f4d">An Introduction to different Types of Convolutions in Deep Learning</a> 介绍一下深度学习中不同的卷积操作。</p>
@@ -1628,6 +1594,40 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       <tags>
         <tag>dl</tag>
         <tag>machine learning</tag>
+        <tag>convolution</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>分组卷积、深度卷积和全局深度卷积</title>
+    <url>/2021/07/02/convolution-classification-group-depthwise/</url>
+    <content><![CDATA[<p>卷积能够提取图像特征，不同的卷积操作能够获得不同的效果，同时有些卷积能够降低待学习的参数量，达到正则化的目的。</p>
+<a id="more"></a>
+
+<h1 id="分组卷积"><a href="#分组卷积" class="headerlink" title="分组卷积"></a>分组卷积</h1><p>分组卷积（Group Convolution）最早见于2012年 ImageNet 竞赛中的 AlexNet 网路中，被用来切分网络，使得模型能够在2个GPU上并行运行，AlexNet 的网络结构如下：</p>
+<p><img src="https://s2.ax1x.com/2019/01/08/FLPm1P.png"></p>
+<h2 id="分组卷积的定义"><a href="#分组卷积的定义" class="headerlink" title="分组卷积的定义"></a>分组卷积的定义</h2><p>对于常规卷积，如果输入的特征图是 $C * H * W$，卷积核个数是 $N$，输出特征图的数量也是 $N$，其与卷积核的数量相同。假设卷积和的尺寸是 $C * K * K$，那么 $N$ 个卷积核的总参数量为 $N * C * K * K$，输入特征图与输出特征图的连接方式如下左图：</p>
+<p><img src="https://s2.ax1x.com/2019/01/08/FLPc1x.png"></p>
+<p>分组卷积是对输入特征图先分组，然后每组分别卷积。假设输入特征图的尺寸仍为 $C * H * W$，输出特征图的数量为 $N$个，如果要分成 $G$ 个组，则每组的输入特征数量为  $\frac{C}{G}$，每组的输出特征图数量为 $\frac{N}{G}$，每个卷积核的尺寸为 $\frac{C}{G} * K * K$，卷积核的总数仍为 $N$个，每组的卷积核数量为 $\frac{N}{G}$，卷积核只与其同组的输入特征图进行卷积，卷积核的总参数量为 $N * \frac{C}{G} * K * K$，可见，总参数量减少为原来的 $\frac{1}{G}$，输入特征图与输出特征图的连接方式如上右图。针对 group1 （group2, group3 相同）的输入特征图是4个，因此其卷积核的通道数为4，输出特征图的通道数为2，表示有两个卷积核，卷积核不与其他组的输入特征图做卷积，只与同组的特征图卷积。</p>
+<h2 id="分组卷积的意义"><a href="#分组卷积的意义" class="headerlink" title="分组卷积的意义"></a>分组卷积的意义</h2><ol>
+<li><font size=3 color=red>减少参数量，分成 $G$组，则该层的参数量减少为原来的 $\frac{1}{G}$</font></li>
+<li>分组卷积可以看成是 structured sparse，每个卷积核的尺寸从 $C * K * K$ 变为 $\frac{C}{G} * K *K$，可以将其余的 $(C - \frac{C}{G}) * K * K$的参数视为 0，有时甚至可以在减少参数量的同时获得更好的效果（相当于正则化）</li>
+<li>当分组数量等于输出特征图的数量时，即每一个通道的输入特征图一个分组，输出特征图的数量等于输入特征图的数量，即 $G = N = C$，$N$ 个卷积核每个尺寸为 $1 * K * K$是，分组卷积 Group Convolution 就变成了深度卷积 Depthwise Convolution，参数量进一步减少，参加 <a href="https://arxiv.org/abs/1704.04861">MobileNet</a>, <a href="https://arxiv.org/abs/1610.02357">Xception</a>. 如下图所示</li>
+</ol>
+<p><img src="https://s2.ax1x.com/2019/01/08/FLkxED.png"></p>
+<ol start="4">
+<li><p>更进一步，如果分组数 $G = N = C$，即每个通道一个分组，同时卷积核的尺寸与输入特征图的尺寸相同，即 $K = H = W$，则输出特征图为 $C * 1 * 1$，得到长度为 $C$ 的向量，此时称之为  Global Depthwise Convolution (GDC)，参加 <a href="https://arxiv.org/abs/1804.07573">MobileFaceNet</a>，可以看成是全局加权池化，与 Global Average Pooling (GAP) 的不同之处在于 GDC 给每个位置赋予可学习的权重（对于已经对齐的图像很有效，比如人脸，中心位置和边界位置的权重自然应该不同），而 GAP 每个位置的权重相同，全局取平均，如下图所示</p>
+<p><img src="https://s2.ax1x.com/2019/01/08/FLEneK.png"></p>
+</li>
+</ol>
+<h1 id="参考连接"><a href="#参考连接" class="headerlink" title="参考连接"></a>参考连接</h1><ol>
+<li><a href="https://www.cnblogs.com/shine-lee/p/10243114.html">Group Convolution分组卷积，以及Depthwise Convolution和Global Depthwise Convolution</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>research</category>
+        <category>object tracking</category>
+      </categories>
+      <tags>
         <tag>convolution</tag>
       </tags>
   </entry>
@@ -1921,30 +1921,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>定积分定义</title>
-    <url>/2020/07/27/definite-integral/</url>
-    <content><![CDATA[<p>导数的逆运算是不定积分，而定积分是某种特殊和式的极限。不定积分与定积分既有联系又有区别。</p>
-<a id="more"></a>
-
-<h1 id="概念的引出"><a href="#概念的引出" class="headerlink" title="概念的引出"></a>概念的引出</h1><p>定积分的概念提出是基于：1、曲边梯形的面积；2、变力所做的功。总体思想是：<strong>分割，近似求和，取极限</strong>。</p>
-<h1 id="定积分的定义"><a href="#定积分的定义" class="headerlink" title="定积分的定义"></a>定积分的定义</h1><p><strong>定义</strong>    设闭区间 $[a, b]$ 上有 $n-1$ 个点，依次为<br>$$<br>a = x_0 &lt; x_1 &lt; x_2 &lt; \cdots &lt; x_{n-1} &lt; x_n = b,<br>$$<br>它们把 $[a, b]$ 分成 $n$ 个小区间 $\Delta_i = [x_{i-1}, x_i], i=1,2,\cdots,n$. 这些分点或这些闭区间构成对 $[a,b]$ 的一个分割，记为<br>$$<br>T = {x_0, x_1, \cdots, x_n} 或 {\Delta_1, \Delta_2, \cdots, \Delta_n}.<br>$$<br>小区间 $\Delta_i$ 的长度为 $\Delta x_i = x_i - x_{i-1},$ 并记<br>$$<br>|T| = \max_{1\leq i \leq n} {\Delta x_i},<br>$$<br>称为分割 $T$ 的模。</p>
-<p><strong>注意</strong>    由于 $\Delta x_i \leq |T|, i = 1, 2, \cdots, n,$ 因此 $|T|$ 可用来反应 $[a, b]$ 被分割的细密程度。另外，分割 $T$ 一旦给出，$|T|$ 就随之而确定；但是，具有同一细度 $|T|$ 的分割 $T$ 却有无限多个。</p>
-<p><strong>定义</strong>    设 $f$ 是定义在 $[a, b]$ 上的一个函数，对于 $[a, b]$ 的一个分割 $T = {\Delta_1, \Delta_2, \cdots, \Delta_n}$，任取点 $\xi_i \in \Delta_i, i = 1,2,\cdots, n,$ 并作和式<br>$$<br>\sum^n_{i=1}f(\xi_i)\Delta x_i.<br>$$<br>称此和式为函数 $f$ 在 $[a, b]$ 上的一个积分和，也称为黎曼和。</p>
-<p>有定义可知，积分和既与分割 $T$ 有关，又与所选取的点集 ${\xi_i}$ 有关。</p>
-<p><strong>定义</strong>    设 $f$ 是定义在 $[a, b]$ 上的一个函数，$J$ 是一个确定的实数，若对任给的正数 $\varepsilon$, 总存在某一正数 $\delta$, 使得对 $[a, b]$ 的任何分割 $T$, 以及在其上任意选取的点集 ${\xi_i}$，只要 $|T| &lt; \delta$，就有<br>$$<br>\left | \sum^n_{i=1}f(\xi_i)\Delta x_i - J \right | &lt; \varepsilon,<br>$$<br>则称函数 $f$ 在区间 $[a, b]$ 上可积或黎曼可积；数 $J$ 称为 $f$ 在 $[a, b]$ 上的定积分或黎曼积分，记作<br>$$<br>J = \int^b_a f(x) \mathrm{d}x.<br>$$<br>其中， $f$ 称为被积函数，$x$ 称为积分变量，$[a, b]$ 称为积分区间，$a, b$ 分别称为这个定积分的下限和上限。</p>
-<p>定积分的几何意义    对于 $[a, b]$ 上的连续函数 $f$，当 $f \geq 0, x\in[a,b]$ 时，定积分的几何意义就是该曲边梯形的面积；当 $f(x) \leq 0, x\in [a,b]$ 时，这时 $J = - \int^b_a [-f(x)] \mathrm{d}x$ 是位于 $x$ 轴下方的曲边梯形面积的相反数，不妨称之为“负面积”；对于一般非定号的 $f(x)$ 而言，定积分 $J$ 的值则是曲线 $y=f(x)$ 在 $x$ 轴上方部分所有曲边梯形的正面积与下方部分所有曲边梯形的负面积的代数和。</p>
-<p><strong>注意</strong>    定积分作为积分和的极限，它的值只与被积函数 $f$ 和积分区间 $[a, b]$ 有关，而与积分变量所用的符号无关，即<br>$$<br>\int^b_a f(x) \mathrm{d}x = \int^b_a f(t) \mathrm{d}t = \int^b_a f(\theta) \mathrm{d} \theta.<br>$$</p>
-]]></content>
-      <categories>
-        <category>maths</category>
-        <category>mathematical analysis</category>
-      </categories>
-      <tags>
-        <tag>maths</tag>
-        <tag>integral</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>方向导数和梯度</title>
     <url>/2020/07/26/directional-derivative-and-gradient/</url>
     <content><![CDATA[<p>方向导数 $D_{\boldsymbol{l}}f(\boldsymbol{x})$ 一般是对多元函数而言的，表示函数  $f(\boldsymbol{x})$ 沿着某一方向 $\boldsymbol{l}$ 在点 $\boldsymbol{x}$ 的导数。方向导数的大小表示函数沿着该方向 $\boldsymbol{l}$ 在点 $\boldsymbol{x}$ 的函数值的变化率。对于多元函数有无穷多个方向，但只有一个方向是使得函数在点 $\boldsymbol{x}$ 的变化率（增长率）最大，那就是梯度方向 $\nabla f$ （其中，$\nabla$ 表示 nabla symbol），有时也用记号 grad $f(\boldsymbol{x})$ 表示函数 $f(\boldsymbol{x})$ 在点 $\boldsymbol{x}$ 的梯度（gradient）向量。那为什么变化率最大的方向是梯度方向呢？下面给出解释，不是一般性，假设 $\boldsymbol{x} = (x, y)$ ，记这里假设是 $f(\boldsymbol{x})$ 二元函数。</p>
@@ -2044,6 +2020,30 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <tag>gpu</tag>
         <tag>cuda</tag>
         <tag>nvcc</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>定积分定义</title>
+    <url>/2020/07/27/definite-integral/</url>
+    <content><![CDATA[<p>导数的逆运算是不定积分，而定积分是某种特殊和式的极限。不定积分与定积分既有联系又有区别。</p>
+<a id="more"></a>
+
+<h1 id="概念的引出"><a href="#概念的引出" class="headerlink" title="概念的引出"></a>概念的引出</h1><p>定积分的概念提出是基于：1、曲边梯形的面积；2、变力所做的功。总体思想是：<strong>分割，近似求和，取极限</strong>。</p>
+<h1 id="定积分的定义"><a href="#定积分的定义" class="headerlink" title="定积分的定义"></a>定积分的定义</h1><p><strong>定义</strong>    设闭区间 $[a, b]$ 上有 $n-1$ 个点，依次为<br>$$<br>a = x_0 &lt; x_1 &lt; x_2 &lt; \cdots &lt; x_{n-1} &lt; x_n = b,<br>$$<br>它们把 $[a, b]$ 分成 $n$ 个小区间 $\Delta_i = [x_{i-1}, x_i], i=1,2,\cdots,n$. 这些分点或这些闭区间构成对 $[a,b]$ 的一个分割，记为<br>$$<br>T = {x_0, x_1, \cdots, x_n} 或 {\Delta_1, \Delta_2, \cdots, \Delta_n}.<br>$$<br>小区间 $\Delta_i$ 的长度为 $\Delta x_i = x_i - x_{i-1},$ 并记<br>$$<br>|T| = \max_{1\leq i \leq n} {\Delta x_i},<br>$$<br>称为分割 $T$ 的模。</p>
+<p><strong>注意</strong>    由于 $\Delta x_i \leq |T|, i = 1, 2, \cdots, n,$ 因此 $|T|$ 可用来反应 $[a, b]$ 被分割的细密程度。另外，分割 $T$ 一旦给出，$|T|$ 就随之而确定；但是，具有同一细度 $|T|$ 的分割 $T$ 却有无限多个。</p>
+<p><strong>定义</strong>    设 $f$ 是定义在 $[a, b]$ 上的一个函数，对于 $[a, b]$ 的一个分割 $T = {\Delta_1, \Delta_2, \cdots, \Delta_n}$，任取点 $\xi_i \in \Delta_i, i = 1,2,\cdots, n,$ 并作和式<br>$$<br>\sum^n_{i=1}f(\xi_i)\Delta x_i.<br>$$<br>称此和式为函数 $f$ 在 $[a, b]$ 上的一个积分和，也称为黎曼和。</p>
+<p>有定义可知，积分和既与分割 $T$ 有关，又与所选取的点集 ${\xi_i}$ 有关。</p>
+<p><strong>定义</strong>    设 $f$ 是定义在 $[a, b]$ 上的一个函数，$J$ 是一个确定的实数，若对任给的正数 $\varepsilon$, 总存在某一正数 $\delta$, 使得对 $[a, b]$ 的任何分割 $T$, 以及在其上任意选取的点集 ${\xi_i}$，只要 $|T| &lt; \delta$，就有<br>$$<br>\left | \sum^n_{i=1}f(\xi_i)\Delta x_i - J \right | &lt; \varepsilon,<br>$$<br>则称函数 $f$ 在区间 $[a, b]$ 上可积或黎曼可积；数 $J$ 称为 $f$ 在 $[a, b]$ 上的定积分或黎曼积分，记作<br>$$<br>J = \int^b_a f(x) \mathrm{d}x.<br>$$<br>其中， $f$ 称为被积函数，$x$ 称为积分变量，$[a, b]$ 称为积分区间，$a, b$ 分别称为这个定积分的下限和上限。</p>
+<p>定积分的几何意义    对于 $[a, b]$ 上的连续函数 $f$，当 $f \geq 0, x\in[a,b]$ 时，定积分的几何意义就是该曲边梯形的面积；当 $f(x) \leq 0, x\in [a,b]$ 时，这时 $J = - \int^b_a [-f(x)] \mathrm{d}x$ 是位于 $x$ 轴下方的曲边梯形面积的相反数，不妨称之为“负面积”；对于一般非定号的 $f(x)$ 而言，定积分 $J$ 的值则是曲线 $y=f(x)$ 在 $x$ 轴上方部分所有曲边梯形的正面积与下方部分所有曲边梯形的负面积的代数和。</p>
+<p><strong>注意</strong>    定积分作为积分和的极限，它的值只与被积函数 $f$ 和积分区间 $[a, b]$ 有关，而与积分变量所用的符号无关，即<br>$$<br>\int^b_a f(x) \mathrm{d}x = \int^b_a f(t) \mathrm{d}t = \int^b_a f(\theta) \mathrm{d} \theta.<br>$$</p>
+]]></content>
+      <categories>
+        <category>maths</category>
+        <category>mathematical analysis</category>
+      </categories>
+      <tags>
+        <tag>maths</tag>
+        <tag>integral</tag>
       </tags>
   </entry>
   <entry>
@@ -2372,10 +2372,75 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
     <content><![CDATA[<p><a href="https://www.ffmpeg.org/">FFmpeg</a> 是一个非常受欢迎的、完备的、跨平台的、<a href="https://github.com/FFmpeg/FFmpeg">开源的</a>用于处理多媒体内容（如音频、视频、字幕及其他相关元数据）的库和工具集。本篇介绍 FFmpeg 的相关概念和基本使用方法。所有命令以 Ubuntu 为例进行介绍，Windows 和 Mac 同样适用。</p>
 <a id="more"></a>
 
-<h1 id="FFmpeg-安装"><a href="#FFmpeg-安装" class="headerlink" title="FFmpeg 安装"></a>FFmpeg 安装</h1><p>想要使用 FFmpeg，必须首先安装它。Ubuntu（Centos 安装 FFmpeg的方法参考我的另一篇：<a href="https://xujinzh.github.io/2020/03/10/centos-ffmpeg/?highlight=ffmpeg">Centos安装ffmpeg</a>。Ubuntu 切换镜像源的方法参考我的另一篇：<a href="https://xujinzh.github.io/2022/02/19/ubuntu-change-source-list/">ubuntu 更改镜像源</a>） 安装 FFmpeg 非常方便，命令如下：</p>
+<h1 id="FFmpeg-安装"><a href="#FFmpeg-安装" class="headerlink" title="FFmpeg 安装"></a>FFmpeg 安装</h1><p>想要使用 FFmpeg (Linux中对应的程序为 <code>ffmpeg</code>)，必须首先安装它。Ubuntu（Centos 安装 FFmpeg的方法参考我的另一篇：<a href="https://xujinzh.github.io/2020/03/10/centos-ffmpeg/?highlight=ffmpeg">Centos安装ffmpeg</a>。Ubuntu 切换镜像源的方法参考我的另一篇：<a href="https://xujinzh.github.io/2022/02/19/ubuntu-change-source-list/">ubuntu 更改镜像源</a>） 安装 FFmpeg 非常方便，命令如下：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install ffmpeg</span><br></pre></td></tr></table></figure>
 
+<h1 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h1><p>在介绍 FFmpeg 处理视频之前，我们需要对视频有个了解。从计算上来说，视频文件是一个容器（container）</p>
+<p>，在该容器中包含了视频（图片序列，无声音）、音频、字幕等内容。</p>
+<p>常见的视频容器有如下几种，常常以文件后缀名来反映其容器格式：</p>
+<ul>
+<li>MP4：常用</li>
+<li>MKV：更清晰</li>
+<li>WebM：体积更小</li>
+<li>AVI：较久远</li>
+</ul>
+<p>FFmpeg 支持很多种容器，使用如下命令可查看它支持的格式有哪些：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ffmpeg -formats</span><br></pre></td></tr></table></figure>
 
+<h1 id="编码格式"><a href="#编码格式" class="headerlink" title="编码格式"></a>编码格式</h1><p>无论是视频还是音频都需要进行编码。不同的编码有不同的压缩率。编码可以将视频文件变得更小，但一定程度上会丢失信息，导致清晰度降低。</p>
+<p>常用的视频编码格式：</p>
+<ul>
+<li>H.265：mp4 中常用</li>
+<li>H.264：mp4 中常用。更普遍</li>
+<li>H.262</li>
+<li>VP9：webm 中常用</li>
+<li>VP8</li>
+<li>AV1</li>
+</ul>
+<p>常用的音频编码格式：</p>
+<ul>
+<li>MP3</li>
+<li>AAC</li>
+</ul>
+<p>使用如下命令，可以查看 FFmpeg 支持的编码格式（包括视频和音频）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ffmpeg -codecs</span><br></pre></td></tr></table></figure>
+
+<h1 id="编码器"><a href="#编码器" class="headerlink" title="编码器"></a>编码器</h1><p>有了编码方法，需要一些程序或软件来实现文件（视频或音频）的编码，这就是编码器。</p>
+<p>FFmpeg 中内置的视频编码器有：</p>
+<ul>
+<li>libx264：最流行的开源 H.264 编码器</li>
+<li>NVENC：基于 NVIDIA GPU 的 H.264 编码器</li>
+<li>libx265：开源的 HEVC 编码器</li>
+<li>libvpx：谷歌的 VP8 和 VP9 编码器</li>
+<li>libaom：AV1 编码器</li>
+</ul>
+<p>FFmpeg 中内置的音频编码器有：</p>
+<ul>
+<li>libfdk-aac</li>
+<li>aac</li>
+</ul>
+<h1 id="ffmpeg-命令的使用"><a href="#ffmpeg-命令的使用" class="headerlink" title="ffmpeg 命令的使用"></a>ffmpeg 命令的使用</h1><p>ffmpeg 命令的格式如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ffmpeg [全局参数] [输入文件参数] -i 输入文件 [输出文件参数] [输出文件]</span><br></pre></td></tr></table></figure>
+
+<p>常用的参数有</p>
+<ul>
+<li><code>-c</code>：指定编码器</li>
+<li><code>-c copy</code>：直接复制，不经过重新编码（这样比较快）</li>
+<li><code>-c:v</code>：指定视频编码器</li>
+<li><code>-c:a</code>：指定音频编码器</li>
+<li><code>-i</code>：指定输入文件</li>
+<li><code>-an</code>：去除音频流</li>
+<li><code>-vn</code>： 去除视频流</li>
+<li><code>-preset</code>：指定输出的视频质量，会影响文件的生成速度，有以下几个可用的值 ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow。</li>
+<li><code>-y</code>：不经过确认，输出时直接覆盖同名文件。</li>
+</ul>
+<h2 id="查看视频元信息"><a href="#查看视频元信息" class="headerlink" title="查看视频元信息"></a>查看视频元信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ffmpeg -i input.mp4</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不显示 ffmpeg 基本信息，只显示视频相关信息</span></span><br><span class="line">ffmpeg -i input.mp4 -hide_banner</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="更改容器格式（扩展名改变）"><a href="#更改容器格式（扩展名改变）" class="headerlink" title="更改容器格式（扩展名改变）"></a>更改容器格式（扩展名改变）</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 把 avi 视频转换为 mp4 视频</span></span><br><span class="line">ffmpeg -i input.avi output.mp4</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 webm 视频转换为 mp4 视频</span></span><br><span class="line">ffmpeg -i input.webm output.mp4</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 mkv 视频转换为 mp4 视频</span></span><br><span class="line">ffmpeg -i input.mkv output.mp4</span><br></pre></td></tr></table></figure>
+
+<h2 id="更改编码格式（扩展名可不变）"><a href="#更改编码格式（扩展名可不变）" class="headerlink" title="更改编码格式（扩展名可不变）"></a>更改编码格式（扩展名可不变）</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 把 H.265 更改为 H.264 编码，（这里以 MP4 容器输入文件 input.mp4 为例，其他容器格式也可以）</span></span><br><span class="line">ffmpeg -i input.mp4 -c:v libx264 output.mp4</span><br></pre></td></tr></table></figure>
 
 
 
@@ -2393,6 +2458,42 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <tag>ffmpeg</tag>
         <tag>video</tag>
         <tag>audio</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>linux 防火墙</title>
+    <url>/2022/01/08/fire-wall-linux/</url>
+    <content><![CDATA[<p>无论是 Windows 系统还是 Linux 系统都有防火墙，防火墙能够防护电脑免受外界攻击，保护电脑安全。本篇介绍如何在 Ubuntu/Debian/CentOS 上安装和使用防火墙。</p>
+<a id="more"></a>
+
+<h1 id="Ubuntu-Debian-上防火墙"><a href="#Ubuntu-Debian-上防火墙" class="headerlink" title="Ubuntu/Debian 上防火墙"></a>Ubuntu/Debian 上防火墙</h1><p>安装防火墙</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install ufw</span><br></pre></td></tr></table></figure>
+
+<p>防火墙使用</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 开启防火墙</span></span><br><span class="line">sudo ufw <span class="built_in">enable</span></span><br><span class="line"><span class="comment"># 查看防火墙状态</span></span><br><span class="line">sudo ufw status</span><br><span class="line"><span class="comment"># 开启指定端口</span></span><br><span class="line">sudo ufw allow 22</span><br><span class="line"><span class="comment"># 开启指定端口的tcp</span></span><br><span class="line">sudo ufw allow 22/tcp</span><br><span class="line"><span class="comment"># 打开端口范围</span></span><br><span class="line">sudo ufw allow 7000:7070</span><br><span class="line"><span class="comment"># 允许指定IP地址</span></span><br><span class="line">sudo ufw allow from xxx.xxx.xxx.xxx</span><br><span class="line"><span class="comment"># 允许指定IP地址访问指定端口</span></span><br><span class="line">sudo ufw allow from xxx.xxx.xxx.xxx to any port 22</span><br><span class="line"><span class="comment"># 运行子网</span></span><br><span class="line">sudo ufw allow from 192.168.1.0/24 to any port 3306</span><br><span class="line"><span class="comment"># 运行指定网络接口的连接</span></span><br><span class="line">sudo ufw allow <span class="keyword">in</span> on eth0 to any port 3306</span><br><span class="line"><span class="comment"># 删除指定端口</span></span><br><span class="line">sudo ufw delete allow 8888</span><br><span class="line"><span class="comment"># 禁止连接</span></span><br><span class="line">sudo ufw deny from 192.168.1.0/24</span><br><span class="line"><span class="comment"># 指定端口禁止连接</span></span><br><span class="line">sudo ufw deny from 192.168.1.0/24 to any port 80</span><br><span class="line"><span class="comment"># 按序号查看</span></span><br><span class="line">sudo ufw status numbered</span><br><span class="line"><span class="comment"># 删除对应序号10的规则</span></span><br><span class="line">sudo ufw delete 10</span><br><span class="line"><span class="comment"># 禁止防火墙</span></span><br><span class="line">sudo ufw <span class="built_in">disable</span></span><br><span class="line"><span class="comment"># 重置防火墙</span></span><br><span class="line">sudo ufw reset</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>，开启防火墙后，注意打开指定的SSH连接端口，不然重启后将无法使用SSH连接</p>
+<h1 id="CentOS-上防火墙"><a href="#CentOS-上防火墙" class="headerlink" title="CentOS 上防火墙"></a>CentOS 上防火墙</h1><p>安装防火墙</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum install firewalld</span><br></pre></td></tr></table></figure>
+
+<p>使用防火墙</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看状态</span></span><br><span class="line">sudo firewall-cmd --state</span><br><span class="line"><span class="comment"># 开启防火墙</span></span><br><span class="line">sudo systemctl start firewalld.service</span><br><span class="line"><span class="comment"># 关闭防火墙</span></span><br><span class="line">sudo systemctl stop firewald.service</span><br><span class="line"><span class="comment"># 设置开机启动防火墙</span></span><br><span class="line">sudo systemctl <span class="built_in">enable</span> firewald.service</span><br><span class="line"><span class="comment"># 禁止开机启动防火墙</span></span><br><span class="line">sudo systemctl <span class="built_in">disable</span> firewald.service</span><br><span class="line"><span class="comment"># 查看防火墙是否会开机自启</span></span><br><span class="line">sudo systemctl list-unit-file | grep firewald</span><br><span class="line"><span class="comment"># 开放指定端口</span></span><br><span class="line">sudo firewall-cmd --zone=public --add-port=22/tcp --permanent</span><br><span class="line"><span class="comment"># 关闭指定端口</span></span><br><span class="line">sudo firewall-cmd --zone=public --remove-port=80/tcp --permanent</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考连接"><a href="#参考连接" class="headerlink" title="参考连接"></a>参考连接</h1><ol>
+<li><a href="https://cloud.tencent.com/developer/article/1626614">如何在 Debian 10 上使用 UFW 来设置防火墙</a></li>
+<li><a href="https://blog.csdn.net/xc_zhou/article/details/103758308">[745]Debian打开关闭防火墙</a></li>
+<li><a href="https://blog.csdn.net/ytangdigl/article/details/79796961">CentOS7查看和关闭防火墙</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-using-firewalld-on-centos-7">How To Set Up a Firewall Using FirewallD on CentOS 7</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
       </tags>
   </entry>
   <entry>
@@ -2460,42 +2561,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <tag>python</tag>
         <tag>web</tag>
         <tag>flask</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>linux 防火墙</title>
-    <url>/2022/01/08/fire-wall-linux/</url>
-    <content><![CDATA[<p>无论是 Windows 系统还是 Linux 系统都有防火墙，防火墙能够防护电脑免受外界攻击，保护电脑安全。本篇介绍如何在 Ubuntu/Debian/CentOS 上安装和使用防火墙。</p>
-<a id="more"></a>
-
-<h1 id="Ubuntu-Debian-上防火墙"><a href="#Ubuntu-Debian-上防火墙" class="headerlink" title="Ubuntu/Debian 上防火墙"></a>Ubuntu/Debian 上防火墙</h1><p>安装防火墙</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install ufw</span><br></pre></td></tr></table></figure>
-
-<p>防火墙使用</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 开启防火墙</span></span><br><span class="line">sudo ufw <span class="built_in">enable</span></span><br><span class="line"><span class="comment"># 查看防火墙状态</span></span><br><span class="line">sudo ufw status</span><br><span class="line"><span class="comment"># 开启指定端口</span></span><br><span class="line">sudo ufw allow 22</span><br><span class="line"><span class="comment"># 开启指定端口的tcp</span></span><br><span class="line">sudo ufw allow 22/tcp</span><br><span class="line"><span class="comment"># 打开端口范围</span></span><br><span class="line">sudo ufw allow 7000:7070</span><br><span class="line"><span class="comment"># 允许指定IP地址</span></span><br><span class="line">sudo ufw allow from xxx.xxx.xxx.xxx</span><br><span class="line"><span class="comment"># 允许指定IP地址访问指定端口</span></span><br><span class="line">sudo ufw allow from xxx.xxx.xxx.xxx to any port 22</span><br><span class="line"><span class="comment"># 运行子网</span></span><br><span class="line">sudo ufw allow from 192.168.1.0/24 to any port 3306</span><br><span class="line"><span class="comment"># 运行指定网络接口的连接</span></span><br><span class="line">sudo ufw allow <span class="keyword">in</span> on eth0 to any port 3306</span><br><span class="line"><span class="comment"># 删除指定端口</span></span><br><span class="line">sudo ufw delete allow 8888</span><br><span class="line"><span class="comment"># 禁止连接</span></span><br><span class="line">sudo ufw deny from 192.168.1.0/24</span><br><span class="line"><span class="comment"># 指定端口禁止连接</span></span><br><span class="line">sudo ufw deny from 192.168.1.0/24 to any port 80</span><br><span class="line"><span class="comment"># 按序号查看</span></span><br><span class="line">sudo ufw status numbered</span><br><span class="line"><span class="comment"># 删除对应序号10的规则</span></span><br><span class="line">sudo ufw delete 10</span><br><span class="line"><span class="comment"># 禁止防火墙</span></span><br><span class="line">sudo ufw <span class="built_in">disable</span></span><br><span class="line"><span class="comment"># 重置防火墙</span></span><br><span class="line">sudo ufw reset</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意</strong>，开启防火墙后，注意打开指定的SSH连接端口，不然重启后将无法使用SSH连接</p>
-<h1 id="CentOS-上防火墙"><a href="#CentOS-上防火墙" class="headerlink" title="CentOS 上防火墙"></a>CentOS 上防火墙</h1><p>安装防火墙</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum install firewalld</span><br></pre></td></tr></table></figure>
-
-<p>使用防火墙</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看状态</span></span><br><span class="line">sudo firewall-cmd --state</span><br><span class="line"><span class="comment"># 开启防火墙</span></span><br><span class="line">sudo systemctl start firewalld.service</span><br><span class="line"><span class="comment"># 关闭防火墙</span></span><br><span class="line">sudo systemctl stop firewald.service</span><br><span class="line"><span class="comment"># 设置开机启动防火墙</span></span><br><span class="line">sudo systemctl <span class="built_in">enable</span> firewald.service</span><br><span class="line"><span class="comment"># 禁止开机启动防火墙</span></span><br><span class="line">sudo systemctl <span class="built_in">disable</span> firewald.service</span><br><span class="line"><span class="comment"># 查看防火墙是否会开机自启</span></span><br><span class="line">sudo systemctl list-unit-file | grep firewald</span><br><span class="line"><span class="comment"># 开放指定端口</span></span><br><span class="line">sudo firewall-cmd --zone=public --add-port=22/tcp --permanent</span><br><span class="line"><span class="comment"># 关闭指定端口</span></span><br><span class="line">sudo firewall-cmd --zone=public --remove-port=80/tcp --permanent</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="参考连接"><a href="#参考连接" class="headerlink" title="参考连接"></a>参考连接</h1><ol>
-<li><a href="https://cloud.tencent.com/developer/article/1626614">如何在 Debian 10 上使用 UFW 来设置防火墙</a></li>
-<li><a href="https://blog.csdn.net/xc_zhou/article/details/103758308">[745]Debian打开关闭防火墙</a></li>
-<li><a href="https://blog.csdn.net/ytangdigl/article/details/79796961">CentOS7查看和关闭防火墙</a></li>
-<li><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-using-firewalld-on-centos-7">How To Set Up a Firewall Using FirewallD on CentOS 7</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
       </tags>
   </entry>
   <entry>
@@ -3000,6 +3065,48 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>Hexo 生成错误问题</title>
+    <url>/2020/08/28/hexo-error-maths-cardinality/</url>
+    <content><![CDATA[<p>Hexo 写完博文后，使用如下命令生成静态页面</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>出现如下错误</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">Error: expected end of comment, got end of file</span><br></pre></td></tr></table></figure>
+
+<p>解决方案：</p>
+<a id="more"></a>
+
+<ol>
+<li><p>使用命令找到出错的文档是哪一个</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo generate --debug</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="2">
+<li><p>检查文档中是否出现</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&#123;#</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="3">
+<li>尝试去除上面的 ‘{‘ 和 ‘#’</li>
+</ol>
+<p>参考文献</p>
+<p><a href="https://www.dyxmq.cn/cloud/hexo/the-hexo-error-expected-end-of-comment.html">起风了</a></p>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>hexo博客评论系统gitalk</title>
     <url>/2020/03/14/hexo-gitalk/</url>
     <content><![CDATA[<p>Hexo结合GitHub进行博客系统搭建，能够免费的畅享GitHub给我们带来的无限量服务。下面假设</p>
@@ -3070,48 +3177,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>hexo</tag>
         <tag>gitalk</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hexo 生成错误问题</title>
-    <url>/2020/08/28/hexo-error-maths-cardinality/</url>
-    <content><![CDATA[<p>Hexo 写完博文后，使用如下命令生成静态页面</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>出现如下错误</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">Error: expected end of comment, got end of file</span><br></pre></td></tr></table></figure>
-
-<p>解决方案：</p>
-<a id="more"></a>
-
-<ol>
-<li><p>使用命令找到出错的文档是哪一个</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo generate --debug</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ol>
-<ol start="2">
-<li><p>检查文档中是否出现</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&#123;#</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ol>
-<ol start="3">
-<li>尝试去除上面的 ‘{‘ 和 ‘#’</li>
-</ol>
-<p>参考文献</p>
-<p><a href="https://www.dyxmq.cn/cloud/hexo/the-hexo-error-expected-end-of-comment.html">起风了</a></p>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>blog</tag>
-        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -3626,6 +3691,36 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>java 一条语句打印多个变量</title>
+    <url>/2022/01/03/java-print-multi-variables/</url>
+    <content><![CDATA[<p>在 java 程序中，想要通过一条语句打印输出多个变量的值，就像在 python 中那样，将变量以逗号分隔罗列到 print 函数中是不行的，在 java 中可以使用如下方法。</p>
+<a id="more"></a>
+
+<h1 id="字符串拼接和占位符"><a href="#字符串拼接和占位符" class="headerlink" title="字符串拼接和占位符"></a>字符串拼接和占位符</h1><ol>
+<li>通过字符串拼接在函数 System.out.println() 中；</li>
+<li>通过占位符在函数 System.out.printf() 中；</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">2147483647</span>;</span><br><span class="line">        <span class="keyword">int</span> i2 = -<span class="number">2147483648</span>;</span><br><span class="line">        <span class="keyword">int</span> i3 = <span class="number">2_000_000</span>;</span><br><span class="line">        <span class="keyword">int</span> i4 = <span class="number">0xff0000</span>;</span><br><span class="line">        <span class="keyword">int</span> i5 = <span class="number">0b1000000000</span>;</span><br><span class="line">        <span class="keyword">long</span> l = <span class="number">9000000000000000000L</span>;</span><br><span class="line">        <span class="comment">// 通过 &quot;+&quot; 对字符串进行拼接</span></span><br><span class="line">        System.out.println(i + <span class="string">&quot;, &quot;</span> + i2 + <span class="string">&quot;, &quot;</span> + i3 + <span class="string">&quot;, &quot;</span> + i4 + <span class="string">&quot;, &quot;</span> + i5 + <span class="string">&quot;, &quot;</span> + l);</span><br><span class="line">        <span class="comment">// 注意 printf 最后面没有换行符，想要换行需要手动添加</span></span><br><span class="line">        <span class="comment">// 通过占位符，打印多个变量</span></span><br><span class="line">        System.out.printf(<span class="string">&quot;%d, %d, %d, %d, %d, %d\n&quot;</span>, i, i2, i3, i4, i5, l);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>打印结果如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="number">2147483647</span>, -<span class="number">2147483648</span>, <span class="number">2000000</span>, <span class="number">16711680</span>, <span class="number">512</span>, <span class="number">9000000000000000000</span></span><br><span class="line"><span class="number">2147483647</span>, -<span class="number">2147483648</span>, <span class="number">2000000</span>, <span class="number">16711680</span>, <span class="number">512</span>, <span class="number">9000000000000000000</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>printf 支持的占位符如下：</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line"><span class="comment">%c        单个字符 </span></span><br><span class="line"><span class="comment">%d        十进制整数 </span></span><br><span class="line"><span class="comment">%f        十进制浮点数 </span></span><br><span class="line"><span class="comment">%o        八进制数 </span></span><br><span class="line"><span class="comment">%s        字符串 </span></span><br><span class="line"><span class="comment">%u        无符号十进制数 </span></span><br><span class="line"><span class="comment">%x        十六进制数 </span></span><br><span class="line"><span class="comment">%08x      十六进制数，用0补足8位</span></span><br><span class="line"><span class="comment">%e	      格式化输出科学计数法表示的浮点数</span></span><br><span class="line"><span class="comment">%%        输出百分号% </span></span><br></pre></td></tr></table></figure>
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://blog.csdn.net/CrayonK/article/details/84822448">java一条System.out语句打印多个变量</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ip、tcp、udp 首部校验和</title>
     <url>/2022/01/15/ip-tcp-udp-header-checksum/</url>
     <content><![CDATA[<p>ip 首部校验和、tcp/udp 首部校验和能够判断网络传输中是否出现丢包、错包等。下面分别介绍它们的计算方法和 python 实现。</p>
@@ -3729,56 +3824,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>java 一条语句打印多个变量</title>
-    <url>/2022/01/03/java-print-multi-variables/</url>
-    <content><![CDATA[<p>在 java 程序中，想要通过一条语句打印输出多个变量的值，就像在 python 中那样，将变量以逗号分隔罗列到 print 函数中是不行的，在 java 中可以使用如下方法。</p>
-<a id="more"></a>
-
-<h1 id="字符串拼接和占位符"><a href="#字符串拼接和占位符" class="headerlink" title="字符串拼接和占位符"></a>字符串拼接和占位符</h1><ol>
-<li>通过字符串拼接在函数 System.out.println() 中；</li>
-<li>通过占位符在函数 System.out.printf() 中；</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">2147483647</span>;</span><br><span class="line">        <span class="keyword">int</span> i2 = -<span class="number">2147483648</span>;</span><br><span class="line">        <span class="keyword">int</span> i3 = <span class="number">2_000_000</span>;</span><br><span class="line">        <span class="keyword">int</span> i4 = <span class="number">0xff0000</span>;</span><br><span class="line">        <span class="keyword">int</span> i5 = <span class="number">0b1000000000</span>;</span><br><span class="line">        <span class="keyword">long</span> l = <span class="number">9000000000000000000L</span>;</span><br><span class="line">        <span class="comment">// 通过 &quot;+&quot; 对字符串进行拼接</span></span><br><span class="line">        System.out.println(i + <span class="string">&quot;, &quot;</span> + i2 + <span class="string">&quot;, &quot;</span> + i3 + <span class="string">&quot;, &quot;</span> + i4 + <span class="string">&quot;, &quot;</span> + i5 + <span class="string">&quot;, &quot;</span> + l);</span><br><span class="line">        <span class="comment">// 注意 printf 最后面没有换行符，想要换行需要手动添加</span></span><br><span class="line">        <span class="comment">// 通过占位符，打印多个变量</span></span><br><span class="line">        System.out.printf(<span class="string">&quot;%d, %d, %d, %d, %d, %d\n&quot;</span>, i, i2, i3, i4, i5, l);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>打印结果如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="number">2147483647</span>, -<span class="number">2147483648</span>, <span class="number">2000000</span>, <span class="number">16711680</span>, <span class="number">512</span>, <span class="number">9000000000000000000</span></span><br><span class="line"><span class="number">2147483647</span>, -<span class="number">2147483648</span>, <span class="number">2000000</span>, <span class="number">16711680</span>, <span class="number">512</span>, <span class="number">9000000000000000000</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>printf 支持的占位符如下：</p>
-<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line"><span class="comment">%c        单个字符 </span></span><br><span class="line"><span class="comment">%d        十进制整数 </span></span><br><span class="line"><span class="comment">%f        十进制浮点数 </span></span><br><span class="line"><span class="comment">%o        八进制数 </span></span><br><span class="line"><span class="comment">%s        字符串 </span></span><br><span class="line"><span class="comment">%u        无符号十进制数 </span></span><br><span class="line"><span class="comment">%x        十六进制数 </span></span><br><span class="line"><span class="comment">%08x      十六进制数，用0补足8位</span></span><br><span class="line"><span class="comment">%e	      格式化输出科学计数法表示的浮点数</span></span><br><span class="line"><span class="comment">%%        输出百分号% </span></span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="https://blog.csdn.net/CrayonK/article/details/84822448">java一条System.out语句打印多个变量</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>设置 Jupyter Cell Proxy</title>
-    <url>/2021/08/31/jupyter-cell-proxy/</url>
-    <content><![CDATA[<p>Jupyter Notebook/Lab 提供了交互式的 Python 等编程范式，下面介绍一种设置 Proxy 的方法，方便 Python 代码的运行。</p>
-<a id="more"></a>
-
-<p>只需要在 Jupyter Notebook/Lab 第一个 Cell 上添加如下代码即可：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入模块</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment"># 设置代理</span></span><br><span class="line">proxy = <span class="string">&#x27;http://127.0.0.1:1080&#x27;</span></span><br><span class="line">os.environ[<span class="string">&#x27;http_proxy&#x27;</span>] = proxy</span><br><span class="line">os.environ[<span class="string">&#x27;HTTP_PROXY&#x27;</span>] = proxy</span><br><span class="line">os.environ[<span class="string">&#x27;https_proxy&#x27;</span>] = proxy</span><br><span class="line">os.environ[<span class="string">&#x27;HTTPS_PROXY&#x27;</span>] = proxy</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>jupyter</tag>
-        <tag>proxy</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>使用 Java 命令运行 jar 包</title>
     <url>/2021/03/30/java-run-jar/</url>
     <content><![CDATA[<p>Java 使用 Maven 等 打包好程序为 Jar 后，如何运行，这里根据 Jar 包中是否有主类 （main class）入口，来分两种方法运行。</p>
@@ -3804,6 +3849,26 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>java</tag>
         <tag>jar</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>设置 Jupyter Cell Proxy</title>
+    <url>/2021/08/31/jupyter-cell-proxy/</url>
+    <content><![CDATA[<p>Jupyter Notebook/Lab 提供了交互式的 Python 等编程范式，下面介绍一种设置 Proxy 的方法，方便 Python 代码的运行。</p>
+<a id="more"></a>
+
+<p>只需要在 Jupyter Notebook/Lab 第一个 Cell 上添加如下代码即可：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入模块</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment"># 设置代理</span></span><br><span class="line">proxy = <span class="string">&#x27;http://127.0.0.1:1080&#x27;</span></span><br><span class="line">os.environ[<span class="string">&#x27;http_proxy&#x27;</span>] = proxy</span><br><span class="line">os.environ[<span class="string">&#x27;HTTP_PROXY&#x27;</span>] = proxy</span><br><span class="line">os.environ[<span class="string">&#x27;https_proxy&#x27;</span>] = proxy</span><br><span class="line">os.environ[<span class="string">&#x27;HTTPS_PROXY&#x27;</span>] = proxy</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>jupyter</tag>
+        <tag>proxy</tag>
       </tags>
   </entry>
   <entry>
@@ -4248,6 +4313,74 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>jupyterlab 扩展</title>
+    <url>/2019/12/31/jupyterlab-extension/</url>
+    <content><![CDATA[<h1 id="jupyterlab-代码折叠-Collapsible-Headings"><a href="#jupyterlab-代码折叠-Collapsible-Headings" class="headerlink" title="jupyterlab 代码折叠 - Collapsible_Headings"></a>jupyterlab 代码折叠 - <strong><a href="https://github.com/aquirdTurtle/Collapsible_Headings">Collapsible_Headings</a></strong></h1><p>按照 Github 上扩展安装步骤进行安装</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter labextension install @aquirdturtle/collapsible_headings</span><br></pre></td></tr></table></figure>
+
+<p>效果如图</p>
+<a id="more"></a>
+
+<p><img src="https://raw.githubusercontent.com/aquirdTurtle/Collapsible_Headings/master/Demo2.gif"></p>
+<h1 id="jupyterlab-目录-TOC"><a href="#jupyterlab-目录-TOC" class="headerlink" title="jupyterlab 目录 - TOC"></a>jupyterlab 目录 - <a href="https://github.com/jupyterlab/jupyterlab-toc">TOC</a></h1><p>按照 Github 上扩展安装步骤进行安装</p>
+<p><font color='dd00dd'>注意：如果 jupyterlab &gt;= 3.0.0，则自带该插件功能，不需再次安装</font></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter labextension install @jupyterlab/toc</span><br></pre></td></tr></table></figure>
+
+<h1 id="jupyterlab-代码自动补全-Kite"><a href="#jupyterlab-代码自动补全-Kite" class="headerlink" title="jupyterlab 代码自动补全 - Kite"></a>jupyterlab 代码自动补全 - <a href="https://github.com/kiteco/jupyterlab-kite">Kite</a></h1><p>按照 Github 上扩展安装步骤进行安装</p>
+<h2 id="安装-Kite-Engine"><a href="#安装-Kite-Engine" class="headerlink" title="安装 Kite Engine"></a>安装 Kite Engine</h2><p><strong>macOS Instructions</strong></p>
+<ol>
+<li>Download the <a href="https://kite.com/download">installer</a> and open the downloaded <code>.dmg</code> file.</li>
+<li>Drag the Kite icon into the <code>Applications</code> folder.</li>
+<li>Run <code>Kite.app</code> to start the Kite Engine.</li>
+</ol>
+<p><strong>Windows Instructions</strong></p>
+<ol>
+<li>Download the <a href="https://kite.com/download">installer</a> and run the downloaded <code>.exe</code> file.</li>
+<li>The installer should run the Kite Engine automatically after installation is complete.</li>
+</ol>
+<p><strong>Linux Instructions</strong></p>
+<ol>
+<li><p>Run <code>bash -c &quot;$(wget -q -O - https://linux.kite.com/dls/linux/current)&quot;</code> from the terminal.</p>
+</li>
+<li><p>The installer should run the Kite Engine automatically after installation is complete.</p>
+</li>
+</ol>
+<h2 id="安装-Kite-Extension-for-JupyterLab"><a href="#安装-Kite-Extension-for-JupyterLab" class="headerlink" title="安装 Kite Extension for JupyterLab"></a>安装 Kite Extension for JupyterLab</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install jupyter-kite</span><br><span class="line">jupyter labextension install <span class="string">&quot;@kiteco/jupyterlab-kite&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后，重启 jupyterlab</p>
+<h1 id="Jupyterlab-代码格式化-code-formatter"><a href="#Jupyterlab-代码格式化-code-formatter" class="headerlink" title="Jupyterlab 代码格式化 - code formatter"></a>Jupyterlab 代码格式化 - <a href="https://github.com/ryantam626/jupyterlab_code_formatter/blob/master/docs/installation.rst">code formatter</a></h1><p>按照如下步骤安装</p>
+<p><font color='dd00dd'>对于 jupyterlab &lt; 3.0.0, 按照如下方式安装</font></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter labextension install @ryantam626/jupyterlab_code_formatter</span><br><span class="line">pip install jupyterlab_code_formatter black isort</span><br><span class="line">jupyter serverextension <span class="built_in">enable</span> --py jupyterlab_code_formatter</span><br></pre></td></tr></table></figure>
+
+<p><font color='dd00dd'>对于 jupyterlab &gt;= 3.0.0，按照如下方式安装</font></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install jupyterlab_code_formatter</span><br><span class="line">jupyter server extension <span class="built_in">enable</span> jupyterlab_code_formatter</span><br><span class="line"><span class="comment"># if you installed the plugin with pip and using --user, you need to add it here as well</span></span><br><span class="line"><span class="comment"># jupyter server extension enable --user jupyterlab_code_formatter</span></span><br><span class="line">pip install black isort</span><br></pre></td></tr></table></figure>
+
+<p>然后，重启 jupyterlab</p>
+<h1 id="可能遇到的问题"><a href="#可能遇到的问题" class="headerlink" title="可能遇到的问题"></a>可能遇到的问题</h1><h2 id="无法卸载扩展"><a href="#无法卸载扩展" class="headerlink" title="无法卸载扩展"></a>无法卸载扩展</h2><p>如果使用</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter labextension list</span><br></pre></td></tr></table></figure>
+
+<p>出现</p>
+<p>installed 和 uninstalled 相同的条目，可以移除 build_config.json 来解决。</p>
+<h2 id="无法安装扩展"><a href="#无法安装扩展" class="headerlink" title="无法安装扩展"></a>无法安装扩展</h2><p>因为build jupyterlab 扩展时，需要使用 npm 安装一些插件，所以 npm 按照插件成功与否会直接影响 jupyterlab 扩展 build 的成败。下面介绍如何安装 npm 和配置国内源</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt install nodejs</span><br><span class="line"><span class="comment"># 配置淘宝源</span></span><br><span class="line">npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br><span class="line"><span class="comment"># 或者使用工具 nrm 管理源，首先安装 nrm</span></span><br><span class="line">npm install -g nrm</span><br><span class="line"><span class="comment"># 查看可用源</span></span><br><span class="line">nrm ls</span><br><span class="line"><span class="comment"># 切换国内源</span></span><br><span class="line">nrm use taobao</span><br></pre></td></tr></table></figure>
+
+<p>这样，再次使用</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter lab build</span><br></pre></td></tr></table></figure>
+
+<p>时，就能够 build 成功了。</p>
+<p><font color='dd0000'>注意：在 jupyterlab 3.0.0 以后，部分插件安装不需要 nodejs，可以直接使用 pip 安装，如 @ryantam626/jupyterlab_code_formatter </font></p>
+<h2 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h2><p><a href="https://www.runoob.com/w3cnote/npm-switch-repo.html">npm 切换镜像站点</a></p>
+<p><a href="https://www.runoob.com/w3cnote/npm-slow-use-cnpm.html">NPM 国内慢的问题解决</a></p>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>jupyterlab</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>利用 nginx 反向代理为 jupyterlab 配置二级网址页面</title>
     <url>/2020/11/09/jupyterlab-nginx/</url>
     <content><![CDATA[<p>当服务器配置好 Python, Jupyterlab 后，访问总是通过 8888 端口，出于某些原因，想要为其配置二级页面，这样当想要更改端口时只需要修改一下配置，而不需要再次记忆到底是打开了哪个端口，只需要记住二级页面 web 地址就可以。本篇不介绍如何配置 Jupyterlab，而是假设已经配置好了 Jupyterlab，且申请了域名，直接说如何通过 nginx 配置 Jupyterlab.</p>
@@ -4323,7 +4456,7 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
 
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">conda install nodejs</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> JupyterLab renderer support</span></span><br><span class="line">jupyter labextension install jupyterlab-plotly@4.8.1</span><br></pre></td></tr></table></figure>
 
-<p>在  <a href="mailto:&#x6a;&#117;&#112;&#121;&#116;&#101;&#x72;&#x6c;&#x61;&#x62;&#45;&#112;&#108;&#111;&#116;&#x6c;&#x79;&#x40;&#x34;&#46;&#56;&#x2e;&#x31;">&#x6a;&#117;&#112;&#121;&#116;&#101;&#x72;&#x6c;&#x61;&#x62;&#45;&#112;&#108;&#111;&#116;&#x6c;&#x79;&#x40;&#x34;&#46;&#56;&#x2e;&#x31;</a>中，需要编译一会，可能会消耗2G多内存，建议内存小的用户创建交换分区。</p>
+<p>在  <a href="mailto:&#106;&#x75;&#x70;&#121;&#x74;&#101;&#x72;&#x6c;&#97;&#x62;&#45;&#x70;&#108;&#111;&#116;&#108;&#121;&#64;&#x34;&#46;&#56;&#46;&#x31;">&#106;&#x75;&#x70;&#121;&#x74;&#101;&#x72;&#x6c;&#97;&#x62;&#45;&#x70;&#108;&#111;&#116;&#108;&#121;&#64;&#x34;&#46;&#56;&#46;&#x31;</a>中，需要编译一会，可能会消耗2G多内存，建议内存小的用户创建交换分区。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看安装的jupyterlab扩展</span></span><br><span class="line">jupyter labextension list</span><br></pre></td></tr></table></figure>
 
 <h1 id="使用plotly画图"><a href="#使用plotly画图" class="headerlink" title="使用plotly画图"></a>使用plotly画图</h1><p>按照上面方法按照后，需要先 log out jupyterlab，然后，在登录进去使用plotly才能正常显示图形。</p>
@@ -4374,76 +4507,8 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <category>technology</category>
       </categories>
       <tags>
+        <tag>python</tag>
         <tag>ubuntu</tag>
-        <tag>python</tag>
-        <tag>jupyterlab</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>jupyterlab 扩展</title>
-    <url>/2019/12/31/jupyterlab-extension/</url>
-    <content><![CDATA[<h1 id="jupyterlab-代码折叠-Collapsible-Headings"><a href="#jupyterlab-代码折叠-Collapsible-Headings" class="headerlink" title="jupyterlab 代码折叠 - Collapsible_Headings"></a>jupyterlab 代码折叠 - <strong><a href="https://github.com/aquirdTurtle/Collapsible_Headings">Collapsible_Headings</a></strong></h1><p>按照 Github 上扩展安装步骤进行安装</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter labextension install @aquirdturtle/collapsible_headings</span><br></pre></td></tr></table></figure>
-
-<p>效果如图</p>
-<a id="more"></a>
-
-<p><img src="https://raw.githubusercontent.com/aquirdTurtle/Collapsible_Headings/master/Demo2.gif"></p>
-<h1 id="jupyterlab-目录-TOC"><a href="#jupyterlab-目录-TOC" class="headerlink" title="jupyterlab 目录 - TOC"></a>jupyterlab 目录 - <a href="https://github.com/jupyterlab/jupyterlab-toc">TOC</a></h1><p>按照 Github 上扩展安装步骤进行安装</p>
-<p><font color='dd00dd'>注意：如果 jupyterlab &gt;= 3.0.0，则自带该插件功能，不需再次安装</font></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter labextension install @jupyterlab/toc</span><br></pre></td></tr></table></figure>
-
-<h1 id="jupyterlab-代码自动补全-Kite"><a href="#jupyterlab-代码自动补全-Kite" class="headerlink" title="jupyterlab 代码自动补全 - Kite"></a>jupyterlab 代码自动补全 - <a href="https://github.com/kiteco/jupyterlab-kite">Kite</a></h1><p>按照 Github 上扩展安装步骤进行安装</p>
-<h2 id="安装-Kite-Engine"><a href="#安装-Kite-Engine" class="headerlink" title="安装 Kite Engine"></a>安装 Kite Engine</h2><p><strong>macOS Instructions</strong></p>
-<ol>
-<li>Download the <a href="https://kite.com/download">installer</a> and open the downloaded <code>.dmg</code> file.</li>
-<li>Drag the Kite icon into the <code>Applications</code> folder.</li>
-<li>Run <code>Kite.app</code> to start the Kite Engine.</li>
-</ol>
-<p><strong>Windows Instructions</strong></p>
-<ol>
-<li>Download the <a href="https://kite.com/download">installer</a> and run the downloaded <code>.exe</code> file.</li>
-<li>The installer should run the Kite Engine automatically after installation is complete.</li>
-</ol>
-<p><strong>Linux Instructions</strong></p>
-<ol>
-<li><p>Run <code>bash -c &quot;$(wget -q -O - https://linux.kite.com/dls/linux/current)&quot;</code> from the terminal.</p>
-</li>
-<li><p>The installer should run the Kite Engine automatically after installation is complete.</p>
-</li>
-</ol>
-<h2 id="安装-Kite-Extension-for-JupyterLab"><a href="#安装-Kite-Extension-for-JupyterLab" class="headerlink" title="安装 Kite Extension for JupyterLab"></a>安装 Kite Extension for JupyterLab</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install jupyter-kite</span><br><span class="line">jupyter labextension install <span class="string">&quot;@kiteco/jupyterlab-kite&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>然后，重启 jupyterlab</p>
-<h1 id="Jupyterlab-代码格式化-code-formatter"><a href="#Jupyterlab-代码格式化-code-formatter" class="headerlink" title="Jupyterlab 代码格式化 - code formatter"></a>Jupyterlab 代码格式化 - <a href="https://github.com/ryantam626/jupyterlab_code_formatter/blob/master/docs/installation.rst">code formatter</a></h1><p>按照如下步骤安装</p>
-<p><font color='dd00dd'>对于 jupyterlab &lt; 3.0.0, 按照如下方式安装</font></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter labextension install @ryantam626/jupyterlab_code_formatter</span><br><span class="line">pip install jupyterlab_code_formatter black isort</span><br><span class="line">jupyter serverextension <span class="built_in">enable</span> --py jupyterlab_code_formatter</span><br></pre></td></tr></table></figure>
-
-<p><font color='dd00dd'>对于 jupyterlab &gt;= 3.0.0，按照如下方式安装</font></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install jupyterlab_code_formatter</span><br><span class="line">jupyter server extension <span class="built_in">enable</span> jupyterlab_code_formatter</span><br><span class="line"><span class="comment"># if you installed the plugin with pip and using --user, you need to add it here as well</span></span><br><span class="line"><span class="comment"># jupyter server extension enable --user jupyterlab_code_formatter</span></span><br><span class="line">pip install black isort</span><br></pre></td></tr></table></figure>
-
-<p>然后，重启 jupyterlab</p>
-<h1 id="可能遇到的问题"><a href="#可能遇到的问题" class="headerlink" title="可能遇到的问题"></a>可能遇到的问题</h1><h2 id="无法卸载扩展"><a href="#无法卸载扩展" class="headerlink" title="无法卸载扩展"></a>无法卸载扩展</h2><p>如果使用</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter labextension list</span><br></pre></td></tr></table></figure>
-
-<p>出现</p>
-<p>installed 和 uninstalled 相同的条目，可以移除 build_config.json 来解决。</p>
-<h2 id="无法安装扩展"><a href="#无法安装扩展" class="headerlink" title="无法安装扩展"></a>无法安装扩展</h2><p>因为build jupyterlab 扩展时，需要使用 npm 安装一些插件，所以 npm 按照插件成功与否会直接影响 jupyterlab 扩展 build 的成败。下面介绍如何安装 npm 和配置国内源</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt install nodejs</span><br><span class="line"><span class="comment"># 配置淘宝源</span></span><br><span class="line">npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br><span class="line"><span class="comment"># 或者使用工具 nrm 管理源，首先安装 nrm</span></span><br><span class="line">npm install -g nrm</span><br><span class="line"><span class="comment"># 查看可用源</span></span><br><span class="line">nrm ls</span><br><span class="line"><span class="comment"># 切换国内源</span></span><br><span class="line">nrm use taobao</span><br></pre></td></tr></table></figure>
-
-<p>这样，再次使用</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter lab build</span><br></pre></td></tr></table></figure>
-
-<p>时，就能够 build 成功了。</p>
-<p><font color='dd0000'>注意：在 jupyterlab 3.0.0 以后，部分插件安装不需要 nodejs，可以直接使用 pip 安装，如 @ryantam626/jupyterlab_code_formatter </font></p>
-<h2 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h2><p><a href="https://www.runoob.com/w3cnote/npm-switch-repo.html">npm 切换镜像站点</a></p>
-<p><a href="https://www.runoob.com/w3cnote/npm-slow-use-cnpm.html">NPM 国内慢的问题解决</a></p>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
         <tag>jupyterlab</tag>
       </tags>
   </entry>
@@ -4716,6 +4781,77 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>Linux 文件和目录的默认权限和特殊权限</title>
+    <url>/2021/03/17/linux-hidden-authority/</url>
+    <content><![CDATA[<p>对于 Linux 用户而言，当创建文件或目录时都会自动为该文件或目录分配权限，该权限就是默认权限。对于 Linux 文件和目录，除了具有默认权限外，还有特殊权限。默认权限和特殊权限在使用 Linux 系统时非常重要，特别是和团队开发时尤为重要。本篇就介绍一下如何查看和设置默认权限和特殊权限。以 Ubuntu 20.04 为例进行介绍。</p>
+<a id="more"></a>
+
+<h1 id="文件默认权限：umask"><a href="#文件默认权限：umask" class="headerlink" title="文件默认权限：umask"></a>文件默认权限：<strong>umask</strong></h1><p>查看用户的默认权限</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">➜  ~ <span class="built_in">umask</span></span><br><span class="line">002</span><br><span class="line">➜  ~ <span class="built_in">umask</span> -S</span><br><span class="line">u=rwx,g=rwx,o=rx</span><br></pre></td></tr></table></figure>
+
+<p>以 umask 显示的是数字，加上参数 -S (Symbolic) 显示的是字符。含义解释：文件权限有 r, w, x 三个，分别对应数字 4， 2， 1，002 表示创建文件、目录时剔除 w 写权限。如 umask -S 显示的是创建目录时的默认权限，从上面命令可以看到其他用户 o 缺少 w 写权限。值得注意的是，文件默认是没有可执行权限 x 的。即文件的默认最高权限是 -rw-rw-rw-，目录的默认最高权限是 drwxrwxrwx，因此，剔除 w 写权限时，用户新创建的文件的默认权限是 -rw-rw-r–，新创建的目录的默认权限是 drwxrwxr-x，如下示例</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">➜  ~ touch test1</span><br><span class="line">➜  ~ mkdir test2</span><br><span class="line">➜  ~ ls -ld <span class="built_in">test</span>[12]  <span class="comment"># -d 表示只显示目录本身，不显示它里面包含的内容；中括号表示中间有个指定的字符，而不是任意字符，任意字符用 *</span></span><br><span class="line">-rw-rw-r-- 1 jinzhongxu jinzhongxu    0 3月  17 15:30 test1</span><br><span class="line">drwxrwxr-x 2 jinzhongxu jinzhongxu 4096 3月  17 15:30 test2</span><br></pre></td></tr></table></figure>
+
+<p>如何修改用户的默认权限</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 如果想要用户创建的新文件或目录的群组和其他人没有写权限，可以设置如下，即剔除用户的写权限</span></span><br><span class="line"><span class="built_in">umask</span> 022</span><br></pre></td></tr></table></figure>
+
+<h1 id="文件特殊权限：SUID-SGID-SBIT"><a href="#文件特殊权限：SUID-SGID-SBIT" class="headerlink" title="文件特殊权限：SUID, SGID, SBIT"></a>文件特殊权限：<strong>SUID, SGID, SBIT</strong></h1><p>对于 Linux 系统中有一个目录 /tmp 它的权限如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">➜  ~ ls -ld /tmp</span><br><span class="line">drwxrwxrwt 12 root root 4096 3月  17 15:05 /tmp</span><br></pre></td></tr></table></figure>
+
+<p>可以看到它的权限中有一个 t，熟悉该目录的人应该知道，/tmp 目录下我们可以自由创建内容，也可以查看别人在该目录下创建的文件和目录，但是，我们不能删除别人创建的文件和目录。同时，别人也不能删除我们自己创建的文件和目录。这一切都要归功于特殊权限。</p>
+<p>​    又如</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">➜  ~ ls -l /usr/bin/passwd</span><br><span class="line">-rwsr-xr-x 1 root root 68208 5月  28  2020 /usr/bin/passwd</span><br><span class="line">➜  ~ ls -l /etc/shadow</span><br><span class="line">-rw-r----- 1 root shadow 1229 3月  14 21:38 /etc/shadow</span><br></pre></td></tr></table></figure>
+
+<p>在 /etc/shadow 中存储的是所有用户的密码，但只有 root 用户可以查看和修改。但是，有些人可能会疑惑了，明明自己可以修改自己用户的密码啊，使用 passwd 直接修改就可以了，不需要通知 root 进行修改。这是为什么呢？其实，这也要归功于 /usr/bin/passwd 可执行文件特殊权限 s，那么这些特殊权限符号代表什么含义呢，如何进行设置呢？比如，使用 iftop 命令需要输入密码，如何不输入密码直接使用呢？</p>
+<h2 id="Set-UID"><a href="#Set-UID" class="headerlink" title="Set UID"></a>Set UID</h2><p>当 s 出现在文件拥有者的 x 权限上时，称为 Set UID，简称为 SUID 的特殊权限。关于该特殊权限有如下几个特点：</p>
+<ol>
+<li>SUID 权限仅对二进制程序有效，如 passwd, iftop；</li>
+<li>执行者对于该程序需要具有执行权限；</li>
+<li>本权限仅在执行该程序的过程中有效；</li>
+<li>执行者将具有该程序拥有者的权限；</li>
+</ol>
+<p>当普通用户使用 passwd 执行修改密码的时候，因为 passwd 拥有特殊权限，因此，普通用户能够使用该命令，且命令执行期间拥有 root 的权限修改 /etc/shadow 文件</p>
+<h2 id="Set-GID"><a href="#Set-GID" class="headerlink" title="Set GID"></a>Set GID</h2><p>当 s 出现在群组的 x 上时，称为 Set GID，简称为 SGID，它有如下特点：</p>
+<ol>
+<li>SGID 对二进制程序有用；</li>
+<li>程序执行者对于该程序来说，需具备 x 的权限；</li>
+<li>执行者在执行的过程中将会获得该程序群组的支持；</li>
+</ol>
+<h2 id="Sticky-Bit"><a href="#Sticky-Bit" class="headerlink" title="Sticky Bit"></a>Sticky Bit</h2><p>与 Set UID 和 Set GID 不同，Sticky Bit 只针对目录有效。简称为 SBIT，其对目录的作用是：</p>
+<ol>
+<li>当使用者对于此目录具有 w, x 权限时，即具有写入的权限；</li>
+<li>当使用者在该目录下创建文件或目录时，仅有自己与 root 才有权利删除该文件；</li>
+</ol>
+<p>举例来说，我们的 /tmp 本身的权限是 drwxrwxrwt， 在这样的权限内容下，任何人都可以在 /tmp 内新增、修改文件，但仅有该文件/目录创建者与 root 能够删除自己的目录或文件。</p>
+<h2 id="设置特殊权限"><a href="#设置特殊权限" class="headerlink" title="设置特殊权限"></a>设置特殊权限</h2><p>和读写执行一样，特殊权限也对应有数字：</p>
+<ul>
+<li>4 为 SUID</li>
+<li>2 为 SGID</li>
+<li>1 为 SBIT</li>
+</ul>
+<p>如下示例进行特殊权限设置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">➜  ~ touch <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rw-rw-r-- 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ chmod 4664 <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwSrw-r-- 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p>我们发现出现的是大 S，而不是小 s，这是为什么呢？因为文件 test 本身缺乏 x 可执行权限，所以增加特殊权限也为无法执行该文件，大 S 表示空，即无用的特殊权限。想要使用有用的特殊权限，需要我们的文件本身具有执行权限，如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">➜  ~ chmod +x <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwsrwxr-x 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ chmod 6775 <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwsrwsr-x 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ chmod u+s,g+s,o+t <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwsrwsr-t 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p>可见这样就给文件附加了特殊权限。</p>
+<p>再比如</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod 4755 /usr/sbin/iftop</span><br><span class="line">ll /usr/sbin/iftop</span><br><span class="line">	-rwsr-xr-x 1 root root 68408 9月   5  2019 /usr/sbin/iftop*</span><br></pre></td></tr></table></figure>
+
+<p>这样普通用户就不需要输入密码就可以使用命令 iftop 了。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>鸟哥的 LINUX 私房菜 基础学习篇（第四版）</p>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>查看内存消耗排序情况</title>
     <url>/2019/12/21/linux-memory/</url>
     <content><![CDATA[<p>在终端运行如下命令</p>
@@ -4902,107 +5038,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>Linux 文件和目录的默认权限和特殊权限</title>
-    <url>/2021/03/17/linux-hidden-authority/</url>
-    <content><![CDATA[<p>对于 Linux 用户而言，当创建文件或目录时都会自动为该文件或目录分配权限，该权限就是默认权限。对于 Linux 文件和目录，除了具有默认权限外，还有特殊权限。默认权限和特殊权限在使用 Linux 系统时非常重要，特别是和团队开发时尤为重要。本篇就介绍一下如何查看和设置默认权限和特殊权限。以 Ubuntu 20.04 为例进行介绍。</p>
-<a id="more"></a>
-
-<h1 id="文件默认权限：umask"><a href="#文件默认权限：umask" class="headerlink" title="文件默认权限：umask"></a>文件默认权限：<strong>umask</strong></h1><p>查看用户的默认权限</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">➜  ~ <span class="built_in">umask</span></span><br><span class="line">002</span><br><span class="line">➜  ~ <span class="built_in">umask</span> -S</span><br><span class="line">u=rwx,g=rwx,o=rx</span><br></pre></td></tr></table></figure>
-
-<p>以 umask 显示的是数字，加上参数 -S (Symbolic) 显示的是字符。含义解释：文件权限有 r, w, x 三个，分别对应数字 4， 2， 1，002 表示创建文件、目录时剔除 w 写权限。如 umask -S 显示的是创建目录时的默认权限，从上面命令可以看到其他用户 o 缺少 w 写权限。值得注意的是，文件默认是没有可执行权限 x 的。即文件的默认最高权限是 -rw-rw-rw-，目录的默认最高权限是 drwxrwxrwx，因此，剔除 w 写权限时，用户新创建的文件的默认权限是 -rw-rw-r–，新创建的目录的默认权限是 drwxrwxr-x，如下示例</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">➜  ~ touch test1</span><br><span class="line">➜  ~ mkdir test2</span><br><span class="line">➜  ~ ls -ld <span class="built_in">test</span>[12]  <span class="comment"># -d 表示只显示目录本身，不显示它里面包含的内容；中括号表示中间有个指定的字符，而不是任意字符，任意字符用 *</span></span><br><span class="line">-rw-rw-r-- 1 jinzhongxu jinzhongxu    0 3月  17 15:30 test1</span><br><span class="line">drwxrwxr-x 2 jinzhongxu jinzhongxu 4096 3月  17 15:30 test2</span><br></pre></td></tr></table></figure>
-
-<p>如何修改用户的默认权限</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 如果想要用户创建的新文件或目录的群组和其他人没有写权限，可以设置如下，即剔除用户的写权限</span></span><br><span class="line"><span class="built_in">umask</span> 022</span><br></pre></td></tr></table></figure>
-
-<h1 id="文件特殊权限：SUID-SGID-SBIT"><a href="#文件特殊权限：SUID-SGID-SBIT" class="headerlink" title="文件特殊权限：SUID, SGID, SBIT"></a>文件特殊权限：<strong>SUID, SGID, SBIT</strong></h1><p>对于 Linux 系统中有一个目录 /tmp 它的权限如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">➜  ~ ls -ld /tmp</span><br><span class="line">drwxrwxrwt 12 root root 4096 3月  17 15:05 /tmp</span><br></pre></td></tr></table></figure>
-
-<p>可以看到它的权限中有一个 t，熟悉该目录的人应该知道，/tmp 目录下我们可以自由创建内容，也可以查看别人在该目录下创建的文件和目录，但是，我们不能删除别人创建的文件和目录。同时，别人也不能删除我们自己创建的文件和目录。这一切都要归功于特殊权限。</p>
-<p>​    又如</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">➜  ~ ls -l /usr/bin/passwd</span><br><span class="line">-rwsr-xr-x 1 root root 68208 5月  28  2020 /usr/bin/passwd</span><br><span class="line">➜  ~ ls -l /etc/shadow</span><br><span class="line">-rw-r----- 1 root shadow 1229 3月  14 21:38 /etc/shadow</span><br></pre></td></tr></table></figure>
-
-<p>在 /etc/shadow 中存储的是所有用户的密码，但只有 root 用户可以查看和修改。但是，有些人可能会疑惑了，明明自己可以修改自己用户的密码啊，使用 passwd 直接修改就可以了，不需要通知 root 进行修改。这是为什么呢？其实，这也要归功于 /usr/bin/passwd 可执行文件特殊权限 s，那么这些特殊权限符号代表什么含义呢，如何进行设置呢？比如，使用 iftop 命令需要输入密码，如何不输入密码直接使用呢？</p>
-<h2 id="Set-UID"><a href="#Set-UID" class="headerlink" title="Set UID"></a>Set UID</h2><p>当 s 出现在文件拥有者的 x 权限上时，称为 Set UID，简称为 SUID 的特殊权限。关于该特殊权限有如下几个特点：</p>
-<ol>
-<li>SUID 权限仅对二进制程序有效，如 passwd, iftop；</li>
-<li>执行者对于该程序需要具有执行权限；</li>
-<li>本权限仅在执行该程序的过程中有效；</li>
-<li>执行者将具有该程序拥有者的权限；</li>
-</ol>
-<p>当普通用户使用 passwd 执行修改密码的时候，因为 passwd 拥有特殊权限，因此，普通用户能够使用该命令，且命令执行期间拥有 root 的权限修改 /etc/shadow 文件</p>
-<h2 id="Set-GID"><a href="#Set-GID" class="headerlink" title="Set GID"></a>Set GID</h2><p>当 s 出现在群组的 x 上时，称为 Set GID，简称为 SGID，它有如下特点：</p>
-<ol>
-<li>SGID 对二进制程序有用；</li>
-<li>程序执行者对于该程序来说，需具备 x 的权限；</li>
-<li>执行者在执行的过程中将会获得该程序群组的支持；</li>
-</ol>
-<h2 id="Sticky-Bit"><a href="#Sticky-Bit" class="headerlink" title="Sticky Bit"></a>Sticky Bit</h2><p>与 Set UID 和 Set GID 不同，Sticky Bit 只针对目录有效。简称为 SBIT，其对目录的作用是：</p>
-<ol>
-<li>当使用者对于此目录具有 w, x 权限时，即具有写入的权限；</li>
-<li>当使用者在该目录下创建文件或目录时，仅有自己与 root 才有权利删除该文件；</li>
-</ol>
-<p>举例来说，我们的 /tmp 本身的权限是 drwxrwxrwt， 在这样的权限内容下，任何人都可以在 /tmp 内新增、修改文件，但仅有该文件/目录创建者与 root 能够删除自己的目录或文件。</p>
-<h2 id="设置特殊权限"><a href="#设置特殊权限" class="headerlink" title="设置特殊权限"></a>设置特殊权限</h2><p>和读写执行一样，特殊权限也对应有数字：</p>
-<ul>
-<li>4 为 SUID</li>
-<li>2 为 SGID</li>
-<li>1 为 SBIT</li>
-</ul>
-<p>如下示例进行特殊权限设置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">➜  ~ touch <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rw-rw-r-- 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ chmod 4664 <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwSrw-r-- 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
-
-<p>我们发现出现的是大 S，而不是小 s，这是为什么呢？因为文件 test 本身缺乏 x 可执行权限，所以增加特殊权限也为无法执行该文件，大 S 表示空，即无用的特殊权限。想要使用有用的特殊权限，需要我们的文件本身具有执行权限，如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">➜  ~ chmod +x <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwsrwxr-x 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ chmod 6775 <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwsrwsr-x 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ chmod u+s,g+s,o+t <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwsrwsr-t 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
-
-<p>可见这样就给文件附加了特殊权限。</p>
-<p>再比如</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod 4755 /usr/sbin/iftop</span><br><span class="line">ll /usr/sbin/iftop</span><br><span class="line">	-rwsr-xr-x 1 root root 68408 9月   5  2019 /usr/sbin/iftop*</span><br></pre></td></tr></table></figure>
-
-<p>这样普通用户就不需要输入密码就可以使用命令 iftop 了。</p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>鸟哥的 LINUX 私房菜 基础学习篇（第四版）</p>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux 系统下 usr 目录由来</title>
-    <url>/2020/12/09/linux-usr-history/</url>
-    <content><![CDATA[<p>在 Linux（或Unix） 系统下，存放二进制文件的目录一般用 bin 表示，如 /bin, /usr/bin, /usr/local/bin, /opt/bin 等等，它们有什么区别？</p>
-<a id="more"></a>
-
-<p>在文章: <a href="http://lists.busybox.net/pipermail/busybox/2010-December/074114.html">Understanding the bin, sbin, usr/bin , usr/sbin split</a> 中可以知道，Linux 目录结构是历史造成的。</p>
-<p>1969年，Ken Thompson 和 Dennis Ritchie 在小型机 PDP-7上发明了 Unix。1971年，他们将主机升级到 PDP-11。当时使用的存储盘 RK05 容量大约是1.5MB，随着使用，根目录（/）下的操作系统越来越大，无法装下。于是增加了第二张盘 RK05，专门储存用户（user）程序，取名挂载点为 /usr，两张盘的结构完全一样，如在第一张盘或根目录下的 /bin, /sbin, /lib, /tmp… 在第二张盘 /usr 目录下也有。但是，随着时间继续，储存的程序越来越多，就需要第三张盘，取名挂载点 /home，用于储存 /usr 里面用户的数据。</p>
-<p>随着系统的发展，各个目录的含义进一步明确：</p>
-<ol>
-<li>/：存放系统程序，也就是 At&amp;t 开发的 Unix 程序。</li>
-</ol>
-<p>　2. /usr：存放 Unix 系统商（比如 IBM 和 HP ）开发的程序。</p>
-<p>　3. /usr/local：存放用户自己安装的程序。</p>
-<p>　4. /opt：在某些系统，用于存放第三方厂商开发的程序，所以取名为 option，意为”选装”。</p>
-<p>参考链接：</p>
-<ol>
-<li><a href="http://www.ruanyifeng.com/blog/2012/02/a_history_of_unix_directory_structure.html">Unix目录结构的来历</a></li>
-<li><a href="http://lists.busybox.net/pipermail/busybox/2010-December/074114.html">Understanding the bin, sbin, usr/bin , usr/sbin split</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>usr</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>在 Linux 上设置不同的语言和时区</title>
     <url>/2020/12/30/locale-linux-language/</url>
     <content><![CDATA[<p>Linux 系统语言的设置至关重要，当设置不匹配的语言时，严重影响使用的效率。如在系统上没有设置中文时，大多出现乱码、数字等情况，使得使用的体验感大幅下降。下面介绍在 Debian, CentOS 等系统上设置中文或其他语言的方法。本篇命令以 root 身份运行。</p>
@@ -5037,20 +5072,24 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>linux 中 ls 仅列出目录或文件</title>
-    <url>/2022/01/21/ls-dir-file/</url>
-    <content><![CDATA[<p>Linux 中的 ls 命令可谓是使用最多的命令之一，有效掌握该命令的能够大大提高效率，下面介绍如何使用 ls 命令仅列出目录或文件。本篇以 Ubuntu 18.04 为例。</p>
+    <title>Linux 系统下 usr 目录由来</title>
+    <url>/2020/12/09/linux-usr-history/</url>
+    <content><![CDATA[<p>在 Linux（或Unix） 系统下，存放二进制文件的目录一般用 bin 表示，如 /bin, /usr/bin, /usr/local/bin, /opt/bin 等等，它们有什么区别？</p>
 <a id="more"></a>
 
-<h1 id="仅列出目录"><a href="#仅列出目录" class="headerlink" title="仅列出目录"></a>仅列出目录</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 不能罗列隐藏目录</span></span><br><span class="line">ls -ld */</span><br><span class="line">ls -lF | grep /</span><br><span class="line">ls -lF | grep /$</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不罗列隐藏目录</span></span><br><span class="line">ls -l | grep ^d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 能够罗列隐藏目录</span></span><br><span class="line">ls -al | grep ^d</span><br></pre></td></tr></table></figure>
-
-<h1 id="仅列出文件"><a href="#仅列出文件" class="headerlink" title="仅列出文件"></a>仅列出文件</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 不罗列隐藏文件</span></span><br><span class="line">ls -l | grep ^-</span><br><span class="line"></span><br><span class="line"><span class="comment"># 能够罗列隐藏文件</span></span><br><span class="line">ls -al | grep ^-</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="https://blog.csdn.net/DLUTBruceZhang/article/details/9244897">Linux Shell 只列出目录的方法</a></li>
-<li><a href="https://segmentfault.com/a/1190000023186477">Linux技巧：ls命令只列出子目录名和每行打印一个文件名</a></li>
+<p>在文章: <a href="http://lists.busybox.net/pipermail/busybox/2010-December/074114.html">Understanding the bin, sbin, usr/bin , usr/sbin split</a> 中可以知道，Linux 目录结构是历史造成的。</p>
+<p>1969年，Ken Thompson 和 Dennis Ritchie 在小型机 PDP-7上发明了 Unix。1971年，他们将主机升级到 PDP-11。当时使用的存储盘 RK05 容量大约是1.5MB，随着使用，根目录（/）下的操作系统越来越大，无法装下。于是增加了第二张盘 RK05，专门储存用户（user）程序，取名挂载点为 /usr，两张盘的结构完全一样，如在第一张盘或根目录下的 /bin, /sbin, /lib, /tmp… 在第二张盘 /usr 目录下也有。但是，随着时间继续，储存的程序越来越多，就需要第三张盘，取名挂载点 /home，用于储存 /usr 里面用户的数据。</p>
+<p>随着系统的发展，各个目录的含义进一步明确：</p>
+<ol>
+<li>/：存放系统程序，也就是 At&amp;t 开发的 Unix 程序。</li>
+</ol>
+<p>　2. /usr：存放 Unix 系统商（比如 IBM 和 HP ）开发的程序。</p>
+<p>　3. /usr/local：存放用户自己安装的程序。</p>
+<p>　4. /opt：在某些系统，用于存放第三方厂商开发的程序，所以取名为 option，意为”选装”。</p>
+<p>参考链接：</p>
+<ol>
+<li><a href="http://www.ruanyifeng.com/blog/2012/02/a_history_of_unix_directory_structure.html">Unix目录结构的来历</a></li>
+<li><a href="http://lists.busybox.net/pipermail/busybox/2010-December/074114.html">Understanding the bin, sbin, usr/bin , usr/sbin split</a></li>
 </ol>
 ]]></content>
       <categories>
@@ -5059,6 +5098,7 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </categories>
       <tags>
         <tag>linux</tag>
+        <tag>usr</tag>
       </tags>
   </entry>
   <entry>
@@ -5098,6 +5138,31 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>ubuntu</tag>
         <tag>windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>linux 中 ls 仅列出目录或文件</title>
+    <url>/2022/01/21/ls-dir-file/</url>
+    <content><![CDATA[<p>Linux 中的 ls 命令可谓是使用最多的命令之一，有效掌握该命令的能够大大提高效率，下面介绍如何使用 ls 命令仅列出目录或文件。本篇以 Ubuntu 18.04 为例。</p>
+<a id="more"></a>
+
+<h1 id="仅列出目录"><a href="#仅列出目录" class="headerlink" title="仅列出目录"></a>仅列出目录</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 不能罗列隐藏目录</span></span><br><span class="line">ls -ld */</span><br><span class="line">ls -lF | grep /</span><br><span class="line">ls -lF | grep /$</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不罗列隐藏目录</span></span><br><span class="line">ls -l | grep ^d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 能够罗列隐藏目录</span></span><br><span class="line">ls -al | grep ^d</span><br></pre></td></tr></table></figure>
+
+<h1 id="仅列出文件"><a href="#仅列出文件" class="headerlink" title="仅列出文件"></a>仅列出文件</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 不罗列隐藏文件</span></span><br><span class="line">ls -l | grep ^-</span><br><span class="line"></span><br><span class="line"><span class="comment"># 能够罗列隐藏文件</span></span><br><span class="line">ls -al | grep ^-</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://blog.csdn.net/DLUTBruceZhang/article/details/9244897">Linux Shell 只列出目录的方法</a></li>
+<li><a href="https://segmentfault.com/a/1190000023186477">Linux技巧：ls命令只列出子目录名和每行打印一个文件名</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
       </tags>
   </entry>
   <entry>
@@ -5161,6 +5226,31 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>mac</tag>
         <tag>launchctl</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mac 电脑重设密码</title>
+    <url>/2021/05/29/mac-resetpassword/</url>
+    <content><![CDATA[<p>当某天突然 Mac 电脑无法通过输入密码正常进入系统，但密码正确无误，不知什么原因，可通过如下方式重设密码。</p>
+<a id="more"></a>
+
+<h1 id="关机"><a href="#关机" class="headerlink" title="关机"></a>关机</h1><p>按住开机键3秒，电脑强制关机</p>
+<h1 id="进入恢复模式"><a href="#进入恢复模式" class="headerlink" title="进入恢复模式"></a>进入恢复模式</h1><p>按住 command + r 键保持住，然后按开机键开机，进入恢复模式</p>
+<h1 id="通过终端命令重设密码"><a href="#通过终端命令重设密码" class="headerlink" title="通过终端命令重设密码"></a>通过终端命令重设密码</h1><p>在左上角菜单栏找到 <code>实用程序</code>，选择 <code>Terminal</code>，输入 <code>resetpassword</code> 回车</p>
+<p>此时会弹出一个界面，请同时设定所有用户的密码，可以重设管理员密码。</p>
+<p>重设确认后，重启电脑即可。</p>
+<h1 id="其他重设密码方法"><a href="#其他重设密码方法" class="headerlink" title="其他重设密码方法"></a>其他重设密码方法</h1><p>如果能够正常进入 Mac 系统，可以使用如下方法重设密码</p>
+<p>打开 <code>系统便好设置</code> 找到 <code>用户和群组</code> 打开小锁, 点击更改密码</p>
+<p>如果勾选了<code>运行用户使用Apple ID重设密码</code>，那么开无法登陆系统时可尝试 Apple ID 找回密码。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>1.<a href="https://www.cnblogs.com/cdfive2018/p/12441500.html">mac系统登录密码对的但无法登录</a></p>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>mac</category>
+      </categories>
+      <tags>
+        <tag>mac</tag>
+        <tag>mbp</tag>
       </tags>
   </entry>
   <entry>
@@ -5232,31 +5322,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>mac</tag>
         <tag>caffeinate</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Mac 电脑重设密码</title>
-    <url>/2021/05/29/mac-resetpassword/</url>
-    <content><![CDATA[<p>当某天突然 Mac 电脑无法通过输入密码正常进入系统，但密码正确无误，不知什么原因，可通过如下方式重设密码。</p>
-<a id="more"></a>
-
-<h1 id="关机"><a href="#关机" class="headerlink" title="关机"></a>关机</h1><p>按住开机键3秒，电脑强制关机</p>
-<h1 id="进入恢复模式"><a href="#进入恢复模式" class="headerlink" title="进入恢复模式"></a>进入恢复模式</h1><p>按住 command + r 键保持住，然后按开机键开机，进入恢复模式</p>
-<h1 id="通过终端命令重设密码"><a href="#通过终端命令重设密码" class="headerlink" title="通过终端命令重设密码"></a>通过终端命令重设密码</h1><p>在左上角菜单栏找到 <code>实用程序</code>，选择 <code>Terminal</code>，输入 <code>resetpassword</code> 回车</p>
-<p>此时会弹出一个界面，请同时设定所有用户的密码，可以重设管理员密码。</p>
-<p>重设确认后，重启电脑即可。</p>
-<h1 id="其他重设密码方法"><a href="#其他重设密码方法" class="headerlink" title="其他重设密码方法"></a>其他重设密码方法</h1><p>如果能够正常进入 Mac 系统，可以使用如下方法重设密码</p>
-<p>打开 <code>系统便好设置</code> 找到 <code>用户和群组</code> 打开小锁, 点击更改密码</p>
-<p>如果勾选了<code>运行用户使用Apple ID重设密码</code>，那么开无法登陆系统时可尝试 Apple ID 找回密码。</p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>1.<a href="https://www.cnblogs.com/cdfive2018/p/12441500.html">mac系统登录密码对的但无法登录</a></p>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>mac</category>
-      </categories>
-      <tags>
-        <tag>mac</tag>
-        <tag>mbp</tag>
       </tags>
   </entry>
   <entry>
@@ -5628,6 +5693,41 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>Mac Book Pro 更改 bash 为 zsh</title>
+    <url>/2019/12/21/mbp-bash-to-zsh/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chsh -s /bin/zsh</span><br><span class="line"><span class="comment"># 有时 Centos 上没有自动安装工具 chsh，可使用如下方法安装</span></span><br><span class="line">sudo yum install util-linux-user</span><br></pre></td></tr></table></figure>
+
+<p>安装 oh-my-zsh</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sh -c <span class="string">&quot;<span class="subst">$(wget -O- https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>shell</tag>
+        <tag>mbp</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习神经网络模型loss和accuracy的理解</title>
+    <url>/2020/03/26/ml-nn-loss-accuracy/</url>
+    <content><![CDATA[<p>训练机器学习模型时，特别是使用 TensorFlow 进行训练神经网络模型时，在每一步（epoch，表示一个周期，即训练完所有训练集样本。假设训练集包含100000个样本，而batch_size设置为100，即一次输入100个训练样本，那么需要1000次迭代后就完成一次epoch，将所有训练样本训练一次）总是会出现loss是多少，accuracy是多少。</p>
+<a id="more"></a>
+
+<p>loss越低，模型越好（当模型没有过拟合时）。它不是一个百分比，而是一次epoch中训练集样本或验证集样本所有error的和。比如，在神经网络中，loss值一般是 negative log likelihood(分类问题)和 residual sum of squares(回归问题)。因此，模型的训练是通过减少loss为目的的，即最小化loss function，如神经网络中采用反向传播对模型参数求导。loss隐含着每一次优化迭代后模型表现的好坏。</p>
+<p>accuracy是当模型的参数学习得到并固定后来计算得到的。通过比较真实标签和预测标签来确定的0-1损失。它是一个百分比值。</p>
+<p>优化训练的目标是loss值，而不是accuracy，因为loss function可以求导优化，而accuracy不能够求导。</p>
+]]></content>
+      <categories>
+        <category>research</category>
+      </categories>
+      <tags>
+        <tag>neural network</tag>
+        <tag>machine learning</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux命令 more 和 less</title>
     <url>/2020/03/13/more-or-less/</url>
     <content><![CDATA[<p>Linux系统有命令more和less来在终端查看文件内容，但是，两者有什么区别呢？总的来说，less比more更有效率更快，因为less不会立即加载整个文件，而more命令会一次加载整个文件内容。</p>
@@ -5669,66 +5769,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>机器学习神经网络模型loss和accuracy的理解</title>
-    <url>/2020/03/26/ml-nn-loss-accuracy/</url>
-    <content><![CDATA[<p>训练机器学习模型时，特别是使用 TensorFlow 进行训练神经网络模型时，在每一步（epoch，表示一个周期，即训练完所有训练集样本。假设训练集包含100000个样本，而batch_size设置为100，即一次输入100个训练样本，那么需要1000次迭代后就完成一次epoch，将所有训练样本训练一次）总是会出现loss是多少，accuracy是多少。</p>
-<a id="more"></a>
-
-<p>loss越低，模型越好（当模型没有过拟合时）。它不是一个百分比，而是一次epoch中训练集样本或验证集样本所有error的和。比如，在神经网络中，loss值一般是 negative log likelihood(分类问题)和 residual sum of squares(回归问题)。因此，模型的训练是通过减少loss为目的的，即最小化loss function，如神经网络中采用反向传播对模型参数求导。loss隐含着每一次优化迭代后模型表现的好坏。</p>
-<p>accuracy是当模型的参数学习得到并固定后来计算得到的。通过比较真实标签和预测标签来确定的0-1损失。它是一个百分比值。</p>
-<p>优化训练的目标是loss值，而不是accuracy，因为loss function可以求导优化，而accuracy不能够求导。</p>
-]]></content>
-      <categories>
-        <category>research</category>
-      </categories>
-      <tags>
-        <tag>neural network</tag>
-        <tag>machine learning</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Mac Book Pro 更改 bash 为 zsh</title>
-    <url>/2019/12/21/mbp-bash-to-zsh/</url>
-    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chsh -s /bin/zsh</span><br><span class="line"><span class="comment"># 有时 Centos 上没有自动安装工具 chsh，可使用如下方法安装</span></span><br><span class="line">sudo yum install util-linux-user</span><br></pre></td></tr></table></figure>
-
-<p>安装 oh-my-zsh</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sh -c <span class="string">&quot;<span class="subst">$(wget -O- https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>shell</tag>
-        <tag>mbp</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>国自然申请书的一些建议</title>
-    <url>/2020/01/08/nsfc-suggestion/</url>
-    <content><![CDATA[<p>国家自然科学基金对于科研人员是无比重要的，除了补充科研经费，同时在一定程度上也是检验一个科研人员科研能力的试金石，如在研究思想、研究敏锐性、研究方法、同行评议等方面。那如何写出一份高质量的国自然申请书呢，这里给出一些个人建议，供参考。</p>
-<a id="more"></a>
-
-<p>写申请书之前需要问自己几个问题，根据这几个问题来撰写</p>
-<ol>
-<li>（立项依据）为什么要做该项目？提出科学问题</li>
-<li>（研究背景）是否为<strong>前沿</strong>和<strong>热点</strong>研究问题？最好列出最近<strong>5年</strong>内国内外研究进展</li>
-<li>（研究内容）做哪些事请能够解决提出的科学问题，实现预期目标？研究内容要与立项依据提出的问题一致，且有<strong>创新性</strong></li>
-<li>（研究方法）具体如何去做？</li>
-<li>（研究可行性）自己在该领域有哪些前期积累？重点介绍曾经做过的相关前期工作，自己是项目的最佳实践者，该项目<strong>能够很好的执行并完成</strong></li>
-<li>（研究基础）为什么自己能够做该项目？要列出与研究内容<strong>相关</strong>的学术论文</li>
-</ol>
-<p>从立项依据到研究内容，从研究内容到研究方法，从研究方法到研究基础，都是一环扣一环，环环相扣，不能错节。申请书中不能出现语言错误、格式错误等。</p>
-]]></content>
-      <categories>
-        <category>research</category>
-      </categories>
-      <tags>
-        <tag>nsfc</tag>
-        <tag>application</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>牛顿方法求解方程根</title>
     <url>/2020/07/26/newton-method-optimization/</url>
     <content><![CDATA[<p>牛顿法求极小值和方程根</p>
@@ -5765,6 +5805,31 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>maths</tag>
         <tag>Newton</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>国自然申请书的一些建议</title>
+    <url>/2020/01/08/nsfc-suggestion/</url>
+    <content><![CDATA[<p>国家自然科学基金对于科研人员是无比重要的，除了补充科研经费，同时在一定程度上也是检验一个科研人员科研能力的试金石，如在研究思想、研究敏锐性、研究方法、同行评议等方面。那如何写出一份高质量的国自然申请书呢，这里给出一些个人建议，供参考。</p>
+<a id="more"></a>
+
+<p>写申请书之前需要问自己几个问题，根据这几个问题来撰写</p>
+<ol>
+<li>（立项依据）为什么要做该项目？提出科学问题</li>
+<li>（研究背景）是否为<strong>前沿</strong>和<strong>热点</strong>研究问题？最好列出最近<strong>5年</strong>内国内外研究进展</li>
+<li>（研究内容）做哪些事请能够解决提出的科学问题，实现预期目标？研究内容要与立项依据提出的问题一致，且有<strong>创新性</strong></li>
+<li>（研究方法）具体如何去做？</li>
+<li>（研究可行性）自己在该领域有哪些前期积累？重点介绍曾经做过的相关前期工作，自己是项目的最佳实践者，该项目<strong>能够很好的执行并完成</strong></li>
+<li>（研究基础）为什么自己能够做该项目？要列出与研究内容<strong>相关</strong>的学术论文</li>
+</ol>
+<p>从立项依据到研究内容，从研究内容到研究方法，从研究方法到研究基础，都是一环扣一环，环环相扣，不能错节。申请书中不能出现语言错误、格式错误等。</p>
+]]></content>
+      <categories>
+        <category>research</category>
+      </categories>
+      <tags>
+        <tag>nsfc</tag>
+        <tag>application</tag>
       </tags>
   </entry>
   <entry>
@@ -6082,33 +6147,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>Pycharm 自动文件代码注释说明</title>
-    <url>/2020/07/31/pycharm-comments/</url>
-    <content><![CDATA[<p>PyCharm 是一款非常优秀的python代码开发工具，功能强大，特别是代码提示功能，非常好用。在我们开发python代码时，常常需要给代码文件添加说明注释，比如，在什么时候创建的代码、有谁开发、作者信息等等，下面给出一个个人喜好的格式</p>
-<a id="more"></a>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># @Author   : Jinzhong Xu</span></span><br><span class="line"><span class="comment"># @Contact  : jinzhongxu@csu.ac.cn</span></span><br><span class="line"><span class="comment"># @Time     : $&#123;DATE&#125; $&#123;TIME&#125;</span></span><br><span class="line"><span class="comment"># @File     : $&#123;NAME&#125;.py</span></span><br><span class="line"><span class="comment"># @Software : $&#123;PRODUCT_NAME&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>如何在PyCharm中设置呢？</p>
-<p>以Windows上为例：</p>
-<ol>
-<li><p>打开PyCharm -&gt; File -&gt; Settings -&gt; Editor -&gt; File and Code Templates -&gt; Python Script </p>
-</li>
-<li><p>然后添加上面的格式代码</p>
-</li>
-<li><p>点击 Apply -&gt; OK</p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>pycharm</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>把本地代码发布到 GitHub 上</title>
     <url>/2020/10/13/publish-local-code-on-github/</url>
     <content><![CDATA[<p>本地写好的代码如何发布到 GitHub 上呢？这里给出一个方法。</p>
@@ -6146,6 +6184,33 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>python</tag>
         <tag>github</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Pycharm 自动文件代码注释说明</title>
+    <url>/2020/07/31/pycharm-comments/</url>
+    <content><![CDATA[<p>PyCharm 是一款非常优秀的python代码开发工具，功能强大，特别是代码提示功能，非常好用。在我们开发python代码时，常常需要给代码文件添加说明注释，比如，在什么时候创建的代码、有谁开发、作者信息等等，下面给出一个个人喜好的格式</p>
+<a id="more"></a>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># @Author   : Jinzhong Xu</span></span><br><span class="line"><span class="comment"># @Contact  : jinzhongxu@csu.ac.cn</span></span><br><span class="line"><span class="comment"># @Time     : $&#123;DATE&#125; $&#123;TIME&#125;</span></span><br><span class="line"><span class="comment"># @File     : $&#123;NAME&#125;.py</span></span><br><span class="line"><span class="comment"># @Software : $&#123;PRODUCT_NAME&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如何在PyCharm中设置呢？</p>
+<p>以Windows上为例：</p>
+<ol>
+<li><p>打开PyCharm -&gt; File -&gt; Settings -&gt; Editor -&gt; File and Code Templates -&gt; Python Script </p>
+</li>
+<li><p>然后添加上面的格式代码</p>
+</li>
+<li><p>点击 Apply -&gt; OK</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>pycharm</tag>
       </tags>
   </entry>
   <entry>
@@ -6646,46 +6711,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>利用 PyQt5 开发 Python 图形用户程序</title>
-    <url>/2021/11/28/python-qt-gui/</url>
-    <content><![CDATA[<p>Python 作为一种高级编程语言，简洁高效，开发效率高。将 Python 与 JupyterLab 结合使用非常方便，也是我之前常采用的形式。但本篇主要介绍用 Python 开发桌面等应用程序，利用图形界面实现与用户交互。本篇将包含 Miniconda, PyQt5, pyqt5-tools, Qt Designer, pyinstaller 等。</p>
-<a id="more"></a>
-
-<h1 id="安装需要的包"><a href="#安装需要的包" class="headerlink" title="安装需要的包"></a>安装需要的包</h1><p>首先，从<a href="https://docs.conda.io/en/latest/miniconda.html">官网</a>下载 Miniconda，配置好开发环境，这时就可以使用 Python 了。</p>
-<p>其次，从 <a href="https://pypi.org/">Python packages 官网</a> 安装 PyQt5 和 pyqt5-tools（PyQt6 在 2021年1月份已经发布，截止本篇文章，已经到 6.2.1，大家可以自己选择使用）。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pip install PyQt5</span><br><span class="line">pip install pyqt5-tools</span><br></pre></td></tr></table></figure>
-
-<p>到目前，所安装的包已经足够开发 Python 图形用户程序，但设计图形界面不是那么直观，可利用下面的 Qt Designer  进行图形设计界面。</p>
-<p>然后，从网址 <a href="https://build-system.fman.io/qt-designer-download">fman build system</a> 下载 Qt Designer，包含有 Windows 版和 Mac 版。下载需要的版本，并安装。在 Windows 上利用 Miniconda 安装过 PyQt5 和 pyqt5-tools 后，默认会在路径 <code>miniconda\Lib\site-packages\qt5_applications\Qt\bin</code>下包含有 Qt Designer 工具，只需要把它添加到 PyCharm 中即可，方法如下：<font color=cyan>在设置中搜索 external tools， 打开后，添加，主要是把路径设置好即可。这样在工程主目录右键即可看到 external tools 里的 qt designer (添加时自己设置的名字)</font>。</p>
-<p>最后，安装打包程序 pyinstaller:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pip install pyinstaller</span><br></pre></td></tr></table></figure>
-
-<h1 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h1><p>首先，使用 Qt Designer 设计需要的图形界面，然后保存，如 <code>test.ui</code>.</p>
-<p>其次，进入该文件的目录，打开 shell 或 cmd，输入如下命令，把其转化为 .py 文件:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pyuic5 -x test.ui -o main.py</span><br></pre></td></tr></table></figure>
-
-<p>只需要把它添加到 PyCharm 中即可，方法如下：<font color=cyan>在设置中搜索 external tools， 打开后，添加，program 选择程序路径，arguments 填写 <code>$FileName$ -o $FileNameWithoutExtension$.py</code>,  working directory 填写 <code>$FileDir$</code>， 设置好点确定即可。这样在工程主目录右键即可看到 external tools 里的 PyUIC5 (添加时自己设置的名字)</font>。</p>
-<p>然后，在该文件中开发，增加各按钮等的功能函数。此时，运行程序能够看到程序演示效果。</p>
-<p>最后，使用 pyinstaller 将 Python 程序打包成可独立运行的应用程序。因为其将运行该程序的所有依赖环境都打包进一个 .exe 或 .app 文件中，所以可以拷贝或传播到其他电脑上使用。打包方法如下（首先进入工程目录，假设 main.py 是程序主入口）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 常用方法，打包成一个文件夹，该方法比加 -F 打包成一个文件的程序启动速度快3-6倍</span></span><br><span class="line">pyinstaller main.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># -w (--noconsole) 设置程序运行时不显示黑框；-i icon.ico 设置程序图标</span></span><br><span class="line">pyinstaller -w -i icon.ico main.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加额外数据，如图像资源</span></span><br><span class="line"><span class="comment"># pyinstaller x.py --add-data=&quot;源地址;目标地址&quot;。 windows以;分割，linux以:分割</span></span><br><span class="line"><span class="comment"># 如下，会把 main.py 同目录下的 resources 文件夹，打包到 dist/main 文件夹中，命名仍然是 resources</span></span><br><span class="line">pyinstaller main.py --add-data resources;resources</span><br><span class="line"></span><br><span class="line"><span class="comment"># 个人常用方法</span></span><br><span class="line"><span class="comment"># 不显示控制台，清空上次打包痕迹，设置图标，打包到release1.0，添加资源</span></span><br><span class="line">pyinstaller main.py -w --clean -i icon.ico --distpath release1.0 --add-data resources;resources</span><br></pre></td></tr></table></figure>
-
-<p>详细打包方法可参考我的另一篇：<a href="https://xujinzh.github.io/2020/07/21/python-to-exe/">Python 程序编译成 exe 可执行文件</a>.</p>
-<p>此时，点击 dist 目录下的 main.exe 或 main.app 就可以运行程序了。</p>
-<p><font color=cyan>注意：打包时建议使用 conda 另外创建一个新的虚拟环境，该坏境包含运行程序必须的包即可，其他建议不要安装，这样打包的程序会较小。</font></p>
-<p>利用 conda 创建虚拟环境的方法可参考我的另一篇：<a href="https://xujinzh.github.io/2020/03/25/conda-jupyter-env-kernel/">Conda 配置其他虚拟环境 jupyter kernel</a>.</p>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>shell</tag>
-        <tag>pyqt5</tag>
-        <tag>gui</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>命令行运行 Python 代码时传参数</title>
     <url>/2021/10/25/python-shell-run-with-arguments/</url>
     <content><![CDATA[<p>Python 代码能够以多种形式运行，如在 JupyterLab 中交互式方式、在 PyCharm 中以工程代码形式运行。有时，我们还需要在终端或CMD 以命令行的形式运行。这些运行方式都能够实现 Python 代码的运行。对于需要自定义参数的代码，在 JupyterLab 中我们可以把参数写入单元格内，在 PyCharm 中我们可以将参数写入配置文件内，那么在终端或CMD运行 Python 代码时，如何传入参数呢，下面介绍两种方法。</p>
@@ -6839,6 +6864,46 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>python</tag>
         <tag>multiprocess</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>利用 PyQt5 开发 Python 图形用户程序</title>
+    <url>/2021/11/28/python-qt-gui/</url>
+    <content><![CDATA[<p>Python 作为一种高级编程语言，简洁高效，开发效率高。将 Python 与 JupyterLab 结合使用非常方便，也是我之前常采用的形式。但本篇主要介绍用 Python 开发桌面等应用程序，利用图形界面实现与用户交互。本篇将包含 Miniconda, PyQt5, pyqt5-tools, Qt Designer, pyinstaller 等。</p>
+<a id="more"></a>
+
+<h1 id="安装需要的包"><a href="#安装需要的包" class="headerlink" title="安装需要的包"></a>安装需要的包</h1><p>首先，从<a href="https://docs.conda.io/en/latest/miniconda.html">官网</a>下载 Miniconda，配置好开发环境，这时就可以使用 Python 了。</p>
+<p>其次，从 <a href="https://pypi.org/">Python packages 官网</a> 安装 PyQt5 和 pyqt5-tools（PyQt6 在 2021年1月份已经发布，截止本篇文章，已经到 6.2.1，大家可以自己选择使用）。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pip install PyQt5</span><br><span class="line">pip install pyqt5-tools</span><br></pre></td></tr></table></figure>
+
+<p>到目前，所安装的包已经足够开发 Python 图形用户程序，但设计图形界面不是那么直观，可利用下面的 Qt Designer  进行图形设计界面。</p>
+<p>然后，从网址 <a href="https://build-system.fman.io/qt-designer-download">fman build system</a> 下载 Qt Designer，包含有 Windows 版和 Mac 版。下载需要的版本，并安装。在 Windows 上利用 Miniconda 安装过 PyQt5 和 pyqt5-tools 后，默认会在路径 <code>miniconda\Lib\site-packages\qt5_applications\Qt\bin</code>下包含有 Qt Designer 工具，只需要把它添加到 PyCharm 中即可，方法如下：<font color=cyan>在设置中搜索 external tools， 打开后，添加，主要是把路径设置好即可。这样在工程主目录右键即可看到 external tools 里的 qt designer (添加时自己设置的名字)</font>。</p>
+<p>最后，安装打包程序 pyinstaller:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pip install pyinstaller</span><br></pre></td></tr></table></figure>
+
+<h1 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h1><p>首先，使用 Qt Designer 设计需要的图形界面，然后保存，如 <code>test.ui</code>.</p>
+<p>其次，进入该文件的目录，打开 shell 或 cmd，输入如下命令，把其转化为 .py 文件:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pyuic5 -x test.ui -o main.py</span><br></pre></td></tr></table></figure>
+
+<p>只需要把它添加到 PyCharm 中即可，方法如下：<font color=cyan>在设置中搜索 external tools， 打开后，添加，program 选择程序路径，arguments 填写 <code>$FileName$ -o $FileNameWithoutExtension$.py</code>,  working directory 填写 <code>$FileDir$</code>， 设置好点确定即可。这样在工程主目录右键即可看到 external tools 里的 PyUIC5 (添加时自己设置的名字)</font>。</p>
+<p>然后，在该文件中开发，增加各按钮等的功能函数。此时，运行程序能够看到程序演示效果。</p>
+<p>最后，使用 pyinstaller 将 Python 程序打包成可独立运行的应用程序。因为其将运行该程序的所有依赖环境都打包进一个 .exe 或 .app 文件中，所以可以拷贝或传播到其他电脑上使用。打包方法如下（首先进入工程目录，假设 main.py 是程序主入口）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 常用方法，打包成一个文件夹，该方法比加 -F 打包成一个文件的程序启动速度快3-6倍</span></span><br><span class="line">pyinstaller main.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># -w (--noconsole) 设置程序运行时不显示黑框；-i icon.ico 设置程序图标</span></span><br><span class="line">pyinstaller -w -i icon.ico main.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加额外数据，如图像资源</span></span><br><span class="line"><span class="comment"># pyinstaller x.py --add-data=&quot;源地址;目标地址&quot;。 windows以;分割，linux以:分割</span></span><br><span class="line"><span class="comment"># 如下，会把 main.py 同目录下的 resources 文件夹，打包到 dist/main 文件夹中，命名仍然是 resources</span></span><br><span class="line">pyinstaller main.py --add-data resources;resources</span><br><span class="line"></span><br><span class="line"><span class="comment"># 个人常用方法</span></span><br><span class="line"><span class="comment"># 不显示控制台，清空上次打包痕迹，设置图标，打包到release1.0，添加资源</span></span><br><span class="line">pyinstaller main.py -w --clean -i icon.ico --distpath release1.0 --add-data resources;resources</span><br></pre></td></tr></table></figure>
+
+<p>详细打包方法可参考我的另一篇：<a href="https://xujinzh.github.io/2020/07/21/python-to-exe/">Python 程序编译成 exe 可执行文件</a>.</p>
+<p>此时，点击 dist 目录下的 main.exe 或 main.app 就可以运行程序了。</p>
+<p><font color=cyan>注意：打包时建议使用 conda 另外创建一个新的虚拟环境，该坏境包含运行程序必须的包即可，其他建议不要安装，这样打包的程序会较小。</font></p>
+<p>利用 conda 创建虚拟环境的方法可参考我的另一篇：<a href="https://xujinzh.github.io/2020/03/25/conda-jupyter-env-kernel/">Conda 配置其他虚拟环境 jupyter kernel</a>.</p>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>shell</tag>
+        <tag>pyqt5</tag>
+        <tag>gui</tag>
       </tags>
   </entry>
   <entry>
@@ -7832,7 +7897,7 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
 <li>N：只连接远程主机，不打开远程shell。（不执行远程指令，即代理服务器不需执行指令，只作端口转发）；</li>
 <li>g：允许代理服务器连接到本地转发端口；</li>
 <li>R：将代理服务器指定端口上的连接转发到本机端口；</li>
-<li><a href="mailto:&#x6a;&#x69;&#110;&#122;&#x68;&#111;&#110;&#103;&#120;&#x75;&#64;&#49;&#46;&#50;&#x2e;&#51;&#x2e;&#x78;">&#x6a;&#x69;&#110;&#122;&#x68;&#111;&#110;&#103;&#120;&#x75;&#64;&#49;&#46;&#50;&#x2e;&#51;&#x2e;&#x78;</a>： 表示使用代理服务器的用户来连接；</li>
+<li><a href="mailto:&#x6a;&#105;&#x6e;&#x7a;&#x68;&#111;&#110;&#103;&#120;&#x75;&#64;&#x31;&#x2e;&#50;&#x2e;&#x33;&#x2e;&#120;">&#x6a;&#105;&#x6e;&#x7a;&#x68;&#111;&#110;&#103;&#120;&#x75;&#64;&#x31;&#x2e;&#50;&#x2e;&#x33;&#x2e;&#120;</a>： 表示使用代理服务器的用户来连接；</li>
 <li>2222:127.0.0.1:22：表示本机回环接口 (127.0.0.1，也可使用本机其他网络接口的地址，比如以太网 IP 或 WiFi IP) 的 22 端口连接到远程主机的 2222 接口，因远程主机 2222 绑定的地址为空，所以远程主机会监听其所有网络接口的 2222 端口。</li>
 </ul>
 <p>常常，我喜欢配置 systemd service 服务，能够更好的管理转换命令。具体命令如下：</p>
@@ -8589,77 +8654,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>泰勒公式</title>
-    <url>/2020/03/18/taylor-formula/</url>
-    <content><![CDATA[<p>Taylor’s Formula (泰勒公式) 本节为参考华东师范大学《数学分析 上册》，学习本书的心得以及重点知识点总结。</p>
-<ol>
-<li>泰勒公式源于多项式的简单性，多项式逼近函数用于近似计算和理论分析；</li>
-<li>在$x = 0$处展开的泰勒公式又称为 Maclaurin(麦克劳林) 公式；</li>
-<li>本节讨论了两种余项的泰勒公式，分别是用于定性分析的佩亚诺余项和用于定量分析的拉格朗日余项；</li>
-<li>带有佩亚诺余项的泰勒公式多用于求函数极限，一般先考虑等价无穷小，然后对于复杂函数考虑泰勒公式；</li>
-<li>利用泰勒公式可以近似计算无理数等的近似值。</li>
-</ol>
-<a id="more"></a>
-
-<h1 id="带有佩亚诺型余项的泰勒公式"><a href="#带有佩亚诺型余项的泰勒公式" class="headerlink" title="带有佩亚诺型余项的泰勒公式"></a>带有佩亚诺型余项的泰勒公式</h1><p><strong>定理6.9</strong> 若函数$f$在点$x_0$存在直至$n$阶导数，则有$f(x) = T_n(x) + o((x - x_0)^n)$，这里<br>$$<br>T_n(x) = f(x_0) + f^{\prime}(x_0)(x - x_0) + \frac{f^{(2)}(x_0)}{2!}(x - x_0)^2 + \cdots + \frac{f^{(n)}(x_0)}{n!}(x - x_0)^n.<br>$$<br>称为函数$f$在点$x_0$处的泰勒多项式，$T_n(x)$的各项系数$\frac{f^{(k)}(x_0)}{k!}\ (k = 1, 2, \cdots, n)$称为泰勒系数。具有性质<br>$$<br>f^{(k)}(x_0) = T^{(k)}_n(x_0), \ k = 0, 1, 2, \cdots, n.<br>$$</p>
-<p><strong>注意，这里只要求在一点$x_0$处$n$阶可导，所以，$n - 1$阶导函数后不能使用柯西中值定理</strong> </p>
-<p>$R_n(x) = f(x) - T_n(x)$称为泰勒公式的余项，形如$o((x - x_0)^n)$的余项称为佩亚诺（Peano）型余项，所以上面公式又称为带有佩亚诺型余项的泰勒公式。  </p>
-<p>称如下<br>$$<br>f(x) = f(0) + f^{\prime}(0)x + \frac{f^{\prime\prime}(0)}{2!} x^2 + \cdots + \frac{f^{(n)}(0)}{n!} x^n + o(x^n).<br>$$</p>
-<p>为（带有佩亚诺型余项的）麦克劳林（Maclaurin）公式。</p>
-<p><strong>下面列出一些常用的带有佩亚诺型余项的麦克劳林公式</strong>：</p>
-<ol>
-<li><p>$$<br>e^x = 1 + x + \frac{x^2}{2!} + \cdots + \frac{x^n}{n!} + o(x^n);<br>$$</p>
-</li>
-<li><p>$$<br>\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} + \cdots + (-1)^{m-1}\frac{x^{2m - 1}}{(2m - 1)!} + o(x^{2m});<br>$$</p>
-</li>
-<li><p>$$<br>\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} + \cdots + (-1)^m \frac{x^{2m}}{(2m)!} + o(x^{2m + 1});<br>$$</p>
-</li>
-<li><p>$$<br>\ln(1 + x) = x - \frac{x^2}{2} + \frac{x^3}{3} + \cdots + (-1)^{n-1}\frac{x^n}{n} + o(x^n);<br>$$</p>
-</li>
-<li><p>$$<br>(1 + x)^{\alpha} = 1 + \alpha x + \frac{\alpha(\alpha - 1)}{2!} x^2 + \frac{\alpha(\alpha - 1)\cdots(\alpha - n + 1)}{n!} x^n + o(x^n);<br>$$</p>
-</li>
-<li><p>$$<br>\frac{1}{1 - x} = 1 + x + x^2 + \cdots + x^n + o(x^n).<br>$$</p>
-</li>
-</ol>
-<p><strong>记忆方法：</strong></p>
-<ol>
-<li>$e^x$ 各阶导数相同，因此$f^{\prime}(0) = f^{\prime\prime}(0) = \cdots = f^{(n)}(0) = e^0 = 1$，形式上最解决泰勒公式。</li>
-<li>$\sin x \sim x, \ x \to 0$，且为基函数，只能取奇数幂项。</li>
-<li>$\cos x \sim 1, x \to 0$，且为偶函数，只能取偶次幂项。</li>
-<li>$\frac{1}{1 - x}$为等比数列极限$\frac{a_1}{1 - q}$的特殊形式。</li>
-<li>$\ln(1 + x)$的一次导数为$\frac{1}{1 - (-x)}$，因此是导数展开的一次积分。另外，$\ln(1 + x) \sim x,\ x \to 0.$</li>
-<li>$(1 + x)^{\alpha}$可以参考$(1 + x)^n$的二项式展开，即每项为$C^i_n x^{i}$.</li>
-</ol>
-<h1 id="带有拉格朗日型余项的泰勒公式"><a href="#带有拉格朗日型余项的泰勒公式" class="headerlink" title="带有拉格朗日型余项的泰勒公式"></a>带有拉格朗日型余项的泰勒公式</h1><p>拉格朗日型余项是一种定量形式的余项，便于对逼近误差进行具体的计算或估计。</p>
-<p><strong>定理 6.10</strong> &emsp; (泰勒定理) &emsp; 若函数$f$在$[a, b]$上存在直至$n$阶的连续导函数，在$(a, b)$上存在$(n + 1)$阶导函数，则对任意给定的$x, x_0 \in [a, b]$，至少存在一点$\xi \in (a, b)$，使得<br>$$<br>f(x) = f(x_0) + f^{\prime}(x_0)(x - x_0) + \frac{f^{\prime\prime}(x_0)}{2!}(x - x_0)^2 + \cdots + \frac{f^{(n)}(x_0)}{n!}(x - x_0)^n + \frac{f^{(n + 1)}(\xi)}{(n + 1)!}(x - x_0)^{n + 1}.<br>$$<br><font color='dd0000'>注意：这里是在区间上存在$n$阶连续导函数，可以使用柯西中值定理</font>。  </p>
-<p>上面公式称为带有拉格朗日型余项的泰勒公式，当取$x_0 = 0$时，称下式<br>$$<br>f(x) = f(0) + f^{\prime}(0)x + \frac{f^{\prime\prime}(0)}{2!}x^2 + \cdots + \frac{f^{(n)}(0)}{n!}x^n + \frac{f^{(n + 1)}(\theta x)}{(n + 1)!}x^{n + 1} \\<br>(0 &lt; \theta &lt; 1)<br>$$</p>
-<p>为带有拉格朗日型余项的麦克劳林公式。  </p>
-<p><strong>下面列出一些常用的带有拉格朗日型余项的麦克劳林公式：</strong></p>
-<ol>
-<li><p>$$<br>e^x = 1 + x + \frac{x^2}{2!} + \cdots + \frac{x^n}{n!} + \frac{e^{\theta x}}{(n + 1)!}x^{n + 1}, \ 0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).<br>$$</p>
-</li>
-<li><p>$$<br>\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} + \cdots + (-1)^{m - 1}\frac{x^{2m - 1}}{(2m - 1)!} + (-1)^m \frac{\cos \theta x}{(2m + 1)!}x^{2m + 1}, \\<br>0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).<br>$$</p>
-</li>
-<li><p>$$<br>\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} + \cdots + (-1)^m \frac{x^{2m}}{(2m)!} + (-1)^{m + 1}\frac{\cos \theta x}{(2m + 2)!}x^{2m + 2}, \\<br>0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).<br>$$</p>
-</li>
-<li><p>$$<br>\ln(1 + x) = x - \frac{x^2}{2} + \frac{x^3}{3} + \cdots + (-1)^{n - 1}\frac{x^n}{n} + (-1)^n \frac{x^{n + 1}}{(n + 1)(1 + \theta x)^{n + 1}}, \\<br>0 &lt; \theta &lt; 1, \ x &gt; -1.<br>$$</p>
-</li>
-<li><p>$$<br>(1 + x)^{\alpha} = 1 + \alpha x + \frac{\alpha(\alpha - 1)}{2!}x^2 + \cdots + \frac{\alpha(\alpha - 1) \cdots (\alpha - n + 1)}{n!}x^n + \\<br>\frac{\alpha(\alpha - 1)\cdots(\alpha - n)}{(n + 1)!}(1 + \theta x)^{\alpha - n - 1}x^{n + 1}, \  0 &lt; \theta &lt; 1, \ x &gt; -1.<br>$$</p>
-</li>
-<li><p>$$<br>\frac{1}{1 - x} = 1 + x + x^2 + \cdots + x^n + \frac{x^{n + 1}}{(1 - \theta x)^{n + 2}}, \ 0 &lt; \theta &lt; 1, \ |x| &lt; 1.<br>$$</p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>maths</category>
-        <category>mathematical analysis</category>
-      </categories>
-      <tags>
-        <tag>maths</tag>
-        <tag>taylor&#39;s formula</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>TensorFlow 分布式简单介绍</title>
     <url>/2020/11/06/tensorflow-distribution/</url>
     <content><![CDATA[<p>TensorFlow 能够方便的进行深度学习实践，特别是拥有多GPU的服务器或拥有多台GPU服务器时，如何使用 TensorFlow 进行快速训练，节约宝贵时间呢，下面介绍 TensorFlow 给出的分布式训练方法。</p>
@@ -8743,6 +8737,77 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>proxy</tag>
         <tag>terminal</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>泰勒公式</title>
+    <url>/2020/03/18/taylor-formula/</url>
+    <content><![CDATA[<p>Taylor’s Formula (泰勒公式) 本节为参考华东师范大学《数学分析 上册》，学习本书的心得以及重点知识点总结。</p>
+<ol>
+<li>泰勒公式源于多项式的简单性，多项式逼近函数用于近似计算和理论分析；</li>
+<li>在$x = 0$处展开的泰勒公式又称为 Maclaurin(麦克劳林) 公式；</li>
+<li>本节讨论了两种余项的泰勒公式，分别是用于定性分析的佩亚诺余项和用于定量分析的拉格朗日余项；</li>
+<li>带有佩亚诺余项的泰勒公式多用于求函数极限，一般先考虑等价无穷小，然后对于复杂函数考虑泰勒公式；</li>
+<li>利用泰勒公式可以近似计算无理数等的近似值。</li>
+</ol>
+<a id="more"></a>
+
+<h1 id="带有佩亚诺型余项的泰勒公式"><a href="#带有佩亚诺型余项的泰勒公式" class="headerlink" title="带有佩亚诺型余项的泰勒公式"></a>带有佩亚诺型余项的泰勒公式</h1><p><strong>定理6.9</strong> 若函数$f$在点$x_0$存在直至$n$阶导数，则有$f(x) = T_n(x) + o((x - x_0)^n)$，这里<br>$$<br>T_n(x) = f(x_0) + f^{\prime}(x_0)(x - x_0) + \frac{f^{(2)}(x_0)}{2!}(x - x_0)^2 + \cdots + \frac{f^{(n)}(x_0)}{n!}(x - x_0)^n.<br>$$<br>称为函数$f$在点$x_0$处的泰勒多项式，$T_n(x)$的各项系数$\frac{f^{(k)}(x_0)}{k!}\ (k = 1, 2, \cdots, n)$称为泰勒系数。具有性质<br>$$<br>f^{(k)}(x_0) = T^{(k)}_n(x_0), \ k = 0, 1, 2, \cdots, n.<br>$$</p>
+<p><strong>注意，这里只要求在一点$x_0$处$n$阶可导，所以，$n - 1$阶导函数后不能使用柯西中值定理</strong> </p>
+<p>$R_n(x) = f(x) - T_n(x)$称为泰勒公式的余项，形如$o((x - x_0)^n)$的余项称为佩亚诺（Peano）型余项，所以上面公式又称为带有佩亚诺型余项的泰勒公式。  </p>
+<p>称如下<br>$$<br>f(x) = f(0) + f^{\prime}(0)x + \frac{f^{\prime\prime}(0)}{2!} x^2 + \cdots + \frac{f^{(n)}(0)}{n!} x^n + o(x^n).<br>$$</p>
+<p>为（带有佩亚诺型余项的）麦克劳林（Maclaurin）公式。</p>
+<p><strong>下面列出一些常用的带有佩亚诺型余项的麦克劳林公式</strong>：</p>
+<ol>
+<li><p>$$<br>e^x = 1 + x + \frac{x^2}{2!} + \cdots + \frac{x^n}{n!} + o(x^n);<br>$$</p>
+</li>
+<li><p>$$<br>\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} + \cdots + (-1)^{m-1}\frac{x^{2m - 1}}{(2m - 1)!} + o(x^{2m});<br>$$</p>
+</li>
+<li><p>$$<br>\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} + \cdots + (-1)^m \frac{x^{2m}}{(2m)!} + o(x^{2m + 1});<br>$$</p>
+</li>
+<li><p>$$<br>\ln(1 + x) = x - \frac{x^2}{2} + \frac{x^3}{3} + \cdots + (-1)^{n-1}\frac{x^n}{n} + o(x^n);<br>$$</p>
+</li>
+<li><p>$$<br>(1 + x)^{\alpha} = 1 + \alpha x + \frac{\alpha(\alpha - 1)}{2!} x^2 + \frac{\alpha(\alpha - 1)\cdots(\alpha - n + 1)}{n!} x^n + o(x^n);<br>$$</p>
+</li>
+<li><p>$$<br>\frac{1}{1 - x} = 1 + x + x^2 + \cdots + x^n + o(x^n).<br>$$</p>
+</li>
+</ol>
+<p><strong>记忆方法：</strong></p>
+<ol>
+<li>$e^x$ 各阶导数相同，因此$f^{\prime}(0) = f^{\prime\prime}(0) = \cdots = f^{(n)}(0) = e^0 = 1$，形式上最解决泰勒公式。</li>
+<li>$\sin x \sim x, \ x \to 0$，且为基函数，只能取奇数幂项。</li>
+<li>$\cos x \sim 1, x \to 0$，且为偶函数，只能取偶次幂项。</li>
+<li>$\frac{1}{1 - x}$为等比数列极限$\frac{a_1}{1 - q}$的特殊形式。</li>
+<li>$\ln(1 + x)$的一次导数为$\frac{1}{1 - (-x)}$，因此是导数展开的一次积分。另外，$\ln(1 + x) \sim x,\ x \to 0.$</li>
+<li>$(1 + x)^{\alpha}$可以参考$(1 + x)^n$的二项式展开，即每项为$C^i_n x^{i}$.</li>
+</ol>
+<h1 id="带有拉格朗日型余项的泰勒公式"><a href="#带有拉格朗日型余项的泰勒公式" class="headerlink" title="带有拉格朗日型余项的泰勒公式"></a>带有拉格朗日型余项的泰勒公式</h1><p>拉格朗日型余项是一种定量形式的余项，便于对逼近误差进行具体的计算或估计。</p>
+<p><strong>定理 6.10</strong> &emsp; (泰勒定理) &emsp; 若函数$f$在$[a, b]$上存在直至$n$阶的连续导函数，在$(a, b)$上存在$(n + 1)$阶导函数，则对任意给定的$x, x_0 \in [a, b]$，至少存在一点$\xi \in (a, b)$，使得<br>$$<br>f(x) = f(x_0) + f^{\prime}(x_0)(x - x_0) + \frac{f^{\prime\prime}(x_0)}{2!}(x - x_0)^2 + \cdots + \frac{f^{(n)}(x_0)}{n!}(x - x_0)^n + \frac{f^{(n + 1)}(\xi)}{(n + 1)!}(x - x_0)^{n + 1}.<br>$$<br><font color='dd0000'>注意：这里是在区间上存在$n$阶连续导函数，可以使用柯西中值定理</font>。  </p>
+<p>上面公式称为带有拉格朗日型余项的泰勒公式，当取$x_0 = 0$时，称下式<br>$$<br>f(x) = f(0) + f^{\prime}(0)x + \frac{f^{\prime\prime}(0)}{2!}x^2 + \cdots + \frac{f^{(n)}(0)}{n!}x^n + \frac{f^{(n + 1)}(\theta x)}{(n + 1)!}x^{n + 1} \\<br>(0 &lt; \theta &lt; 1)<br>$$</p>
+<p>为带有拉格朗日型余项的麦克劳林公式。  </p>
+<p><strong>下面列出一些常用的带有拉格朗日型余项的麦克劳林公式：</strong></p>
+<ol>
+<li><p>$$<br>e^x = 1 + x + \frac{x^2}{2!} + \cdots + \frac{x^n}{n!} + \frac{e^{\theta x}}{(n + 1)!}x^{n + 1}, \ 0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).<br>$$</p>
+</li>
+<li><p>$$<br>\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} + \cdots + (-1)^{m - 1}\frac{x^{2m - 1}}{(2m - 1)!} + (-1)^m \frac{\cos \theta x}{(2m + 1)!}x^{2m + 1}, \\<br>0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).<br>$$</p>
+</li>
+<li><p>$$<br>\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} + \cdots + (-1)^m \frac{x^{2m}}{(2m)!} + (-1)^{m + 1}\frac{\cos \theta x}{(2m + 2)!}x^{2m + 2}, \\<br>0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).<br>$$</p>
+</li>
+<li><p>$$<br>\ln(1 + x) = x - \frac{x^2}{2} + \frac{x^3}{3} + \cdots + (-1)^{n - 1}\frac{x^n}{n} + (-1)^n \frac{x^{n + 1}}{(n + 1)(1 + \theta x)^{n + 1}}, \\<br>0 &lt; \theta &lt; 1, \ x &gt; -1.<br>$$</p>
+</li>
+<li><p>$$<br>(1 + x)^{\alpha} = 1 + \alpha x + \frac{\alpha(\alpha - 1)}{2!}x^2 + \cdots + \frac{\alpha(\alpha - 1) \cdots (\alpha - n + 1)}{n!}x^n + \\<br>\frac{\alpha(\alpha - 1)\cdots(\alpha - n)}{(n + 1)!}(1 + \theta x)^{\alpha - n - 1}x^{n + 1}, \  0 &lt; \theta &lt; 1, \ x &gt; -1.<br>$$</p>
+</li>
+<li><p>$$<br>\frac{1}{1 - x} = 1 + x + x^2 + \cdots + x^n + \frac{x^{n + 1}}{(1 - \theta x)^{n + 2}}, \ 0 &lt; \theta &lt; 1, \ |x| &lt; 1.<br>$$</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>maths</category>
+        <category>mathematical analysis</category>
+      </categories>
+      <tags>
+        <tag>maths</tag>
+        <tag>taylor&#39;s formula</tag>
       </tags>
   </entry>
   <entry>
@@ -8920,6 +8985,27 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>如何查询 Ubuntu 系统安装时间</title>
+    <url>/2019/12/20/ubuntu-installation-time/</url>
+    <content><![CDATA[<p>为了某些目的，有时候我们需要知道 Ubuntu 系统的安装时间，那么如何通过terminal 查询系统安装时间呢，这里给出两种查询方法：</p>
+<p>第一种方法：运行如下命令直接查询日志文件获取系统安装时间：</p>
+<ul><li>ls -ld /var/log/installer</li></ul>
+<p>第二种方法：</p>
+<p>1、首先，运行如下命令查询系统有哪些分区</p>
+<ul><li>ls /dev | grep sd</li></ul>
+<p>2、然后，运行如下命令查询系统盘格式化时间，就是系统安装时间</p>
+<ul><li>sudo dumpe2fs /dev/sda | grep 'Filesystem created'</li></ul>
+<p>在第一步种，可能有些是 /dev/sdb，但大多数是 /dev/sda</p>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>debian</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Ubuntu 明文显示 known hosts</title>
     <url>/2022/02/18/ubuntu-knownhosts-without-hash/</url>
     <content><![CDATA[<p>Ubuntu 通过 SSH 连结服务器时，将服务器的基本信息保存在相应用户名下的 <code>.ssh/known_hosts</code> 文件中，但是，默认保存的信息是通过密文保存的，这虽然安全，但不方便自己查看。如想要删除特定服务器信息时不好查找对应的信息。明文显示并不会造成不安全，在 Mac 系统中默认就是以明文显示。本篇介绍如何将信息保存为明文，方便自己查看。</p>
@@ -8937,6 +9023,32 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>ubuntu</tag>
         <tag>debian</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在 Ubuntu 上挂载 ISO 文件</title>
+    <url>/2021/07/27/ubuntu-mount-iso/</url>
+    <content><![CDATA[<p>我这里需要安装 MATLAB，但是下载的软件是 ISO 文件，无法直接读取，需要挂在到 Ubuntu 上才能读取，因此，使用如下方法挂载和卸载 ISO 文件</p>
+<a id="more"></a>
+
+<h1 id="创建挂在点文件夹"><a href="#创建挂在点文件夹" class="headerlink" title="创建挂在点文件夹"></a>创建挂在点文件夹</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mkdir /media/iso</span><br></pre></td></tr></table></figure>
+
+<h1 id="挂载-ISO-文件到挂载点"><a href="#挂载-ISO-文件到挂载点" class="headerlink" title="挂载 ISO 文件到挂载点"></a>挂载 ISO 文件到挂载点</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mount -o loop /home/jinzhongxu/Matlab98R2020a_Lin64.iso /media/jinzhongxu</span><br></pre></td></tr></table></figure>
+
+<h1 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo umount /media/iso</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://askubuntu.com/questions/164227/how-to-mount-an-iso-file">How to mount an ISO file?</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>ubuntu</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>iso</tag>
+        <tag>mount</tag>
       </tags>
   </entry>
   <entry>
@@ -9049,27 +9161,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>如何查询 Ubuntu 系统安装时间</title>
-    <url>/2019/12/20/ubuntu-installation-time/</url>
-    <content><![CDATA[<p>为了某些目的，有时候我们需要知道 Ubuntu 系统的安装时间，那么如何通过terminal 查询系统安装时间呢，这里给出两种查询方法：</p>
-<p>第一种方法：运行如下命令直接查询日志文件获取系统安装时间：</p>
-<ul><li>ls -ld /var/log/installer</li></ul>
-<p>第二种方法：</p>
-<p>1、首先，运行如下命令查询系统有哪些分区</p>
-<ul><li>ls /dev | grep sd</li></ul>
-<p>2、然后，运行如下命令查询系统盘格式化时间，就是系统安装时间</p>
-<ul><li>sudo dumpe2fs /dev/sda | grep 'Filesystem created'</li></ul>
-<p>在第一步种，可能有些是 /dev/sdb，但大多数是 /dev/sda</p>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>debian</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>深度学习中的欠拟合和过拟合</title>
     <url>/2021/06/18/underfitting-overfitting/</url>
     <content><![CDATA[<p>人类专家在完成某项任务的准确性可以作为深度学习完成同样任务合理目标的参考。由于人类专家人类专家也有犯错的概率，因此，利用他们准备的数据集训练模型，不能期望100%的准确率。在深度学习模型训练中常遇到欠拟合和过拟合，我认为这主要是因为数据量和模型不匹配导致的。当模型简单时，如线性模型、参数量少等，训练数据量需求相对较少；当模型复杂时，如指数、参数量多等，训练数据量需求就会相对较多。</p>
@@ -9105,6 +9196,27 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <tag>dl</tag>
         <tag>ml</tag>
         <tag>cv</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ubuntu卸载cuda</title>
+    <url>/2020/02/20/uninstall-cuda/</url>
+    <content><![CDATA[<p>当使用Ubuntu运行深度学习模型时，有时候会出现一些错误，有可能是因为cuda版本不匹配或较旧导致的，所以需要我们卸载Ubuntu系统安装的cuda驱动，重新安装，下面一些代码是以Ubuntu18.04为例来卸载cuda</p>
+<a id="more"></a>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt --purge remove cuda</span><br><span class="line">sudo apt autoremove</span><br><span class="line">sudo apt --purge remove cuda*</span><br></pre></td></tr></table></figure>
+
+<p>有时，还需要进入路径/usr/local，并删除文件夹cuda</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rm -rf /usr/<span class="built_in">local</span>/cuda*</span><br></pre></td></tr></table></figure>
+
+<p>至此，就完全卸载了cuda。</p>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>cuda</tag>
       </tags>
   </entry>
   <entry>
@@ -9148,24 +9260,29 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>Ubuntu卸载cuda</title>
-    <url>/2020/02/20/uninstall-cuda/</url>
-    <content><![CDATA[<p>当使用Ubuntu运行深度学习模型时，有时候会出现一些错误，有可能是因为cuda版本不匹配或较旧导致的，所以需要我们卸载Ubuntu系统安装的cuda驱动，重新安装，下面一些代码是以Ubuntu18.04为例来卸载cuda</p>
+    <title>手动更新 oh-my-zsh</title>
+    <url>/2021/10/08/update-oh-my-zsh/</url>
+    <content><![CDATA[<p>我比较喜欢使用 zsh，特别是搭配 <a href="https://ohmyz.sh/">Oh My ZSH</a>，它有很多方便的功能以及各种主题。但它不会自动更新，特别是 Mac 上很少关闭 Terminal 导致oh-my-zsh 不是最新的。下面介绍一种手动更新 oh-my-zsh 的方法。</p>
 <a id="more"></a>
 
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt --purge remove cuda</span><br><span class="line">sudo apt autoremove</span><br><span class="line">sudo apt --purge remove cuda*</span><br></pre></td></tr></table></figure>
+<h1 id="手动更新"><a href="#手动更新" class="headerlink" title="手动更新"></a>手动更新</h1><p>使用如下命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">omz update</span><br></pre></td></tr></table></figure>
 
-<p>有时，还需要进入路径/usr/local，并删除文件夹cuda</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rm -rf /usr/<span class="built_in">local</span>/cuda*</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/.oh-my-zsh/tools</span><br><span class="line">zsh upgrade.sh</span><br></pre></td></tr></table></figure>
 
-<p>至此，就完全卸载了cuda。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://blog.digital-craftsman.de/manually-update-oh-my-zsh/">Manually update oh-my-zsh</a></li>
+<li><a href="https://futurestud.io/tutorials/how-to-manually-update-oh-my-zsh">How to Manually Update Oh-My-ZSH</a></li>
+</ol>
 ]]></content>
       <categories>
         <category>technology</category>
+        <category>linux</category>
       </categories>
       <tags>
-        <tag>ubuntu</tag>
-        <tag>cuda</tag>
+        <tag>shell</tag>
+        <tag>zsh</tag>
       </tags>
   </entry>
   <entry>
@@ -9196,32 +9313,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>手动更新 oh-my-zsh</title>
-    <url>/2021/10/08/update-oh-my-zsh/</url>
-    <content><![CDATA[<p>我比较喜欢使用 zsh，特别是搭配 <a href="https://ohmyz.sh/">Oh My ZSH</a>，它有很多方便的功能以及各种主题。但它不会自动更新，特别是 Mac 上很少关闭 Terminal 导致oh-my-zsh 不是最新的。下面介绍一种手动更新 oh-my-zsh 的方法。</p>
-<a id="more"></a>
-
-<h1 id="手动更新"><a href="#手动更新" class="headerlink" title="手动更新"></a>手动更新</h1><p>使用如下命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">omz update</span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/.oh-my-zsh/tools</span><br><span class="line">zsh upgrade.sh</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="https://blog.digital-craftsman.de/manually-update-oh-my-zsh/">Manually update oh-my-zsh</a></li>
-<li><a href="https://futurestud.io/tutorials/how-to-manually-update-oh-my-zsh">How to Manually Update Oh-My-ZSH</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>shell</tag>
-        <tag>zsh</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>在 Linux 系统上查看日志信息</title>
     <url>/2022/01/19/view-log-info-on-linux/</url>
     <content><![CDATA[<p>Linux 系统上有很多服务是使用 <code>systemctl</code> 来管理的，如何查看这些服务的日志信息呢？下面以 Ubuntu 18.04/CentOS 7 为例，所有命令以 root 身份运行。</p>
@@ -9248,32 +9339,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>log</tag>
         <tag>journalctl</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在 Ubuntu 上挂载 ISO 文件</title>
-    <url>/2021/07/27/ubuntu-mount-iso/</url>
-    <content><![CDATA[<p>我这里需要安装 MATLAB，但是下载的软件是 ISO 文件，无法直接读取，需要挂在到 Ubuntu 上才能读取，因此，使用如下方法挂载和卸载 ISO 文件</p>
-<a id="more"></a>
-
-<h1 id="创建挂在点文件夹"><a href="#创建挂在点文件夹" class="headerlink" title="创建挂在点文件夹"></a>创建挂在点文件夹</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mkdir /media/iso</span><br></pre></td></tr></table></figure>
-
-<h1 id="挂载-ISO-文件到挂载点"><a href="#挂载-ISO-文件到挂载点" class="headerlink" title="挂载 ISO 文件到挂载点"></a>挂载 ISO 文件到挂载点</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mount -o loop /home/jinzhongxu/Matlab98R2020a_Lin64.iso /media/jinzhongxu</span><br></pre></td></tr></table></figure>
-
-<h1 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo umount /media/iso</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="https://askubuntu.com/questions/164227/how-to-mount-an-iso-file">How to mount an ISO file?</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>ubuntu</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>iso</tag>
-        <tag>mount</tag>
       </tags>
   </entry>
   <entry>
@@ -9526,30 +9591,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>安装 windows10 时出现无法创建分区</title>
-    <url>/2019/12/20/windows10-diskpart/</url>
-    <content><![CDATA[<p>在安装 windows10 时出现无法创建分区，一般是因为两个问题，一个是启动引导项未设置成 UEFI ；另一个原因是磁盘未格式化 GPT 格式。下面分别给出解决两者的方法。（UEFI 对应 GPT；Legacy 对应 MBR）</p>
-<p>第一个问题解决方法，设置引导项为 UEFI</p>
-<a id="more"></a>
-
-<p>重启系统，长按 F2 进入 bios，选择 UEFI 作为引导项</p>
-<p>第二个问题解决方法，格式化磁盘为 GPT</p>
-<p>在系统安装界面，使用快捷键 SHIFT + F10 进入CMD，输入</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">diskpart</span><br><span class="line">list disk</span><br><span class="line">select disk 0</span><br><span class="line">clean</span><br><span class="line">convert GPT</span><br></pre></td></tr></table></figure>
-
-<p>至此，完成了磁盘0格式化为 GPT 格式。</p>
-<p>这时候，再重新安装系统就可以了。推广参考 <a rel="noreferrer noopener" aria-label="csdn（在新窗口打开）" href="https://blog.csdn.net/abcdad/article/details/80273646" target="_blank">csdn</a> </p>
-<p>经实际验证，安装Windows10系统时，使用UEFI+GPT；安装Ubuntu系统时，使用Legacy+MBR。</p>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>windows</tag>
-        <tag>disk</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Windows 10 Cmake error 解决方法</title>
     <url>/2020/08/03/windows-cmake-error/</url>
     <content><![CDATA[<p>使用 Windows10 开发 Python 程序时，有时候需要编译安装一些模块，如 dlib 等，需要用到 Cmake 在本地编译安装，但有时候总是会出现</p>
@@ -9572,6 +9613,50 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>cmake</tag>
         <tag>windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Windows10 子系统 Ubuntu 在硬盘上的路径</title>
+    <url>/2020/01/07/windows10-wsl-path/</url>
+    <content><![CDATA[<p>Windows10 的 Linux 子系统 Ubuntu 非常好用，能够与Windows10非常融洽的结合使用，既保留了Windows系统优秀的用户交互式，又提供了Linux系统开发的便捷，可谓是集成了两种操作系统的优点于一身。那么，如何互相访问两者的文件呢？下面给出两者相互访问的方法。</p>
+<a id="more"></a>
+
+<h1 id="Ubuntu-访问-Windows-文件"><a href="#Ubuntu-访问-Windows-文件" class="headerlink" title="Ubuntu 访问 Windows 文件"></a>Ubuntu 访问 Windows 文件</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /mnt/c/Users/xujin/Downloads</span><br></pre></td></tr></table></figure>
+
+<h1 id="Windows-访问-Ubuntu-文件"><a href="#Windows-访问-Ubuntu-文件" class="headerlink" title="Windows 访问 Ubuntu 文件"></a>Windows 访问 Ubuntu 文件</h1><p>Ubuntu 用户家目录在Windows的如下路径</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">E:\Users\xujin\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc\LocalState\rootfs\home\jinzhongxu</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>安装 windows10 时出现无法创建分区</title>
+    <url>/2019/12/20/windows10-diskpart/</url>
+    <content><![CDATA[<p>在安装 windows10 时出现无法创建分区，一般是因为两个问题，一个是启动引导项未设置成 UEFI ；另一个原因是磁盘未格式化 GPT 格式。下面分别给出解决两者的方法。（UEFI 对应 GPT；Legacy 对应 MBR）</p>
+<p>第一个问题解决方法，设置引导项为 UEFI</p>
+<a id="more"></a>
+
+<p>重启系统，长按 F2 进入 bios，选择 UEFI 作为引导项</p>
+<p>第二个问题解决方法，格式化磁盘为 GPT</p>
+<p>在系统安装界面，使用快捷键 SHIFT + F10 进入CMD，输入</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">diskpart</span><br><span class="line">list disk</span><br><span class="line">select disk 0</span><br><span class="line">clean</span><br><span class="line">convert GPT</span><br></pre></td></tr></table></figure>
+
+<p>至此，完成了磁盘0格式化为 GPT 格式。</p>
+<p>这时候，再重新安装系统就可以了。推广参考 <a rel="noreferrer noopener" aria-label="csdn（在新窗口打开）" href="https://blog.csdn.net/abcdad/article/details/80273646" target="_blank">csdn</a> </p>
+<p>经实际验证，安装Windows10系统时，使用UEFI+GPT；安装Ubuntu系统时，使用Legacy+MBR。</p>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>windows</tag>
+        <tag>disk</tag>
       </tags>
   </entry>
   <entry>
@@ -9626,26 +9711,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>wsl</tag>
         <tag>cron</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Windows10 子系统 Ubuntu 在硬盘上的路径</title>
-    <url>/2020/01/07/windows10-wsl-path/</url>
-    <content><![CDATA[<p>Windows10 的 Linux 子系统 Ubuntu 非常好用，能够与Windows10非常融洽的结合使用，既保留了Windows系统优秀的用户交互式，又提供了Linux系统开发的便捷，可谓是集成了两种操作系统的优点于一身。那么，如何互相访问两者的文件呢？下面给出两者相互访问的方法。</p>
-<a id="more"></a>
-
-<h1 id="Ubuntu-访问-Windows-文件"><a href="#Ubuntu-访问-Windows-文件" class="headerlink" title="Ubuntu 访问 Windows 文件"></a>Ubuntu 访问 Windows 文件</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /mnt/c/Users/xujin/Downloads</span><br></pre></td></tr></table></figure>
-
-<h1 id="Windows-访问-Ubuntu-文件"><a href="#Windows-访问-Ubuntu-文件" class="headerlink" title="Windows 访问 Ubuntu 文件"></a>Windows 访问 Ubuntu 文件</h1><p>Ubuntu 用户家目录在Windows的如下路径</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">E:\Users\xujin\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc\LocalState\rootfs\home\jinzhongxu</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>windows</tag>
       </tags>
   </entry>
   <entry>
@@ -9710,34 +9775,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>windows</tag>
         <tag>wsl</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用 xrdp 远程连接 Ubuntu</title>
-    <url>/2021/04/07/xrdp-remote-connection-ubuntu/</url>
-    <content><![CDATA[<p>我这里有一个需求就是使用 Windows10 远程连接 Ubuntu 的桌面系统，但是，Ubuntu 服务器在机房且没有连接显示器，只能通过终端 SSH 远程连接。然而，处于一些需求，需要远程连接，而 Teamviewer 在远程服务器没有连接显示器的情况下会出现灰屏，无法使用。因此，使用如下方法来解决。</p>
-<a id="more"></a>
-
-<h1 id="安装-xrdp"><a href="#安装-xrdp" class="headerlink" title="安装 xrdp"></a>安装 xrdp</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update &amp;&amp; sudo apt -y upgrade</span><br><span class="line">sudo apt install xrdp</span><br></pre></td></tr></table></figure>
-
-<h1 id="安装-xfce"><a href="#安装-xfce" class="headerlink" title="安装 xfce"></a>安装 xfce</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo apt install -y xfce4</span><br><span class="line">sudo apt install -y xfce4-goodies</span><br></pre></td></tr></table></figure>
-
-<h1 id="配置-xrdp"><a href="#配置-xrdp" class="headerlink" title="配置 xrdp"></a>配置 xrdp</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo cp /etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini.bak</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/3389/3390/g&#x27;</span> /etc/xrdp/xrdp.ini</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/max_bpp=32/#max_bpp=32\nmax_bpp=128/g&#x27;</span> /etc/xrdp/xrdp.ini</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/xserverbpp=24/#xserverbpp=24\nxserverbpp=128/g&#x27;</span> /etc/xrdp/xrdp.ini</span><br><span class="line"><span class="built_in">echo</span> xfce4-session &gt; ~/.xsession</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编辑启动方式为 xfce4</span></span><br><span class="line">sudo vim /etc/xrdp/startwm.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># test -x /etc/X11/Xsession &amp;&amp; exec /etc/X11/Xsession</span></span><br><span class="line"><span class="comment"># exec /bin/sh /etc/X11/Xsession</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># xfce</span></span><br><span class="line">startxfce4</span><br></pre></td></tr></table></figure>
-
-<h1 id="启动-xrdp"><a href="#启动-xrdp" class="headerlink" title="启动 xrdp"></a>启动 xrdp</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo systemctl status xrdp.service</span><br><span class="line">sudo systemctl stop xrdp.service</span><br><span class="line">sudo systemctl start xrdp.service</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> xrdp.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">/etc/init.d/xrdp status</span><br><span class="line">/etc/init.d/xrdp stop</span><br><span class="line">/etc/init.d/xrdp start</span><br></pre></td></tr></table></figure>
-
-<h1 id="远程连接"><a href="#远程连接" class="headerlink" title="远程连接"></a>远程连接</h1><p>在 Windows10 上打开远程桌面连接，输入 Ubuntu 服务器的 IP 和 端口，如下示例</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1.2.3.4:3389</span><br></pre></td></tr></table></figure>
-
-<p>然后，输入SSH 连接时的用户名和密码即可连接。</p>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>ubuntu</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>xrdp</tag>
       </tags>
   </entry>
   <entry>
@@ -9905,6 +9942,34 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>ubuntu</tag>
         <tag>zabbix</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用 xrdp 远程连接 Ubuntu</title>
+    <url>/2021/04/07/xrdp-remote-connection-ubuntu/</url>
+    <content><![CDATA[<p>我这里有一个需求就是使用 Windows10 远程连接 Ubuntu 的桌面系统，但是，Ubuntu 服务器在机房且没有连接显示器，只能通过终端 SSH 远程连接。然而，处于一些需求，需要远程连接，而 Teamviewer 在远程服务器没有连接显示器的情况下会出现灰屏，无法使用。因此，使用如下方法来解决。</p>
+<a id="more"></a>
+
+<h1 id="安装-xrdp"><a href="#安装-xrdp" class="headerlink" title="安装 xrdp"></a>安装 xrdp</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update &amp;&amp; sudo apt -y upgrade</span><br><span class="line">sudo apt install xrdp</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装-xfce"><a href="#安装-xfce" class="headerlink" title="安装 xfce"></a>安装 xfce</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo apt install -y xfce4</span><br><span class="line">sudo apt install -y xfce4-goodies</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置-xrdp"><a href="#配置-xrdp" class="headerlink" title="配置 xrdp"></a>配置 xrdp</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo cp /etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini.bak</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/3389/3390/g&#x27;</span> /etc/xrdp/xrdp.ini</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/max_bpp=32/#max_bpp=32\nmax_bpp=128/g&#x27;</span> /etc/xrdp/xrdp.ini</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/xserverbpp=24/#xserverbpp=24\nxserverbpp=128/g&#x27;</span> /etc/xrdp/xrdp.ini</span><br><span class="line"><span class="built_in">echo</span> xfce4-session &gt; ~/.xsession</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编辑启动方式为 xfce4</span></span><br><span class="line">sudo vim /etc/xrdp/startwm.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># test -x /etc/X11/Xsession &amp;&amp; exec /etc/X11/Xsession</span></span><br><span class="line"><span class="comment"># exec /bin/sh /etc/X11/Xsession</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># xfce</span></span><br><span class="line">startxfce4</span><br></pre></td></tr></table></figure>
+
+<h1 id="启动-xrdp"><a href="#启动-xrdp" class="headerlink" title="启动 xrdp"></a>启动 xrdp</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo systemctl status xrdp.service</span><br><span class="line">sudo systemctl stop xrdp.service</span><br><span class="line">sudo systemctl start xrdp.service</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> xrdp.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">/etc/init.d/xrdp status</span><br><span class="line">/etc/init.d/xrdp stop</span><br><span class="line">/etc/init.d/xrdp start</span><br></pre></td></tr></table></figure>
+
+<h1 id="远程连接"><a href="#远程连接" class="headerlink" title="远程连接"></a>远程连接</h1><p>在 Windows10 上打开远程桌面连接，输入 Ubuntu 服务器的 IP 和 端口，如下示例</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1.2.3.4:3389</span><br></pre></td></tr></table></figure>
+
+<p>然后，输入SSH 连接时的用户名和密码即可连接。</p>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>ubuntu</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>xrdp</tag>
       </tags>
   </entry>
   <entry>
@@ -12137,12 +12202,12 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
   </entry>
   <entry>
     <title></title>
-    <url>/tags/index.html</url>
+    <url>/categories/index.html</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title></title>
-    <url>/categories/index.html</url>
+    <url>/tags/index.html</url>
     <content><![CDATA[]]></content>
   </entry>
 </search>
