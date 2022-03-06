@@ -4945,7 +4945,7 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
 
 <h1 id="查看端口占用"><a href="#查看端口占用" class="headerlink" title="查看端口占用"></a>查看端口占用</h1><h2 id="lsof"><a href="#lsof" class="headerlink" title="lsof"></a>lsof</h2><p>lsof(list open files)是一个列出当前系统打开文件的工具。</p>
 <p>lsof 查看端口占用语法格式：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">lsof -i:port</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子</span></span><br><span class="line">lsof -i:2181</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">lsof -i:port</span><br><span class="line">lsof -i tcp:port</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子</span></span><br><span class="line">lsof -i:2181</span><br></pre></td></tr></table></figure>
 
 <p>其他更多用法：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">lsof -i:8080：查看8080端口占用</span><br><span class="line">lsof abc.txt：显示开启文件abc.txt的进程</span><br><span class="line">lsof -c abc：显示abc进程现在打开的文件</span><br><span class="line">lsof -c -p 1234：列出进程号为1234的进程所打开的文件</span><br><span class="line">lsof -g gid：显示归属gid的进程情况</span><br><span class="line">lsof +d &#x2F;usr&#x2F;local&#x2F;：显示目录下被进程开启的文件</span><br><span class="line">lsof +D &#x2F;usr&#x2F;local&#x2F;：同上，但是会搜索目录下的目录，时间较长</span><br><span class="line">lsof -d 4：显示使用fd为4的进程</span><br><span class="line">lsof -i -U：显示所有打开的端口和UNIX domain文件</span><br></pre></td></tr></table></figure>
@@ -4957,10 +4957,13 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">netstat -tunlp | grep port</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子</span></span><br><span class="line">netstat -tunlp | grep 2181</span><br></pre></td></tr></table></figure>
 
 <h1 id="释放端口占用"><a href="#释放端口占用" class="headerlink" title="释放端口占用"></a>释放端口占用</h1><h2 id="kill"><a href="#kill" class="headerlink" title="kill"></a>kill</h2><p>在查到端口占用的进程后，如果你要杀掉对应的进程可以使用 kill 命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">kill</span> PID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者当无法杀掉时，强制杀掉</span></span><br><span class="line"><span class="built_in">kill</span> -9 PID</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">kill</span> PID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者当无法杀掉时，强制杀掉</span></span><br><span class="line"><span class="built_in">kill</span> -9 PID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 一条命令直接杀掉占用端口的进程</span></span><br><span class="line"><span class="built_in">kill</span> -9 `lsof -t -i:PORT`</span><br><span class="line"></span><br><span class="line"><span class="built_in">kill</span> -9 $(lsof -t -i:1080)</span><br></pre></td></tr></table></figure>
 
 <p>像一些大数据框架服务，如Zookeeper, Kafka, Flink, Storm等，可以使用命令 jps 查看相应的 pid</p>
 <h1 id="更多阅读"><a href="#更多阅读" class="headerlink" title="更多阅读"></a>更多阅读</h1><p>本篇参考：<a href="https://www.runoob.com/w3cnote/linux-check-port-usage.html">Linux 查看端口占用情况</a></p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://www.cnblogs.com/peida/archive/2013/02/26/2932972.html">每天一个linux命令（51）：lsof命令</a></li>
+</ol>
 ]]></content>
       <categories>
         <category>technology</category>
@@ -4984,7 +4987,24 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ip-172-26-1-96:/<span class="comment"># kill 5759</span></span><br></pre></td></tr></table></figure>
 
 <p>再次查看端口得到释放</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ip-172-26-1-96:/<span class="comment"># netstat -ntulp | grep 8080</span></span><br></pre></td></tr></table></figure>]]></content>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ip-172-26-1-96:/<span class="comment"># netstat -ntulp | grep 8080</span></span><br></pre></td></tr></table></figure>
+
+<p>更多方法，请参考：[Linux 端口占用与释放](</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">title: Linux端口占用情况查询与释放端口</span><br><span class="line">date: 2019.12.21</span><br><span class="line">tags:</span><br><span class="line">- linux</span><br><span class="line">- port</span><br><span class="line">categories: technology</span><br></pre></td></tr></table></figure>
+
+<p>查询特定端口占用情况：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">root@ip-172-26-1-96:&#x2F;# netstat -ntulp | grep 8080</span><br><span class="line">tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN      5759&#x2F;filebrowser</span><br></pre></td></tr></table></figure>
+
+<p>结果最后一位分别是进程id/进程名，使用如下方法杀死进程：</p>
+<!--more-->
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">root@ip-172-26-1-96:&#x2F;# kill 5759</span><br></pre></td></tr></table></figure>
+
+<p>再次查看端口得到释放</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">root@ip-172-26-1-96:&#x2F;# netstat -ntulp | grep 8080</span><br></pre></td></tr></table></figure>
+
+<p>更多方法，请参考：<a href="https://xujinzh.github.io/2020/07/21/linux-port-occupation/">Linux 端口占用与释放</a></p>
+]]></content>
       <categories>
         <category>technology</category>
       </categories>
@@ -12584,6 +12604,35 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>machine learning</tag>
         <tag>clustering</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>更新 ubuntu 系统内核版本</title>
+    <url>/2022/03/06/update-ubuntu-kernel/</url>
+    <content><![CDATA[<p>Ubuntu 系统的内核升级的简单方法。本篇以 Ubuntu 20.04 为例，所有命令均以 root 用户运行。</p>
+<a id="more"></a>
+
+<h1 id="下载最新内核"><a href="#下载最新内核" class="headerlink" title="下载最新内核"></a>下载最新内核</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.16.10/amd64/linux-headers-5.16.10-051610_5.16.10-051610.202202161442_all.deb</span><br><span class="line"></span><br><span class="line">wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.16.10/amd64/linux-headers-5.16.10-051610-generic_5.16.10-051610.202202161442_amd64.deb</span><br><span class="line"></span><br><span class="line">wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.16.10/amd64/linux-image-unsigned-5.16.10-051610-generic_5.16.10-051610.202202161442_amd64.deb</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.16.10/amd64/linux-modules-5.16.10-051610-generic_5.16.10-051610.202202161442_amd64.deb</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装内核"><a href="#安装内核" class="headerlink" title="安装内核"></a>安装内核</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dpkg -i *.deb</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后需要重启</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">shutdown -r now</span><br></pre></td></tr></table></figure>
+
+<h1 id="查看内核版本"><a href="#查看内核版本" class="headerlink" title="查看内核版本"></a>查看内核版本</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">uname -r</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">uname -rs</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">uname -a</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://nextgentips.com/2021/12/14/how-to-upgrade-linux-kernel-on-ubuntu-20-04-to-5-16-release/">How to upgrade Linux Kernel on Ubuntu 20.04 to 5.16 Release</a></li>
+<li><a href="https://sypalo.com/how-to-upgrade-ubuntu">How to upgrade Ubuntu to 22.04 and kernel to 5.16</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>ubuntu</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>kernel</tag>
       </tags>
   </entry>
   <entry>
