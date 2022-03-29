@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.1.1">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.1.1">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
@@ -16,12 +15,15 @@
 
 
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" integrity="sha256-jTIdiMuX/e3DGJUGwl3pKSxuc6YOuqtJYkM0bGQESA4=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.9.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="Transformer 是一种 Seq2seq 模型，即 input a sequence, output a sequence. 应用包括语音识别（输入语音，输出文本）、机器翻译（输入一种语言文本，输出另一种语言文本）、语言翻译（输入一种语言的语音，输出是另一种语言的文本，如字幕）、语音合成（输入一种语言文本，输出另一种语言的语音）、聊天机器人（对话）等，这些都可以看作 QA（Question">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Transformer 是一种 Seq2seq 模型，即 input a sequence, output a sequence. 应用包括语音识别（输入语音，输出文本）、机器翻译（输入一种语言文本，输出另一种语言文本）、语言翻译（输入一种语言的语音，输出是另一种语言的文本，如字幕）、语音合成（输入一种语言文本，输出另一种语言的语音）、聊天机器人（对话）等，这些都可以看作 QA（Question">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Transformer">
 <meta property="og:url" content="https://xujinzh.github.io/2021/11/05/transformer-concept/index.html">
@@ -55,6 +57,7 @@
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>Transformer | J. Xu</title>
   
+
 
 
 
@@ -97,12 +100,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu">
-        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
-        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">215</span></a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">20</span></a></li>
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">252</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">215</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">20</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">252</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -206,6 +204,10 @@
 
         </div>
       </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -214,10 +216,6 @@
     </header>
 
     
-  <div class="back-to-top" role="button" aria-label="返回顶部">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
   <div class="reading-progress-bar"></div>
   <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
@@ -242,11 +240,16 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/silence.jpg">
       <meta itemprop="name" content="Jinzhong Xu">
-      <meta itemprop="description" content="众妙之门">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="J. Xu">
+      <meta itemprop="description" content="众妙之门">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Transformer | J. Xu">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -292,6 +295,21 @@
       <span class="post-meta-item-text">阅读次数：</span>
       <span id="busuanzi_value_page_pv"></span>
     </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -309,17 +327,17 @@
 
 <p>如 Transformer 就是该模型的一种。李宏毅老师的课件：<a target="_blank" rel="noopener" href="https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/seq2seq_v9.pdf">Transformer</a></p>
 <h1 id="Self-attention"><a href="#Self-attention" class="headerlink" title="Self-attention"></a>Self-attention</h1><p>self-attention 中文是自注意力，它对于输入的一列向量输出相同数量的一列向量。</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/self-attention.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/self-attention.png"></p>
 <p>如上图所示，$a^i, i = 1, 2, 3, 4$ 为输入向量（如词嵌入向量），$q^i, i = 1, 2, 3, 4$ 为 query，$k^i, i = 1, 2, 3, 4$ 为 key，$v^i, i=1, 2, 3, 4$ 为 value，后三者分别有输入向量 $a^i$ 得到<br>$$<br>q^i = W^q a^i<br>$$</p>
 <p>$$<br>k^i = W^k a^i<br>$$</p>
 <p>$$<br>v^i = W^v a^i<br>$$</p>
 <p>这里，矩阵 $W^q, W^k, W^v$ 是矩阵，但不一定是方阵，一般是行大于列。行数代表输入向量的维数，列代表乘积后输出的向量 $q^i, k^i, v^i$ 维数。</p>
 <p>而 $\alpha_{2, 1}$ 是由 $q^2$ 与 $k^1$ 做 dot product 而得到的，其他依次类推 $\alpha_{2,2}, \alpha_{2, 3}, \alpha_{2, 4}$. 然后，通过 Softmax 激活函数，得到  $\alpha^{\prime}_{2, i}, i = 1, 2, 3, 4$ 作为系数与 $v^i, i = 1, 2, 3, 4$ 相乘得到 $b^2 = \sum_i \alpha^{\prime}_{2, i} v^i$，对于其他 $b^1, b^3, b^4$ 依次类推。</p>
 <p>其实，Self-attention 能够利用矩阵简洁表示如下，这也是其并行化计算的原因</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/self-attention-matrix.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/self-attention-matrix.png"></p>
 <p>这里 $I = (a^i), i = 1, 2, 3, 4$ 为输入向量列，$W^q, W^k, W^v$ 为需要学习的参数矩阵，$Q, K, V$ 分别为 query, key, value 矩阵，$A$ 为 attention 系数，$A^{\prime}$ 为经过 Sigmoid 归一化后的 attention matrix. $O = (b^i), i = 1, 2, 3, 4$ 为 self-attention 输出的向量列。</p>
 <p>在实际使用中，常常采用 multi-head self-attention，如下图所示</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/multi-head-self-attention.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/multi-head-self-attention.png"></p>
 <p>与上面的 self-attention 类似，先通过 $W^q, W^k, W^v$ 得到 $q^i, k^i, v^i$，然后再分别经过 2 个（这里例子 multi-head 为 2 头的）矩阵得到 2 个<br>$$<br>q^{i, 1} = W^{q, 1}q^i, q^{i,2} = W^{q,2}q^i<br>$$</p>
 <p>$$<br>k^{i, 1} = W^{k, 1}k^i, k^{i,2} = W^{k,2}k^i<br>$$</p>
 <p>$$<br>v^{i, 1} = W^{v, 1}v^i, v^{i,2} = W^{v,2}v^i<br>$$</p>
@@ -329,14 +347,14 @@
 <p>CNN 和 Self-attention 的关系：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1911.03584.pdf">On The Relationship Between Self-attention And Convolutional Layers</a></p>
 <h1 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h1><p>输入一排向量，输出另一排同样长度的向量。在 Transformer 中的 Encoder 里用的是 <a target="_blank" rel="noopener" href="https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/self_v7.pdf">Self-attention</a>.</p>
 <p> BERT 是仅仅使用 Transformer 的 Encoder 构建起来的。</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/encoder.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/encoder.png"></p>
 <p>Encoder 是由 $N$ 个 self-attention 模块线性拼接而成，输入向量列增加了位置信息。</p>
 <h1 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h1><p>输入是 Encoder 的输出向量和一个 special token （标识开始 BEGIN）。</p>
 <p> GPT-2, GPT-3 是仅仅使用 Transformer 的 Decoder 构建起来的，属于 Unsupervised Pre-training model。 在 300 billion tokens of text 上训练得到，它的目标（能够做）Predict the next word.</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/decoder.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/decoder.png"></p>
 <p>Decoder 与 Encoder  的区别是调整为 masked multi-head attention，并在中间增加 cross attention，引入 encoder 的信息。而 masked multi-head attention 是因为后面的单词或向量还未得到，不能像 encoder 里的 multi-head attention 那样使用全面的向量的信息，只能使用已经得到的向量的信息。</p>
 <p>在 cross attention 中，对于 decoder 中 masked multi-head attenion 得到的每一个 $q$ 分别于 encoder 中的 $k^i = W^k a^i, v^i = W^v a^i$ 做 self-attention 操作得到 $v$，如图所示</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/cross-attention.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/cross-attention.png"></p>
 <h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>TensorFlow: <a target="_blank" rel="noopener" href="https://github.com/tensorflow/tensor2tensor">tensor2tensor</a></p>
 <p>pyTorch: <a target="_blank" rel="noopener" href="http://nlp.seas.harvard.edu/2018/04/03/attention.html">The Annotated Transformer</a></p>
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
@@ -434,6 +452,22 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
 </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">522k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:55</span>
+  </span>
+</div>
 <div class="busuanzi-count">
     <span class="post-meta-item" id="busuanzi_container_site_uv">
       <span class="post-meta-item-icon">
@@ -462,10 +496,12 @@
   </footer>
 
   
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script><script src="/js/pjax.js"></script>
 
   
@@ -476,6 +512,7 @@
 
   <script src="/js/third-party/fancybox.js"></script>
 
+  <script src="/js/third-party/pace.js"></script>
 
   
   <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

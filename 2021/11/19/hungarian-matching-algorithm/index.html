@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.1.1">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.1.1">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
@@ -16,12 +15,15 @@
 
 
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" integrity="sha256-jTIdiMuX/e3DGJUGwl3pKSxuc6YOuqtJYkM0bGQESA4=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.9.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="匈牙利匹配算法（Hungarian Matching Algorithm)，也称为 Kuhn-Munkres 算法，是一个 $O\big(|V|^3\big)$ （$V$ 表示二分图的顶点集）算法，可用于在二分图中找到最大权重匹配，有时称为分配问题。匈牙利算法在 文章 End-to-End Object Detection with Transformers 中提出 DETR 算法中被采用，用于匹">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="匈牙利匹配算法（Hungarian Matching Algorithm)，也称为 Kuhn-Munkres 算法，是一个 $O\big(|V|^3\big)$ （$V$ 表示二分图的顶点集）算法，可用于在二分图中找到最大权重匹配，有时称为分配问题。匈牙利算法在 文章 End-to-End Object Detection with Transformers 中提出 DETR 算法中被采用，用于匹">
 <meta property="og:type" content="article">
 <meta property="og:title" content="匈牙利匹配算法">
 <meta property="og:url" content="https://xujinzh.github.io/2021/11/19/hungarian-matching-algorithm/index.html">
@@ -64,6 +66,7 @@
 
 
 
+
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -102,12 +105,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu">
-        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
-        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">215</span></a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">20</span></a></li>
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">252</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">215</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">20</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">252</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -211,6 +209,10 @@
 
         </div>
       </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -219,10 +221,6 @@
     </header>
 
     
-  <div class="back-to-top" role="button" aria-label="返回顶部">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
   <div class="reading-progress-bar"></div>
   <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
@@ -247,11 +245,16 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/silence.jpg">
       <meta itemprop="name" content="Jinzhong Xu">
-      <meta itemprop="description" content="众妙之门">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="J. Xu">
+      <meta itemprop="description" content="众妙之门">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="匈牙利匹配算法 | J. Xu">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -297,6 +300,21 @@
       <span class="post-meta-item-text">阅读次数：</span>
       <span id="busuanzi_value_page_pv"></span>
     </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -314,7 +332,7 @@
 <h1 id="二分图"><a href="#二分图" class="headerlink" title="二分图"></a>二分图</h1><p>图 $G = (V, E)$ 是二分的（bipartite），如果存在一个划分使得<br>$$<br>V = X \cup Y, X \cap Y = \emptyset, E \subseteq X \times Y.<br>$$<br>这里 $V$ 是顶点集，$E$ 是边集。换句话说，就是顶点集合分成两类，每类之间的顶点没有边相连接，只有不同顶点集合的点之间才可以有边相连接。</p>
 <p>匹配（matching）$M \subseteq E$ 是一个边集合，使得 $\forall v \in V$ 至多只属于 $M$ 中的一个边。匹配 $M$ 中边的个数称为匹配的大小，记作 $|M|$. 最大匹配（maximum matching）是一个匹配，使得任何其他匹配 $M^{\prime}$ 满足 $|M^{\prime}| \leq |M|$.</p>
 <p>顶点 $v$ 是匹配的，如果它是匹配 $M$ 的某个边的端点，否则，称为是自由的。</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/alternating-paths.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/alternating-paths.png"></p>
 <p>如上图左图，$Y_2$, $Y_3$, $Y_4$, $Y_6$, $X_2$, $X_4$, $X_5$, $X_6$ 是匹配的，其他点是自由的。</p>
 <p>一个边集合 $P \subseteq E$ 是道路，如果 $P$ 中的所有边都连接在一起。一个道路是交替的，如果它的边交替取自 $M$ 和 $E-M$. 如上图右图，$Y_1$, $X_2$, $Y_2$, $X_4$, $Y_4$, $X_5$, $Y_3$, $X_3$ 是交替的。</p>
 <p>一个交替道路是增广交替道路，如果它的两个端点都是自由的。</p>
@@ -323,7 +341,7 @@
 <p><strong>最大权重匹配一定是完美匹配。</strong></p>
 <p>一个二分图是完全的，如果两个顶点集合 $X$, $Y$ 中，任意的点 $x \in X (y \in Y)$ 都与 $y \in Y (x \in X)$ 中的点有边 $e \in E$ 相连。如果一个二分图不是完全的，可以考虑把它变成完全的，通过添加权重为 0 的边。当求解的是最大匹配问题时，添加权重为 inf 的边。</p>
 <p>二分图可以很容易地用邻接矩阵表示，其中边的权重是矩阵元素。从邻接矩阵的角度考虑图形对于匈牙利算法很有用。</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/matching-matrxi.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/matching-matrxi.png"></p>
 <h1 id="使用邻接均值的匈牙利算法"><a href="#使用邻接均值的匈牙利算法" class="headerlink" title="使用邻接均值的匈牙利算法"></a>使用邻接均值的匈牙利算法</h1><p>假设您想举办一个派对，并且您想要一位音乐家(musician)进行表演，一位厨师(chef)准备食物，以及在派对结束后进行清洁服务的清洁工(cleaner)。有 3 家公司提供这三种服务中的每一种，但一家公司一次只能提供一种服务（即 B 公司不能同时提供清洁工和厨师）。您正在决定应该从哪家公司购买每项服务，以最大限度地减少聚会的成本。你意识到这是分配问题的一个例子，并着手根据以下信息制作一个图表：</p>
 <table>
 <thead>
@@ -354,7 +372,7 @@
 </tr>
 </tbody></table>
 <p>用二分图表示如下</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/matrix-bigraph-example.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/matrix-bigraph-example.png"></p>
 <p>如何解决上面的最大权重匹配问题，可以考虑蛮力法，列举所有的可能组合，但是，当二分部越来越大时，这将是非常低效的。</p>
 <p>求二分图的最大权重匹配和最小权重匹配没有什么本质区别。对于二分图，只需要把权重系数用最大的减去所有边的权重，把二分图的最大权重匹配问题转化为求最小权重匹配。当考虑权重和最小时，我们称邻接矩阵是成本矩阵(cost matrix)；当考虑权重和最大时，我们称邻接矩阵是效益矩阵(profit matrix)。</p>
 <p>考虑到上述示例中的成本矩阵，匈牙利算法基于这一关键思想进行操作：如果在成本矩阵的任何一行或一列的所有条目中添加或减去一个数字，则为由此产生的成本矩阵也是原始成本矩阵的最佳匹配。</p>
@@ -363,23 +381,23 @@
 
 <p>利用匈牙利算法求解上面的最小权重匹配问题。</p>
 <p>初始邻接矩阵：</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-1.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-1.png"></p>
 <p>每一行减去行最小元素：</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-2.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-2.png"></p>
 <p>每一列减去列最小元素：</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-3.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-3.png"></p>
 <p>画最少的线覆盖包含 0 的行和列：</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-4.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-4.png"></p>
 <p>发现共有两条线，分别是第一列和第二行，而 $2 &lt; 3$，所以，还需要继续进行约简。对没有覆盖的两行减去两行中的最小元素：</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-5.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-5.png"></p>
 <p>对覆盖的列加上刚刚减去的最小元素，使得列中的 0 恢复：</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-6.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-6.png"></p>
 <p>继续画线，用最少的线覆盖所有的 0：</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-7.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-7.png"></p>
 <p>画线个数 3 等于邻接矩阵的行数。所得的匹配是矩阵中的 0，它在每行和每列中只能取1个：</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-8.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-8.png"></p>
 <p>替换 0 为原始权重值：</p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-9.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-9.png"></p>
 <p>匈牙利算法告诉我们最小的花费（407 = 150 + 135 + 122）是请 A 公司的清洁工，B 公司的厨师，C 公司的音乐家。通过蛮力解法可以验证结果的正确性。</p>
 <h1 id="使用图的匈牙利算法"><a href="#使用图的匈牙利算法" class="headerlink" title="使用图的匈牙利算法"></a>使用图的匈牙利算法</h1><p>不使用邻接矩阵，直接使用二分图寻找最大权重匹配，需要对每个顶点定义标签值，称为可行标签（feasible labeling）.</p>
 <p>A <em>labeling</em> for graph $G = (V, E)$ is a function $l: V \to \mathbb{R}$, such that:<br>$$<br>\forall (u, v) \in E: l(u) + l(v) \geq w(u, v).<br>$$<br>An <em>Equality Subgraph</em> is a subgraph $G_l = (V, E_l)$ $ \subseteq$ $G = (V, E)$, fixed on a labeling $l$, such that<br>$$<br>E_l = \lbrace(u,v) \in E: l(u) + l(v) = w(u,v)\rbrace.<br>$$</p>
@@ -548,6 +566,22 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
 </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">522k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:55</span>
+  </span>
+</div>
 <div class="busuanzi-count">
     <span class="post-meta-item" id="busuanzi_container_site_uv">
       <span class="post-meta-item-icon">
@@ -576,10 +610,12 @@
   </footer>
 
   
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script><script src="/js/pjax.js"></script>
 
   
@@ -590,6 +626,7 @@
 
   <script src="/js/third-party/fancybox.js"></script>
 
+  <script src="/js/third-party/pace.js"></script>
 
   
   <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

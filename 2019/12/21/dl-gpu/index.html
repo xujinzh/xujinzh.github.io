@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.1.1">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.1.1">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
@@ -16,12 +15,15 @@
 
 
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" integrity="sha256-jTIdiMuX/e3DGJUGwl3pKSxuc6YOuqtJYkM0bGQESA4=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.9.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="本篇介绍如何安装 nvidia drivers（GPU显卡驱动），cuda toolkit（GPU 通用并行计算架构） 和 cudnn（深度学习模型专用库），以 ubuntu18.04 为例，下载的软件选择 runfile(local) 版本。">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本篇介绍如何安装 nvidia drivers（GPU显卡驱动），cuda toolkit（GPU 通用并行计算架构） 和 cudnn（深度学习模型专用库），以 ubuntu18.04 为例，下载的软件选择 runfile(local) 版本。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深度学习的 GPU 环境的配置">
 <meta property="og:url" content="https://xujinzh.github.io/2019/12/21/dl-gpu/index.html">
@@ -51,6 +53,7 @@
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>深度学习的 GPU 环境的配置 | J. Xu</title>
   
+
 
 
 
@@ -93,12 +96,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu">
-        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
-        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">215</span></a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">20</span></a></li>
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">252</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">215</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">20</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">252</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -202,6 +200,10 @@
 
         </div>
       </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -210,10 +212,6 @@
     </header>
 
     
-  <div class="back-to-top" role="button" aria-label="返回顶部">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
   <div class="reading-progress-bar"></div>
   <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
@@ -238,11 +236,16 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/silence.jpg">
       <meta itemprop="name" content="Jinzhong Xu">
-      <meta itemprop="description" content="众妙之门">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="J. Xu">
+      <meta itemprop="description" content="众妙之门">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="深度学习的 GPU 环境的配置 | J. Xu">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -288,6 +291,21 @@
       <span class="post-meta-item-text">阅读次数：</span>
       <span id="busuanzi_value_page_pv"></span>
     </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -302,7 +320,7 @@
 
 <h1 id="nvidia-drivers"><a href="#nvidia-drivers" class="headerlink" title="nvidia drivers"></a>nvidia drivers</h1><p>该模块就是安装显卡驱动。</p>
 <p><a target="_blank" rel="noopener" href="https://www.nvidia.com/content/DriverDownload-March2009/confirmation.php?url=/tesla/440.118.02/NVIDIA-Linux-x86_64-440.118.02.run&lang=us&type=Tesla">ubuntu18.04-nvidia drivers 10.2</a></p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/nvidia-driver.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/nvidia-driver.png"></p>
 <p><font size=3 color=red><strong>其实该步骤安装可以省略，在安装 CUDA-TOOLKIT 时可同时选择安装驱动 NVIDIA-DRIVERS</strong> </font></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装前需退出 X-SERVER</span></span><br><span class="line">sudo su</span><br><span class="line">sudo init 3</span><br><span class="line">sudo sh NVIDIA-Linux-x86_64-440.118.02.run</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当遇到安装失败时，可能是因为头文件缺少，运行下面代码即可</span></span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install linux-headers-$(uname -r)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看安装是否成功</span></span><br><span class="line">nvidia-smi</span><br><span class="line"><span class="comment"># nvidia-smi 全称是 NVIDIA System Management Interface，</span></span><br><span class="line"><span class="comment"># 基于 NVIDIA Management Library(NVML) 构建的命令行实用工具，</span></span><br><span class="line"><span class="comment"># 旨在帮助管理和监控 NVIDIA GPU 设备。</span></span><br></pre></td></tr></table></figure>
 
@@ -316,7 +334,7 @@
 
 <h1 id="cuda-toolkit"><a href="#cuda-toolkit" class="headerlink" title="cuda toolkit"></a>cuda toolkit</h1><p>cuda (Compute Unified Device Architecture) 模块为并行计算的加速包。CUDA™是一种由NVIDIA推出的通用并行计算架构，该架构使GPU 能够解决复杂的计算问题。按照<a href="https://link.zhihu.com/?target=https://blogs.nvidia.com/blog/2012/09/10/what-is-cuda-2/">官方</a>的说法是，<strong>CUDA是一个并行计算平台和编程模型，能够使得使用GPU进行通用计算变得简单和优雅</strong>。</p>
 <p><a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-toolkit-archive">CUDA Toolkit Archive</a></p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/cuda-toolkit.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/cuda-toolkit.png"></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget https://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run</span><br><span class="line"></span><br><span class="line"><span class="comment"># 常规安装</span></span><br><span class="line">sudo sh cuda_10.2.89_440.33.01_linux.run</span><br><span class="line"></span><br><span class="line"><span class="comment"># 建议覆盖 (override) 安装，以免出错</span></span><br><span class="line">sudo sh cuda_10.2.89_440.33.01_linux.run --toolkit --silent --override</span><br></pre></td></tr></table></figure>
 
 <p>在安装过程中截取其中比较重要的几个选择：</p>
@@ -331,7 +349,7 @@
 
 <h1 id="cudnn"><a href="#cudnn" class="headerlink" title="cudnn"></a>cudnn</h1><p>cudnn 模块其实就是一个专门为深度学习计算设计的软件库，里面提供了很多专门的计算函数，如卷积等。</p>
 <p>cudnn 下载时需要登录，下载对应的版本：<a target="_blank" rel="noopener" href="https://developer.nvidia.com/rdp/cudnn-download">cudnn</a></p>
-<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/cudnn.jpeg"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/cudnn.jpeg"></p>
 <p>然后，参考官网 <a target="_blank" rel="noopener" href="https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#installlinux">NVIDIA CUDNN DOCUMENTATION</a> 安装</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf cudnn-x.x-linux-x64-v8.x.x.x.tgz</span><br><span class="line">sudo cp cuda/include/cudnn*.h /usr/<span class="built_in">local</span>/cuda/include </span><br><span class="line">sudo cp -P cuda/lib64/libcudnn* /usr/<span class="built_in">local</span>/cuda/lib64 </span><br><span class="line">sudo chmod a+r /usr/<span class="built_in">local</span>/cuda/include/cudnn*.h /usr/<span class="built_in">local</span>/cuda/lib64/libcudnn*</span><br></pre></td></tr></table></figure>
 
@@ -454,6 +472,22 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
 </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">522k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:55</span>
+  </span>
+</div>
 <div class="busuanzi-count">
     <span class="post-meta-item" id="busuanzi_container_site_uv">
       <span class="post-meta-item-icon">
@@ -482,10 +516,12 @@
   </footer>
 
   
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script><script src="/js/pjax.js"></script>
 
   
@@ -496,6 +532,7 @@
 
   <script src="/js/third-party/fancybox.js"></script>
 
+  <script src="/js/third-party/pace.js"></script>
 
   
   <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
