@@ -32,43 +32,6 @@
       </tags>
   </entry>
   <entry>
-    <title>三维重建简单综述</title>
-    <url>/2019/12/21/3d-reconstruction/</url>
-    <content><![CDATA[<p>文章《<a rel="noreferrer noopener" aria-label="基于深度学习的视觉三维重建研究总结（在新窗口打开）" href="https://zhuanlan.zhihu.com/p/79628068" target="_blank">基于深度学习的视觉三维重建研究总结</a>》从三维重建的意义、定义、表示方式、分类开始，总结了深度学习在三维重建方向的最近几年（截至2019年）的进展，分别是</p>
-<a id="more"></a>
-
-<ol><li>从单张图像恢复深度图的文章《<a rel="noreferrer noopener" aria-label="Depth Map Prediction from a Single Image using a Multi-Scale Deep Network（在新窗口打开）" href="https://arxiv.org/abs/1406.2283" target="_blank">Depth Map Prediction from a Single Image using a Multi-Scale Deep Network</a>》，是深度学习进行三维重建的开山之作，由粗到细并提出尺度不变的损失函数。</li><li>单视图或多视图的体素三维重建文章《<a rel="noreferrer noopener" aria-label="3D-R2N2: A Unified Approach for Single and Multi-view 3D Object Reconstruction（在新窗口打开）" href="https://arxiv.org/abs/1604.00449" target="_blank">3D-R2N2: A Unified Approach for Single and Multi-view 3D Object Reconstruction</a>》结合编码解码网络和LSTM，既可以对单幅图像做三维图像体素重建，又可以对多幅图像做。</li><li>单张RGB图像的点云三维重建文章《<a rel="noreferrer noopener" aria-label="A Point Set Generation Network for 3D Object Reconstruction from a Single Image（在新窗口打开）" href="https://arxiv.org/abs/1612.00603" target="_blank">A Point Set Generation Network for 3D Object Reconstruction from a Single Image</a>》用1024个点云数据表示物体的三维重建，并提出了CD（Chamfer Distance）和 EMD（Earth Mover's Distance）。</li><li>单张RGB图像的Mesh三维重建文章《<a rel="noreferrer noopener" aria-label="Pixel2Mesh: Generating 3D Mesh Models from Single RGB Images（在新窗口打开）" href="https://arxiv.org/abs/1804.01654" target="_blank">Pixel2Mesh: Generating 3D Mesh Models from Single RGB Images</a>》从椭球体Mesh通过深度学习（CNN + GCN） 端到端 变形为对应物体的Mesh三维重建。</li><li>文章《<a rel="noreferrer noopener" aria-label="Mesh R-CNN（在新窗口打开）" href="https://arxiv.org/abs/1906.02739" target="_blank">Mesh R-CNN</a>》使用《<a rel="noreferrer noopener" aria-label="Mask R-CNN（在新窗口打开）" href="https://arxiv.org/abs/1703.06870" target="_blank">Mask R-CNN</a>》框架实现现实图片的物体检测，并为每个检测物体生成三角Mesh。文章使用了图卷积网络GCN和多种损失来训练。</li><li>文章《<a rel="noreferrer noopener" aria-label="Conditional Single-view Shape Generation for Multi-view Stereo Reconstruction（在新窗口打开）" href="https://arxiv.org/abs/1904.06699" target="_blank">Conditional Single-view Shape Generation for Multi-view Stereo Reconstruction</a>》使用条件生成模型对不可见部分进行建模。</li></ol>
-]]></content>
-      <categories>
-        <category>research</category>
-      </categories>
-      <tags>
-        <tag>3d</tag>
-        <tag>dl</tag>
-        <tag>study</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>给服务器添加交换分区swap 和开启 bbr</title>
-    <url>/2019/12/20/add-swap/</url>
-    <content><![CDATA[<p>有时候，购买的云服务器不会自动给创建交换分区，如何自己建立交换分区呢，使用下面命令创建交换分区，可以更改大小，比如1G更改为2G，一般交换分区是内存的2倍足矣。本篇以 Debian 系统为例，建议以 root 身份运行本篇中的命令。</p>
-<a id="more"></a>
-
-<h1 id="添加交换分区"><a href="#添加交换分区" class="headerlink" title="添加交换分区"></a>添加交换分区</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo swapon --show</span><br><span class="line">free -h</span><br><span class="line">df -h</span><br><span class="line">sudo fallocate -l 1G /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">sudo chmod 600 /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">sudo mkswap /swapfile</span><br><span class="line">sudo swapon /swapfile</span><br><span class="line">sudo swapon --show</span><br><span class="line">free -h</span><br><span class="line">sudo cp /etc/fstab /etc/fstab.bak</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/swapfile none swap sw 0 0&#x27;</span> | sudo tee -a /etc/fstab</span><br><span class="line">cat /proc/sys/vm/swappiness</span><br><span class="line">sudo sysctl vm.swappiness=10</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.swappiness=10&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">cat /proc/sys/vm/vfs_cache_pressure</span><br><span class="line">sudo sysctl vm.vfs_cache_pressure=50</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.vfs_cache_pressure=50&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
-
-<p>使用 top 或 htop 命令，可以查看交换分区是否创建成功。</p>
-<h1 id="开启-bbr"><a href="#开启-bbr" class="headerlink" title="开启 bbr"></a>开启 bbr</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.core.default_qdisc=fq&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv4.tcp_congestion_control=bbr&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl -p</span><br><span class="line">sysctl net.ipv4.tcp_available_congestion_control</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否开启成功</span></span><br><span class="line">lsmod | grep bbr</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>swap</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>牛顿-莱布尼茨公式</title>
     <url>/2020/08/15/Newton-Leibniz-formula/</url>
     <content><![CDATA[<p>牛顿-莱布尼茨公式不仅为定积分提供了一个有效的计算方法，而且是联系不定积分和定积分的桥梁。</p>
@@ -92,6 +55,26 @@
         <tag>maths</tag>
         <tag>Newton</tag>
         <tag>Leibniz</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>给服务器添加交换分区swap 和开启 bbr</title>
+    <url>/2019/12/20/add-swap/</url>
+    <content><![CDATA[<p>有时候，购买的云服务器不会自动给创建交换分区，如何自己建立交换分区呢，使用下面命令创建交换分区，可以更改大小，比如1G更改为2G，一般交换分区是内存的2倍足矣。本篇以 Debian 系统为例，建议以 root 身份运行本篇中的命令。</p>
+<a id="more"></a>
+
+<h1 id="添加交换分区"><a href="#添加交换分区" class="headerlink" title="添加交换分区"></a>添加交换分区</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo swapon --show</span><br><span class="line">free -h</span><br><span class="line">df -h</span><br><span class="line">sudo fallocate -l 1G /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">sudo chmod 600 /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">sudo mkswap /swapfile</span><br><span class="line">sudo swapon /swapfile</span><br><span class="line">sudo swapon --show</span><br><span class="line">free -h</span><br><span class="line">sudo cp /etc/fstab /etc/fstab.bak</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/swapfile none swap sw 0 0&#x27;</span> | sudo tee -a /etc/fstab</span><br><span class="line">cat /proc/sys/vm/swappiness</span><br><span class="line">sudo sysctl vm.swappiness=10</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.swappiness=10&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">cat /proc/sys/vm/vfs_cache_pressure</span><br><span class="line">sudo sysctl vm.vfs_cache_pressure=50</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.vfs_cache_pressure=50&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
+
+<p>使用 top 或 htop 命令，可以查看交换分区是否创建成功。</p>
+<h1 id="开启-bbr"><a href="#开启-bbr" class="headerlink" title="开启 bbr"></a>开启 bbr</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.core.default_qdisc=fq&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv4.tcp_congestion_control=bbr&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl -p</span><br><span class="line">sysctl net.ipv4.tcp_available_congestion_control</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否开启成功</span></span><br><span class="line">lsmod | grep bbr</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>swap</tag>
       </tags>
   </entry>
   <entry>
@@ -130,6 +113,23 @@
       <tags>
         <tag>python</tag>
         <tag>copy</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>三维重建简单综述</title>
+    <url>/2019/12/21/3d-reconstruction/</url>
+    <content><![CDATA[<p>文章《<a rel="noreferrer noopener" aria-label="基于深度学习的视觉三维重建研究总结（在新窗口打开）" href="https://zhuanlan.zhihu.com/p/79628068" target="_blank">基于深度学习的视觉三维重建研究总结</a>》从三维重建的意义、定义、表示方式、分类开始，总结了深度学习在三维重建方向的最近几年（截至2019年）的进展，分别是</p>
+<a id="more"></a>
+
+<ol><li>从单张图像恢复深度图的文章《<a rel="noreferrer noopener" aria-label="Depth Map Prediction from a Single Image using a Multi-Scale Deep Network（在新窗口打开）" href="https://arxiv.org/abs/1406.2283" target="_blank">Depth Map Prediction from a Single Image using a Multi-Scale Deep Network</a>》，是深度学习进行三维重建的开山之作，由粗到细并提出尺度不变的损失函数。</li><li>单视图或多视图的体素三维重建文章《<a rel="noreferrer noopener" aria-label="3D-R2N2: A Unified Approach for Single and Multi-view 3D Object Reconstruction（在新窗口打开）" href="https://arxiv.org/abs/1604.00449" target="_blank">3D-R2N2: A Unified Approach for Single and Multi-view 3D Object Reconstruction</a>》结合编码解码网络和LSTM，既可以对单幅图像做三维图像体素重建，又可以对多幅图像做。</li><li>单张RGB图像的点云三维重建文章《<a rel="noreferrer noopener" aria-label="A Point Set Generation Network for 3D Object Reconstruction from a Single Image（在新窗口打开）" href="https://arxiv.org/abs/1612.00603" target="_blank">A Point Set Generation Network for 3D Object Reconstruction from a Single Image</a>》用1024个点云数据表示物体的三维重建，并提出了CD（Chamfer Distance）和 EMD（Earth Mover's Distance）。</li><li>单张RGB图像的Mesh三维重建文章《<a rel="noreferrer noopener" aria-label="Pixel2Mesh: Generating 3D Mesh Models from Single RGB Images（在新窗口打开）" href="https://arxiv.org/abs/1804.01654" target="_blank">Pixel2Mesh: Generating 3D Mesh Models from Single RGB Images</a>》从椭球体Mesh通过深度学习（CNN + GCN） 端到端 变形为对应物体的Mesh三维重建。</li><li>文章《<a rel="noreferrer noopener" aria-label="Mesh R-CNN（在新窗口打开）" href="https://arxiv.org/abs/1906.02739" target="_blank">Mesh R-CNN</a>》使用《<a rel="noreferrer noopener" aria-label="Mask R-CNN（在新窗口打开）" href="https://arxiv.org/abs/1703.06870" target="_blank">Mask R-CNN</a>》框架实现现实图片的物体检测，并为每个检测物体生成三角Mesh。文章使用了图卷积网络GCN和多种损失来训练。</li><li>文章《<a rel="noreferrer noopener" aria-label="Conditional Single-view Shape Generation for Multi-view Stereo Reconstruction（在新窗口打开）" href="https://arxiv.org/abs/1904.06699" target="_blank">Conditional Single-view Shape Generation for Multi-view Stereo Reconstruction</a>》使用条件生成模型对不可见部分进行建模。</li></ol>
+]]></content>
+      <categories>
+        <category>research</category>
+      </categories>
+      <tags>
+        <tag>3d</tag>
+        <tag>dl</tag>
+        <tag>study</tag>
       </tags>
   </entry>
   <entry>
@@ -546,6 +546,54 @@
       </tags>
   </entry>
   <entry>
+    <title>微积分基本定理和定积分计算</title>
+    <url>/2020/09/19/basic-theorem-of-calculus-and-calculation-of-definite-integral/</url>
+    <content><![CDATA[<p>首先给出一个结论：连续函数必定存在原函数。</p>
+<a id="more"></a>
+
+<h1 id="变限积分与原函数的存在性"><a href="#变限积分与原函数的存在性" class="headerlink" title="变限积分与原函数的存在性"></a>变限积分与原函数的存在性</h1><p>假设$f(x)$在$[a,b]$上可积，对于任何的$x\in[a,b]$，$f$在$[a,x]$上也可积，定义<br>$$<br>\Phi(x) = \int^x_a f(t) \mathrm{d}t, x\in [a, b]<br>$$<br>为以积分上限$x$为自变量的函数，称为变上限的定积分。同样，定义变下限的定积分为<br>$$<br>\Psi(x) = \int^b_x f(t) \mathrm{d}t, x\in[a,b].<br>$$<br>统称$\Psi$与$\Phi$为变限积分。由于$\int^b_x f(t) \mathrm{d}t = -\int^x_b f(t)\mathrm{d}t$，因此下面只讨论变上限积分。</p>
+<p><strong>定理 9.9</strong>    若$f$在$[a,b]$上可积，则$\Phi$在$[a,b]$上连续。</p>
+<p><strong>定理 9.10</strong>    （原函数存在定理）若$f$在$[a,b]$上连续，则$\Phi$在$[a,b]$上处处可导，且<br>$$<br>\Phi^{\prime}(x) = \frac{\mathrm{d}}{\mathrm{d}x}\int^x_a f(t)\mathrm{d}t = f(x), x \in [a, b].<br>$$<br><strong>定理 9.11</strong>    （积分第二中值定理）设函数$f$在$[a,b]$上可积，</p>
+<ul>
+<li>若函数$g$在$[a,b]$上减，且$g(x)\geq 0$，则存在$\xi \in [a,b]$，使得</li>
+</ul>
+<p>$$<br>\int^b_a f(x)g(x) \mathrm{d}x = g(a) \int^{\xi}_a f(x) \mathrm{d}x.<br>$$</p>
+<ul>
+<li>若函数$g$在$[a,b]$上增，且$g(x)\geq 0$，则存在$\eta \in [a,b]$，使得</li>
+</ul>
+<p>$$<br>\int^b_a f(x) g(x) \mathrm{d}x = g(b) \int^b_{\eta} f(x) \mathrm{d}x.<br>$$</p>
+<ul>
+<li>推广：若函数$g$在$[a,b]$上单调，则存在$\xi \in [a,b]$使得</li>
+</ul>
+<p>$$<br>\int_{a}^{b} f(x)g(x) \mathrm{d}x = g(a) \int_{a}^{\xi} f(x) \mathrm{d}x + g(b) \int_{\xi}^{b} f(x) \mathrm{d}x.<br>$$</p>
+<h1 id="换元积分法与分部积分法"><a href="#换元积分法与分部积分法" class="headerlink" title="换元积分法与分部积分法"></a>换元积分法与分部积分法</h1><p><strong>定理 9.12</strong>    （定积分换元积分法）若函数$f$在$[a,b]$上连续，$\varphi^{\prime}$在$[a,b]$上可积，且满足<br>$$<br>\varphi(\alpha)=a, \varphi(\beta)=b, \varphi([\alpha, \beta]) \subset [a,b],<br>$$<br>则有定积分换元公式：<br>$$<br>\int^b_a f(x) \mathrm{d}x = \int^{\beta}_{\alpha}f(\varphi(t))\varphi^{\prime}(t) \mathrm{d}t.<br>$$<br><strong>定理 9.13</strong>    （定积分分部积分法）若$u(x),v(x)$为$[a,b]$上的可微函数，且$u^{\prime}(x)$和$v^{\prime}(x)$都在$[a,b]$上可积，则有定积分分部积分公式：<br>$$<br>\int^b_a u(x)v^{\prime}(x) \mathrm{d}x = u(x)v(x)\vert^b_a - \int^b_a u^{\prime}(x)v(x)\mathrm{d}x.<br>$$</p>
+<h1 id="泰勒公式的积分型余项"><a href="#泰勒公式的积分型余项" class="headerlink" title="泰勒公式的积分型余项"></a>泰勒公式的积分型余项</h1><p>若在$[a,b]$上$u(x),v(x)$有$n+1$阶连续导函数，则有<br>$$<br>\int^b_a u(x)v^{(n+1)}(x)\mathrm{d}x = [u(x)v^{(n)}(x) - u^{\prime}v^{(n-1)}(x) + \cdots + \\<br>(-1)^n u^{(n)}(x)v(x)]^b_a + (-1)^{n+1}\int^b_a u^{(n+1)}(x) v(x) \mathrm{d}x \\<br>(n = 1, 2, \cdots)<br>$$<br>假设函数$f$在点$x_0$的某领域$U(x_0)$上有$n+1$阶连续导函数，令$x\in U(x_0)$，$u(t) = (x-t)^n, v(t) = f(t), t\in [x_0, x]$ （或$[x, x_0]$），<br>$$<br>\int^x_{x_0} (x-t)^n f^{(n+1)}(t) \mathrm{d}t = [(x-t)^n f^{(n)}(t) + n(x-t)^{n-1}f^{(n-1)}(t) + \cdots + \\<br>n! f(t)]^x_{x_0} + \int^x_{x_0} 0 \cdot f(t) \mathrm{d}t \\<br>= n! f(x) - n! [f(x_0) + f^{\prime}(x_0)(x-x_0) + \cdots + \frac{f^{(n)}(x_0)}{n!}(x-x_0)^n] \\<br>= n! R_n(x)<br>$$<br>其中$R_n(x)$即为泰勒公式的$n$阶余项。由此求得<br>$$<br>R_n(x) = \frac{1}{n!} \int^x_{x_0} f^{(n+1)}(t)(x-t)^n \mathrm{d}t,<br>$$<br>这就是泰勒公式的积分型余项。</p>
+<p>由于$f^{(n+1)}(t)$连续，$(x-t)^n$在$[x_0, x]$（或$[x, x_0]$）上保持同号，因此由推广的积分第一中值定理，可得<br>$$<br>R_n(x) = \frac{1}{n!} f^{(n+1)}(\xi) \int^x_{x_0} (x-t)^n \mathrm{d}t \\<br>= \frac{1}{(n+1)!}f^{(n+1)}(\xi)(x-x_0)^{n+1},<br>$$<br>其中$\xi = x_0 + \theta(x-x_0), 0\leq \theta \leq 1$，得到得结果就是拉格朗日型余项。</p>
+<p>如果直接运用积分第一中值定理，那么<br>$$<br>R_n(x) = \frac{1}{n!}f^{(n+1)}(\xi)(x-\xi)^n(x-x_0), \\<br>\xi = x_0 + \theta(x-x_0), 0 \leq \theta \leq 1.<br>$$<br>由于<br>$$<br>(x-\xi)^n (x-x_0) = [x-x_0 - \theta(x-x_0)]^n(x-x_0) \\<br>=(1-\theta)^n(x-x_0)^{n+1},<br>$$<br>因此<br>$$<br>R_n(x) = \frac{1}{n!}f^{(n+1)}(x_0 + \theta(x-x_0))(1-\theta)^n(x-x_0)^{n+1}, \\<br>0 \leq \theta \leq 1.<br>$$<br>特别地，当$x_0 = 0$时，又有<br>$$<br>R_n(x) = \frac{1}{n!}f^{(n+1)}(\theta x)(1 - \theta)^n x^{n+1}, 0\leq \theta \leq 1.<br>$$<br>称为泰勒公式得柯西型余项。</p>
+<h1 id="三角函数积分技巧"><a href="#三角函数积分技巧" class="headerlink" title="三角函数积分技巧"></a>三角函数积分技巧</h1><ul>
+<li><p>$\int_{0}^{\frac{\pi}{2}} f(\sin x, \cos x)\mathrm{d}x = \int_{0}^{\frac{\pi}{2}} f(\cos x, \sin x)\mathrm{d}x.$ </p>
+</li>
+<li><p>$I(m,n) = \int^{\frac{\pi}{2}}_0 \cos^m x \sin^n x \mathrm{d}x$，$m,n$为正整数，则</p>
+</li>
+</ul>
+<p>$$<br>I(m,n) = \frac{m-1}{m+n}I(m-2,n) = \frac{n-1}{n+m}I(m,n-2), m,n=2,3,\cdots.<br>$$</p>
+<p>$$<br>I(m,n) =<br>\begin{cases}<br>\frac{(m-1)!! \cdot (n-1)!!}{(m+n)!!} \frac{\pi}{2}, m,n 都是偶数;\\<br>\frac{(m-1)!! \cdot (n-1)!!}{(m+n)!!}, 其他.<br>\end{cases}<br>$$</p>
+<ul>
+<li>$\int^{\frac{\pi}{2}}_0 \sin^n x \mathrm{d}x = \int^{\frac{\pi}{2}}_0 \cos^n x \mathrm{d}x = I(n, 0)$</li>
+</ul>
+<p>$$<br>I(n, 0) =<br>\begin{cases}<br>\frac{(n-1)!!}{n!!}\frac{\pi}{2}, n 是偶数;\\<br>\frac{(n-1)!!}{n!!}.<br>\end{cases}<br>$$</p>
+]]></content>
+      <categories>
+        <category>maths</category>
+        <category>mathematical analysis</category>
+      </categories>
+      <tags>
+        <tag>maths</tag>
+        <tag>definite integral</tag>
+        <tag>integral</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>如何使用服务器搭建博客</title>
     <url>/2019/12/22/blog-construct/</url>
     <content><![CDATA[<p>参照博文《<a rel="noreferrer noopener" aria-label="（在新窗口打开）" href="https://websiteforstudents.com/install-wordpress-on-ubuntu-18-04-lts-beta-with-apache2-mariadb-and-php-7-1/" target="_blank"><em>Website for Students</em></a>》或《<a rel="noreferrer noopener" aria-label="How to Install WordPress with LAMP Stack on Ubuntu 18.04（在新窗口打开）" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/" target="_blank"><em><strong>How to Install WordPress with LAMP Stack on Ubuntu 18.04</strong></em></a>》进行搭建.</p>
@@ -633,54 +681,6 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       <tags>
         <tag>blog</tag>
         <tag>server</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>微积分基本定理和定积分计算</title>
-    <url>/2020/09/19/basic-theorem-of-calculus-and-calculation-of-definite-integral/</url>
-    <content><![CDATA[<p>首先给出一个结论：连续函数必定存在原函数。</p>
-<a id="more"></a>
-
-<h1 id="变限积分与原函数的存在性"><a href="#变限积分与原函数的存在性" class="headerlink" title="变限积分与原函数的存在性"></a>变限积分与原函数的存在性</h1><p>假设$f(x)$在$[a,b]$上可积，对于任何的$x\in[a,b]$，$f$在$[a,x]$上也可积，定义<br>$$<br>\Phi(x) = \int^x_a f(t) \mathrm{d}t, x\in [a, b]<br>$$<br>为以积分上限$x$为自变量的函数，称为变上限的定积分。同样，定义变下限的定积分为<br>$$<br>\Psi(x) = \int^b_x f(t) \mathrm{d}t, x\in[a,b].<br>$$<br>统称$\Psi$与$\Phi$为变限积分。由于$\int^b_x f(t) \mathrm{d}t = -\int^x_b f(t)\mathrm{d}t$，因此下面只讨论变上限积分。</p>
-<p><strong>定理 9.9</strong>    若$f$在$[a,b]$上可积，则$\Phi$在$[a,b]$上连续。</p>
-<p><strong>定理 9.10</strong>    （原函数存在定理）若$f$在$[a,b]$上连续，则$\Phi$在$[a,b]$上处处可导，且<br>$$<br>\Phi^{\prime}(x) = \frac{\mathrm{d}}{\mathrm{d}x}\int^x_a f(t)\mathrm{d}t = f(x), x \in [a, b].<br>$$<br><strong>定理 9.11</strong>    （积分第二中值定理）设函数$f$在$[a,b]$上可积，</p>
-<ul>
-<li>若函数$g$在$[a,b]$上减，且$g(x)\geq 0$，则存在$\xi \in [a,b]$，使得</li>
-</ul>
-<p>$$<br>\int^b_a f(x)g(x) \mathrm{d}x = g(a) \int^{\xi}_a f(x) \mathrm{d}x.<br>$$</p>
-<ul>
-<li>若函数$g$在$[a,b]$上增，且$g(x)\geq 0$，则存在$\eta \in [a,b]$，使得</li>
-</ul>
-<p>$$<br>\int^b_a f(x) g(x) \mathrm{d}x = g(b) \int^b_{\eta} f(x) \mathrm{d}x.<br>$$</p>
-<ul>
-<li>推广：若函数$g$在$[a,b]$上单调，则存在$\xi \in [a,b]$使得</li>
-</ul>
-<p>$$<br>\int_{a}^{b} f(x)g(x) \mathrm{d}x = g(a) \int_{a}^{\xi} f(x) \mathrm{d}x + g(b) \int_{\xi}^{b} f(x) \mathrm{d}x.<br>$$</p>
-<h1 id="换元积分法与分部积分法"><a href="#换元积分法与分部积分法" class="headerlink" title="换元积分法与分部积分法"></a>换元积分法与分部积分法</h1><p><strong>定理 9.12</strong>    （定积分换元积分法）若函数$f$在$[a,b]$上连续，$\varphi^{\prime}$在$[a,b]$上可积，且满足<br>$$<br>\varphi(\alpha)=a, \varphi(\beta)=b, \varphi([\alpha, \beta]) \subset [a,b],<br>$$<br>则有定积分换元公式：<br>$$<br>\int^b_a f(x) \mathrm{d}x = \int^{\beta}_{\alpha}f(\varphi(t))\varphi^{\prime}(t) \mathrm{d}t.<br>$$<br><strong>定理 9.13</strong>    （定积分分部积分法）若$u(x),v(x)$为$[a,b]$上的可微函数，且$u^{\prime}(x)$和$v^{\prime}(x)$都在$[a,b]$上可积，则有定积分分部积分公式：<br>$$<br>\int^b_a u(x)v^{\prime}(x) \mathrm{d}x = u(x)v(x)\vert^b_a - \int^b_a u^{\prime}(x)v(x)\mathrm{d}x.<br>$$</p>
-<h1 id="泰勒公式的积分型余项"><a href="#泰勒公式的积分型余项" class="headerlink" title="泰勒公式的积分型余项"></a>泰勒公式的积分型余项</h1><p>若在$[a,b]$上$u(x),v(x)$有$n+1$阶连续导函数，则有<br>$$<br>\int^b_a u(x)v^{(n+1)}(x)\mathrm{d}x = [u(x)v^{(n)}(x) - u^{\prime}v^{(n-1)}(x) + \cdots + \\<br>(-1)^n u^{(n)}(x)v(x)]^b_a + (-1)^{n+1}\int^b_a u^{(n+1)}(x) v(x) \mathrm{d}x \\<br>(n = 1, 2, \cdots)<br>$$<br>假设函数$f$在点$x_0$的某领域$U(x_0)$上有$n+1$阶连续导函数，令$x\in U(x_0)$，$u(t) = (x-t)^n, v(t) = f(t), t\in [x_0, x]$ （或$[x, x_0]$），<br>$$<br>\int^x_{x_0} (x-t)^n f^{(n+1)}(t) \mathrm{d}t = [(x-t)^n f^{(n)}(t) + n(x-t)^{n-1}f^{(n-1)}(t) + \cdots + \\<br>n! f(t)]^x_{x_0} + \int^x_{x_0} 0 \cdot f(t) \mathrm{d}t \\<br>= n! f(x) - n! [f(x_0) + f^{\prime}(x_0)(x-x_0) + \cdots + \frac{f^{(n)}(x_0)}{n!}(x-x_0)^n] \\<br>= n! R_n(x)<br>$$<br>其中$R_n(x)$即为泰勒公式的$n$阶余项。由此求得<br>$$<br>R_n(x) = \frac{1}{n!} \int^x_{x_0} f^{(n+1)}(t)(x-t)^n \mathrm{d}t,<br>$$<br>这就是泰勒公式的积分型余项。</p>
-<p>由于$f^{(n+1)}(t)$连续，$(x-t)^n$在$[x_0, x]$（或$[x, x_0]$）上保持同号，因此由推广的积分第一中值定理，可得<br>$$<br>R_n(x) = \frac{1}{n!} f^{(n+1)}(\xi) \int^x_{x_0} (x-t)^n \mathrm{d}t \\<br>= \frac{1}{(n+1)!}f^{(n+1)}(\xi)(x-x_0)^{n+1},<br>$$<br>其中$\xi = x_0 + \theta(x-x_0), 0\leq \theta \leq 1$，得到得结果就是拉格朗日型余项。</p>
-<p>如果直接运用积分第一中值定理，那么<br>$$<br>R_n(x) = \frac{1}{n!}f^{(n+1)}(\xi)(x-\xi)^n(x-x_0), \\<br>\xi = x_0 + \theta(x-x_0), 0 \leq \theta \leq 1.<br>$$<br>由于<br>$$<br>(x-\xi)^n (x-x_0) = [x-x_0 - \theta(x-x_0)]^n(x-x_0) \\<br>=(1-\theta)^n(x-x_0)^{n+1},<br>$$<br>因此<br>$$<br>R_n(x) = \frac{1}{n!}f^{(n+1)}(x_0 + \theta(x-x_0))(1-\theta)^n(x-x_0)^{n+1}, \\<br>0 \leq \theta \leq 1.<br>$$<br>特别地，当$x_0 = 0$时，又有<br>$$<br>R_n(x) = \frac{1}{n!}f^{(n+1)}(\theta x)(1 - \theta)^n x^{n+1}, 0\leq \theta \leq 1.<br>$$<br>称为泰勒公式得柯西型余项。</p>
-<h1 id="三角函数积分技巧"><a href="#三角函数积分技巧" class="headerlink" title="三角函数积分技巧"></a>三角函数积分技巧</h1><ul>
-<li><p>$\int_{0}^{\frac{\pi}{2}} f(\sin x, \cos x)\mathrm{d}x = \int_{0}^{\frac{\pi}{2}} f(\cos x, \sin x)\mathrm{d}x.$ </p>
-</li>
-<li><p>$I(m,n) = \int^{\frac{\pi}{2}}_0 \cos^m x \sin^n x \mathrm{d}x$，$m,n$为正整数，则</p>
-</li>
-</ul>
-<p>$$<br>I(m,n) = \frac{m-1}{m+n}I(m-2,n) = \frac{n-1}{n+m}I(m,n-2), m,n=2,3,\cdots.<br>$$</p>
-<p>$$<br>I(m,n) =<br>\begin{cases}<br>\frac{(m-1)!! \cdot (n-1)!!}{(m+n)!!} \frac{\pi}{2}, m,n 都是偶数;\\<br>\frac{(m-1)!! \cdot (n-1)!!}{(m+n)!!}, 其他.<br>\end{cases}<br>$$</p>
-<ul>
-<li>$\int^{\frac{\pi}{2}}_0 \sin^n x \mathrm{d}x = \int^{\frac{\pi}{2}}_0 \cos^n x \mathrm{d}x = I(n, 0)$</li>
-</ul>
-<p>$$<br>I(n, 0) =<br>\begin{cases}<br>\frac{(n-1)!!}{n!!}\frac{\pi}{2}, n 是偶数;\\<br>\frac{(n-1)!!}{n!!}.<br>\end{cases}<br>$$</p>
-]]></content>
-      <categories>
-        <category>maths</category>
-        <category>mathematical analysis</category>
-      </categories>
-      <tags>
-        <tag>maths</tag>
-        <tag>definite integral</tag>
-        <tag>integral</tag>
       </tags>
   </entry>
   <entry>
@@ -795,30 +795,6 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
-    <title>Centos安装ffmpeg</title>
-    <url>/2020/03/10/centos-ffmpeg/</url>
-    <content><![CDATA[<p>Centos 安全稳定，但是，对于ffmpeg却没有通过yum install ffmpeg直接按照的支持。下面给出一种可行的安装方法：<strong>Static Prebuilt Install of FFMpeg.</strong> 这里以Centos 7为例。</p>
-<a id="more"></a>
-
-<h1 id="下载安装脚本"><a href="#下载安装脚本" class="headerlink" title="下载安装脚本"></a>下载安装脚本</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/q3aql/ffmpeg-install/master/ffmpeg-install</span><br></pre></td></tr></table></figure>
-
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod  a+x ffmpeg-install &amp;&amp; ./ffmpeg-install --install release</span><br></pre></td></tr></table></figure>
-
-<h1 id="查看ffmpeg版本信息"><a href="#查看ffmpeg版本信息" class="headerlink" title="查看ffmpeg版本信息"></a>查看ffmpeg版本信息</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ffmpeg -version</span><br></pre></td></tr></table></figure>
-
-<h1 id="其他补充"><a href="#其他补充" class="headerlink" title="其他补充"></a>其他补充</h1><p>Centos 7 不能直接使用tar 解压缩 x.tar.bz2?</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum install bzip2</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>centos</tag>
-        <tag>ffmpeg</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Centos 修改时区</title>
     <url>/2020/04/02/centos-change-timezone/</url>
     <content><![CDATA[<p>Centos修改系统显示时间可以通过修改时区来做。常用的时区一般包含CST, UTC, GMT.</p>
@@ -853,87 +829,6 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
-    <title>Centos安装htop和htop命令使用</title>
-    <url>/2020/03/10/centos-htop/</url>
-    <content><![CDATA[<p>Centos 是一个比较优秀的Linux发行版，在其上可以使用软件包管理工具yum进行软件命令的安装，但是，htop却不能直接使用命令yum install htop来安装，下面介绍如何安装htop，方面我们清楚的查看电脑的运行情况。</p>
-<a id="more"></a>
-
-<h1 id="首先，需要添加EPEL-repo"><a href="#首先，需要添加EPEL-repo" class="headerlink" title="首先，需要添加EPEL repo"></a>首先，需要添加EPEL repo</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum -y install epel-release</span><br></pre></td></tr></table></figure>
-
-<h1 id="其次，安装htop"><a href="#其次，安装htop" class="headerlink" title="其次，安装htop"></a>其次，安装htop</h1><h2 id="搜索htop"><a href="#搜索htop" class="headerlink" title="搜索htop"></a>搜索htop</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum search htop</span><br></pre></td></tr></table></figure>
-
-<h2 id="查看htop信息"><a href="#查看htop信息" class="headerlink" title="查看htop信息"></a>查看htop信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum info htop</span><br></pre></td></tr></table></figure>
-
-<h2 id="更新系统"><a href="#更新系统" class="headerlink" title="更新系统"></a>更新系统</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum update</span><br><span class="line">sudo yum upgrade</span><br></pre></td></tr></table></figure>
-
-<p>注意，在centos中，命令yum update 和yum upgrade有一些小区别：</p>
-<p>yum upgrade 会强制删除过时的软件包，这可能是危险的，因为有可能你在使用该软件</p>
-<p>yum update 不会删除而会保留它们，这使得yum update 更安全</p>
-<h2 id="安装htop"><a href="#安装htop" class="headerlink" title="安装htop"></a>安装htop</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum install htop</span><br></pre></td></tr></table></figure>
-
-<h1 id="htop命令"><a href="#htop命令" class="headerlink" title="htop命令"></a>htop命令</h1><h2 id="以无颜色显示"><a href="#以无颜色显示" class="headerlink" title="以无颜色显示"></a>以无颜色显示</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">htop -C</span><br><span class="line">htop --no-color</span><br></pre></td></tr></table></figure>
-
-<h2 id="以树型显示"><a href="#以树型显示" class="headerlink" title="以树型显示"></a>以树型显示</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">htop -t</span><br><span class="line">htop --tree</span><br></pre></td></tr></table></figure>
-
-<h2 id="查看某个用户的信息"><a href="#查看某个用户的信息" class="headerlink" title="查看某个用户的信息"></a>查看某个用户的信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">htop -u jinzhongxu</span><br><span class="line">htop --user=jinzhongxu</span><br></pre></td></tr></table></figure>
-
-<h2 id="查看某个进程的信息"><a href="#查看某个进程的信息" class="headerlink" title="查看某个进程的信息"></a>查看某个进程的信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">htop -p PID</span><br><span class="line">htop -p 2322, 3999</span><br></pre></td></tr></table></figure>
-
-<h2 id="查看htop帮助信息"><a href="#查看htop帮助信息" class="headerlink" title="查看htop帮助信息"></a>查看htop帮助信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">htop --<span class="built_in">help</span></span><br><span class="line">man htop</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>centos</tag>
-        <tag>htop</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>CentOS 编译安装 gcc</title>
-    <url>/2021/02/03/centos-install-gcc/</url>
-    <content><![CDATA[<p>gcc 是 Linux 系统的核心模块，同时，它可以编译使用 C，C++ 等语言编写的源代码。但是，在某些系统上自带的 gcc 版本过低，导致一些软件无法正常安装和运行。本篇介绍在 CentOS 上如何编译安装最新版或者高版本的 gcc，默认在 root 用户下运行命令。</p>
-<a id="more"></a>
-
-<h1 id="下载最新版-gcc"><a href="#下载最新版-gcc" class="headerlink" title="下载最新版 gcc"></a>下载最新版 gcc</h1><p>下载 gcc 可以在下面的官方网址下载，里面有最新版的 gcc 源码</p>
-<p><a href="http://ftp.gnu.org/gnu/gcc/">GCC官方网址</a></p>
-<p>或者使用 Git 克隆最新版</p>
-<p>git clone <a href="https://gcc.gnu.org/git/gcc.git">https://gcc.gnu.org/git/gcc.git</a></p>
-<p>如果官网下载慢，可以采用如下的镜像网址</p>
-<p><a href="https://mirrors.ustc.edu.cn//gnu/gcc/">中国科技大学镜像网址</a></p>
-<p><a href="http://mirror.hust.edu.cn/gnu/gcc/">华中科技大学镜像网址</a></p>
-<p><a href="http://mirrors.nju.edu.cn/gnu/gcc/">南京大学镜像网址</a></p>
-<p><a href="https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/">清华大学镜像网址</a></p>
-<p>我这里下载的测试版本是 gcc-10.1.0，</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget -c http://ftp.gnu.org/gnu/gcc/gcc-10.1.0/gcc-10.1.0.tar.gz</span><br><span class="line"><span class="comment"># 或者下载到指定目录</span></span><br><span class="line">wget -c http://ftp.gnu.org/gnu/gcc/gcc-10.1.0/gcc-10.1.0.tar.gz -p /root/.</span><br><span class="line">tar -xzvf gcc-10.1.0.tar.gz</span><br></pre></td></tr></table></figure>
-
-<h1 id="安装工具软件"><a href="#安装工具软件" class="headerlink" title="安装工具软件"></a>安装工具软件</h1><p>因为下载的是 gcc 源码，因此，需要先编译才能安装。所以，需要在 CentOS 上需要安装一下工具软件，方法如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum -y install wget bzip2 gcc gcc-c++ glibc-headers</span><br></pre></td></tr></table></figure>
-
-<h1 id="编译安装最新版-gcc"><a href="#编译安装最新版-gcc" class="headerlink" title="编译安装最新版 gcc"></a>编译安装最新版 gcc</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/gcc-10.1.0</span><br><span class="line"><span class="comment"># 下载依赖包</span></span><br><span class="line">./contrib/download_prerequisites</span><br><span class="line"><span class="comment"># 创建文件夹，存储编译中产生的临时文件</span></span><br><span class="line">mkdir build</span><br><span class="line"><span class="built_in">cd</span> build/</span><br><span class="line"><span class="comment"># 配置编译</span></span><br><span class="line">../configure --prefix=/usr/<span class="built_in">local</span>/gcc-10.1.0 --<span class="built_in">enable</span>-bootstrap --<span class="built_in">enable</span>-checking=release --<span class="built_in">enable</span>-languages=c,c++ --<span class="built_in">disable</span>-multilib</span><br><span class="line"><span class="comment"># 进行编译，经测试花销3小时30分钟左右</span></span><br><span class="line">make</span><br><span class="line"><span class="comment"># 安装，大约3-5分钟左右</span></span><br><span class="line">make install</span><br><span class="line"><span class="comment"># 配置为默认 gcc</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;\nexport PATH=/usr/local/gcc-10.1.0/bin:$PATH\n&#x27;</span> &gt;&gt; /etc/profile.d/gcc.sh &amp;&amp; <span class="built_in">source</span> /etc/profile.d/gcc.sh</span><br><span class="line">ln -sv /usr/<span class="built_in">local</span>/gcc-10.1.0/include/ /usr/include/gcc</span><br><span class="line"><span class="comment"># 配置生效</span></span><br><span class="line">ldconfig -v</span><br><span class="line"><span class="comment"># 导出验证</span></span><br><span class="line">ldconfig -p | grep gcc</span><br><span class="line"><span class="comment"># 查看 gcc 版本号</span></span><br><span class="line">gcc -v</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><p><a href="https://developer.aliyun.com/article/718551">CentOS 7.6 编译安装最新版本GCC 9.2.0 实录</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/weixin_42090356/article/details/90678158">Linux升级gcc到最新版本–gcc-9.1.0</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/21aspnet/article/details/105708122">安装最新的GCC</a></p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>centos</tag>
-        <tag>gcc</tag>
-        <tag>make</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Centos 安装 htop</title>
     <url>/2020/01/02/centos-install-htop/</url>
     <content><![CDATA[<p>htop 是一个非常优秀好用的命令来查看系统运行情况，在Ubuntu上可以非常简单的使用命令</p>
@@ -956,42 +851,27 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
-    <title>Centos远程SSH保持在线方法</title>
-    <url>/2020/03/21/centos-ssh-client-alive/</url>
-    <content><![CDATA[<p>Centos 安全可靠，但是远程通过SSH连接Centos服务器时，总是会出现过一段时间不用或隔夜第二天断开的情况，这是由于Centos的SSH服务配置项设置导致的，可以修改相应的配置项来保证Centos通过SSH连接时不自动断开。</p>
+    <title>Centos安装ffmpeg</title>
+    <url>/2020/03/10/centos-ffmpeg/</url>
+    <content><![CDATA[<p>Centos 安全稳定，但是，对于ffmpeg却没有通过yum install ffmpeg直接按照的支持。下面给出一种可行的安装方法：<strong>Static Prebuilt Install of FFMpeg.</strong> 这里以Centos 7为例。</p>
 <a id="more"></a>
 
-<h1 id="修改配置项"><a href="#修改配置项" class="headerlink" title="修改配置项"></a>修改配置项</h1><p>打开配置文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+<h1 id="下载安装脚本"><a href="#下载安装脚本" class="headerlink" title="下载安装脚本"></a>下载安装脚本</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/q3aql/ffmpeg-install/master/ffmpeg-install</span><br></pre></td></tr></table></figure>
 
-<p>修改如下两项</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">ClientAliveInterval 0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">ClientAliveCountMax 3</span></span><br></pre></td></tr></table></figure>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod  a+x ffmpeg-install &amp;&amp; ./ffmpeg-install --install release</span><br></pre></td></tr></table></figure>
 
-<p>为如下</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ClientAliveInterval 60</span><br><span class="line">ClientAliveCountMax 3</span><br></pre></td></tr></table></figure>
+<h1 id="查看ffmpeg版本信息"><a href="#查看ffmpeg版本信息" class="headerlink" title="查看ffmpeg版本信息"></a>查看ffmpeg版本信息</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ffmpeg -version</span><br></pre></td></tr></table></figure>
 
-<p>参数说明：</p>
-<p>&emsp; ClientAliveInterval 指定了服务器端向客户端请求消息的时间间隔，默认值为0，表示不发送。设置ClientAliveInterval = 60 表示每分钟发送一次，客户端进行相应，保持在线不断开。</p>
-<p>&emsp; ClientAliveCountMax  表服务器发出请求后客户端没有响应的次数达到一定值就会自动断开。使用默认值3即可，因为正常情况下，不会不响应。</p>
-<h1 id="重启SSH服务"><a href="#重启SSH服务" class="headerlink" title="重启SSH服务"></a>重启SSH服务</h1><p>重启SSH服务</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo systemctl restart sshd</span><br></pre></td></tr></table></figure>
+<h1 id="其他补充"><a href="#其他补充" class="headerlink" title="其他补充"></a>其他补充</h1><p>Centos 7 不能直接使用tar 解压缩 x.tar.bz2?</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum install bzip2</span><br></pre></td></tr></table></figure>
 
-<p>或者如下命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">service sshd restart</span><br></pre></td></tr></table></figure>
-
-<p>重启后，就使设置生效了。即正常情况下，远程SSH连接不会断开。</p>
-<p>参考博文：</p>
-<ol>
-<li><a href="https://blog.csdn.net/libaineu2004/article/details/83857779">CentOS 7 SSH连接超时自动断开解决方案</a>.</li>
-<li><a href="https://blog.csdn.net/moliyiran/article/details/54809090">CentOS下解决SSH自动断开办法</a>.</li>
-</ol>
 ]]></content>
       <categories>
         <category>technology</category>
       </categories>
       <tags>
-        <tag>ssh</tag>
         <tag>centos</tag>
+        <tag>ffmpeg</tag>
       </tags>
   </entry>
   <entry>
@@ -1070,6 +950,49 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
+    <title>CentOS 编译安装 gcc</title>
+    <url>/2021/02/03/centos-install-gcc/</url>
+    <content><![CDATA[<p>gcc 是 Linux 系统的核心模块，同时，它可以编译使用 C，C++ 等语言编写的源代码。但是，在某些系统上自带的 gcc 版本过低，导致一些软件无法正常安装和运行。本篇介绍在 CentOS 上如何编译安装最新版或者高版本的 gcc，默认在 root 用户下运行命令。</p>
+<a id="more"></a>
+
+<h1 id="下载最新版-gcc"><a href="#下载最新版-gcc" class="headerlink" title="下载最新版 gcc"></a>下载最新版 gcc</h1><p>下载 gcc 可以在下面的官方网址下载，里面有最新版的 gcc 源码</p>
+<p><a href="http://ftp.gnu.org/gnu/gcc/">GCC官方网址</a></p>
+<p>或者使用 Git 克隆最新版</p>
+<p>git clone <a href="https://gcc.gnu.org/git/gcc.git">https://gcc.gnu.org/git/gcc.git</a></p>
+<p>如果官网下载慢，可以采用如下的镜像网址</p>
+<p><a href="https://mirrors.ustc.edu.cn//gnu/gcc/">中国科技大学镜像网址</a></p>
+<p><a href="http://mirror.hust.edu.cn/gnu/gcc/">华中科技大学镜像网址</a></p>
+<p><a href="http://mirrors.nju.edu.cn/gnu/gcc/">南京大学镜像网址</a></p>
+<p><a href="https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/">清华大学镜像网址</a></p>
+<p>我这里下载的测试版本是 gcc-10.1.0，</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget -c http://ftp.gnu.org/gnu/gcc/gcc-10.1.0/gcc-10.1.0.tar.gz</span><br><span class="line"><span class="comment"># 或者下载到指定目录</span></span><br><span class="line">wget -c http://ftp.gnu.org/gnu/gcc/gcc-10.1.0/gcc-10.1.0.tar.gz -p /root/.</span><br><span class="line">tar -xzvf gcc-10.1.0.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装工具软件"><a href="#安装工具软件" class="headerlink" title="安装工具软件"></a>安装工具软件</h1><p>因为下载的是 gcc 源码，因此，需要先编译才能安装。所以，需要在 CentOS 上需要安装一下工具软件，方法如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum -y install wget bzip2 gcc gcc-c++ glibc-headers</span><br></pre></td></tr></table></figure>
+
+<h1 id="编译安装最新版-gcc"><a href="#编译安装最新版-gcc" class="headerlink" title="编译安装最新版 gcc"></a>编译安装最新版 gcc</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/gcc-10.1.0</span><br><span class="line"><span class="comment"># 下载依赖包</span></span><br><span class="line">./contrib/download_prerequisites</span><br><span class="line"><span class="comment"># 创建文件夹，存储编译中产生的临时文件</span></span><br><span class="line">mkdir build</span><br><span class="line"><span class="built_in">cd</span> build/</span><br><span class="line"><span class="comment"># 配置编译</span></span><br><span class="line">../configure --prefix=/usr/<span class="built_in">local</span>/gcc-10.1.0 --<span class="built_in">enable</span>-bootstrap --<span class="built_in">enable</span>-checking=release --<span class="built_in">enable</span>-languages=c,c++ --<span class="built_in">disable</span>-multilib</span><br><span class="line"><span class="comment"># 进行编译，经测试花销3小时30分钟左右</span></span><br><span class="line">make</span><br><span class="line"><span class="comment"># 安装，大约3-5分钟左右</span></span><br><span class="line">make install</span><br><span class="line"><span class="comment"># 配置为默认 gcc</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;\nexport PATH=/usr/local/gcc-10.1.0/bin:$PATH\n&#x27;</span> &gt;&gt; /etc/profile.d/gcc.sh &amp;&amp; <span class="built_in">source</span> /etc/profile.d/gcc.sh</span><br><span class="line">ln -sv /usr/<span class="built_in">local</span>/gcc-10.1.0/include/ /usr/include/gcc</span><br><span class="line"><span class="comment"># 配置生效</span></span><br><span class="line">ldconfig -v</span><br><span class="line"><span class="comment"># 导出验证</span></span><br><span class="line">ldconfig -p | grep gcc</span><br><span class="line"><span class="comment"># 查看 gcc 版本号</span></span><br><span class="line">gcc -v</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><p><a href="https://developer.aliyun.com/article/718551">CentOS 7.6 编译安装最新版本GCC 9.2.0 实录</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/weixin_42090356/article/details/90678158">Linux升级gcc到最新版本–gcc-9.1.0</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/21aspnet/article/details/105708122">安装最新的GCC</a></p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>centos</tag>
+        <tag>gcc</tag>
+        <tag>make</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>目标跟踪算法的分类</title>
     <url>/2020/08/24/classification-of-object-tracking/</url>
     <content><![CDATA[<p>目标跟踪算法按照不同的分类方法可以分为很多类别，如按提取的特征分类、特征提取方法分类、最优候选框匹配模型分类等。研究者大多是按照最优候选框匹配模型分类，这里也按此给出目标跟踪的算法分类。</p>
@@ -1140,6 +1063,44 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
+    <title>Centos安装htop和htop命令使用</title>
+    <url>/2020/03/10/centos-htop/</url>
+    <content><![CDATA[<p>Centos 是一个比较优秀的Linux发行版，在其上可以使用软件包管理工具yum进行软件命令的安装，但是，htop却不能直接使用命令yum install htop来安装，下面介绍如何安装htop，方面我们清楚的查看电脑的运行情况。</p>
+<a id="more"></a>
+
+<h1 id="首先，需要添加EPEL-repo"><a href="#首先，需要添加EPEL-repo" class="headerlink" title="首先，需要添加EPEL repo"></a>首先，需要添加EPEL repo</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum -y install epel-release</span><br></pre></td></tr></table></figure>
+
+<h1 id="其次，安装htop"><a href="#其次，安装htop" class="headerlink" title="其次，安装htop"></a>其次，安装htop</h1><h2 id="搜索htop"><a href="#搜索htop" class="headerlink" title="搜索htop"></a>搜索htop</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum search htop</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看htop信息"><a href="#查看htop信息" class="headerlink" title="查看htop信息"></a>查看htop信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum info htop</span><br></pre></td></tr></table></figure>
+
+<h2 id="更新系统"><a href="#更新系统" class="headerlink" title="更新系统"></a>更新系统</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum update</span><br><span class="line">sudo yum upgrade</span><br></pre></td></tr></table></figure>
+
+<p>注意，在centos中，命令yum update 和yum upgrade有一些小区别：</p>
+<p>yum upgrade 会强制删除过时的软件包，这可能是危险的，因为有可能你在使用该软件</p>
+<p>yum update 不会删除而会保留它们，这使得yum update 更安全</p>
+<h2 id="安装htop"><a href="#安装htop" class="headerlink" title="安装htop"></a>安装htop</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum install htop</span><br></pre></td></tr></table></figure>
+
+<h1 id="htop命令"><a href="#htop命令" class="headerlink" title="htop命令"></a>htop命令</h1><h2 id="以无颜色显示"><a href="#以无颜色显示" class="headerlink" title="以无颜色显示"></a>以无颜色显示</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">htop -C</span><br><span class="line">htop --no-color</span><br></pre></td></tr></table></figure>
+
+<h2 id="以树型显示"><a href="#以树型显示" class="headerlink" title="以树型显示"></a>以树型显示</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">htop -t</span><br><span class="line">htop --tree</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看某个用户的信息"><a href="#查看某个用户的信息" class="headerlink" title="查看某个用户的信息"></a>查看某个用户的信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">htop -u jinzhongxu</span><br><span class="line">htop --user=jinzhongxu</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看某个进程的信息"><a href="#查看某个进程的信息" class="headerlink" title="查看某个进程的信息"></a>查看某个进程的信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">htop -p PID</span><br><span class="line">htop -p 2322, 3999</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看htop帮助信息"><a href="#查看htop帮助信息" class="headerlink" title="查看htop帮助信息"></a>查看htop帮助信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">htop --<span class="built_in">help</span></span><br><span class="line">man htop</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>centos</tag>
+        <tag>htop</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>使用 filebrowser 和 Nginx 在 VPS 搭建云盘</title>
     <url>/2020/11/19/cloud-by-filebrowser-and-nginx/</url>
     <content><![CDATA[<p>个人云盘能够方便存储个人文档，特别是没有上传下载速度限制，可以灵活扩展容量，具有更好的私密性。当具有远程服务器（如VPS）时，可以使用 <a href="https://filebrowser.org/">filebrowser</a> 搭建个人云盘。结合 <a href="https://nginx.org/en/linux_packages.html#Debian">Nginx</a> 实现个性化网页快速访问。下面分别介绍如何在远程服务器上安装 Nginx, filebrowser, 以及他们的配置。本篇以 Debian 10 为例，Ubuntu 系统类似， CentOS 系统需要切换相应命令，但一般是将 apt 更改为 yum.</p>
@@ -1182,6 +1143,45 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
         <tag>filebrowser</tag>
         <tag>nginx</tag>
         <tag>vps</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Centos远程SSH保持在线方法</title>
+    <url>/2020/03/21/centos-ssh-client-alive/</url>
+    <content><![CDATA[<p>Centos 安全可靠，但是远程通过SSH连接Centos服务器时，总是会出现过一段时间不用或隔夜第二天断开的情况，这是由于Centos的SSH服务配置项设置导致的，可以修改相应的配置项来保证Centos通过SSH连接时不自动断开。</p>
+<a id="more"></a>
+
+<h1 id="修改配置项"><a href="#修改配置项" class="headerlink" title="修改配置项"></a>修改配置项</h1><p>打开配置文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+
+<p>修改如下两项</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">ClientAliveInterval 0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">ClientAliveCountMax 3</span></span><br></pre></td></tr></table></figure>
+
+<p>为如下</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ClientAliveInterval 60</span><br><span class="line">ClientAliveCountMax 3</span><br></pre></td></tr></table></figure>
+
+<p>参数说明：</p>
+<p>&emsp; ClientAliveInterval 指定了服务器端向客户端请求消息的时间间隔，默认值为0，表示不发送。设置ClientAliveInterval = 60 表示每分钟发送一次，客户端进行相应，保持在线不断开。</p>
+<p>&emsp; ClientAliveCountMax  表服务器发出请求后客户端没有响应的次数达到一定值就会自动断开。使用默认值3即可，因为正常情况下，不会不响应。</p>
+<h1 id="重启SSH服务"><a href="#重启SSH服务" class="headerlink" title="重启SSH服务"></a>重启SSH服务</h1><p>重启SSH服务</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo systemctl restart sshd</span><br></pre></td></tr></table></figure>
+
+<p>或者如下命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">service sshd restart</span><br></pre></td></tr></table></figure>
+
+<p>重启后，就使设置生效了。即正常情况下，远程SSH连接不会断开。</p>
+<p>参考博文：</p>
+<ol>
+<li><a href="https://blog.csdn.net/libaineu2004/article/details/83857779">CentOS 7 SSH连接超时自动断开解决方案</a>.</li>
+<li><a href="https://blog.csdn.net/moliyiran/article/details/54809090">CentOS下解决SSH自动断开办法</a>.</li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>ssh</tag>
+        <tag>centos</tag>
       </tags>
   </entry>
   <entry>
@@ -1952,6 +1952,26 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>由平行截面面积求体积</title>
+    <url>/2020/10/17/definite-integral-calculate-volume/</url>
+    <content><![CDATA[<p>本节讲通过定积分求解三维空间中立体的体积。</p>
+<a id="more"></a>
+
+<p>假设 $\Omega$ 为三维空间中的一个立体，它夹在垂直于 $x$ 轴的两平面 $x = a$ 与 $x = b$ 之间，这里 $a &lt;b$. 若在任意一点 $x \in [a, b]$ 处作垂直于 $x$ 轴的平面，它截得 $\Omega$ 的截面面积显然是 $x$ 的函数，记为 $A(x), x \in [a, b]$，并称之为 $\Omega$ 的截面面积函数。假设截面面积函数 $A(x)$ 是 $[a, b]$ 上的一个连续函数，且把 $\Omega$ 的上述平行截面投影到某一垂直于 $x$ 轴的平面上，它们永远是一个含在另一个里面。对 $[a, b]$ 作分割<br>$$<br>T: a = x_0 &lt; x_1 &lt; \cdots &lt; x_n = b.<br>$$<br>过各个分点作垂直于 $x$ 轴的平面 $x = x_i, i = 1, 2, \cdots, n$，它们把 $\Omega$ 切割成 $n$ 个薄片 $\Omega_i, i = 1, 2, \cdots, n$. 任取 $\xi_i \in [x_{i-1}, x_i]$，那么每一个薄片的体积<br>$$<br>\Delta V_i \approx A(\xi_i) \Delta x_i.<br>$$<br>于是<br>$$<br>V \approx \sum_{i=1}^n A(\xi_i)\Delta x_i.<br>$$<br>由定积分的定义和连续函数的可积性，当 $|T|\to 0$时，上式右边的极限存在，即为函数 $A(x)$ 在 $[a, b]$ 上的定积分。于是我们定义立体 $\Omega$ 的体积为<br>$$<br>V = \int_a ^b A(x) \mathrm{d}x.<br>$$<br>假设 $\Omega_A, \Omega_B$ 为位于同一区间 $[a, b]$ 上的两个立体，其体积分别为 $V_A, V_B$，若在 $[a, b]$ 上它们的截面面积函数 $A(x)$ 与 $B(x)$ 皆连续，且 $A(x) = B(x)$，则$V_A = V_B$. 该定理在我国齐梁时期的数学家祖暅（祖冲之之子）早发现，在《九章算术》一书中记载的祖暅原理是：“夫叠棊成立积，缘幂势既同则积不容异”。</p>
+<p>对于旋转体，体积计算公式定义如下。</p>
+<p>假设 $f$ 是 $[a, b]$ 上的连续函数，$\Omega$ 是由平面图形<br>$$<br>0 \leq |y| \leq |f(x)|, a \leq x \leq b<br>$$<br>绕 $x$ 轴旋转一周所得的旋转体。那么易知截面面积函数为<br>$$<br>A(x) = \pi [f(x)]^2, x \in [a, b].<br>$$<br>得旋转体 $\Omega$ 的体积公式为<br>$$<br>V = \pi \int_a ^b [f(x)]^2 \mathrm{d}x.<br>$$</p>
+]]></content>
+      <categories>
+        <category>maths</category>
+        <category>mathematical analysis</category>
+      </categories>
+      <tags>
+        <tag>maths</tag>
+        <tag>definite integral</tag>
+        <tag>volume</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>定积分定义</title>
     <url>/2020/07/27/definite-integral/</url>
     <content><![CDATA[<p>导数的逆运算是不定积分，而定积分是某种特殊和式的极限。不定积分与定积分既有联系又有区别。</p>
@@ -1973,26 +1993,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>maths</tag>
         <tag>integral</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>由平行截面面积求体积</title>
-    <url>/2020/10/17/definite-integral-calculate-volume/</url>
-    <content><![CDATA[<p>本节讲通过定积分求解三维空间中立体的体积。</p>
-<a id="more"></a>
-
-<p>假设 $\Omega$ 为三维空间中的一个立体，它夹在垂直于 $x$ 轴的两平面 $x = a$ 与 $x = b$ 之间，这里 $a &lt;b$. 若在任意一点 $x \in [a, b]$ 处作垂直于 $x$ 轴的平面，它截得 $\Omega$ 的截面面积显然是 $x$ 的函数，记为 $A(x), x \in [a, b]$，并称之为 $\Omega$ 的截面面积函数。假设截面面积函数 $A(x)$ 是 $[a, b]$ 上的一个连续函数，且把 $\Omega$ 的上述平行截面投影到某一垂直于 $x$ 轴的平面上，它们永远是一个含在另一个里面。对 $[a, b]$ 作分割<br>$$<br>T: a = x_0 &lt; x_1 &lt; \cdots &lt; x_n = b.<br>$$<br>过各个分点作垂直于 $x$ 轴的平面 $x = x_i, i = 1, 2, \cdots, n$，它们把 $\Omega$ 切割成 $n$ 个薄片 $\Omega_i, i = 1, 2, \cdots, n$. 任取 $\xi_i \in [x_{i-1}, x_i]$，那么每一个薄片的体积<br>$$<br>\Delta V_i \approx A(\xi_i) \Delta x_i.<br>$$<br>于是<br>$$<br>V \approx \sum_{i=1}^n A(\xi_i)\Delta x_i.<br>$$<br>由定积分的定义和连续函数的可积性，当 $|T|\to 0$时，上式右边的极限存在，即为函数 $A(x)$ 在 $[a, b]$ 上的定积分。于是我们定义立体 $\Omega$ 的体积为<br>$$<br>V = \int_a ^b A(x) \mathrm{d}x.<br>$$<br>假设 $\Omega_A, \Omega_B$ 为位于同一区间 $[a, b]$ 上的两个立体，其体积分别为 $V_A, V_B$，若在 $[a, b]$ 上它们的截面面积函数 $A(x)$ 与 $B(x)$ 皆连续，且 $A(x) = B(x)$，则$V_A = V_B$. 该定理在我国齐梁时期的数学家祖暅（祖冲之之子）早发现，在《九章算术》一书中记载的祖暅原理是：“夫叠棊成立积，缘幂势既同则积不容异”。</p>
-<p>对于旋转体，体积计算公式定义如下。</p>
-<p>假设 $f$ 是 $[a, b]$ 上的连续函数，$\Omega$ 是由平面图形<br>$$<br>0 \leq |y| \leq |f(x)|, a \leq x \leq b<br>$$<br>绕 $x$ 轴旋转一周所得的旋转体。那么易知截面面积函数为<br>$$<br>A(x) = \pi [f(x)]^2, x \in [a, b].<br>$$<br>得旋转体 $\Omega$ 的体积公式为<br>$$<br>V = \pi \int_a ^b [f(x)]^2 \mathrm{d}x.<br>$$</p>
-]]></content>
-      <categories>
-        <category>maths</category>
-        <category>mathematical analysis</category>
-      </categories>
-      <tags>
-        <tag>maths</tag>
-        <tag>definite integral</tag>
-        <tag>volume</tag>
       </tags>
   </entry>
   <entry>
@@ -3178,6 +3178,48 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>Hexo 生成错误问题</title>
+    <url>/2020/08/28/hexo-error-maths-cardinality/</url>
+    <content><![CDATA[<p>Hexo 写完博文后，使用如下命令生成静态页面</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>出现如下错误</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">Error: expected end of comment, got end of file</span><br></pre></td></tr></table></figure>
+
+<p>解决方案：</p>
+<a id="more"></a>
+
+<ol>
+<li><p>使用命令找到出错的文档是哪一个</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo generate --debug</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="2">
+<li><p>检查文档中是否出现</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&#123;#</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="3">
+<li>尝试去除上面的 ‘{‘ 和 ‘#’</li>
+</ol>
+<p>参考文献</p>
+<p><a href="https://www.dyxmq.cn/cloud/hexo/the-hexo-error-expected-end-of-comment.html">起风了</a></p>
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>hexo博客评论系统gitalk</title>
     <url>/2020/03/14/hexo-gitalk/</url>
     <content><![CDATA[<p>Hexo结合GitHub进行博客系统搭建，能够免费的畅享GitHub给我们带来的无限量服务。下面假设</p>
@@ -3251,45 +3293,66 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>Hexo 生成错误问题</title>
-    <url>/2020/08/28/hexo-error-maths-cardinality/</url>
-    <content><![CDATA[<p>Hexo 写完博文后，使用如下命令生成静态页面</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>出现如下错误</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">Error: expected end of comment, got end of file</span><br></pre></td></tr></table></figure>
-
-<p>解决方案：</p>
+    <title>利用 GitHub 和 HEXO 随时随地书写博客</title>
+    <url>/2020/03/03/hexo-home-work/</url>
+    <content><![CDATA[<p>当使用 GitHub + HEXO + Markdown 部署个人博客时，总是希望能够在家和在单位都能够随时随地写博客，记录当时的工作或灵感。本篇文章介绍如何完成家庭和单位无缝衔接的去自由书写博客。如何搭建博客请参考我的另一篇文章： <a href="https://xujinzh.github.io/2019/12/20/%E4%BD%BF%E7%94%A8GitHub%20%E4%B8%8E%20Hexo%20%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/">利用 Hexo and Github 搭建个人博客</a> .</p>
 <a id="more"></a>
 
-<ol>
-<li><p>使用命令找到出错的文档是哪一个</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo generate --debug</span><br></pre></td></tr></table></figure>
+<h1 id="在-GitHub-上新建一个仓库"><a href="#在-GitHub-上新建一个仓库" class="headerlink" title="在 GitHub 上新建一个仓库"></a>在 GitHub 上新建一个仓库</h1><p>在 GitHub 上创建一个仓库，用以保持和同步博客源文件（包括博客文章、主题等内容）</p>
+<p>比如：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git@github.com:xujinzh/JBlog.git</span><br></pre></td></tr></table></figure>
 
 
 
-</li>
+<h1 id="将本地博客同步到-GitHub"><a href="#将本地博客同步到-GitHub" class="headerlink" title="将本地博客同步到 GitHub"></a>将本地博客同步到 GitHub</h1><p>如果你当前的博客源文件是在单位，那么，我们将该文件夹同步上传到 GitHub 上。步骤如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> JBlog</span><br><span class="line">git init</span><br><span class="line">git remote add origin git@github.com:xujinzh/JBlog.git</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;release 1.0.0&quot;</span></span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="将-GitHub-仓库克隆到本地"><a href="#将-GitHub-仓库克隆到本地" class="headerlink" title="将 GitHub 仓库克隆到本地"></a>将 GitHub 仓库克隆到本地</h1><p>回到家，将 GitHub 上的仓库克隆到家里 Mac 上。注意，该Mac上首先需要安装 hexo，步骤如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew update</span><br><span class="line">brew install node</span><br><span class="line">sudo npm install hexo-cli -g</span><br></pre></td></tr></table></figure>
+
+<p>克隆仓库到本地Mac上：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:xujinzh/JBlog.git /Users/jinzhongxu/github/JBlog</span><br></pre></td></tr></table></figure>
+
+<p>此时，运行 hexo -v 会发生如下错误：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ERROR Local hexo not found <span class="keyword">in</span> ....</span><br><span class="line">ERROR Try running: <span class="string">&#x27;npm install hexo --save&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>这是由于.gitignore 中缺少 node_modules 文件夹，没有更新上去。解决方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> JBlog</span><br><span class="line">npm cache clean --force</span><br><span class="line">npm install -g npm</span><br><span class="line">npm install</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看博客显示，本地模式 http://localhost:4000</span></span><br><span class="line">hexo server</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install --force</span><br></pre></td></tr></table></figure>
+
+<p>到此，就可以正常使用了。</p>
+<h1 id="写文章"><a href="#写文章" class="headerlink" title="写文章"></a>写文章</h1><p>在家写文章</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo new mac-test</span><br></pre></td></tr></table></figure>
+
+<p>然后打开 mac-test.md 写文章，然后，部署文章到网址</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo generate &amp;&amp; hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>之后，将更新推送到 GitHub 仓库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git status</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;new article&quot;</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+
+<p>如果是第一次 push，请使用</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+
+<p>它会记住你的提交分支情况，这样以后就可以直接 git push 了。</p>
+<p>回到办公室，首先从 GitHub 仓库拉去最新</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull</span><br></pre></td></tr></table></figure>
+
+<p>然后，开始写文章，记住发布完文章后，记得 push 到 GitHub 仓库。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://docs.github.com/cn/get-started/getting-started-with-git/managing-remote-repositories">管理远程仓库</a></li>
 </ol>
-<ol start="2">
-<li><p>检查文档中是否出现</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&#123;#</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ol>
-<ol start="3">
-<li>尝试去除上面的 ‘{‘ 和 ‘#’</li>
-</ol>
-<p>参考文献</p>
-<p><a href="https://www.dyxmq.cn/cloud/hexo/the-hexo-error-expected-end-of-comment.html">起风了</a></p>
 ]]></content>
       <categories>
         <category>technology</category>
       </categories>
       <tags>
-        <tag>blog</tag>
+        <tag>github</tag>
         <tag>hexo</tag>
+        <tag>mac</tag>
       </tags>
   </entry>
   <entry>
@@ -3354,69 +3417,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <tag>hexo</tag>
         <tag>next</tag>
         <tag>menu</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>利用 GitHub 和 HEXO 随时随地书写博客</title>
-    <url>/2020/03/03/hexo-home-work/</url>
-    <content><![CDATA[<p>当使用 GitHub + HEXO + Markdown 部署个人博客时，总是希望能够在家和在单位都能够随时随地写博客，记录当时的工作或灵感。本篇文章介绍如何完成家庭和单位无缝衔接的去自由书写博客。如何搭建博客请参考我的另一篇文章： <a href="https://xujinzh.github.io/2019/12/20/%E4%BD%BF%E7%94%A8GitHub%20%E4%B8%8E%20Hexo%20%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/">利用 Hexo and Github 搭建个人博客</a> .</p>
-<a id="more"></a>
-
-<h1 id="在-GitHub-上新建一个仓库"><a href="#在-GitHub-上新建一个仓库" class="headerlink" title="在 GitHub 上新建一个仓库"></a>在 GitHub 上新建一个仓库</h1><p>在 GitHub 上创建一个仓库，用以保持和同步博客源文件（包括博客文章、主题等内容）</p>
-<p>比如：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git@github.com:xujinzh/JBlog.git</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="将本地博客同步到-GitHub"><a href="#将本地博客同步到-GitHub" class="headerlink" title="将本地博客同步到 GitHub"></a>将本地博客同步到 GitHub</h1><p>如果你当前的博客源文件是在单位，那么，我们将该文件夹同步上传到 GitHub 上。步骤如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> JBlog</span><br><span class="line">git init</span><br><span class="line">git remote add origin git@github.com:xujinzh/JBlog.git</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;release 1.0.0&quot;</span></span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="将-GitHub-仓库克隆到本地"><a href="#将-GitHub-仓库克隆到本地" class="headerlink" title="将 GitHub 仓库克隆到本地"></a>将 GitHub 仓库克隆到本地</h1><p>回到家，将 GitHub 上的仓库克隆到家里 Mac 上。注意，该Mac上首先需要安装 hexo，步骤如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew update</span><br><span class="line">brew install node</span><br><span class="line">sudo npm install hexo-cli -g</span><br></pre></td></tr></table></figure>
-
-<p>克隆仓库到本地Mac上：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:xujinzh/JBlog.git /Users/jinzhongxu/github/JBlog</span><br></pre></td></tr></table></figure>
-
-<p>此时，运行 hexo -v 会发生如下错误：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ERROR Local hexo not found <span class="keyword">in</span> ....</span><br><span class="line">ERROR Try running: <span class="string">&#x27;npm install hexo --save&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>这是由于.gitignore 中缺少 node_modules 文件夹，没有更新上去。解决方法如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> JBlog</span><br><span class="line">npm cache clean --force</span><br><span class="line">npm install -g npm</span><br><span class="line">npm install</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看博客显示，本地模式 http://localhost:4000</span></span><br><span class="line">hexo server</span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install --force</span><br></pre></td></tr></table></figure>
-
-<p>到此，就可以正常使用了。</p>
-<h1 id="写文章"><a href="#写文章" class="headerlink" title="写文章"></a>写文章</h1><p>在家写文章</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo new mac-test</span><br></pre></td></tr></table></figure>
-
-<p>然后打开 mac-test.md 写文章，然后，部署文章到网址</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo generate &amp;&amp; hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>之后，将更新推送到 GitHub 仓库</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git status</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;new article&quot;</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
-
-<p>如果是第一次 push，请使用</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
-
-<p>它会记住你的提交分支情况，这样以后就可以直接 git push 了。</p>
-<p>回到办公室，首先从 GitHub 仓库拉去最新</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull</span><br></pre></td></tr></table></figure>
-
-<p>然后，开始写文章，记住发布完文章后，记得 push 到 GitHub 仓库。</p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="https://docs.github.com/cn/get-started/getting-started-with-git/managing-remote-repositories">管理远程仓库</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>github</tag>
-        <tag>hexo</tag>
-        <tag>mac</tag>
       </tags>
   </entry>
   <entry>
@@ -4577,7 +4577,7 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
 
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">conda install nodejs</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> JupyterLab renderer support</span></span><br><span class="line">jupyter labextension install jupyterlab-plotly@4.8.1</span><br></pre></td></tr></table></figure>
 
-<p>在  <a href="mailto:&#106;&#117;&#112;&#x79;&#x74;&#x65;&#114;&#x6c;&#97;&#x62;&#x2d;&#112;&#x6c;&#x6f;&#116;&#x6c;&#121;&#x40;&#52;&#46;&#56;&#46;&#x31;">&#106;&#117;&#112;&#x79;&#x74;&#x65;&#114;&#x6c;&#97;&#x62;&#x2d;&#112;&#x6c;&#x6f;&#116;&#x6c;&#121;&#x40;&#52;&#46;&#56;&#46;&#x31;</a>中，需要编译一会，可能会消耗2G多内存，建议内存小的用户创建交换分区。</p>
+<p>在  <a href="mailto:&#x6a;&#x75;&#112;&#x79;&#116;&#101;&#114;&#108;&#97;&#x62;&#45;&#112;&#x6c;&#x6f;&#116;&#x6c;&#x79;&#x40;&#x34;&#x2e;&#x38;&#x2e;&#x31;">&#x6a;&#x75;&#112;&#x79;&#116;&#101;&#114;&#108;&#97;&#x62;&#45;&#112;&#x6c;&#x6f;&#116;&#x6c;&#x79;&#x40;&#x34;&#x2e;&#x38;&#x2e;&#x31;</a>中，需要编译一会，可能会消耗2G多内存，建议内存小的用户创建交换分区。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看安装的jupyterlab扩展</span></span><br><span class="line">jupyter labextension list</span><br></pre></td></tr></table></figure>
 
 <h1 id="使用plotly画图"><a href="#使用plotly画图" class="headerlink" title="使用plotly画图"></a>使用plotly画图</h1><p>按照上面方法按照后，需要先 log out jupyterlab，然后，在登录进去使用plotly才能正常显示图形。</p>
@@ -5209,6 +5209,31 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>linux 中 ls 仅列出目录或文件</title>
+    <url>/2022/01/21/ls-dir-file/</url>
+    <content><![CDATA[<p>Linux 中的 ls 命令可谓是使用最多的命令之一，有效掌握该命令的能够大大提高效率，下面介绍如何使用 ls 命令仅列出目录或文件。本篇以 Ubuntu 18.04 为例。</p>
+<a id="more"></a>
+
+<h1 id="仅列出目录"><a href="#仅列出目录" class="headerlink" title="仅列出目录"></a>仅列出目录</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 不能罗列隐藏目录</span></span><br><span class="line">ls -ld */</span><br><span class="line">ls -lF | grep /</span><br><span class="line">ls -lF | grep /$</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不罗列隐藏目录</span></span><br><span class="line">ls -l | grep ^d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 能够罗列隐藏目录</span></span><br><span class="line">ls -al | grep ^d</span><br></pre></td></tr></table></figure>
+
+<h1 id="仅列出文件"><a href="#仅列出文件" class="headerlink" title="仅列出文件"></a>仅列出文件</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 不罗列隐藏文件</span></span><br><span class="line">ls -l | grep ^-</span><br><span class="line"></span><br><span class="line"><span class="comment"># 能够罗列隐藏文件</span></span><br><span class="line">ls -al | grep ^-</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://blog.csdn.net/DLUTBruceZhang/article/details/9244897">Linux Shell 只列出目录的方法</a></li>
+<li><a href="https://segmentfault.com/a/1190000023186477">Linux技巧：ls命令只列出子目录名和每行打印一个文件名</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>在 Linux 上设置不同的语言和时区</title>
     <url>/2020/12/30/locale-linux-language/</url>
     <content><![CDATA[<p>Linux 系统语言的设置至关重要，当设置不匹配的语言时，严重影响使用的效率。如在系统上没有设置中文时，大多出现乱码、数字等情况，使得使用的体验感大幅下降。下面介绍在 Debian, CentOS 等系统上设置中文或其他语言的方法。本篇命令以 root 身份运行。</p>
@@ -5240,31 +5265,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <tag>centos</tag>
         <tag>debian</tag>
         <tag>locale</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>linux 中 ls 仅列出目录或文件</title>
-    <url>/2022/01/21/ls-dir-file/</url>
-    <content><![CDATA[<p>Linux 中的 ls 命令可谓是使用最多的命令之一，有效掌握该命令的能够大大提高效率，下面介绍如何使用 ls 命令仅列出目录或文件。本篇以 Ubuntu 18.04 为例。</p>
-<a id="more"></a>
-
-<h1 id="仅列出目录"><a href="#仅列出目录" class="headerlink" title="仅列出目录"></a>仅列出目录</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 不能罗列隐藏目录</span></span><br><span class="line">ls -ld */</span><br><span class="line">ls -lF | grep /</span><br><span class="line">ls -lF | grep /$</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不罗列隐藏目录</span></span><br><span class="line">ls -l | grep ^d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 能够罗列隐藏目录</span></span><br><span class="line">ls -al | grep ^d</span><br></pre></td></tr></table></figure>
-
-<h1 id="仅列出文件"><a href="#仅列出文件" class="headerlink" title="仅列出文件"></a>仅列出文件</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 不罗列隐藏文件</span></span><br><span class="line">ls -l | grep ^-</span><br><span class="line"></span><br><span class="line"><span class="comment"># 能够罗列隐藏文件</span></span><br><span class="line">ls -al | grep ^-</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="https://blog.csdn.net/DLUTBruceZhang/article/details/9244897">Linux Shell 只列出目录的方法</a></li>
-<li><a href="https://segmentfault.com/a/1190000023186477">Linux技巧：ls命令只列出子目录名和每行打印一个文件名</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
       </tags>
   </entry>
   <entry>
@@ -5747,56 +5747,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>数学公式显示</title>
-    <url>/2020/03/17/maths-formula-display/</url>
-    <content><![CDATA[<p>Hexo + Github + Next搭建博客后，有时候需要写一些带有公式的博文。而默认情况下是不能显示数学公式的。这里介绍一种如何在博文上显示数学公式的方法。</p>
-<a id="more"></a>
-
-<h1 id="Typora-本地数学公式编辑"><a href="#Typora-本地数学公式编辑" class="headerlink" title="Typora 本地数学公式编辑"></a>Typora 本地数学公式编辑</h1><p>在本地下文章想显示数学公式，推荐使用typora这个软件，可以非常简单的配置后显示数学公式。</p>
-<h2 id="行内公式"><a href="#行内公式" class="headerlink" title="行内公式"></a>行内公式</h2><p>首先设置行内公式编辑功能</p>
-<p>文件—偏好设置—Markdown—Markdown扩展语法—内联公式</p>
-<p>设置后重启typora</p>
-<p>行内公式编辑方法，直接在需要编写数学公式的地方写如下类似内容</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">$\sin(x) = x - \frac&#123;x^3&#125;&#123;3!&#125; + \cdots$ </span><br></pre></td></tr></table></figure>
-
-<p>即，将公式写在**$**包括的里面就行，跟Latex语法一样。</p>
-<h2 id="居中显示公式"><a href="#居中显示公式" class="headerlink" title="居中显示公式"></a>居中显示公式</h2><p>居中显示公式跟Latex语言一样，首先输入**$$**，然后回车，即可进入编辑模式。</p>
-<p>或者使用快捷键：Ctrl + Shift + M</p>
-<p>或者点击段落—公式块</p>
-<h1 id="网页显示数学公式"><a href="#网页显示数学公式" class="headerlink" title="网页显示数学公式"></a>网页显示数学公式</h1><h2 id="开启mathjax"><a href="#开启mathjax" class="headerlink" title="开启mathjax"></a>开启mathjax</h2><p>进入目录 <strong>~\themes\next</strong>，编辑<strong>_config.yml</strong> ，修改如下内容</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># MathJax Support</span></span><br><span class="line"><span class="attr">mathjax:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">cdn:</span> <span class="string">//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="post模板添加mathjax"><a href="#post模板添加mathjax" class="headerlink" title="post模板添加mathjax"></a>post模板添加mathjax</h2><p>进入目录**~\scaffolds** ，编辑<strong>post.md</strong>，添加<strong>mathjax: true</strong> ，类似于如下内容</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">author: Jinzhong Xu</span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">mathjax: true</span><br><span class="line">tags:</span><br><span class="line">categories:</span><br></pre></td></tr></table></figure>
-
-<p>这样，使用命令hexo new maths-formula创建新博文时就会自动加载上mathjax，使得数学公式正常显示。</p>
-<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>如果不想设置那么复杂，可以直接在想要写的博文前面添加如下内容，使得本博文可以显示数学公式</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/x-mathjax-config&quot;</span>&gt;</span></span><br><span class="line">        MathJax.Hub.Config(&#123;</span><br><span class="line">            tex2jax: &#123;</span><br><span class="line"><span class="javascript">            skipTags: [<span class="string">&#x27;script&#x27;</span>, <span class="string">&#x27;noscript&#x27;</span>, <span class="string">&#x27;style&#x27;</span>, <span class="string">&#x27;textarea&#x27;</span>, <span class="string">&#x27;pre&#x27;</span>],</span></span><br><span class="line"><span class="javascript">            inlineMath: [[<span class="string">&#x27;$&#x27;</span>,<span class="string">&#x27;$&#x27;</span>]]</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>maths</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Github Pages 数学公式显示</title>
-    <url>/2019/12/22/maths-formula-format/</url>
-    <content><![CDATA[<p>使用GitHub Pages发布博文时，数学公式不能正常显示，有一种方法可以解决，具体的是，添加如下代码到markdown文件的开头，这样发布的博文就可以正常显示了。</p>
-<a id="more"></a>
-
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/x-mathjax-config&quot;</span>&gt;</span></span><br><span class="line">        MathJax.Hub.Config(&#123;</span><br><span class="line">            tex2jax: &#123;</span><br><span class="line"><span class="javascript">            skipTags: [<span class="string">&#x27;script&#x27;</span>, <span class="string">&#x27;noscript&#x27;</span>, <span class="string">&#x27;style&#x27;</span>, <span class="string">&#x27;textarea&#x27;</span>, <span class="string">&#x27;pre&#x27;</span>],</span></span><br><span class="line"><span class="javascript">            inlineMath: [[<span class="string">&#x27;$&#x27;</span>,<span class="string">&#x27;$&#x27;</span>]]</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>maths</tag>
-        <tag>markdown</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数学中集合在 Python 中的操作</title>
     <url>/2021/10/25/maths-set-python/</url>
     <content><![CDATA[<p>在数学中，集合（Set）是一个基本概念，指具有某种特定性质的事物的总体，集合里的事物称作元素。元素 $x$ 和集合 $A$ 之间有属于（$x \in A$）和不属于（$x \notin A$）关系，集合有势（#$A$, $Card(A)$, $|A|$）的概念，集合有子集和包含关系（$B \subset A$），两集合 $A, B$ 间有并（$A\cup B$）、交（$A \cap B$）、差（$A - B$）、对称差（$A \triangle B$）运算。在 Python 中，对于该数学概念进行了定义，下面我们进行介绍。</p>
@@ -5834,23 +5784,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>Mac Book Pro 更改 bash 为 zsh</title>
-    <url>/2019/12/21/mbp-bash-to-zsh/</url>
-    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chsh -s /bin/zsh</span><br><span class="line"><span class="comment"># 有时 Centos 上没有自动安装工具 chsh，可使用如下方法安装</span></span><br><span class="line">sudo yum install util-linux-user</span><br></pre></td></tr></table></figure>
-
-<p>安装 oh-my-zsh</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sh -c <span class="string">&quot;<span class="subst">$(wget -O- https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-      </categories>
-      <tags>
-        <tag>shell</tag>
-        <tag>mbp</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>机器学习神经网络模型loss和accuracy的理解</title>
     <url>/2020/03/26/ml-nn-loss-accuracy/</url>
     <content><![CDATA[<p>训练机器学习模型时，特别是使用 TensorFlow 进行训练神经网络模型时，在每一步（epoch，表示一个周期，即训练完所有训练集样本。假设训练集包含100000个样本，而batch_size设置为100，即一次输入100个训练样本，那么需要1000次迭代后就完成一次epoch，将所有训练样本训练一次）总是会出现loss是多少，accuracy是多少。</p>
@@ -5866,6 +5799,39 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>neural network</tag>
         <tag>machine learning</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数学公式显示</title>
+    <url>/2020/03/17/maths-formula-display/</url>
+    <content><![CDATA[<p>Hexo + Github + Next搭建博客后，有时候需要写一些带有公式的博文。而默认情况下是不能显示数学公式的。这里介绍一种如何在博文上显示数学公式的方法。</p>
+<a id="more"></a>
+
+<h1 id="Typora-本地数学公式编辑"><a href="#Typora-本地数学公式编辑" class="headerlink" title="Typora 本地数学公式编辑"></a>Typora 本地数学公式编辑</h1><p>在本地下文章想显示数学公式，推荐使用typora这个软件，可以非常简单的配置后显示数学公式。</p>
+<h2 id="行内公式"><a href="#行内公式" class="headerlink" title="行内公式"></a>行内公式</h2><p>首先设置行内公式编辑功能</p>
+<p>文件—偏好设置—Markdown—Markdown扩展语法—内联公式</p>
+<p>设置后重启typora</p>
+<p>行内公式编辑方法，直接在需要编写数学公式的地方写如下类似内容</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">$\sin(x) = x - \frac&#123;x^3&#125;&#123;3!&#125; + \cdots$ </span><br></pre></td></tr></table></figure>
+
+<p>即，将公式写在**$**包括的里面就行，跟Latex语法一样。</p>
+<h2 id="居中显示公式"><a href="#居中显示公式" class="headerlink" title="居中显示公式"></a>居中显示公式</h2><p>居中显示公式跟Latex语言一样，首先输入**$$**，然后回车，即可进入编辑模式。</p>
+<p>或者使用快捷键：Ctrl + Shift + M</p>
+<p>或者点击段落—公式块</p>
+<h1 id="网页显示数学公式"><a href="#网页显示数学公式" class="headerlink" title="网页显示数学公式"></a>网页显示数学公式</h1><h2 id="开启mathjax"><a href="#开启mathjax" class="headerlink" title="开启mathjax"></a>开启mathjax</h2><p>进入目录 <strong>~\themes\next</strong>，编辑<strong>_config.yml</strong> ，修改如下内容</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># MathJax Support</span></span><br><span class="line"><span class="attr">mathjax:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">cdn:</span> <span class="string">//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="post模板添加mathjax"><a href="#post模板添加mathjax" class="headerlink" title="post模板添加mathjax"></a>post模板添加mathjax</h2><p>进入目录**~\scaffolds** ，编辑<strong>post.md</strong>，添加<strong>mathjax: true</strong> ，类似于如下内容</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">author: Jinzhong Xu</span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">mathjax: true</span><br><span class="line">tags:</span><br><span class="line">categories:</span><br></pre></td></tr></table></figure>
+
+<p>这样，使用命令hexo new maths-formula创建新博文时就会自动加载上mathjax，使得数学公式正常显示。</p>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>如果不想设置那么复杂，可以直接在想要写的博文前面添加如下内容，使得本博文可以显示数学公式</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/x-mathjax-config&quot;</span>&gt;</span></span><br><span class="line">        MathJax.Hub.Config(&#123;</span><br><span class="line">            tex2jax: &#123;</span><br><span class="line"><span class="javascript">            skipTags: [<span class="string">&#x27;script&#x27;</span>, <span class="string">&#x27;noscript&#x27;</span>, <span class="string">&#x27;style&#x27;</span>, <span class="string">&#x27;textarea&#x27;</span>, <span class="string">&#x27;pre&#x27;</span>],</span></span><br><span class="line"><span class="javascript">            inlineMath: [[<span class="string">&#x27;$&#x27;</span>,<span class="string">&#x27;$&#x27;</span>]]</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>maths</tag>
       </tags>
   </entry>
   <entry>
@@ -5922,6 +5888,40 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </categories>
       <tags>
         <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Github Pages 数学公式显示</title>
+    <url>/2019/12/22/maths-formula-format/</url>
+    <content><![CDATA[<p>使用GitHub Pages发布博文时，数学公式不能正常显示，有一种方法可以解决，具体的是，添加如下代码到markdown文件的开头，这样发布的博文就可以正常显示了。</p>
+<a id="more"></a>
+
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/x-mathjax-config&quot;</span>&gt;</span></span><br><span class="line">        MathJax.Hub.Config(&#123;</span><br><span class="line">            tex2jax: &#123;</span><br><span class="line"><span class="javascript">            skipTags: [<span class="string">&#x27;script&#x27;</span>, <span class="string">&#x27;noscript&#x27;</span>, <span class="string">&#x27;style&#x27;</span>, <span class="string">&#x27;textarea&#x27;</span>, <span class="string">&#x27;pre&#x27;</span>],</span></span><br><span class="line"><span class="javascript">            inlineMath: [[<span class="string">&#x27;$&#x27;</span>,<span class="string">&#x27;$&#x27;</span>]]</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>maths</tag>
+        <tag>markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mac Book Pro 更改 bash 为 zsh</title>
+    <url>/2019/12/21/mbp-bash-to-zsh/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chsh -s /bin/zsh</span><br><span class="line"><span class="comment"># 有时 Centos 上没有自动安装工具 chsh，可使用如下方法安装</span></span><br><span class="line">sudo yum install util-linux-user</span><br></pre></td></tr></table></figure>
+
+<p>安装 oh-my-zsh</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sh -c <span class="string">&quot;<span class="subst">$(wget -O- https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+      </categories>
+      <tags>
+        <tag>shell</tag>
+        <tag>mbp</tag>
       </tags>
   </entry>
   <entry>
@@ -6169,6 +6169,32 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
+    <title>利用 OpenCV(Python) 读取网上的图片和视频</title>
+    <url>/2021/10/03/opencv-read-image-video-online/</url>
+    <content><![CDATA[<p>在进行目标跟踪研究中,有时候需要直接读取网上的图片和视频,这时候利用 OpenCV 再加上 <code>urllib</code>、<code>pafy</code>、<code>numpy</code> 等就可以直接获取互联网上的各种图片和视频资源.</p>
+<a id="more"></a>
+
+<h1 id="从网上读取图片"><a href="#从网上读取图片" class="headerlink" title="从网上读取图片"></a>从网上读取图片</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取网上图片</span></span><br><span class="line">url_img = <span class="string">&#x27;https://img0.baidu.com/it/u=1073044967,3931799334&amp;fm=26&amp;fmt=auto&#x27;</span></span><br><span class="line">res = urllib.request.urlopen(url_img)</span><br><span class="line">i = np.asarray(bytearray(res.read()), dtype=<span class="string">&quot;uint8&quot;</span>)</span><br><span class="line">img = cv2.imdecode(i, cv2.IMREAD_COLOR)</span><br><span class="line"><span class="comment"># 或者如下(先读取图片为PIL图片，然后转化为OPENCV图片。对于彩色图片，注意通道顺序，对应从RGB转为BGR)</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line">response = requests.get(url_img, stream=<span class="literal">True</span>)</span><br><span class="line">img = Image.open(response.raw)</span><br><span class="line">img = cv.cvtColor(np.array(img), cv.COLOR_RGB2BGR)</span><br><span class="line"><span class="comment"># 或者如下</span></span><br><span class="line"><span class="keyword">from</span> imageio <span class="keyword">import</span> imread</span><br><span class="line">img = imread(url_img)</span><br><span class="line">img = cv.cvtColor(np.array(img), cv.COLOR_RGB2BGR)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 彩色图像</span></span><br><span class="line">plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))</span><br><span class="line"><span class="comment"># plt.imshow(img[:, :, ::-1])</span></span><br><span class="line"><span class="comment"># plt.imshow(img[:, :, [2, 1, 0]])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 灰度图像</span></span><br><span class="line">imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)</span><br><span class="line">plt.imshow(imgray, cmap=<span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 同时画多幅图</span></span><br><span class="line">plt.imshow(np.hstack((imgray, imgray)), cmap=<span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不显示坐标轴</span></span><br><span class="line">plt.xticks([]), plt.yticks([])</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>彩色图片显示如下:</p>
+<p><img data-src="https://img0.baidu.com/it/u=1073044967,3931799334&fm=26&fmt=auto"></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># h, w, c 分别是高、宽、通道</span></span><br><span class="line">img.shape</span><br><span class="line"><span class="comment"># (360, 450, 3)</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="从网上读取视频"><a href="#从网上读取视频" class="headerlink" title="从网上读取视频"></a>从网上读取视频</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pafy</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"></span><br><span class="line"><span class="comment"># The YouTube url or 11 character video id of the video</span></span><br><span class="line">url_video = <span class="string">&#x27;https://youtu.be/2kS0T7fwxJo&#x27;</span></span><br><span class="line"><span class="comment"># Preferred type, set to mp4, webm, flv, 3gp or any</span></span><br><span class="line"><span class="comment"># 把分享的视频地址,转化为 .mp4 地址,如何 cv2.VideoCapture() 直接读取</span></span><br><span class="line">v = pafy.new(url_video).getbestvideo(preftype=<span class="string">&#x27;mp4&#x27;</span>)</span><br><span class="line"><span class="comment"># 如果地址是&quot;*.mp4&quot;的,可以直接读取</span></span><br><span class="line">vc = cv2.VideoCapture(v.url)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> vc.isOpened():</span><br><span class="line">    open = <span class="literal">True</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    open = <span class="literal">False</span></span><br><span class="line">flag = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> open:</span><br><span class="line">    ret, frame = vc.read()</span><br><span class="line">    <span class="keyword">if</span> frame <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">if</span> ret:</span><br><span class="line">        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)</span><br><span class="line">        flag += <span class="number">1</span></span><br><span class="line">vc.release()</span><br><span class="line"><span class="string">&quot;total frame is &quot;</span>, flag</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>1.<a href="https://pythonhosted.org/pafy/">Pafy Documentation</a></p>
+]]></content>
+      <categories>
+        <category>research</category>
+        <category>object tracking</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>opencv</tag>
+        <tag>image</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>OpenCV (Python) 中 BGR 和 RGB 的转换</title>
     <url>/2021/10/03/opencv-rgb-bgr/</url>
     <content><![CDATA[<p>在目标跟踪中经常会使用到 OpenCV 和 Pillow 库等来处理图像。但是，它们处理图像的方式有所不同，比如 OpenCV 把图像看作一个 <code>ndarray</code> 数组对象，而 Pillow 把图像看作一个自定义的 <code>Image</code> 对象；OpenCV 中图像是以 <code>BGR</code> (blue, green , red) 顺序存储的，而 Pillow 中的图像是以 <code>RGB</code> (red, green , blue) 存储的。因此，如果想要同时使用两种库的函数，需要进行相应的 <code>BGR</code> 和 <code>RGB</code> 的转换。</p>
@@ -6199,32 +6225,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       <tags>
         <tag>python</tag>
         <tag>opencv</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>利用 OpenCV(Python) 读取网上的图片和视频</title>
-    <url>/2021/10/03/opencv-read-image-video-online/</url>
-    <content><![CDATA[<p>在进行目标跟踪研究中,有时候需要直接读取网上的图片和视频,这时候利用 OpenCV 再加上 <code>urllib</code>、<code>pafy</code>、<code>numpy</code> 等就可以直接获取互联网上的各种图片和视频资源.</p>
-<a id="more"></a>
-
-<h1 id="从网上读取图片"><a href="#从网上读取图片" class="headerlink" title="从网上读取图片"></a>从网上读取图片</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取网上图片</span></span><br><span class="line">url_img = <span class="string">&#x27;https://img0.baidu.com/it/u=1073044967,3931799334&amp;fm=26&amp;fmt=auto&#x27;</span></span><br><span class="line">res = urllib.request.urlopen(url_img)</span><br><span class="line">i = np.asarray(bytearray(res.read()), dtype=<span class="string">&quot;uint8&quot;</span>)</span><br><span class="line">img = cv2.imdecode(i, cv2.IMREAD_COLOR)</span><br><span class="line"><span class="comment"># 或者如下(先读取图片为PIL图片，然后转化为OPENCV图片。对于彩色图片，注意通道顺序，对应从RGB转为BGR)</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line">response = requests.get(url_img, stream=<span class="literal">True</span>)</span><br><span class="line">img = Image.open(response.raw)</span><br><span class="line">img = cv.cvtColor(np.array(img), cv.COLOR_RGB2BGR)</span><br><span class="line"><span class="comment"># 或者如下</span></span><br><span class="line"><span class="keyword">from</span> imageio <span class="keyword">import</span> imread</span><br><span class="line">img = imread(url_img)</span><br><span class="line">img = cv.cvtColor(np.array(img), cv.COLOR_RGB2BGR)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 彩色图像</span></span><br><span class="line">plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))</span><br><span class="line"><span class="comment"># plt.imshow(img[:, :, ::-1])</span></span><br><span class="line"><span class="comment"># plt.imshow(img[:, :, [2, 1, 0]])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 灰度图像</span></span><br><span class="line">imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)</span><br><span class="line">plt.imshow(imgray, cmap=<span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 同时画多幅图</span></span><br><span class="line">plt.imshow(np.hstack((imgray, imgray)), cmap=<span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不显示坐标轴</span></span><br><span class="line">plt.xticks([]), plt.yticks([])</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p>彩色图片显示如下:</p>
-<p><img data-src="https://img0.baidu.com/it/u=1073044967,3931799334&fm=26&fmt=auto"></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># h, w, c 分别是高、宽、通道</span></span><br><span class="line">img.shape</span><br><span class="line"><span class="comment"># (360, 450, 3)</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="从网上读取视频"><a href="#从网上读取视频" class="headerlink" title="从网上读取视频"></a>从网上读取视频</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pafy</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"></span><br><span class="line"><span class="comment"># The YouTube url or 11 character video id of the video</span></span><br><span class="line">url_video = <span class="string">&#x27;https://youtu.be/2kS0T7fwxJo&#x27;</span></span><br><span class="line"><span class="comment"># Preferred type, set to mp4, webm, flv, 3gp or any</span></span><br><span class="line"><span class="comment"># 把分享的视频地址,转化为 .mp4 地址,如何 cv2.VideoCapture() 直接读取</span></span><br><span class="line">v = pafy.new(url_video).getbestvideo(preftype=<span class="string">&#x27;mp4&#x27;</span>)</span><br><span class="line"><span class="comment"># 如果地址是&quot;*.mp4&quot;的,可以直接读取</span></span><br><span class="line">vc = cv2.VideoCapture(v.url)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> vc.isOpened():</span><br><span class="line">    open = <span class="literal">True</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    open = <span class="literal">False</span></span><br><span class="line">flag = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> open:</span><br><span class="line">    ret, frame = vc.read()</span><br><span class="line">    <span class="keyword">if</span> frame <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">if</span> ret:</span><br><span class="line">        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)</span><br><span class="line">        flag += <span class="number">1</span></span><br><span class="line">vc.release()</span><br><span class="line"><span class="string">&quot;total frame is &quot;</span>, flag</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>1.<a href="https://pythonhosted.org/pafy/">Pafy Documentation</a></p>
-]]></content>
-      <categories>
-        <category>research</category>
-        <category>object tracking</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>opencv</tag>
-        <tag>image</tag>
       </tags>
   </entry>
   <entry>
@@ -6542,39 +6542,6 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
       </tags>
   </entry>
   <entry>
-    <title>Python 调用 C 语言的函数</title>
-    <url>/2020/08/19/python-calling-c-code/</url>
-    <content><![CDATA[<p>Python 是一个高级的、解释性的编程语言，其代码比较其他编程语言，如C、C++、Java 等简单，通俗更易懂，开发效率高，但运行效率较弱。其本身是利用C语言（C语言是为了编写Unix操作系统而被开发研究出来）开发的，因此，在Python中调用C函数、代码将是比较自然的。方法很多，这里介绍一个比较简单的方法。在哪些Python代码运行效率低下的地方，调用C语言实现的程序将会加速代码运行。除此之外，加速Python代码的方法还有，利用 numba 的 jit 或 njit 装饰器来加速数学计算比较多或循环比较多的地方。</p>
-<a id="more"></a>
-
-<h1 id="编写-C-代码"><a href="#编写-C-代码" class="headerlink" title="编写 C 代码"></a>编写 C 代码</h1><p>打开文本编辑器，敲入如下代码，并命名为 x_maths.c</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;math.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">square</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">pow</span>(i, <span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="编译为共享库文件"><a href="#编译为共享库文件" class="headerlink" title="编译为共享库文件"></a>编译为共享库文件</h1><p>利用C编译器将上面的 x_maths.c 编译为共享库文件（shared library）x_maths.so，也可以写成其他名字，但必须以 .so 为扩展名</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cc -fPIC -shared -o x_maths.so x_maths.c</span><br></pre></td></tr></table></figure>
-
-<p>注意，我这里在 Ubuntu 18.04 上运行</p>
-<h1 id="Python-调用-C-函数"><a href="#Python-调用-C-函数" class="headerlink" title="Python 调用 C 函数"></a>Python 调用 C 函数</h1><p>在 Python 程序中，从共享文件创建一个 ctypes.CDLL 实例，最后，使用 {CDLL_instance}.{function_name}（{function_parameters}） 格式调用 C 函数。我这里在 Jupyter lab 里编写代码如下</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">so_file = <span class="string">&quot;./x_maths.so&quot;</span></span><br><span class="line">my_function = CDLL(so_file)</span><br><span class="line">print(type(my_function))</span><br><span class="line">print(my_function.square(<span class="number">100</span>))</span><br></pre></td></tr></table></figure>
-
-<p>运行结果如下</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">&lt;<span class="class"><span class="keyword">class</span> &#x27;<span class="title">ctypes</span>.<span class="title">CDLL</span>&#x27;&gt;</span></span><br><span class="line"><span class="class">1000000</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><ol>
-<li>ctype 简单，且是 Python 标准库之一</li>
-<li>ctypes 是低级实现，易于实现，但缺乏自动化，对于复杂任务将会变得较为繁琐</li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>c</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>PyCharm 远程解释器配置</title>
     <url>/2020/08/10/pycharm-ssh-sftp-remote-interpreter/</url>
     <content><![CDATA[<p>PyCharm 是一款编写 Python 代码的优秀 IDE，特别是其代码提示功能和自动检查代码功能，当我们想要利用远程服务器的强大计算能力和方便的本地 PyCharm 开发工具时，需要配置 PyCharm 远程解释器，下面进行介绍</p>
@@ -6609,6 +6576,39 @@ IJCV自1987年由Springer出版，属月刊，主编是Martial Hebert（Carnegie
         <tag>python</tag>
         <tag>ssh</tag>
         <tag>pycharm</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python 调用 C 语言的函数</title>
+    <url>/2020/08/19/python-calling-c-code/</url>
+    <content><![CDATA[<p>Python 是一个高级的、解释性的编程语言，其代码比较其他编程语言，如C、C++、Java 等简单，通俗更易懂，开发效率高，但运行效率较弱。其本身是利用C语言（C语言是为了编写Unix操作系统而被开发研究出来）开发的，因此，在Python中调用C函数、代码将是比较自然的。方法很多，这里介绍一个比较简单的方法。在哪些Python代码运行效率低下的地方，调用C语言实现的程序将会加速代码运行。除此之外，加速Python代码的方法还有，利用 numba 的 jit 或 njit 装饰器来加速数学计算比较多或循环比较多的地方。</p>
+<a id="more"></a>
+
+<h1 id="编写-C-代码"><a href="#编写-C-代码" class="headerlink" title="编写 C 代码"></a>编写 C 代码</h1><p>打开文本编辑器，敲入如下代码，并命名为 x_maths.c</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;math.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">square</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">pow</span>(i, <span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="编译为共享库文件"><a href="#编译为共享库文件" class="headerlink" title="编译为共享库文件"></a>编译为共享库文件</h1><p>利用C编译器将上面的 x_maths.c 编译为共享库文件（shared library）x_maths.so，也可以写成其他名字，但必须以 .so 为扩展名</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cc -fPIC -shared -o x_maths.so x_maths.c</span><br></pre></td></tr></table></figure>
+
+<p>注意，我这里在 Ubuntu 18.04 上运行</p>
+<h1 id="Python-调用-C-函数"><a href="#Python-调用-C-函数" class="headerlink" title="Python 调用 C 函数"></a>Python 调用 C 函数</h1><p>在 Python 程序中，从共享文件创建一个 ctypes.CDLL 实例，最后，使用 {CDLL_instance}.{function_name}（{function_parameters}） 格式调用 C 函数。我这里在 Jupyter lab 里编写代码如下</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">so_file = <span class="string">&quot;./x_maths.so&quot;</span></span><br><span class="line">my_function = CDLL(so_file)</span><br><span class="line">print(type(my_function))</span><br><span class="line">print(my_function.square(<span class="number">100</span>))</span><br></pre></td></tr></table></figure>
+
+<p>运行结果如下</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">&lt;<span class="class"><span class="keyword">class</span> &#x27;<span class="title">ctypes</span>.<span class="title">CDLL</span>&#x27;&gt;</span></span><br><span class="line"><span class="class">1000000</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><ol>
+<li>ctype 简单，且是 Python 标准库之一</li>
+<li>ctypes 是低级实现，易于实现，但缺乏自动化，对于复杂任务将会变得较为繁琐</li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>c</tag>
       </tags>
   </entry>
   <entry>
@@ -7828,6 +7828,36 @@ __getattribute__ 方法被调用
       </tags>
   </entry>
   <entry>
+    <title>在 Python 中使用 yaml 做配置文件</title>
+    <url>/2021/12/17/python-yaml-config/</url>
+    <content><![CDATA[<p>YAML (YAML Ain’t Markup Language™) 是一种直观的能够被电脑识别的数据序列化格式，容易被人类阅读，并且容易和脚本语言交互。YAML 类似于 XML，但是语法比 XML 简单得多，对于转化成数组或可以 hash 的数据时是很简单有效的。</p>
+<a id="more"></a>
+
+<p>yaml 的官方网站是：<a href="https://yaml.org/">https://yaml.org</a></p>
+<p>安装 yaml</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install PyYAML</span><br></pre></td></tr></table></figure>
+
+<h1 id="读取-yaml-文档"><a href="#读取-yaml-文档" class="headerlink" title="读取 yaml 文档"></a>读取 yaml 文档</h1><p>有文档 test.yaml，内容如下</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">Tom</span> <span class="string">Smith</span></span><br><span class="line"><span class="attr">age:</span> <span class="number">37</span></span><br><span class="line"><span class="attr">spouse:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Jane</span> <span class="string">Smith</span></span><br><span class="line">    <span class="attr">age:</span> <span class="number">25</span></span><br><span class="line"><span class="attr">children:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Jimmy</span> <span class="string">Smith</span></span><br><span class="line">    <span class="attr">age:</span> <span class="number">15</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Jenny</span> <span class="string">Smith</span></span><br><span class="line">    <span class="attr">age:</span> <span class="number">12</span></span><br></pre></td></tr></table></figure>
+
+<p>在 python 中利用 yaml 读取</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"></span><br><span class="line">filepath = <span class="string">&quot;data/test.yaml&quot;</span></span><br><span class="line">file = open(file=filepath)</span><br><span class="line">file_str = yaml.load(file, yaml.Loader)</span><br><span class="line">print(file_str)</span><br></pre></td></tr></table></figure>
+
+<p>结果如下</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line">&#123;<span class="attr">&#x27;name&#x27;:</span> <span class="string">&#x27;Tom Smith&#x27;</span>,</span><br><span class="line"> <span class="attr">&#x27;age&#x27;:</span> <span class="number">37</span>,</span><br><span class="line"> <span class="attr">&#x27;spouse&#x27;:</span> &#123;<span class="attr">&#x27;name&#x27;:</span> <span class="string">&#x27;Jane Smith&#x27;</span>, <span class="attr">&#x27;age&#x27;:</span> <span class="number">25</span>&#125;,</span><br><span class="line"> <span class="attr">&#x27;children&#x27;:</span> [&#123;<span class="attr">&#x27;name&#x27;:</span> <span class="string">&#x27;Jimmy Smith&#x27;</span>, <span class="attr">&#x27;age&#x27;:</span> <span class="number">15</span>&#125;,</span><br><span class="line">  &#123;<span class="attr">&#x27;name&#x27;:</span> <span class="string">&#x27;Jenny Smith&#x27;</span>, <span class="attr">&#x27;age&#x27;:</span> <span class="number">12</span>&#125;]&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="把字典写入-yaml-文档"><a href="#把字典写入-yaml-文档" class="headerlink" title="把字典写入 yaml 文档"></a>把字典写入 yaml 文档</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">f = open(<span class="string">&#x27;data/test2.yaml&#x27;</span>, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line">yaml.dump(file_str, f)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>PyTorch 中 Dataset 和 DataLoader 类的使用方法</title>
     <url>/2021/10/12/pytorch-dataset-dataloader/</url>
     <content><![CDATA[<p>近年来，在学术界和工业界基于 PyTorch 进行深度学习算法研究及模型部署越来越流行，甚至超过了 TensorFlow. 除了其基于动态图的特性外，最主要的是其语法更贴近 Python，容易开发实现和调试。本篇介绍 PyTorch 中为目标跟踪等视觉领域提供的两个基础类 Dataset 和 DataLoader，给出它们的使用方法。</p>
@@ -7946,36 +7976,6 @@ __getattribute__ 方法被调用
         <tag>vot</tag>
         <tag>cv</tag>
         <tag>pytorch</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在 Python 中使用 yaml 做配置文件</title>
-    <url>/2021/12/17/python-yaml-config/</url>
-    <content><![CDATA[<p>YAML (YAML Ain’t Markup Language™) 是一种直观的能够被电脑识别的数据序列化格式，容易被人类阅读，并且容易和脚本语言交互。YAML 类似于 XML，但是语法比 XML 简单得多，对于转化成数组或可以 hash 的数据时是很简单有效的。</p>
-<a id="more"></a>
-
-<p>yaml 的官方网站是：<a href="https://yaml.org/">https://yaml.org</a></p>
-<p>安装 yaml</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install PyYAML</span><br></pre></td></tr></table></figure>
-
-<h1 id="读取-yaml-文档"><a href="#读取-yaml-文档" class="headerlink" title="读取 yaml 文档"></a>读取 yaml 文档</h1><p>有文档 test.yaml，内容如下</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">Tom</span> <span class="string">Smith</span></span><br><span class="line"><span class="attr">age:</span> <span class="number">37</span></span><br><span class="line"><span class="attr">spouse:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Jane</span> <span class="string">Smith</span></span><br><span class="line">    <span class="attr">age:</span> <span class="number">25</span></span><br><span class="line"><span class="attr">children:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Jimmy</span> <span class="string">Smith</span></span><br><span class="line">    <span class="attr">age:</span> <span class="number">15</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Jenny</span> <span class="string">Smith</span></span><br><span class="line">    <span class="attr">age:</span> <span class="number">12</span></span><br></pre></td></tr></table></figure>
-
-<p>在 python 中利用 yaml 读取</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"></span><br><span class="line">filepath = <span class="string">&quot;data/test.yaml&quot;</span></span><br><span class="line">file = open(file=filepath)</span><br><span class="line">file_str = yaml.load(file, yaml.Loader)</span><br><span class="line">print(file_str)</span><br></pre></td></tr></table></figure>
-
-<p>结果如下</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line">&#123;<span class="attr">&#x27;name&#x27;:</span> <span class="string">&#x27;Tom Smith&#x27;</span>,</span><br><span class="line"> <span class="attr">&#x27;age&#x27;:</span> <span class="number">37</span>,</span><br><span class="line"> <span class="attr">&#x27;spouse&#x27;:</span> &#123;<span class="attr">&#x27;name&#x27;:</span> <span class="string">&#x27;Jane Smith&#x27;</span>, <span class="attr">&#x27;age&#x27;:</span> <span class="number">25</span>&#125;,</span><br><span class="line"> <span class="attr">&#x27;children&#x27;:</span> [&#123;<span class="attr">&#x27;name&#x27;:</span> <span class="string">&#x27;Jimmy Smith&#x27;</span>, <span class="attr">&#x27;age&#x27;:</span> <span class="number">15</span>&#125;,</span><br><span class="line">  &#123;<span class="attr">&#x27;name&#x27;:</span> <span class="string">&#x27;Jenny Smith&#x27;</span>, <span class="attr">&#x27;age&#x27;:</span> <span class="number">12</span>&#125;]&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="把字典写入-yaml-文档"><a href="#把字典写入-yaml-文档" class="headerlink" title="把字典写入 yaml 文档"></a>把字典写入 yaml 文档</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">f = open(<span class="string">&#x27;data/test2.yaml&#x27;</span>, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line">yaml.dump(file_str, f)</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -9385,7 +9385,7 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 <li>N：只连接远程主机，不打开远程shell。（不执行远程指令，即代理服务器不需执行指令，只作端口转发）；</li>
 <li>g：允许代理服务器连接到本地转发端口；</li>
 <li>R：将代理服务器指定端口上的连接转发到本机端口；</li>
-<li><a href="mailto:&#x6a;&#105;&#110;&#x7a;&#104;&#x6f;&#x6e;&#x67;&#x78;&#x75;&#64;&#x31;&#x2e;&#50;&#x2e;&#51;&#x2e;&#120;">&#x6a;&#105;&#110;&#x7a;&#104;&#x6f;&#x6e;&#x67;&#x78;&#x75;&#64;&#x31;&#x2e;&#50;&#x2e;&#51;&#x2e;&#120;</a>： 表示使用代理服务器的用户来连接；</li>
+<li><a href="mailto:&#x6a;&#x69;&#x6e;&#x7a;&#104;&#111;&#x6e;&#x67;&#x78;&#x75;&#x40;&#x31;&#x2e;&#x32;&#46;&#x33;&#x2e;&#x78;">&#x6a;&#x69;&#x6e;&#x7a;&#104;&#111;&#x6e;&#x67;&#x78;&#x75;&#x40;&#x31;&#x2e;&#x32;&#46;&#x33;&#x2e;&#x78;</a>： 表示使用代理服务器的用户来连接；</li>
 <li>2222:127.0.0.1:22：表示本机回环接口 (127.0.0.1，也可使用本机其他网络接口的地址，比如以太网 IP 或 WiFi IP) 的 22 端口连接到远程主机的 2222 接口，因远程主机 2222 绑定的地址为空，所以远程主机会监听其所有网络接口的 2222 端口。</li>
 </ul>
 <p>常常，我喜欢配置 systemd service 服务，能够更好的管理转换命令。具体命令如下：</p>
@@ -10270,35 +10270,6 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
       </tags>
   </entry>
   <entry>
-    <title>终端代理方法</title>
-    <url>/2021/04/02/terminal-proxy-method/</url>
-    <content><![CDATA[<p>Linux 系统上终端的使用非常频繁，当需要使用终端进行快速下载软件时（如 conda, pip 命令），对终端进行代理显得非常重要。本篇以 Debian 类系统和 Mac 为例。</p>
-<a id="more"></a>
-
-<h1 id="proxychains"><a href="#proxychains" class="headerlink" title="proxychains"></a>proxychains</h1><p>安装和配置如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt-get install proxychains</span><br><span class="line">sudo vim /etc/proxychains.conf</span><br><span class="line"><span class="comment"># 在最后的 ProxyList 下面设置：（根据个人的参数进行）</span></span><br><span class="line"></span><br><span class="line">socks5    127.0.0.1    1080</span><br></pre></td></tr></table></figure>
-
-<p>使用方法如下（在需要的命令前加上 <code>proxychains</code> 即可）</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">proxychains curl cip.cc</span><br></pre></td></tr></table></figure>
-
-<h1 id="privoxy"><a href="#privoxy" class="headerlink" title="privoxy"></a><strong>privoxy</strong></h1><p>安装和配置如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Debian 安装方法</span></span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install privoxy</span><br><span class="line">sudo vim /etc/privoxy/config</span><br><span class="line"></span><br><span class="line"><span class="comment"># Mac 安装方法</span></span><br><span class="line">brew search privoxy</span><br><span class="line">brew install privoxy</span><br><span class="line">sudo vim /usr/<span class="built_in">local</span>/etc/privoxy/config</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改如下，注意最后面的点号</span></span><br><span class="line"><span class="comment"># 如果想让其他电脑（同网段）也能使用该代理，可以将 127.0.0.1 改为 0.0.0.0</span></span><br><span class="line"><span class="comment"># listen-address  0.0.0.0:8118</span></span><br><span class="line">listen-address  127.0.0.1:8118</span><br><span class="line">listen-address  [::1]:8118</span><br><span class="line"></span><br><span class="line">forward-socks5t   /               127.0.0.1:1080 .</span><br><span class="line"></span><br><span class="line">vim ~/.bashrc</span><br><span class="line"><span class="built_in">alias</span> setproxy=<span class="string">&quot;export ALL_PROXY=127.0.0.1:8118&quot;</span></span><br><span class="line"><span class="built_in">alias</span> unsetproxy=<span class="string">&quot;unset ALL_PROXY&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>使用方法如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Debian 启动</span></span><br><span class="line">sudo /etc/init.d/privoxy start</span><br><span class="line"></span><br><span class="line"><span class="comment"># Mac 启动</span></span><br><span class="line">brew services start privoxy</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使环境变量生效</span></span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 开启</span></span><br><span class="line">setproxy</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检测</span></span><br><span class="line">curl cip.cc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">unsetproxy</span><br></pre></td></tr></table></figure>
-
-<p>对终端进行代理设置后，就可以使用 conda 或 pip 从官方源下载最新的包了，而不用使用更新较迟的国内源。</p>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>proxy</tag>
-        <tag>terminal</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>旋转曲面的面积</title>
     <url>/2021/11/07/the-area-of-the-surface-of-revolution/</url>
     <content><![CDATA[<p>定积分的所有应用一般总可以安装“分割, 近似求和, 去极限”三个步骤导出所求量的积分形式. 但为简便实用起见, 也常采用本篇介绍的“微元法”. 其实在求旋转体的体积时我们采用微小区间上柱体近似旋转体体积, 但是在求旋转曲面的面积时却不能用旋转体的侧面积近似旋转曲面的侧面积. 就像求弧长时需要用微小区间的弦长近似弧长, 不能用弦长直角边近似一样, 求旋转曲面的表面积不能用圆柱侧面积需要用圆台侧面积近似.</p>
@@ -10327,6 +10298,35 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
       <tags>
         <tag>maths</tag>
         <tag>definite integral</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>终端代理方法</title>
+    <url>/2021/04/02/terminal-proxy-method/</url>
+    <content><![CDATA[<p>Linux 系统上终端的使用非常频繁，当需要使用终端进行快速下载软件时（如 conda, pip 命令），对终端进行代理显得非常重要。本篇以 Debian 类系统和 Mac 为例。</p>
+<a id="more"></a>
+
+<h1 id="proxychains"><a href="#proxychains" class="headerlink" title="proxychains"></a>proxychains</h1><p>安装和配置如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt-get install proxychains</span><br><span class="line">sudo vim /etc/proxychains.conf</span><br><span class="line"><span class="comment"># 在最后的 ProxyList 下面设置：（根据个人的参数进行）</span></span><br><span class="line"></span><br><span class="line">socks5    127.0.0.1    1080</span><br></pre></td></tr></table></figure>
+
+<p>使用方法如下（在需要的命令前加上 <code>proxychains</code> 即可）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">proxychains curl cip.cc</span><br></pre></td></tr></table></figure>
+
+<h1 id="privoxy"><a href="#privoxy" class="headerlink" title="privoxy"></a><strong>privoxy</strong></h1><p>安装和配置如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Debian 安装方法</span></span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install privoxy</span><br><span class="line">sudo vim /etc/privoxy/config</span><br><span class="line"></span><br><span class="line"><span class="comment"># Mac 安装方法</span></span><br><span class="line">brew search privoxy</span><br><span class="line">brew install privoxy</span><br><span class="line">sudo vim /usr/<span class="built_in">local</span>/etc/privoxy/config</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改如下，注意最后面的点号</span></span><br><span class="line"><span class="comment"># 如果想让其他电脑（同网段）也能使用该代理，可以将 127.0.0.1 改为 0.0.0.0</span></span><br><span class="line"><span class="comment"># listen-address  0.0.0.0:8118</span></span><br><span class="line">listen-address  127.0.0.1:8118</span><br><span class="line">listen-address  [::1]:8118</span><br><span class="line"></span><br><span class="line">forward-socks5t   /               127.0.0.1:1080 .</span><br><span class="line"></span><br><span class="line">vim ~/.bashrc</span><br><span class="line"><span class="built_in">alias</span> setproxy=<span class="string">&quot;export ALL_PROXY=127.0.0.1:8118&quot;</span></span><br><span class="line"><span class="built_in">alias</span> unsetproxy=<span class="string">&quot;unset ALL_PROXY&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>使用方法如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Debian 启动</span></span><br><span class="line">sudo /etc/init.d/privoxy start</span><br><span class="line"></span><br><span class="line"><span class="comment"># Mac 启动</span></span><br><span class="line">brew services start privoxy</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使环境变量生效</span></span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 开启</span></span><br><span class="line">setproxy</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检测</span></span><br><span class="line">curl cip.cc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">unsetproxy</span><br></pre></td></tr></table></figure>
+
+<p>对终端进行代理设置后，就可以使用 conda 或 pip 从官方源下载最新的包了，而不用使用更新较迟的国内源。</p>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>proxy</tag>
+        <tag>terminal</tag>
       </tags>
   </entry>
   <entry>
@@ -10777,6 +10777,32 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
       </tags>
   </entry>
   <entry>
+    <title>手动更新 oh-my-zsh</title>
+    <url>/2021/10/08/update-oh-my-zsh/</url>
+    <content><![CDATA[<p>我比较喜欢使用 zsh，特别是搭配 <a href="https://ohmyz.sh/">Oh My ZSH</a>，它有很多方便的功能以及各种主题。但它不会自动更新，特别是 Mac 上很少关闭 Terminal 导致oh-my-zsh 不是最新的。下面介绍一种手动更新 oh-my-zsh 的方法。</p>
+<a id="more"></a>
+
+<h1 id="手动更新"><a href="#手动更新" class="headerlink" title="手动更新"></a>手动更新</h1><p>使用如下命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">omz update</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/.oh-my-zsh/tools</span><br><span class="line">zsh upgrade.sh</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://blog.digital-craftsman.de/manually-update-oh-my-zsh/">Manually update oh-my-zsh</a></li>
+<li><a href="https://futurestud.io/tutorials/how-to-manually-update-oh-my-zsh">How to Manually Update Oh-My-ZSH</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>shell</tag>
+        <tag>zsh</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>更新 debian 系统内核版本</title>
     <url>/2022/02/14/update-debian-kernel/</url>
     <content><![CDATA[<p>Debian 系统的内核升级的简单方法。本篇以 Debian 10 为例，所有命令均以 root 用户运行。</p>
@@ -10814,32 +10840,6 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
       <tags>
         <tag>kernel</tag>
         <tag>debian</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>手动更新 oh-my-zsh</title>
-    <url>/2021/10/08/update-oh-my-zsh/</url>
-    <content><![CDATA[<p>我比较喜欢使用 zsh，特别是搭配 <a href="https://ohmyz.sh/">Oh My ZSH</a>，它有很多方便的功能以及各种主题。但它不会自动更新，特别是 Mac 上很少关闭 Terminal 导致oh-my-zsh 不是最新的。下面介绍一种手动更新 oh-my-zsh 的方法。</p>
-<a id="more"></a>
-
-<h1 id="手动更新"><a href="#手动更新" class="headerlink" title="手动更新"></a>手动更新</h1><p>使用如下命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">omz update</span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/.oh-my-zsh/tools</span><br><span class="line">zsh upgrade.sh</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="https://blog.digital-craftsman.de/manually-update-oh-my-zsh/">Manually update oh-my-zsh</a></li>
-<li><a href="https://futurestud.io/tutorials/how-to-manually-update-oh-my-zsh">How to Manually Update Oh-My-ZSH</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technology</category>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>shell</tag>
-        <tag>zsh</tag>
       </tags>
   </entry>
   <entry>
