@@ -32,7 +32,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://pic4.zhimg.com/80/v2-82a512ae404403ff00ed790d8f2569f7_720w.jpg">
 <meta property="article:published_time" content="2022-03-30T07:22:44.000Z">
-<meta property="article:modified_time" content="2022-03-30T07:24:31.045Z">
+<meta property="article:modified_time" content="2022-03-30T07:31:29.277Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary">
@@ -256,7 +256,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-03-30 15:22:44 / 修改时间：15:24:31" itemprop="dateCreated datePublished" datetime="2022-03-30T15:22:44+08:00">2022-03-30</time>
+      <time title="创建时间：2022-03-30 15:22:44 / 修改时间：15:31:29" itemprop="dateCreated datePublished" datetime="2022-03-30T15:22:44+08:00">2022-03-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -555,17 +555,12 @@
 <pre><code>__setattr__ 方法被调用
 ***
 __setattr__ 方法被调用
-
-
-
 &#39;IT&#39;</code></pre>
 <p>从上面的运行结果可以知道，__setattr__ 方法被调用了两次。这是因为在构造函数 __init__ 中也进行了一次属性赋值。所以，在定义 __setattr__ 的时候一定要注意，不能采用方法 1 编写代码，因为本身又会再次调用 __setattr__ 方法，这样会造成无限递归。可以采用方法 2 或方法 3.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 自定义一个字典类，能够实现 &quot;字典.键&quot; 获取值 和 &quot;字典.键=值&quot;</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyDict2</span>(<span class="params">dict</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, *args, **kwargs</span>):</span></span><br><span class="line">        super(MyDict2, self).__init__(*args, **kwargs)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span>(<span class="params">self, key</span>):</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> self[key]</span><br><span class="line">        <span class="keyword">except</span> KeyError:</span><br><span class="line">            <span class="keyword">raise</span> AttributeError(<span class="string">r&quot;&#x27;MyDict&#x27; object has no attribute &#x27;%s&#x27;&quot;</span> % key)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__setattr__</span>(<span class="params">self, key, name</span>):</span></span><br><span class="line">        self[key] = name</span><br></pre></td></tr></table></figure>
 
 
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">d = MyDict2()</span><br><span class="line">d.group = <span class="string">&quot;Python&quot;</span></span><br><span class="line">d.group</span><br></pre></td></tr></table></figure>
-
-
 
 
 <pre><code>&#39;Python&#39;</code></pre>
@@ -578,8 +573,6 @@ __setattr__ 方法被调用
 <pre><code>***
 __getattribute__ 方法被调用
 
-
-
 &#39;AppleGS3&#39;</code></pre>
 <h1 id="dict-、-dir-、dir"><a href="#dict-、-dir-、dir" class="headerlink" title="__dict__、__dir__、dir()"></a>__dict__、__dir__、dir()</h1><p>__dict__ 是对象的一个属性，并不是函数，它的作用是返回对象的所有属性名为 key，属性值为 value 的一个字典，注意，这里所说的所有属性是指数据对象本身的属性，例如类的 __dict__ 只包含类本身的属性和函数，而类实例也只包含类实例的属性。这一点与 dir() 函数不同，dir() 将会返回一个列表，列表中包含对象所有有关的属性名。也就是说，__dict__ 是 dir() 的子集。而 dir() 实际上调用的是 __dir__ 方法。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DD</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        self.company = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">func</span>(<span class="params">self</span>):</span></span><br><span class="line">        print(<span class="string">&quot;func 方法被调用&quot;</span>)</span><br></pre></td></tr></table></figure>
@@ -591,12 +584,8 @@ __getattribute__ 方法被调用
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd.__dict__</span><br></pre></td></tr></table></figure>
 
 
-
-
 <pre><code>&#123;&#39;company&#39;: &#39;AppleDD&#39;&#125;</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DD.__dict__</span><br></pre></td></tr></table></figure>
-
-
 
 
 <pre><code>mappingproxy(&#123;&#39;__module__&#39;: &#39;__main__&#39;,
@@ -606,8 +595,6 @@ __getattribute__ 方法被调用
               &#39;__weakref__&#39;: &lt;attribute &#39;__weakref__&#39; of &#39;DD&#39; objects&gt;,
               &#39;__doc__&#39;: None&#125;)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dir(dd)</span><br></pre></td></tr></table></figure>
-
-
 
 
 <pre><code>[&#39;__class__&#39;,
