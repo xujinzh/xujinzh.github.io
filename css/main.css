@@ -18,10 +18,10 @@
   --btn-default-hover-bg: #fff;
   --btn-default-hover-color: #222;
   --btn-default-hover-border-color: #222;
-  --highlight-background: #f0f0f0;
-  --highlight-foreground: #444;
-  --highlight-gutter-background: #dedede;
-  --highlight-gutter-foreground: #555;
+  --highlight-background: #fff;
+  --highlight-foreground: #000;
+  --highlight-gutter-background: #e5e5e5;
+  --highlight-gutter-foreground: #191919;
   color-scheme: light;
 }
 html {
@@ -362,7 +362,7 @@ td {
 }
 /*
 
-Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
+XCode style (c) Angel Garcia <angelgarcia.mail@gmail.com>
 
 */
 
@@ -370,94 +370,99 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  background: #F0F0F0;
+  background: #fff;
+  color: black;
 }
 
-
-/* Base color: saturation 0; */
-
-.hljs,
-.hljs-subst {
-  color: #444;
+/* Gray DOCTYPE selectors like WebKit */
+.xml .hljs-meta {
+  color: #c0c0c0;
 }
 
-.hljs-comment {
-  color: #888888;
+.hljs-comment,
+.hljs-quote {
+  color: #007400;
 }
 
-.hljs-keyword,
+.hljs-tag,
 .hljs-attribute,
+.hljs-keyword,
 .hljs-selector-tag,
-.hljs-meta-keyword,
-.hljs-doctag,
+.hljs-literal,
 .hljs-name {
-  font-weight: bold;
+  color: #aa0d91;
 }
 
+.hljs-variable,
+.hljs-template-variable {
+  color: #3F6E74;
+}
 
-/* User color: hue: 0 */
-
-.hljs-type,
+.hljs-code,
 .hljs-string,
-.hljs-number,
-.hljs-selector-id,
-.hljs-selector-class,
-.hljs-quote,
-.hljs-template-tag,
-.hljs-deletion {
-  color: #880000;
-}
-
-.hljs-title,
-.hljs-section {
-  color: #880000;
-  font-weight: bold;
+.hljs-meta-string {
+  color: #c41a16;
 }
 
 .hljs-regexp,
+.hljs-link {
+  color: #0E0EFF;
+}
+
+.hljs-title,
 .hljs-symbol,
-.hljs-variable,
-.hljs-template-variable,
-.hljs-link,
-.hljs-selector-attr,
-.hljs-selector-pseudo {
-  color: #BC6060;
-}
-
-
-/* Language color: hue: 90; */
-
-.hljs-literal {
-  color: #78A960;
-}
-
-.hljs-built_in,
 .hljs-bullet,
-.hljs-code,
-.hljs-addition {
-  color: #397300;
+.hljs-number {
+  color: #1c00cf;
 }
 
-
-/* Meta color: hue: 200 */
-
+.hljs-section,
 .hljs-meta {
-  color: #1f7199;
-}
-
-.hljs-meta-string {
-  color: #4d99bf;
+  color: #643820;
 }
 
 
-/* Misc effects */
+.hljs-class .hljs-title,
+.hljs-type,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-params {
+  color: #5c2699;
+}
 
-.hljs-emphasis {
+.hljs-attr {
+  color: #836C28;
+}
+
+.hljs-subst {
+  color: #000;
+}
+
+.hljs-formula {
+  background-color: #eee;
   font-style: italic;
 }
 
+.hljs-addition {
+  background-color: #baeeba;
+}
+
+.hljs-deletion {
+  background-color: #ffc8bd;
+}
+
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #9b703f;
+}
+
+.hljs-doctag,
 .hljs-strong {
   font-weight: bold;
+}
+
+.hljs-emphasis {
+  font-style: italic;
 }
 
 .highlight:hover .copy-btn,
@@ -2887,7 +2892,7 @@ mjx-container[display='true'] + br {
   vertical-align: middle;
 }
 .links-of-author a::before {
-  background: #65ffff;
+  background: #01ad54;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
