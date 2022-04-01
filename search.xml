@@ -8247,6 +8247,9 @@ __getattribute__ 方法被调用
 <pre><code>tensor([[1., 0., 0.],
         [0., 1., 0.],
         [0., 0., 1.]], device=&#39;cuda:0&#39;, dtype=torch.float64)</code></pre>
+<p><font color=orange> 注意，当使用锁页内存（<a href="https://xujinzh.github.io/2022/04/01/pytorch-dataloader-pinned-memory/">pytorch 中数据加载器的锁页内存 pinned memory</a>）的方式加载数据时，数据放入 GPU 的时候，应该把 non_blocking=True，这样能够缩减访问时间，加快训练。</font></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 方法</span></span><br><span class="line"><span class="keyword">if</span> torch.cuda.is_available():</span><br><span class="line">    y = torch.from_numpy(x).to(<span class="string">&quot;cuda&quot;</span>, non_blocking=<span class="literal">True</span>)</span><br><span class="line">y</span><br></pre></td></tr></table></figure>
+
 <h1 id="pytorch-to-numpy"><a href="#pytorch-to-numpy" class="headerlink" title="pytorch to numpy"></a>pytorch to numpy</h1><p>转向另一个方向会稍微复杂一些，因为有时您必须处理 PyTorch 张量和 NumPy 数组之间的两个差异： </p>
 <ol>
 <li>PyTorch 可以针对不同的设备（如 GPU）；</li>
