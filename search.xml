@@ -10583,21 +10583,21 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 </tr>
 <tr>
 <td>inference_mode</td>
-<td>Context-manager that enables or disables inference mode</td>
+<td>Context-manager that enables or disables inference mode.</td>
 </tr>
 </tbody></table>
-<h1 id="torch-no-grad"><a href="#torch-no-grad" class="headerlink" title="torch.no_grad"></a>torch.no_grad</h1><p>该上下文管理器用于禁止梯度计算，常采用如下两者方法</p>
-<h2 id="with-torch-no-grad"><a href="#with-torch-no-grad" class="headerlink" title="with torch.no_grad()"></a>with torch.no_grad()</h2><p>代码示例</p>
+<h1 id="torch-no-grad"><a href="#torch-no-grad" class="headerlink" title="torch.no_grad"></a>torch.no_grad</h1><p>该上下文管理器用于禁止梯度计算，常采用如下两种方法。</p>
+<h2 id="with-torch-no-grad"><a href="#with-torch-no-grad" class="headerlink" title="with torch.no_grad()"></a>with torch.no_grad()</h2><p>代码示例：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">x = torch.tensor([<span class="number">1.</span>], requires_grad=<span class="literal">True</span>)</span><br><span class="line">x</span><br><span class="line"><span class="comment"># tensor([1.], requires_grad=True)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    y = x * <span class="number">2</span></span><br><span class="line">y</span><br><span class="line"><span class="comment"># tensor([2.])</span></span><br><span class="line">y.requires_grad</span><br><span class="line"><span class="comment"># False</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="torch-no-grad-1"><a href="#torch-no-grad-1" class="headerlink" title="@torch.no_grad()"></a>@torch.no_grad()</h2><p>作为装饰器，将函数中不进行梯度计算，接续上面代码</p>
+<h2 id="torch-no-grad-1"><a href="#torch-no-grad-1" class="headerlink" title="@torch.no_grad()"></a>@torch.no_grad()</h2><p>作为装饰器，将函数中不进行梯度计算，接续上面代码：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@torch.no_grad()</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">doubler</span>(<span class="params">x</span>):</span></span><br><span class="line">    <span class="keyword">return</span> x * <span class="number">2</span></span><br><span class="line">    </span><br><span class="line">z = doubler(x)</span><br><span class="line">z</span><br><span class="line"><span class="comment"># tensor([2.])</span></span><br><span class="line">z.requires_grad</span><br><span class="line"><span class="comment"># False</span></span><br></pre></td></tr></table></figure>
 
-<h1 id="enable-grad"><a href="#enable-grad" class="headerlink" title="enable_grad"></a>enable_grad</h1><p>该上下文管理器用于启用梯度计算，常采用如下两者方法</p>
-<h2 id="with-torch-enable-grad"><a href="#with-torch-enable-grad" class="headerlink" title="with torch.enable_grad()"></a>with torch.enable_grad()</h2><p>代码示例</p>
+<h1 id="torch-enable-grad"><a href="#torch-enable-grad" class="headerlink" title="torch.enable_grad"></a>torch.enable_grad</h1><p>该上下文管理器用于启用梯度计算，常采用如下两种方法。</p>
+<h2 id="with-torch-enable-grad"><a href="#with-torch-enable-grad" class="headerlink" title="with torch.enable_grad()"></a>with torch.enable_grad()</h2><p>代码示例：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x = torch.tensor([<span class="number">1.</span>], requires_grad=<span class="literal">True</span>)</span><br><span class="line">x</span><br><span class="line"><span class="comment"># tensor([1.], requires_grad=True)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    <span class="keyword">with</span> torch.enable_grad():</span><br><span class="line">        y = x * <span class="number">2</span></span><br><span class="line"></span><br><span class="line">y</span><br><span class="line"><span class="comment"># tensor([2.], grad_fn=&lt;MulBackward0&gt;)</span></span><br><span class="line">y.requires_grad</span><br><span class="line"><span class="comment"># True</span></span><br><span class="line"></span><br><span class="line">y.backward()</span><br><span class="line">x.grad</span><br><span class="line"><span class="comment"># tensor([2.])</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="torch-enable-grad"><a href="#torch-enable-grad" class="headerlink" title="@torch.enable_grad()"></a>@torch.enable_grad()</h2><p>作为装饰器，函数中进行梯度计算，接续上面代码</p>
+<h2 id="torch-enable-grad-1"><a href="#torch-enable-grad-1" class="headerlink" title="@torch.enable_grad()"></a>@torch.enable_grad()</h2><p>作为装饰器，函数中进行梯度计算，接续上面代码：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@torch.enable_grad()</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">doubler</span>(<span class="params">x</span>):</span></span><br><span class="line">    <span class="keyword">return</span> x * <span class="number">2</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    z = doubler(x)</span><br><span class="line">z</span><br><span class="line"><span class="comment"># tensor([2.], grad_fn=&lt;MulBackward0&gt;)</span></span><br><span class="line">z.requires_grad</span><br><span class="line"><span class="comment"># True</span></span><br><span class="line">z.backward()</span><br><span class="line">x.grad</span><br><span class="line"><span class="comment"># tensor([4.])  # 这里因为是接续上面代码，所以x的梯度分别是y和z对x的梯度和。如果在代码块前增加对x的重新初始化，则只有z对x反向求导的梯度</span></span><br></pre></td></tr></table></figure>
 
 <h1 id="torch-set-grad-enabled-mode"><a href="#torch-set-grad-enabled-mode" class="headerlink" title="torch.set_grad_enabled(mode)"></a>torch.set_grad_enabled(mode)</h1><p>将梯度计算设置为打开或关闭的上下文管理器。</p>
@@ -14880,7 +14880,7 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
   <entry>
     <title>个人简介</title>
     <url>/about/index.html</url>
-    <content><![CDATA[<p>Jinzhong Xu, 科研工作者，专注于数学与应用数学、计算机应用技术，特别是在分析、代数与几何、大数据分析、计算机视觉等。常用编程语言有 Python、C、Java 等。</p>
+    <content><![CDATA[<p>Jinzhong Xu, 科研工作者，专注于数学与应用数学、计算机应用技术，特别是在分析、代数与几何、大数据分析、计算机视觉等。常用编程语言有 Python、Go、C、Java 等。</p>
 <h1 id="座右铭"><a href="#座右铭" class="headerlink" title="座右铭"></a>座右铭</h1><ol>
 <li>学习的最好方法就是沉迷；</li>
 <li>天道酬勤，地道酬善，人道酬诚，商道酬信，业道酬精；</li>
