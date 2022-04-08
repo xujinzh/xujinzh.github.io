@@ -14945,6 +14945,68 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
       </tags>
   </entry>
   <entry>
+    <title>搭配 nginx、cloudflare 和 acme.sh 让网站走 https 协议</title>
+    <url>/2022/04/08/nginx-cloudflare-https/</url>
+    <content><![CDATA[<p>依靠 cloudflare 我们能够把域名解析指向到云服务器的 ip 地址，借助 acme.sh 我们能为域名申请 SSL 证书，通过 nginx 反向解析服务器，让我们的网站访问走 https 协议。https 协议经由 http 进行通信，但利用 SSL/TLS 来加密数据包，比单纯的 http 协议（明文传输）更安全。本篇以 Debian 10 为例来演示如何搭建网站，并为网站申请证书并配置网站，让网站都走 https 协议。所有命令以 root 身份运行。</p>
+<a id="more"></a>
+
+<h1 id="cloudflare-域名解析"><a href="#cloudflare-域名解析" class="headerlink" title="cloudflare 域名解析"></a>cloudflare 域名解析</h1><p>首先，我们需要申请一个域名和购买云服务器，如：mathscv.com，然后在 cloudflare 注册一个账号，并用申请的域名添加域名站点。其次，进入 DNS 配置域名解析，具体的，我们需要添加记录，类型选择 A，名称填入域名：mathscv.com，内容填入云服务器的公网 IP 地址，代理状态可选仅限 DNS，也可开启代理 CND 加速。再添加记录，类型选择 A，名称填入 www (依据个人情况，填写三级域名，我这里配置的三级域名是：<a href="http://www.mathscv.com),内容和代理同上即可./">www.mathscv.com)，内容和代理同上即可。</a></p>
+<p>点击概述，在页码右下角部分有 API 选项，里面有区域 ID (CF_Zone_ID) 和账户 ID (CF_Account_ID)，申请证书还需要一个 token，获取方法如下，还是在 API 选项里有个 获取您的 API 令牌，点进去后出现 API 令牌页面。点击创建令牌，选择变价区域 DNS，点击使用模板，在区域资源最后一栏中选择你的域名，然后点击继续以显示摘要，最后点击创建令牌，会显示创建成功的令牌码，我们需要谨慎保存好该令牌（CF_Token），因为该令牌近出现这一次。将我们获得的三个信息：CF_Zone_ID，CF_Account_ID，CF_Token 写入到我们的云服务器的环境变量中：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export CF_Token=&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;&#x27;</span> &gt;&gt; .bashrc</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export CF_Account_ID=&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;&#x27;</span> &gt;&gt; .bashrc</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export CF_Zone_ID=&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;&#x27;</span> &gt;&gt; .bashrc</span><br><span class="line"><span class="built_in">source</span> .bashrc</span><br></pre></td></tr></table></figure>
+
+<h1 id="nginx-安装"><a href="#nginx-安装" class="headerlink" title="nginx 安装"></a>nginx 安装</h1><p>在 Debian 系统上安装 nginx 非常方便，命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt install nginx -y</span><br></pre></td></tr></table></figure>
+
+<p>安装成功后，默认 nginx 服务是打开的，可以通过如下命令设置开机自启：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> nginx.service</span><br></pre></td></tr></table></figure>
+
+<p>然后，我们配置 nginx</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 存放证书</span></span><br><span class="line">mkdir -p /etc/nginx/cert/</span><br><span class="line"><span class="comment"># 配置证书和路由指向</span></span><br><span class="line">cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak</span><br><span class="line">vim /etc/nginx/nginx.conf</span><br></pre></td></tr></table></figure>
+
+<p>添加如下内容：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">user  root;</span><br><span class="line">worker_processes  <span class="number">1</span>;</span><br><span class="line">error_log  /var/log/nginx/error.log warn;</span><br><span class="line">pid        /var/run/nginx.pid;</span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line">http &#123;</span><br><span class="line">    include       /etc/nginx/mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    log_format  main  <span class="string">&#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;</span>;</span><br><span class="line">    access_log  /var/log/nginx/access.log  main;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    <span class="comment">#tcp_nopush     on;</span></span><br><span class="line">    keepalive_timeout  <span class="number">120</span>;</span><br><span class="line">    client_max_body_size <span class="number">20</span>m;</span><br><span class="line">    <span class="comment">#gzip  on;</span></span><br><span class="line">    server &#123;</span><br><span class="line">        listen <span class="number">80</span>; </span><br><span class="line">        listen [::]:<span class="number">80</span>;</span><br><span class="line">        server_name www.mathscv.com;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">301</span> https://$server_name$request_uri;</span><br><span class="line">    &#125;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen <span class="number">443</span> ssl;</span><br><span class="line">        server_name www.mathscv.com;</span><br><span class="line">        ssl_certificate   /etc/nginx/cert/fullchain.cer;</span><br><span class="line">        ssl_certificate_key  /etc/nginx/cert/private.key;</span><br><span class="line">        ssl_session_timeout <span class="number">5</span>m;</span><br><span class="line">        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;</span><br><span class="line">        ssl_protocols TLSv1 TLSv1<span class="number">.1</span> TLSv1<span class="number">.2</span>;</span><br><span class="line">        ssl_prefer_server_ciphers on;</span><br><span class="line">        location / &#123;</span><br><span class="line">            root /usr/share/nginx/html;</span><br><span class="line">            index index.php index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试配置是否通过</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
+
+<p>通过结果如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx: the configuration file /etc/nginx/nginx.conf syntax is ok</span><br><span class="line">nginx: configuration file /etc/nginx/nginx.conf <span class="built_in">test</span> is successful</span><br></pre></td></tr></table></figure>
+
+<h1 id="acme-sh-申请证书"><a href="#acme-sh-申请证书" class="headerlink" title="acme.sh 申请证书"></a>acme.sh 申请证书</h1><p>申请证书我们采用命令行的方式，假设上面的 CF_Zone_ID，CF_Account_ID，CF_Token 已经按要求正确配置到环境变量中，且 <code>/etc/nginx/nginx.conf</code> 也已经配置成功并通过。那么证书申请配置放入如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装程序，邮箱写自己申请 cloudflare 时使用的</span></span><br><span class="line">curl https://get.acme.sh | sh -s email=xxx@yyy.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 申请证书</span></span><br><span class="line">~/.acme.sh/acme.sh --issue --dns dns_cf -d www.mathscv.com -k ec-256 --ecc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装证书</span></span><br><span class="line">~/.acme.sh/acme.sh  --installcert  -d  www.mathscv.com --ecc   \</span><br><span class="line">        --key-file   /etc/nginx/cert/private.key \</span><br><span class="line">        --fullchain-file /etc/nginx/cert/fullchain.cer \</span><br><span class="line">        --reloadcmd  <span class="string">&quot;systemctl force-reload nginx.service&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>其实，上面申请证书成功后，在 <code>~/.acme.sh</code> 下会出现一个 <code>www.mathscv.com_ecc</code> 文件夹，里面有申请的证书信息，但不建议直接在 nginx 中指定该路径。</p>
+<p>注意：</p>
+<ul>
+<li><p>证书有效期默认是 60 天 （通过命令 <code>~/.acme.sh/acme.sh --list</code> 查看），但安装时自动会创建 crontab 定时任务，每日 0 晨左右会自动运行更新，你无需任何操作；</p>
+</li>
+<li><p>acme.sh 脚本默认的 ZeroSSL.com 存在着频率上限，尽量不要反复多次申请。</p>
+</li>
+<li><p>acme 更新比较活跃，你可以安装如下方法手动更新或设置自动更新软件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 手动更新</span></span><br><span class="line">~/.acme.sh/acme.sh --upgrade</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置自动更新</span></span><br><span class="line">~/.acme.sh/acme.sh --upgrade --auto-upgrade</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭自动更新</span></span><br><span class="line">~/.acme.sh/acme.sh --upgrade --auto-upgrade 0</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a href="https://wsgzao.github.io/post/acme/">使用 acme.sh 免费申请 HTTPS 证书</a></li>
+<li><a href="https://justo.cyou/posts/%E7%94%A8acme%E7%94%B3%E8%AF%B7%E8%AF%81%E4%B9%A6/">用ACME申请证书-有详细的 cloudflare 获取ID、Token 方法的图示</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1874024">HTTPS之acme.sh申请证书</a></li>
+<li><a href="https://github.com/acmesh-official/acme.sh">GitHub-acme.sh</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>nginx</tag>
+        <tag>web</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>个人简介</title>
     <url>/about/index.html</url>
     <content><![CDATA[<p>Jinzhong Xu, 科研工作者，专注于数学与应用数学、计算机应用技术，特别是在分析、代数与几何、大数据分析、计算机视觉等。常用编程语言有 Python、Go、C、Java 等。</p>

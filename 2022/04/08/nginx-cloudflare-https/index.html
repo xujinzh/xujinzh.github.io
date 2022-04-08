@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 5.1.1">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" integrity="sha256-jTIdiMuX/e3DGJUGwl3pKSxuc6YOuqtJYkM0bGQESA4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/orange/pace-theme-center-atom.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="依靠 cloudflare 我们能够把域名解析指向到云服务器的 ip 地址，借助 acme.sh 我们能为域名申请 SSL 证书，通过 nginx 反向解析服务器，让我们的网站访问走 https 协议。https 协议经由 http 进行通信，但利用 SSL&#x2F;TLS 来加密数据包，比单纯的 http 协议（明文传输）更安全。本篇以 Debian 10 为例来演示如何搭建网站，并为网站申请证书并配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭配 nginx、cloudflare 和 acme.sh 让网站走 https 协议">
+<meta property="og:url" content="https://xujinzh.github.io/2022/04/08/nginx-cloudflare-https/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="依靠 cloudflare 我们能够把域名解析指向到云服务器的 ip 地址，借助 acme.sh 我们能为域名申请 SSL 证书，通过 nginx 反向解析服务器，让我们的网站访问走 https 协议。https 协议经由 http 进行通信，但利用 SSL&#x2F;TLS 来加密数据包，比单纯的 http 协议（明文传输）更安全。本篇以 Debian 10 为例来演示如何搭建网站，并为网站申请证书并配置">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-08T00:56:33.000Z">
+<meta property="article:modified_time" content="2022-04-08T02:22:09.040Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2022/04/08/nginx-cloudflare-https/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xujinzh.github.io/2022/04/08/nginx-cloudflare-https/","path":"2022/04/08/nginx-cloudflare-https/","title":"搭配 nginx、cloudflare 和 acme.sh 让网站走 https 协议"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>搭配 nginx、cloudflare 和 acme.sh 让网站走 https 协议 | J. Xu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">J. Xu</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">215</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">20</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">259</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#cloudflare-%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">cloudflare 域名解析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nginx-%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">nginx 安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#acme-sh-%E7%94%B3%E8%AF%B7%E8%AF%81%E4%B9%A6"><span class="nav-number">3.</span> <span class="nav-text">acme.sh 申请证书</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">众妙之门</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">259</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">215</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jinzhongxu@csu.ac.cn" title="E-Mail → mailto:jinzhongxu@csu.ac.cn" rel="noopener" target="_blank"><i class="fab fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.mathscv.com/power" title="MathsCVPower → https:&#x2F;&#x2F;www.mathscv.com&#x2F;power" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>MathsCVPower</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2022/04/08/nginx-cloudflare-https/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J. Xu">
+      <meta itemprop="description" content="众妙之门">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="搭配 nginx、cloudflare 和 acme.sh 让网站走 https 协议 | J. Xu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          搭配 nginx、cloudflare 和 acme.sh 让网站走 https 协议
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-04-08 08:56:33 / 修改时间：10:22:09" itemprop="dateCreated datePublished" datetime="2022-04-08T08:56:33+08:00">2022-04-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>依靠 cloudflare 我们能够把域名解析指向到云服务器的 ip 地址，借助 acme.sh 我们能为域名申请 SSL 证书，通过 nginx 反向解析服务器，让我们的网站访问走 https 协议。https 协议经由 http 进行通信，但利用 SSL/TLS 来加密数据包，比单纯的 http 协议（明文传输）更安全。本篇以 Debian 10 为例来演示如何搭建网站，并为网站申请证书并配置网站，让网站都走 https 协议。所有命令以 root 身份运行。</p>
+<a id="more"></a>
+
+<h1 id="cloudflare-域名解析"><a href="#cloudflare-域名解析" class="headerlink" title="cloudflare 域名解析"></a>cloudflare 域名解析</h1><p>首先，我们需要申请一个域名和购买云服务器，如：mathscv.com，然后在 cloudflare 注册一个账号，并用申请的域名添加域名站点。其次，进入 DNS 配置域名解析，具体的，我们需要添加记录，类型选择 A，名称填入域名：mathscv.com，内容填入云服务器的公网 IP 地址，代理状态可选仅限 DNS，也可开启代理 CND 加速。再添加记录，类型选择 A，名称填入 www (依据个人情况，填写三级域名，我这里配置的三级域名是：<a target="_blank" rel="noopener" href="http://www.mathscv.com),内容和代理同上即可./">www.mathscv.com)，内容和代理同上即可。</a></p>
+<p>点击概述，在页码右下角部分有 API 选项，里面有区域 ID (CF_Zone_ID) 和账户 ID (CF_Account_ID)，申请证书还需要一个 token，获取方法如下，还是在 API 选项里有个 获取您的 API 令牌，点进去后出现 API 令牌页面。点击创建令牌，选择变价区域 DNS，点击使用模板，在区域资源最后一栏中选择你的域名，然后点击继续以显示摘要，最后点击创建令牌，会显示创建成功的令牌码，我们需要谨慎保存好该令牌（CF_Token），因为该令牌近出现这一次。将我们获得的三个信息：CF_Zone_ID，CF_Account_ID，CF_Token 写入到我们的云服务器的环境变量中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export CF_Token=&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;&#x27;</span> &gt;&gt; .bashrc</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export CF_Account_ID=&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;&#x27;</span> &gt;&gt; .bashrc</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export CF_Zone_ID=&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;&#x27;</span> &gt;&gt; .bashrc</span><br><span class="line"><span class="built_in">source</span> .bashrc</span><br></pre></td></tr></table></figure>
+
+<h1 id="nginx-安装"><a href="#nginx-安装" class="headerlink" title="nginx 安装"></a>nginx 安装</h1><p>在 Debian 系统上安装 nginx 非常方便，命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt install nginx -y</span><br></pre></td></tr></table></figure>
+
+<p>安装成功后，默认 nginx 服务是打开的，可以通过如下命令设置开机自启：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> nginx.service</span><br></pre></td></tr></table></figure>
+
+<p>然后，我们配置 nginx</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 存放证书</span></span><br><span class="line">mkdir -p /etc/nginx/cert/</span><br><span class="line"><span class="comment"># 配置证书和路由指向</span></span><br><span class="line">cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak</span><br><span class="line">vim /etc/nginx/nginx.conf</span><br></pre></td></tr></table></figure>
+
+<p>添加如下内容：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">user  root;</span><br><span class="line">worker_processes  <span class="number">1</span>;</span><br><span class="line">error_log  /var/log/nginx/error.log warn;</span><br><span class="line">pid        /var/run/nginx.pid;</span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line">http &#123;</span><br><span class="line">    include       /etc/nginx/mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    log_format  main  <span class="string">&#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;</span>;</span><br><span class="line">    access_log  /var/log/nginx/access.log  main;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    <span class="comment">#tcp_nopush     on;</span></span><br><span class="line">    keepalive_timeout  <span class="number">120</span>;</span><br><span class="line">    client_max_body_size <span class="number">20</span>m;</span><br><span class="line">    <span class="comment">#gzip  on;</span></span><br><span class="line">    server &#123;</span><br><span class="line">        listen <span class="number">80</span>; </span><br><span class="line">        listen [::]:<span class="number">80</span>;</span><br><span class="line">        server_name www.mathscv.com;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">301</span> https://$server_name$request_uri;</span><br><span class="line">    &#125;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen <span class="number">443</span> ssl;</span><br><span class="line">        server_name www.mathscv.com;</span><br><span class="line">        ssl_certificate   /etc/nginx/cert/fullchain.cer;</span><br><span class="line">        ssl_certificate_key  /etc/nginx/cert/private.key;</span><br><span class="line">        ssl_session_timeout <span class="number">5</span>m;</span><br><span class="line">        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;</span><br><span class="line">        ssl_protocols TLSv1 TLSv1<span class="number">.1</span> TLSv1<span class="number">.2</span>;</span><br><span class="line">        ssl_prefer_server_ciphers on;</span><br><span class="line">        location / &#123;</span><br><span class="line">            root /usr/share/nginx/html;</span><br><span class="line">            index index.php index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试配置是否通过</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
+
+<p>通过结果如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nginx: the configuration file /etc/nginx/nginx.conf syntax is ok</span><br><span class="line">nginx: configuration file /etc/nginx/nginx.conf <span class="built_in">test</span> is successful</span><br></pre></td></tr></table></figure>
+
+<h1 id="acme-sh-申请证书"><a href="#acme-sh-申请证书" class="headerlink" title="acme.sh 申请证书"></a>acme.sh 申请证书</h1><p>申请证书我们采用命令行的方式，假设上面的 CF_Zone_ID，CF_Account_ID，CF_Token 已经按要求正确配置到环境变量中，且 <code>/etc/nginx/nginx.conf</code> 也已经配置成功并通过。那么证书申请配置放入如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装程序，邮箱写自己申请 cloudflare 时使用的</span></span><br><span class="line">curl https://get.acme.sh | sh -s email=xxx@yyy.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 申请证书</span></span><br><span class="line">~/.acme.sh/acme.sh --issue --dns dns_cf -d www.mathscv.com -k ec-256 --ecc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装证书</span></span><br><span class="line">~/.acme.sh/acme.sh  --installcert  -d  www.mathscv.com --ecc   \</span><br><span class="line">        --key-file   /etc/nginx/cert/private.key \</span><br><span class="line">        --fullchain-file /etc/nginx/cert/fullchain.cer \</span><br><span class="line">        --reloadcmd  <span class="string">&quot;systemctl force-reload nginx.service&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>其实，上面申请证书成功后，在 <code>~/.acme.sh</code> 下会出现一个 <code>www.mathscv.com_ecc</code> 文件夹，里面有申请的证书信息，但不建议直接在 nginx 中指定该路径。</p>
+<p>注意：</p>
+<ul>
+<li><p>证书有效期默认是 60 天 （通过命令 <code>~/.acme.sh/acme.sh --list</code> 查看），但安装时自动会创建 crontab 定时任务，每日 0 晨左右会自动运行更新，你无需任何操作；</p>
+</li>
+<li><p>acme.sh 脚本默认的 ZeroSSL.com 存在着频率上限，尽量不要反复多次申请。</p>
+</li>
+<li><p>acme 更新比较活跃，你可以安装如下方法手动更新或设置自动更新软件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 手动更新</span></span><br><span class="line">~/.acme.sh/acme.sh --upgrade</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置自动更新</span></span><br><span class="line">~/.acme.sh/acme.sh --upgrade --auto-upgrade</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭自动更新</span></span><br><span class="line">~/.acme.sh/acme.sh --upgrade --auto-upgrade 0</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://wsgzao.github.io/post/acme/">使用 acme.sh 免费申请 HTTPS 证书</a></li>
+<li><a target="_blank" rel="noopener" href="https://justo.cyou/posts/%E7%94%A8acme%E7%94%B3%E8%AF%B7%E8%AF%81%E4%B9%A6/">用ACME申请证书-有详细的 cloudflare 获取ID、Token 方法的图示</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1874024">HTTPS之acme.sh申请证书</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/acmesh-official/acme.sh">GitHub-acme.sh</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>感谢支持！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://xujinzh.github.io/2022/04/08/nginx-cloudflare-https/" title="搭配 nginx、cloudflare 和 acme.sh 让网站走 https 协议">https://xujinzh.github.io/2022/04/08/nginx-cloudflare-https/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
+              <a href="/tags/nginx/" rel="tag"><i class="fa fa-tag"></i> nginx</a>
+              <a href="/tags/web/" rel="tag"><i class="fa fa-tag"></i> web</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/06/python-numpy-meshgrid/" rel="prev" title="python 的 numpy.meshgrid 方法">
+                  <i class="fa fa-chevron-left"></i> python 的 numpy.meshgrid 方法
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">551k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:21</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js","integrity":"sha256-7wT34TI0pEBeEFoi4z+vhuSddGh6vUTMWdqJ2SDe2jg="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"xujinzh","repo":"xujinzh.github.io","client_id":"695ca5d39e2ba2f9feb5","client_secret":"9d4027af6364ff54595b7a8580977ec58c38a5ae","admin_user":"xujinzh","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"a058dfb6336a43afb7afaf53483ce923"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
