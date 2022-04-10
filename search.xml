@@ -15102,6 +15102,29 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
       </tags>
   </entry>
   <entry>
+    <title>ubuntu 安装 tcping</title>
+    <url>/2022/04/10/ubuntu-install-tcping/</url>
+    <content><![CDATA[<p>ping 命令能够帮助我们测试两台主机之间的网络是否畅通。但是，当目标主机的 ICMP 协议端口都关闭的时候，无法通过 ping 命令达到目标。一台主机只要是需要连接服务，那么它一定会开启 tcp 协议的某个端口，因此，我们可以通过基于 tcp 协议的 ping 命令 tcping 来获知两台主机是否网络联通。本篇以 Ubuntu 18.04 为例介绍如何安装 TCPing，以及如何使用它探测网络是否联通。</p>
+<a id="more"></a>
+
+<h1 id="安装-TCPing"><a href="#安装-TCPing" class="headerlink" title="安装 TCPing"></a>安装 TCPing</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line"><span class="comment"># centos 可以使用 yum 包管理工具安装</span></span><br><span class="line">sudo apt install tcptraceroute wget</span><br><span class="line">sudo wget http://www.vdberg.org/\~richard/tcpping -O /usr/bin/tcping</span><br><span class="line">sudo chmod +x /usr/bin/tcping</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用-TCPing"><a href="#使用-TCPing" class="headerlink" title="使用 TCPing"></a>使用 TCPing</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 测试是否可以连接到百度网站的80端口</span></span><br><span class="line">tcping www.baidu.com 80</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a href="https://www.adgk.net/posts/88/">Debian/Ubuntu安装TCP测试工具TCPing</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>ubuntu</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>tcping</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>个人简介</title>
     <url>/about/index.html</url>
     <content><![CDATA[<p>Jinzhong Xu, 科研工作者，专注于数学与应用数学、计算机应用技术，特别是在分析、代数与几何、大数据分析、计算机视觉等。常用编程语言有 Python、Go、C、Java 等。</p>
