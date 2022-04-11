@@ -12546,24 +12546,27 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
   <entry>
     <title>Linux 压缩(解压缩)命令 zip(unzip) 和 rar(unrar)</title>
     <url>/2019/12/20/zip-and-rar/</url>
-    <content><![CDATA[<p>zip 和 rar 都是常有的压缩命令，特别是在 Windows 上压缩的 zip 或 rar 文件，上传到 Linux 系统上时，需要解压缩，下面介绍如何在 Linux 上使用命令 zip (unzip) 和 rar (unrar) 进行压缩和解压缩。</p>
+    <content><![CDATA[<p>zip 和 rar 都是常有的压缩命令，特别是在 Windows 上压缩的 zip 或 rar 文件，上传到 Linux 系统上时，需要解压缩，下面介绍如何在 Linux 上使用命令 zip (unzip) 和 rar (unrar) 进行压缩和解压缩。本篇以 Ubuntu 18.04 为例演示代码。</p>
 <a id="more"></a>
 
-<h1 id="zip压缩"><a href="#zip压缩" class="headerlink" title="zip压缩 "></a><font size=7 color=red>zip压缩 </font></h1><h2 id="zip-压缩多个文件或目录到一个压缩包"><a href="#zip-压缩多个文件或目录到一个压缩包" class="headerlink" title="zip 压缩多个文件或目录到一个压缩包"></a>zip 压缩多个文件或目录到一个压缩包</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">zip -r file.zip wordcount.jar /home/jayzonxu/flink</span><br></pre></td></tr></table></figure>
+<h1 id="安装-zip-和-unzip"><a href="#安装-zip-和-unzip" class="headerlink" title="安装 zip  和 unzip"></a>安装 zip  和 unzip</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install zip unzip</span><br></pre></td></tr></table></figure>
 
-<h2 id="zip-压缩同后缀的文件到一个压缩包"><a href="#zip-压缩同后缀的文件到一个压缩包" class="headerlink" title="zip 压缩同后缀的文件到一个压缩包"></a>zip 压缩同后缀的文件到一个压缩包</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">zip file.zip *.jpeg</span><br></pre></td></tr></table></figure>
+<h1 id="使用-zip-和-unzip"><a href="#使用-zip-和-unzip" class="headerlink" title="使用 zip 和 unzip"></a>使用 zip 和 unzip</h1><h2 id="zip压缩"><a href="#zip压缩" class="headerlink" title="zip压缩 "></a>zip压缩 </h2><p>zip 压缩多个文件或目录到一个压缩包</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">zip -r file.zip wordcount.jar /home/jayzonxu/flink</span><br></pre></td></tr></table></figure>
 
-<h1 id="unzip-解压缩"><a href="#unzip-解压缩" class="headerlink" title="unzip 解压缩"></a><font size=7 color=orange>unzip 解压缩</font></h1><h2 id="unzip-解压缩文件"><a href="#unzip-解压缩文件" class="headerlink" title="unzip 解压缩文件"></a>unzip 解压缩文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">unzip file.zip</span><br></pre></td></tr></table></figure>
+<p>zip 压缩同后缀的文件到一个压缩包</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">zip file.zip *.jpeg</span><br></pre></td></tr></table></figure>
 
-<h1 id="rar-压缩"><a href="#rar-压缩" class="headerlink" title="rar 压缩"></a><font size=7 color=red>rar 压缩</font></h1><h2 id="编译安装-rar"><a href="#编译安装-rar" class="headerlink" title="编译安装 rar"></a>编译安装 rar</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://www.rarlab.com/rar/rarlinux-x64-6.0.2.tar.gz</span><br><span class="line">tar -xzf rarlinux-x64-6.0.2.tar.gz</span><br><span class="line"><span class="built_in">cd</span> rar</span><br><span class="line">sudo make</span><br></pre></td></tr></table></figure>
+<h2 id="unzip-解压缩"><a href="#unzip-解压缩" class="headerlink" title="unzip 解压缩"></a>unzip 解压缩</h2><p>unzip 解压缩文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">unzip file.zip</span><br></pre></td></tr></table></figure>
 
+<h1 id="安装-rar"><a href="#安装-rar" class="headerlink" title="安装 rar"></a>安装 rar</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://www.rarlab.com/rar/rarlinux-x64-6.0.2.tar.gz</span><br><span class="line">tar -xzf rarlinux-x64-6.0.2.tar.gz</span><br><span class="line"><span class="built_in">cd</span> rar</span><br><span class="line">sudo make</span><br></pre></td></tr></table></figure>
 
+<h1 id="使用-rar-和-unrar"><a href="#使用-rar-和-unrar" class="headerlink" title="使用 rar 和 unrar"></a>使用 rar 和 unrar</h1><h2 id="rar-压缩"><a href="#rar-压缩" class="headerlink" title="rar 压缩"></a>rar 压缩</h2><p>把所有文件压缩到 all.rar</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rar a file.rar *.jpeg filename.zip wordcount.jar /home/jayzonxu/flink</span><br></pre></td></tr></table></figure>
 
-<h2 id="把所有文件压缩到-all-rar"><a href="#把所有文件压缩到-all-rar" class="headerlink" title="把所有文件压缩到 all.rar"></a>把所有文件压缩到 all.rar</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rar a file.rar *.jpeg filename.zip wordcount.jar /home/jayzonxu/flink</span><br></pre></td></tr></table></figure>
-
-<h1 id="unrar-解压缩"><a href="#unrar-解压缩" class="headerlink" title="unrar 解压缩"></a><font size=7 color=orange>unrar 解压缩</font></h1><h2 id="unrar-解压缩文件"><a href="#unrar-解压缩文件" class="headerlink" title="unrar 解压缩文件"></a>unrar 解压缩文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 把所有文件解压到当前文件夹</span></span><br><span class="line">unrar e file.rar</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压后保持原来文件目录结构</span></span><br><span class="line">unrar x file.rar</span><br></pre></td></tr></table></figure>
-
-
+<h2 id="unrar-解压缩"><a href="#unrar-解压缩" class="headerlink" title="unrar 解压缩"></a>unrar 解压缩</h2><p>unrar 解压缩文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 把所有文件解压到当前文件夹</span></span><br><span class="line">unrar e file.rar</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压后保持原来文件目录结构</span></span><br><span class="line">unrar x file.rar</span><br></pre></td></tr></table></figure>
 
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a href="https://www.cnblogs.com/findumars/p/8244997.html">Linux中如何安装RAR</a></li>
