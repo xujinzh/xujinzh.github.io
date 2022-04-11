@@ -32,7 +32,7 @@
 <meta property="og:description" content="机器学习算法的评估指标常见的有精确率（Precision，精确率被定义为所有被预测成正样本的样本中真实的正样本比率）、召回率（Recall，召回率被定义为所有真实的正样本中被预测成正样本的样本比率）、F1值、ROC 和 AUC 等，但目标跟踪单根据这些指标是不能够满足跟踪器算法的评估的，它常使用帧率（FPS，每秒处理帧数）、IOU（Intersection Over Union），在 VOT 中提">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-08-28T04:57:57.000Z">
-<meta property="article:modified_time" content="2021-11-09T10:42:04.913Z">
+<meta property="article:modified_time" content="2022-04-11T08:49:47.981Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="vot">
 <meta property="article:tag" content="cv">
@@ -266,7 +266,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+      <time title="修改时间：2022-04-11 16:49:47" itemprop="dateModified" datetime="2022-04-11T16:49:47+08:00">2022-04-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -296,7 +296,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.9k</span>
+      <span>3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -328,7 +328,7 @@
 <h1 id="SRE-和-TRE"><a href="#SRE-和-TRE" class="headerlink" title="SRE 和 TRE"></a>SRE 和 TRE</h1><p>SRE （Spatial Robustness Evaluation）通过从空间（Spatially，不同的 Bounding Box）上打乱再进行评估；TRE（Temporal Robustness Evaluation）通过从时间（Temporally，从不同帧起始）上打乱再进行评估。</p>
 <p>在一个视频中，每个跟踪算法从不同的帧作为起始进行追踪（比如分别从第一帧开始进行跟踪，从第十帧开始进行跟踪等），初始化采用的 Bounding Box 即为对应帧标注的 Ground Truth. 最后对这些结果取平均值，得到 TRE score.</p>
 <p>由于有些算法对初始化时给定的 Bounding Box 比较敏感，而目前测评用的 Ground Truth 都是人工标注的，因此可能会对某些跟踪算法产生影响。因此为了评估这些跟踪算法是否对初始化敏感，作者通过将 Ground Truth 轻微的平移和尺度的扩大与缩小来产生Bounding Box.平移的大小为目标物体大小的 10%，尺度变化范围为 Ground Truth 的 80% 到 120%，每 10% 依次增加。最后取这些结果的平均值作为SRE score.</p>
-<h1 id="评估数据集"><a href="#评估数据集" class="headerlink" title="评估数据集"></a>评估数据集</h1><p>评估数据集对于目标跟踪算法同样很重要。常用的数据集包括 VOT（从 2013 年开始，每年一批数据集）, OTB（分为 OTB50、OTB100）, UAV, GOT-10k. 针对深度学习预训练数据集还包括 ImageNet, COCO 等。</p>
+<h1 id="评估数据集"><a href="#评估数据集" class="headerlink" title="评估数据集"></a>评估数据集</h1><p>评估数据集对于目标跟踪算法同样很重要。常用的数据集包括 VOT（从 2013 年开始，每年一批数据集）, OTB（分为 OTB2013(50个视频，区别于OTB50，有一半左右的视频不同)、OTB50(<a target="_blank" rel="noopener" href="http://cvlab.hanyang.ac.kr/tracker_benchmark/datasets.html">TB-50 Sequences</a>共49个视频，其中<a target="_blank" rel="noopener" href="http://cvlab.hanyang.ac.kr/tracker_benchmark/seq/Skating2.zip">Skating2</a>包含2个目标)、OTB100(又称作OTB2015，是OTB50再加上49个视频<a target="_blank" rel="noopener" href="http://cvlab.hanyang.ac.kr/tracker_benchmark/datasets.html">The rest of TB-100 Sequences</a>，其中<a target="_blank" rel="noopener" href="http://cvlab.hanyang.ac.kr/tracker_benchmark/seq/Jogging.zip">Jogging</a>包含2个目标)）, UAV, GOT-10k. 针对深度学习预训练数据集还包括 ImageNet, COCO 等。</p>
 <p>评估数据集需要满足一些条件才能有效评估目标跟踪算法的优劣，如视频数量充足、目标类别丰富、以及标注信息准确等。</p>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li><p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/766769">视觉目标跟踪漫谈：从原理到应用</a></p>
@@ -443,7 +443,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">8:25</span>
+    <span title="站点阅读时长">8:26</span>
   </span>
 </div>
 <div class="busuanzi-count">
