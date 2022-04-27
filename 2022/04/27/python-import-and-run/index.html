@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 5.1.1">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" integrity="sha256-jTIdiMuX/e3DGJUGwl3pKSxuc6YOuqtJYkM0bGQESA4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/orange/pace-theme-center-atom.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Python 中从其他模块或库中导入方法或模块的方法是利用 import 关键字，但是，当工程比较复制时，比如分成多个类别的库；当代码需要在 jupyter 中调用工程中的模块时，工程中各模块的互相引用就显得非常重要，如果导入模块的姿势不对，将导致程序无法运行。本篇总结常用的导入方法，对 import 关键字进行介绍。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python 中 import 介绍">
+<meta property="og:url" content="https://xujinzh.github.io/2022/04/27/python-import-and-run/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="Python 中从其他模块或库中导入方法或模块的方法是利用 import 关键字，但是，当工程比较复制时，比如分成多个类别的库；当代码需要在 jupyter 中调用工程中的模块时，工程中各模块的互相引用就显得非常重要，如果导入模块的姿势不对，将导致程序无法运行。本篇总结常用的导入方法，对 import 关键字进行介绍。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-27T02:59:27.000Z">
+<meta property="article:modified_time" content="2022-04-27T04:41:16.373Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="import">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2022/04/27/python-import-and-run/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xujinzh.github.io/2022/04/27/python-import-and-run/","path":"2022/04/27/python-import-and-run/","title":"python 中 import 介绍"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>python 中 import 介绍 | J. Xu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">J. Xu</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">217</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">20</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">266</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">工程结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%9D%E5%AF%B9%E5%AF%BC%E5%85%A5"><span class="nav-number">2.</span> <span class="nav-text">绝对导入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%BF%90%E8%A1%8C"><span class="nav-number">2.1.</span> <span class="nav-text">命令行运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ipython-%E8%B0%83%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">ipython 调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jupyter-%E8%B0%83%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">jupyter 调用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B8%E5%AF%B9%E5%AF%BC%E5%85%A5"><span class="nav-number">3.</span> <span class="nav-text">相对导入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%BF%90%E8%A1%8C-1"><span class="nav-number">3.1.</span> <span class="nav-text">命令行运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ipython-%E8%B0%83%E7%94%A8-1"><span class="nav-number">3.2.</span> <span class="nav-text">ipython 调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jupyter-%E8%B0%83%E7%94%A8-1"><span class="nav-number">3.3.</span> <span class="nav-text">jupyter 调用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">4.</span> <span class="nav-text">结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">众妙之门</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">266</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">217</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xujinzhong027@outlook.com" title="Mail → mailto:xujinzhong027@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.mathscv.com/power/" title="MathsCVPower → https:&#x2F;&#x2F;www.mathscv.com&#x2F;power&#x2F;" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>MathsCVPower</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2022/04/27/python-import-and-run/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J. Xu">
+      <meta itemprop="description" content="众妙之门">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="python 中 import 介绍 | J. Xu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          python 中 import 介绍
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-04-27 10:59:27 / 修改时间：12:41:16" itemprop="dateCreated datePublished" datetime="2022-04-27T10:59:27+08:00">2022-04-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>Python 中从其他模块或库中导入方法或模块的方法是利用 <code>import</code> 关键字，但是，当工程比较复制时，比如分成多个类别的库；当代码需要在 jupyter 中调用工程中的模块时，工程中各模块的互相引用就显得非常重要，如果导入模块的姿势不对，将导致程序无法运行。本篇总结常用的导入方法，对 <code>import</code> 关键字进行介绍。</p>
+<a id="more"></a>
+
+<h1 id="工程结构"><a href="#工程结构" class="headerlink" title="工程结构"></a>工程结构</h1><p>我这里创建了一个测试工程，目录结构如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ tree mytest</span><br><span class="line">mytest</span><br><span class="line">├── p1</span><br><span class="line">│   ├── __init__.py</span><br><span class="line">│   └── q1.py</span><br><span class="line">└── p2</span><br><span class="line">    ├── __init__.py</span><br><span class="line">    ├── q2.py</span><br><span class="line">    ├── q3.py</span><br><span class="line">    └── q4.py</span><br><span class="line"></span><br><span class="line">2 directories, 6 files</span><br></pre></td></tr></table></figure>
+
+<p>其中，mytest 是工程名字，p1 和 p2 分别是两个库，里面分别有模块 q1，q2 和 q3，这里给出他们的内容：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">$ cat mytest/p1/q1.py</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">x, y</span>):</span></span><br><span class="line">    <span class="keyword">return</span> x + y</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$ cat mytest/p2/__init__.py</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">PROJECT_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$ cat mytest/p2/q2.py</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> PROJECT_PATH</span><br><span class="line">sys.path.insert(<span class="number">0</span>, PROJECT_PATH)</span><br><span class="line"><span class="keyword">from</span> p1 <span class="keyword">import</span> q1</span><br><span class="line">z = q1.add(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">print(z)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$ cat mytest/p2/q3.py</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">print(sys.path)</span><br><span class="line"><span class="keyword">from</span> p1 <span class="keyword">import</span> q1</span><br><span class="line">z = q1.add(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">print(z)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$ cat mytest/p2/q4.py</span><br><span class="line"><span class="keyword">from</span> .. <span class="keyword">import</span> p1</span><br><span class="line">z = p1.q1.add(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">print(z)</span><br></pre></td></tr></table></figure>
+
+<h1 id="绝对导入"><a href="#绝对导入" class="headerlink" title="绝对导入"></a>绝对导入</h1><p>请查看 <code>mytest/p1/q1.py</code> 和 <code>mytest/p2/q3.py</code>，在 q3 中导入了上一层目录 p1 里面的 q1 模块，使用该模块的 <code>add</code> 方法。属于绝对导入，这种方法以工程名所在目录为家目录，使用时必须保证 <code>mytest</code> 在 python 运行时的环境变量中。</p>
+<p>请查看 <code>mytest/p1/q1.py</code> 和 <code>mytest/p2/q2.py</code>，在 q2 中导入了上一层目录 p1 里面的 q1 模块，使用该模块的 <code>add</code> 方法。在使用绝对导入前，增加了相对导入 <code>from . import PROJECT_PATH</code>，使用动态的方式，将环境变量 <code>mytest</code> 在每次调用模块 q2 是添加到 python 环境变量中。</p>
+<p>查看环境变量的方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.path</span><br></pre></td></tr></table></figure>
+
+<h2 id="命令行运行"><a href="#命令行运行" class="headerlink" title="命令行运行"></a>命令行运行</h2><p>此时，想要运行 <code>q3.py</code>，可使用如下方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> mytest</span><br><span class="line">python -m p2.q3</span><br><span class="line">5</span><br></pre></td></tr></table></figure>
+
+<p>该方法的更多信息请查看另一篇文章：<a href="https://xujinzh.github.io/2022/03/23/run-python-program-on-command-line/">在命令行运行 python 程序的方法</a></p>
+<p>注意，此时使用如下方法，将会报错：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python p2/q3.py</span><br></pre></td></tr></table></figure>
+
+<p>因为此方法以 <code>q3.py</code> 所在目录为主目录：<code>&#39;/home/jinzhongxu/PythonProjects/mytest/p2&#39;</code>，运行时将该目录添加到 <code>sys.path</code> 中，但这与 <code>q3.py</code> 中的模块导入 <code>from p1 import q1</code> 不符，因为 p1 不在被访问到，它不在 p2 目录下。但，<code>python -m p2.q3</code> 会将 <code>&#39;/home/jinzhongxu/PythonProjects/mytest&#39;</code> 作为主目录，运行时将该目录添加到 <code>sys.path</code> 中，因此，在 <code>q3.py</code> 中能够使用 模块导入 <code>from p1 import q1</code>.</p>
+<p>运行 q2.py</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> mytest</span><br><span class="line"><span class="variable">$</span> python <span class="literal">-m</span> p2.q2</span><br><span class="line"><span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>但如下方法将会报错：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd mytest</span><br><span class="line">$ python p2/q2.py</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;/home/jinzhongxu/PythonProjects/mytest/p2/q2.py&quot;</span>, line <span class="number">2</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    <span class="keyword">from</span> . <span class="keyword">import</span> PROJECT_PATH</span><br><span class="line">ImportError: attempted relative <span class="keyword">import</span> <span class="keyword">with</span> no known parent package</span><br></pre></td></tr></table></figure>
+
+<h2 id="ipython-调用"><a href="#ipython-调用" class="headerlink" title="ipython 调用"></a>ipython 调用</h2><p>如果运行方法如下，则同样能够通过：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cd mytest</span><br><span class="line">$ ipython</span><br><span class="line">Python <span class="number">3.9</span><span class="number">.5</span> (default, Jun  <span class="number">4</span> <span class="number">2021</span>, <span class="number">12</span>:<span class="number">28</span>:<span class="number">51</span>)</span><br><span class="line">Type <span class="string">&#x27;copyright&#x27;</span>, <span class="string">&#x27;credits&#x27;</span> <span class="keyword">or</span> <span class="string">&#x27;license&#x27;</span> <span class="keyword">for</span> more information</span><br><span class="line">IPython <span class="number">7.30</span><span class="number">.1</span> -- An enhanced Interactive Python. Type <span class="string">&#x27;?&#x27;</span> <span class="keyword">for</span> help.</span><br><span class="line"></span><br><span class="line">In [<span class="number">1</span>]: <span class="keyword">from</span> p2 <span class="keyword">import</span> q2</span><br><span class="line"><span class="number">5</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: <span class="keyword">from</span> p2 <span class="keyword">import</span> q3</span><br><span class="line">[<span class="string">&#x27;/home/jinzhongxu/PythonProjects/mytest&#x27;</span>, ...]</span><br><span class="line"><span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，该方法同样会将 <code>&#39;/home/jinzhongxu/PythonProjects/mytest&#39;</code> 添加到 <code>sys.path</code> 中。</p>
+<h2 id="jupyter-调用"><a href="#jupyter-调用" class="headerlink" title="jupyter 调用"></a>jupyter 调用</h2><p>如果想在 jupyter 中随处都调用 <code>p2/q2.py</code> 和 <code>p2/q3.py</code>，一种可行的方法是将  <code>&#39;/home/jinzhongxu/PythonProjects/mytest&#39;</code>  添加到环境变量中，此方法可参考：<a href="https://xujinzh.github.io/2021/04/10/python-import-mymodule/">在 Python 中导入自己编写的模块</a>，此时，在 jupyter 中调用方法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> p2 <span class="keyword">import</span> q2</span><br><span class="line"><span class="keyword">from</span> p2 <span class="keyword">import</span> q3</span><br></pre></td></tr></table></figure>
+
+<p>如果添加的是  <code>&#39;/home/jinzhongxu/PythonProjects&#39;</code> 到 module.pth 中，那么 <code>from p2 import q3</code> 方法将失效，因为 <code>mytest</code> 不在 <code>sys.path</code> 中，但 <code>from p2 import q2</code> 确定正常执行，因为，模块 <code>q2.py</code> 会在程序运行时动态导入 <code>mytest</code> 到 <code>sys.path</code> 中。</p>
+<h1 id="相对导入"><a href="#相对导入" class="headerlink" title="相对导入"></a>相对导入</h1><p>请查看 <code>mytest/p1/q1.py</code> 和 <code>mytest/p2/q4.py</code>，在 q4 中导入了上一层目录 p1 里面的 q1 模块，使用该模块的 <code>add</code> 方法。属于相对导入。</p>
+<h2 id="命令行运行-1"><a href="#命令行运行-1" class="headerlink" title="命令行运行"></a>命令行运行</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> mytest</span><br><span class="line">python -m p2.q4</span><br></pre></td></tr></table></figure>
+
+<p>和</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> mytest</span><br><span class="line">python p2/q4.py</span><br></pre></td></tr></table></figure>
+
+<p>都将报错</p>
+<h2 id="ipython-调用-1"><a href="#ipython-调用-1" class="headerlink" title="ipython 调用"></a>ipython 调用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ ipython</span><br><span class="line">Python <span class="number">3.9</span><span class="number">.5</span> (default, Jun  <span class="number">4</span> <span class="number">2021</span>, <span class="number">12</span>:<span class="number">28</span>:<span class="number">51</span>)</span><br><span class="line">Type <span class="string">&#x27;copyright&#x27;</span>, <span class="string">&#x27;credits&#x27;</span> <span class="keyword">or</span> <span class="string">&#x27;license&#x27;</span> <span class="keyword">for</span> more information</span><br><span class="line">IPython <span class="number">7.30</span><span class="number">.1</span> -- An enhanced Interactive Python. Type <span class="string">&#x27;?&#x27;</span> <span class="keyword">for</span> help.</span><br><span class="line"></span><br><span class="line">In [<span class="number">1</span>]: <span class="keyword">from</span> p2 <span class="keyword">import</span> q4</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">ImportError                               Traceback (most recent call last)</span><br><span class="line">&lt;ipython-input<span class="number">-1</span><span class="number">-848272</span>f17660&gt; <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">----&gt; 1 from p2 import q4</span><br><span class="line"></span><br><span class="line">~/PythonProjects/mytest/p2/q4.py <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">      <span class="number">1</span></span><br><span class="line">----&gt; 2 from .. import p1</span><br><span class="line">      <span class="number">3</span></span><br><span class="line">      <span class="number">4</span> z = p1.q1.add(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">      <span class="number">5</span> print(z)</span><br></pre></td></tr></table></figure>
+
+<h2 id="jupyter-调用-1"><a href="#jupyter-调用-1" class="headerlink" title="jupyter 调用"></a>jupyter 调用</h2><p>同样会报错。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>当代码只在命令行中运行时，可简单的采用 <code>q3.py</code> 的模式。运行方法采用 <code>python -m q3.py</code>.</p>
+<p>当代码不仅需要在命令行中运行，还需要再 jupyter 中调用时，配置环境变量很重要，推荐采用 <code>q2.py</code> 的模式。</p>
+<p>尽量不要使用相对导入。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>感谢支持！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://xujinzh.github.io/2022/04/27/python-import-and-run/" title="python 中 import 介绍">https://xujinzh.github.io/2022/04/27/python-import-and-run/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+              <a href="/tags/import/" rel="tag"><i class="fa fa-tag"></i> import</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/24/deeplabcut-usage/" rel="prev" title="deeplabcut 位姿标注软件的安装与使用">
+                  <i class="fa fa-chevron-left"></i> deeplabcut 位姿标注软件的安装与使用
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">575k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:42</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js","integrity":"sha256-7wT34TI0pEBeEFoi4z+vhuSddGh6vUTMWdqJ2SDe2jg="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"xujinzh","repo":"xujinzh.github.io","client_id":"695ca5d39e2ba2f9feb5","client_secret":"9d4027af6364ff54595b7a8580977ec58c38a5ae","admin_user":"xujinzh","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"dbd1ce731a7c6b34cbd9e068fcbefdd1"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
