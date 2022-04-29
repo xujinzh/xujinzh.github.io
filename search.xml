@@ -830,25 +830,30 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
-    <title>Centos安装ffmpeg</title>
+    <title>Centos 或者 Ubuntu 安装 ffmpeg</title>
     <url>/2020/03/10/centos-ffmpeg/</url>
-    <content><![CDATA[<p>Centos 安全稳定，但是，对于ffmpeg却没有通过yum install ffmpeg直接按照的支持。下面给出一种可行的安装方法：<strong>Static Prebuilt Install of FFMpeg.</strong> 这里以Centos 7为例。</p>
+    <content><![CDATA[<p>Centos 安全稳定，但是，对于 ffmpeg 却没有通过 yum install ffmpeg 直接安装的支持。下面给出一种可行的安装方法：<strong>Static Prebuilt Install of FFMpeg.</strong> 这里以 Centos 7 为例，但同样适用于 Ubuntu 系统。</p>
 <a id="more"></a>
 
-<h1 id="下载安装脚本"><a href="#下载安装脚本" class="headerlink" title="下载安装脚本"></a>下载安装脚本</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/q3aql/ffmpeg-install/master/ffmpeg-install</span><br></pre></td></tr></table></figure>
+<h1 id="下载安装脚本"><a href="#下载安装脚本" class="headerlink" title="下载安装脚本"></a>下载安装脚本</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz</span><br><span class="line"><span class="comment">#wget https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz</span></span><br></pre></td></tr></table></figure>
 
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod  a+x ffmpeg-install &amp;&amp; ./ffmpeg-install --install release</span><br></pre></td></tr></table></figure>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir -p /usr/<span class="built_in">local</span>/ffmpeg</span><br><span class="line">tar -xf ffmpeg-release-amd64-static.tar.xz -C /usr/<span class="built_in">local</span>/ffmpeg</span><br><span class="line"><span class="comment"># 把下面的版本替换为自己的</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;PATH=$PATH:/usr/local/ffmpeg/ffmpeg-x.x.x-amd64-static&#x27;</span> &gt;&gt; .bashrc</span><br><span class="line">sourc .bashrc</span><br></pre></td></tr></table></figure>
 
 <h1 id="查看ffmpeg版本信息"><a href="#查看ffmpeg版本信息" class="headerlink" title="查看ffmpeg版本信息"></a>查看ffmpeg版本信息</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ffmpeg -version</span><br></pre></td></tr></table></figure>
 
-<h1 id="其他补充"><a href="#其他补充" class="headerlink" title="其他补充"></a>其他补充</h1><p>Centos 7 不能直接使用tar 解压缩 x.tar.bz2?</p>
+<h1 id="其他补充"><a href="#其他补充" class="headerlink" title="其他补充"></a>其他补充</h1><p>Centos 7 不能直接使用 tar 解压缩 x.tar.bz2?</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum install bzip2</span><br></pre></td></tr></table></figure>
 
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a href="https://johnvansickle.com/ffmpeg/">FFmpeg Static Builds</a></li>
+</ol>
 ]]></content>
       <categories>
         <category>technology</category>
+        <category>centos</category>
       </categories>
       <tags>
+        <tag>ubuntu</tag>
         <tag>centos</tag>
         <tag>ffmpeg</tag>
       </tags>
