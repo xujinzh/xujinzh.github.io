@@ -830,19 +830,24 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       </tags>
   </entry>
   <entry>
-    <title>Centos 或者 Ubuntu 安装 ffmpeg</title>
+    <title>Centos 或者 Ubuntu 安装 FFmpeg</title>
     <url>/2020/03/10/centos-ffmpeg/</url>
-    <content><![CDATA[<p>Centos 安全稳定，但是，对于 ffmpeg 却没有通过 yum install ffmpeg 直接安装的支持。下面给出一种可行的安装方法：<strong>Static Prebuilt Install of FFMpeg.</strong> 这里以 Centos 7 为例，但同样适用于 Ubuntu 系统。</p>
+    <content><![CDATA[<p>Centos 安全稳定，但是，对于 FFmpeg 却没有直接通过命令 <code>yum install ffmpeg</code> 安装的支持。下面给出一种可行的安装方法：<strong>Static Prebuilt Install of FFMpeg</strong>，即将编译好的静态可执行文件直接下载安装。  这里以 Centos 7 为例，但同样适用于 Ubuntu/Debian 系统。</p>
 <a id="more"></a>
 
-<h1 id="下载安装脚本"><a href="#下载安装脚本" class="headerlink" title="下载安装脚本"></a>下载安装脚本</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz</span><br><span class="line"><span class="comment">#wget https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz</span></span><br></pre></td></tr></table></figure>
+<h1 id="下载编译好的静态文件"><a href="#下载编译好的静态文件" class="headerlink" title="下载编译好的静态文件"></a>下载编译好的静态文件</h1><p>只需要通过如下命令即可下载编译好的静态文件。如果服务器不能上网，可以将下载好的静态文件拷贝到服务器上使用。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz</span><br><span class="line"><span class="comment">#wget https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz</span></span><br></pre></td></tr></table></figure>
 
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir -p /usr/<span class="built_in">local</span>/ffmpeg</span><br><span class="line">tar -xf ffmpeg-release-amd64-static.tar.xz -C /usr/<span class="built_in">local</span>/ffmpeg</span><br><span class="line"><span class="comment"># 把下面的版本替换为自己的</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;PATH=$PATH:/usr/local/ffmpeg/ffmpeg-x.x.x-amd64-static&#x27;</span> &gt;&gt; .bashrc</span><br><span class="line">sourc .bashrc</span><br></pre></td></tr></table></figure>
+<h1 id="解压缩到指定目录安装"><a href="#解压缩到指定目录安装" class="headerlink" title="解压缩到指定目录安装"></a>解压缩到指定目录安装</h1><p>将下载好的静态文件解压缩到指定目录，即可直接使用。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir -p /usr/<span class="built_in">local</span>/ffmpeg</span><br><span class="line">tar -xf ffmpeg-release-amd64-static.tar.xz -C /usr/<span class="built_in">local</span>/ffmpeg</span><br><span class="line"><span class="comment"># 把下面的版本替换为自己的</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;PATH=$PATH:/usr/local/ffmpeg/ffmpeg-x.x.x-amd64-static&#x27;</span> &gt;&gt; .bashrc</span><br><span class="line">sourc .bashrc</span><br></pre></td></tr></table></figure>
 
-<h1 id="查看ffmpeg版本信息"><a href="#查看ffmpeg版本信息" class="headerlink" title="查看ffmpeg版本信息"></a>查看ffmpeg版本信息</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ffmpeg -version</span><br></pre></td></tr></table></figure>
+<h1 id="查看-FFmpeg-版本信息"><a href="#查看-FFmpeg-版本信息" class="headerlink" title="查看 FFmpeg 版本信息"></a>查看 FFmpeg 版本信息</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ffmpeg -version</span><br></pre></td></tr></table></figure>
 
 <h1 id="其他补充"><a href="#其他补充" class="headerlink" title="其他补充"></a>其他补充</h1><p>Centos 7 不能直接使用 tar 解压缩 x.tar.bz2?</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum install bzip2</span><br></pre></td></tr></table></figure>
+
+<p>如果 Ubuntu18.04 服务器能够联网，可以直接使用如下命令安装：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install ffmpeg</span><br></pre></td></tr></table></figure>
 
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li><a href="https://johnvansickle.com/ffmpeg/">FFmpeg Static Builds</a></li>

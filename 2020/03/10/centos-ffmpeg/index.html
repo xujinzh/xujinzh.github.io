@@ -24,15 +24,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Centos 安全稳定，但是，对于 ffmpeg 却没有通过 yum install ffmpeg 直接安装的支持。下面给出一种可行的安装方法：Static Prebuilt Install of FFMpeg. 这里以 Centos 7 为例，但同样适用于 Ubuntu 系统。">
+    <meta name="description" content="Centos 安全稳定，但是，对于 FFmpeg 却没有直接通过命令 yum install ffmpeg 安装的支持。下面给出一种可行的安装方法：Static Prebuilt Install of FFMpeg，即将编译好的静态可执行文件直接下载安装。  这里以 Centos 7 为例，但同样适用于 Ubuntu&#x2F;Debian 系统。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Centos 或者 Ubuntu 安装 ffmpeg">
+<meta property="og:title" content="Centos 或者 Ubuntu 安装 FFmpeg">
 <meta property="og:url" content="https://xujinzh.github.io/2020/03/10/centos-ffmpeg/index.html">
 <meta property="og:site_name" content="J. Xu">
-<meta property="og:description" content="Centos 安全稳定，但是，对于 ffmpeg 却没有通过 yum install ffmpeg 直接安装的支持。下面给出一种可行的安装方法：Static Prebuilt Install of FFMpeg. 这里以 Centos 7 为例，但同样适用于 Ubuntu 系统。">
+<meta property="og:description" content="Centos 安全稳定，但是，对于 FFmpeg 却没有直接通过命令 yum install ffmpeg 安装的支持。下面给出一种可行的安装方法：Static Prebuilt Install of FFMpeg，即将编译好的静态可执行文件直接下载安装。  这里以 Centos 7 为例，但同样适用于 Ubuntu&#x2F;Debian 系统。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-03-10T04:04:04.000Z">
-<meta property="article:modified_time" content="2022-04-29T06:10:56.935Z">
+<meta property="article:modified_time" content="2022-04-29T06:24:26.931Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="ubuntu">
 <meta property="article:tag" content="centos">
@@ -44,10 +44,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xujinzh.github.io/2020/03/10/centos-ffmpeg/","path":"2020/03/10/centos-ffmpeg/","title":"Centos 或者 Ubuntu 安装 ffmpeg"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xujinzh.github.io/2020/03/10/centos-ffmpeg/","path":"2020/03/10/centos-ffmpeg/","title":"Centos 或者 Ubuntu 安装 FFmpeg"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Centos 或者 Ubuntu 安装 ffmpeg | J. Xu</title>
+<title>Centos 或者 Ubuntu 安装 FFmpeg | J. Xu</title>
   
 
 
@@ -149,7 +149,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC"><span class="nav-number">1.</span> <span class="nav-text">下载安装脚本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Bffmpeg%E7%89%88%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="nav-number">3.</span> <span class="nav-text">查看ffmpeg版本信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E8%A1%A5%E5%85%85"><span class="nav-number">4.</span> <span class="nav-text">其他补充</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E7%BC%96%E8%AF%91%E5%A5%BD%E7%9A%84%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">下载编译好的静态文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%8E%8B%E7%BC%A9%E5%88%B0%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">解压缩到指定目录安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-FFmpeg-%E7%89%88%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="nav-number">3.</span> <span class="nav-text">查看 FFmpeg 版本信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E8%A1%A5%E5%85%85"><span class="nav-number">4.</span> <span class="nav-text">其他补充</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -243,12 +243,12 @@
     </span>
     
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Centos 或者 Ubuntu 安装 ffmpeg | J. Xu">
+      <meta itemprop="name" content="Centos 或者 Ubuntu 安装 FFmpeg | J. Xu">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Centos 或者 Ubuntu 安装 ffmpeg
+          Centos 或者 Ubuntu 安装 FFmpeg
         </h1>
 
         <div class="post-meta-container">
@@ -266,7 +266,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-04-29 14:10:56" itemprop="dateModified" datetime="2022-04-29T14:10:56+08:00">2022-04-29</time>
+      <time title="修改时间：2022-04-29 14:24:26" itemprop="dateModified" datetime="2022-04-29T14:24:26+08:00">2022-04-29</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -296,7 +296,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>588</span>
+      <span>776</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -314,17 +314,22 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>Centos 安全稳定，但是，对于 ffmpeg 却没有通过 yum install ffmpeg 直接安装的支持。下面给出一种可行的安装方法：<strong>Static Prebuilt Install of FFMpeg.</strong> 这里以 Centos 7 为例，但同样适用于 Ubuntu 系统。</p>
+        <p>Centos 安全稳定，但是，对于 FFmpeg 却没有直接通过命令 <code>yum install ffmpeg</code> 安装的支持。下面给出一种可行的安装方法：<strong>Static Prebuilt Install of FFMpeg</strong>，即将编译好的静态可执行文件直接下载安装。  这里以 Centos 7 为例，但同样适用于 Ubuntu/Debian 系统。</p>
 <a id="more"></a>
 
-<h1 id="下载安装脚本"><a href="#下载安装脚本" class="headerlink" title="下载安装脚本"></a>下载安装脚本</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz</span><br><span class="line"><span class="comment">#wget https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz</span></span><br></pre></td></tr></table></figure>
+<h1 id="下载编译好的静态文件"><a href="#下载编译好的静态文件" class="headerlink" title="下载编译好的静态文件"></a>下载编译好的静态文件</h1><p>只需要通过如下命令即可下载编译好的静态文件。如果服务器不能上网，可以将下载好的静态文件拷贝到服务器上使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz</span><br><span class="line"><span class="comment">#wget https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz</span></span><br></pre></td></tr></table></figure>
 
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /usr/<span class="built_in">local</span>/ffmpeg</span><br><span class="line">tar -xf ffmpeg-release-amd64-static.tar.xz -C /usr/<span class="built_in">local</span>/ffmpeg</span><br><span class="line"><span class="comment"># 把下面的版本替换为自己的</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;PATH=$PATH:/usr/local/ffmpeg/ffmpeg-x.x.x-amd64-static&#x27;</span> &gt;&gt; .bashrc</span><br><span class="line">sourc .bashrc</span><br></pre></td></tr></table></figure>
+<h1 id="解压缩到指定目录安装"><a href="#解压缩到指定目录安装" class="headerlink" title="解压缩到指定目录安装"></a>解压缩到指定目录安装</h1><p>将下载好的静态文件解压缩到指定目录，即可直接使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /usr/<span class="built_in">local</span>/ffmpeg</span><br><span class="line">tar -xf ffmpeg-release-amd64-static.tar.xz -C /usr/<span class="built_in">local</span>/ffmpeg</span><br><span class="line"><span class="comment"># 把下面的版本替换为自己的</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;PATH=$PATH:/usr/local/ffmpeg/ffmpeg-x.x.x-amd64-static&#x27;</span> &gt;&gt; .bashrc</span><br><span class="line">sourc .bashrc</span><br></pre></td></tr></table></figure>
 
-<h1 id="查看ffmpeg版本信息"><a href="#查看ffmpeg版本信息" class="headerlink" title="查看ffmpeg版本信息"></a>查看ffmpeg版本信息</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -version</span><br></pre></td></tr></table></figure>
+<h1 id="查看-FFmpeg-版本信息"><a href="#查看-FFmpeg-版本信息" class="headerlink" title="查看 FFmpeg 版本信息"></a>查看 FFmpeg 版本信息</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -version</span><br></pre></td></tr></table></figure>
 
 <h1 id="其他补充"><a href="#其他补充" class="headerlink" title="其他补充"></a>其他补充</h1><p>Centos 7 不能直接使用 tar 解压缩 x.tar.bz2?</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install bzip2</span><br></pre></td></tr></table></figure>
+
+<p>如果 Ubuntu18.04 服务器能够联网，可以直接使用如下命令安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install ffmpeg</span><br></pre></td></tr></table></figure>
 
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://johnvansickle.com/ffmpeg/">FFmpeg Static Builds</a></li>
@@ -364,7 +369,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://xujinzh.github.io/2020/03/10/centos-ffmpeg/" title="Centos 或者 Ubuntu 安装 ffmpeg">https://xujinzh.github.io/2020/03/10/centos-ffmpeg/</a>
+      <a href="https://xujinzh.github.io/2020/03/10/centos-ffmpeg/" title="Centos 或者 Ubuntu 安装 FFmpeg">https://xujinzh.github.io/2020/03/10/centos-ffmpeg/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
