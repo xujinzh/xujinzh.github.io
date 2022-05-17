@@ -24,12 +24,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="本节介绍一些典型的聚类算法，如 K-Means, DBSCAN, 谱聚类，层次聚类，optics, birch 等。聚类就是对大量未知标注的数据，按照内在相似性将其划分为多个类别，是类别内的数据相似度较大而类别间的数据相似度较小。通过计算每个类的代表点可以获得整个数据集的少量代表点，从而获得整个数据集的结构、形状信息。聚类算法通常处理无标签的数据集，因此常使用相似度或距离来处理。有衡量两个点（向量">
+    <meta name="description" content="本节介绍一些典型的聚类算法，如 K-Means，DBSCAN，谱聚类，层次聚类，optics，birch 等。聚类就是对大量未知标注的数据，按照内在相似性将其划分为多个类别，使类别内的数据相似度较大而类别间的数据相似度较小。通过计算每个类的代表点可以获得整个数据集的少量代表点，从而获得整个数据集的结构、形状信息。聚类算法通常处理无标签的数据集，因此常使用相似度或距离来处理。有衡量两个点（向量）之间">
 <meta property="og:type" content="article">
 <meta property="og:title" content="几个聚类算法">
 <meta property="og:url" content="https://xujinzh.github.io/2020/11/21/clustering-methods/index.html">
 <meta property="og:site_name" content="J. Xu">
-<meta property="og:description" content="本节介绍一些典型的聚类算法，如 K-Means, DBSCAN, 谱聚类，层次聚类，optics, birch 等。聚类就是对大量未知标注的数据，按照内在相似性将其划分为多个类别，是类别内的数据相似度较大而类别间的数据相似度较小。通过计算每个类的代表点可以获得整个数据集的少量代表点，从而获得整个数据集的结构、形状信息。聚类算法通常处理无标签的数据集，因此常使用相似度或距离来处理。有衡量两个点（向量">
+<meta property="og:description" content="本节介绍一些典型的聚类算法，如 K-Means，DBSCAN，谱聚类，层次聚类，optics，birch 等。聚类就是对大量未知标注的数据，按照内在相似性将其划分为多个类别，使类别内的数据相似度较大而类别间的数据相似度较小。通过计算每个类的代表点可以获得整个数据集的少量代表点，从而获得整个数据集的结构、形状信息。聚类算法通常处理无标签的数据集，因此常使用相似度或距离来处理。有衡量两个点（向量）之间">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://scikit-learn.org/stable/_images/sphx_glr_plot_cluster_comparison_001.png">
 <meta property="og:image" content="https://scikit-learn.org/stable/_images/sphx_glr_plot_linkage_comparison_001.png">
@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://scikit-learn.org/stable/_images/sphx_glr_plot_ward_structured_vs_unstructured_001.png">
 <meta property="og:image" content="https://scikit-learn.org/stable/_images/sphx_glr_plot_ward_structured_vs_unstructured_002.png">
 <meta property="article:published_time" content="2020-11-21T03:01:15.000Z">
-<meta property="article:modified_time" content="2021-11-09T10:42:04.851Z">
+<meta property="article:modified_time" content="2022-05-17T01:54:34.777Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="machine learning">
 <meta property="article:tag" content="clustering">
@@ -271,7 +271,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+      <time title="修改时间：2022-05-17 09:54:34" itemprop="dateModified" datetime="2022-05-17T09:54:34+08:00">2022-05-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -301,7 +301,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>16k</span>
+      <span>17k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -319,7 +319,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>本节介绍一些典型的聚类算法，如 K-Means, DBSCAN, 谱聚类，层次聚类，optics, birch 等。聚类就是对大量未知标注的数据，按照内在相似性将其划分为多个类别，是类别内的数据相似度较大而类别间的数据相似度较小。通过计算每个类的代表点可以获得整个数据集的少量代表点，从而获得整个数据集的结构、形状信息。聚类算法通常处理无标签的数据集，因此常使用相似度或距离来处理。有衡量两个点（向量）直接的距离的，有衡量两个子集合之间的距离的，也有衡量点到子集合之间距离的。</p>
+        <p>本节介绍一些典型的聚类算法，如 K-Means，DBSCAN，谱聚类，层次聚类，optics，birch 等。聚类就是对大量未知标注的数据，按照内在相似性将其划分为多个类别，使类别内的数据相似度较大而类别间的数据相似度较小。通过计算每个类的代表点可以获得整个数据集的少量代表点，从而获得整个数据集的结构、形状信息。聚类算法通常处理无标签的数据集，因此常使用相似度或距离来处理。有衡量两个点（向量）之间的距离的，有衡量两个子集合之间的距离的，也有衡量点到子集合之间距离的。</p>
 <a id="more"></a>
 
 <p>首先先给出一个图，来直观看一下各个聚类算法的效果图。</p>
@@ -597,19 +597,19 @@
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/pinard/p/6179132.html">BIRCH聚类算法原理</a></li>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/54837341">数据挖掘入门笔记——BIRCH聚类（一拍即合）</a></li>
 </ol>
-<h1 id="OPTICS"><a href="#OPTICS" class="headerlink" title="OPTICS"></a>OPTICS</h1><p>OPTICS(Ordering Points To Identify the Clustering Structure)聚类算法是前面 DBSCAN 算法的一种扩展，能够解决 DBSCAN 对超参数敏感（不易选择超参数）的问题。与 DBSCAN 相比，OPTICS 算法的改进主要在于对输入参数不敏感。</p>
+<h1 id="OPTICS"><a href="#OPTICS" class="headerlink" title="OPTICS"></a>OPTICS</h1><p>OPTICS (Ordering Points To Identify the Clustering Structure) 聚类算法是前面 DBSCAN 算法的一种扩展，能够解决 DBSCAN 对超参数敏感（不易选择超参数）的问题。与 DBSCAN 相比，OPTICS 算法的改进主要在于对输入参数不敏感。</p>
 <p>OPTICS 算法不显示地生成数据聚类，它只是对数据对象集合中的对象进行排序，得到一个有序的对象列表，其中包含了足够的信息用来提取聚类。</p>
-<p>因为 OPTICS 算法是 DBSCAN 算法发发的改进，因此很多概念可以沿用，如（直接）密度可达，密度相连，核心点，半径参数 $\varepsilon$，最小点数 $M$ 等。假设数据集 $X = {x_1, x_2, \cdots, x_n }$，</p>
+<p>因为 OPTICS 算法是 DBSCAN 算法的改进，因此很多概念可以沿用，如（直接）密度可达，密度相连，核心点，半径参数 $\varepsilon$，最小点数 $M$ 等。假设数据集 $X = \lbrace x_1, x_2, \cdots, x_n \rbrace$，</p>
 <p><font color='dd00dd'>核心距离（core distance）</font></p>
-<p>点$x \in X$ 成为核心点的最小邻域半径定义为 $x$ 的核心距离，<br>$$<br>cd(x) =<br>\begin{cases}<br>undefined， &amp; |N_{\varepsilon}(x)|&lt; M \\<br>d(x, y(N_{\varepsilon}^M, x)) &amp; |N_{\varepsilon}(x)| \geq M<br>\end{cases}<br>$$<br>其中 $y(N_{\varepsilon}^i, x)$ 表示集合 $N_{\varepsilon}(x)$ 中与点 $x$ 第 $i$ 近邻的点。</p>
-<p>从定义可以知道，如果 $x$ 是核心点，那么核心距离 $0 \leq cd(x) \leq \varepsilon$.</p>
+<p>点 $x \in X$ 称为核心点的最小邻域半径定义为 $x$ 的核心距离，<br>$$<br>\text{cd} (x) =<br>\begin{cases}<br>\text{undefined}, &amp; |N_{\varepsilon}(x)|&lt; M \\<br>d(x, y(N_{\varepsilon}^M, x)) &amp; |N_{\varepsilon}(x)| \geq M<br>\end{cases}<br>$$<br>其中 $y(N_{\varepsilon}^i, x)$ 表示集合 $N_{\varepsilon}(x)$ 中与点 $x$ 第 $i$ 近邻的点。</p>
+<p>从定义可以知道，如果 $x$ 是核心点，那么核心距离 $0 \leq \text{cd}(x) \leq \varepsilon$.</p>
 <p><font color='dd00dd'>可达距离（reachability distance）</font></p>
-<p>对于点 $x, y \in X$，$y$ 关于 $x$ 的可达距离定义为<br>$$<br>rd(y, x) =<br>\begin{cases}<br>undefined, &amp; |N_{\varepsilon}(x)| &lt; M \\<br>\max { cd(x), d(x, y) } &amp; |N_{\varepsilon}(x)| \geq M<br>\end{cases}<br>$$<br>即 $rd(y, x)$ 表示使得 $x$ 为核心点且 $y$ 从 $x$ 直接密度可达同时成立的最小邻域半径。</p>
+<p>对于点 $x, y \in X$，$y$ 关于 $x$ 的可达距离定义为<br>$$<br>\text{rd}(y, x) =<br>\begin{cases}<br>\text{undefined}, &amp; |N_{\varepsilon}(x)| &lt; M \\<br>\max { \text{cd}(x), d(x, y) } &amp; |N_{\varepsilon}(x)| \geq M<br>\end{cases}<br>$$<br>即 $\text{rd}(y, x)$ 表示使得 $x$ 为核心点且 $y$ 从 $x$ 直接密度可达同时成立的最小邻域半径。</p>
 <p>通俗理解就是，对于核心点 $x$ ，与点 $x$ 距离小于等于核心距离的可达距离调整为核心距离，大于核心距离的可达距离就是两点之间的距离。</p>
-<p>可达距离 $rd(y, x)$ 的值与点 $y$ 所在空间的密度有关，密度越大，它从相邻节点直接密度可达的距离就越小。如果聚类时想要朝着数据尽量稠密的空间进行扩展，那么可达距离最小的点是最佳的选择。为此，OPTICS 算法中用一个可达距离<strong>升序排列</strong>的有序种子队列存储带扩展的点，以迅速定位稠密空间的数据对象。</p>
+<p>可达距离 $\text{rd}(y, x)$ 的值与点 $y$ 所在空间的密度有关，密度越大，它从相邻节点直接密度可达的距离就越小。如果聚类时想要朝着数据尽量稠密的空间进行扩展，那么可达距离最小的点是最佳的选择。为此，OPTICS 算法中用一个可达距离<strong>升序排列</strong>的有序种子队列存储带扩展的点，以迅速定位稠密空间的数据对象。</p>
 <p>在给出 OPTICS 算法之前，先引入以下定义</p>
 <ol>
-<li>$p_i, i = 1, 2, \cdots, N$：OPTICS 算法的输出序数组，$p_i \in { 1, 2, \cdots, N }$ 表示排在第 $i$ 个位置的节点的编号</li>
+<li>$p_i, i = 1, 2, \cdots, N$：OPTICS 算法的输出序数组，$p_i \in \lbrace 1, 2, \cdots, N \rbrace$ 表示排在第 $i$ 个位置的节点的编号</li>
 <li>$r_i, i = 1, 2, \cdots, N$：第 $i$ 号节点的可达距离</li>
 <li>$c_i, i = 1, 2, \cdots, N$：第 $i$ 号节点的核心距离</li>
 <li>$v_i, i = 1, 2, \cdots, N$：表示节点便函是否被访问过的辅助数组，$0$ 表示未访问过，$1$ 表示访问过。这里是否被访问过是指是否被加入到输出序数组 $p$ 中</li>
@@ -622,15 +622,15 @@
 <li>生成 $N_{\varepsilon}(i), i = 1, 2, \cdots, N$</li>
 <li>生成 $c_i, i = 1, 2, \cdots, N$</li>
 <li>令 $v_i = 0, i = 1, 2, \cdots, N$</li>
-<li>令 $r_i = undefined, i = 1, 2, \cdots, N$</li>
-<li>令 $k = 1, I = { 1, 2, \cdots, N }$</li>
+<li>令 $r_i = \text{undefined}, i = 1, 2, \cdots, N$</li>
+<li>令 $k = 1, I = \lbrace 1, 2, \cdots, N \rbrace$</li>
 <li>将队列 seedlist 初始化为空</li>
 </ol>
 </li>
 <li><p>主流程</p>
 <p>while ($I \neq 0$)</p>
 <p>{</p>
-<p>​    从 $I$ 中任取一个元素 $i$，令 $I:= I \ { i }$</p>
+<p>​    从 $I$ 中任取一个元素 $i$，令 $I:= I \ \lbrace i \rbrace$</p>
 <p>​    if ($v_i = 0$)  # 表示 $i$ 号节点还没有被处理过</p>
 <p>​    {</p>
 <p>​        （1）令 $v_i = 1$</p>
@@ -642,42 +642,42 @@
 <p>​                            （a）从 seedlist 中取出<strong>第一个元素</strong> $j$ （其可达距离值最小）</p>
 <p>​                            （b）令 $v_j = 1$</p>
 <p>​                            （c）令 $p_k = j, k = k + 1$</p>
-<p>​                            （d）若 $|N_{\varepsilon}(j)| \geq M$ （即 $j$ 为核心点），则调用 insertlist($N_{\varepsilon}(j), {v_l}_{l=1}^N, {r_l}_{l=1}^N, c_j$, seedlist)，将 $N_{\varepsilon}(j)$ 中未被访问过的节点按照可达距离插入到队列 seedlist 中</p>
+<p>​                            （d）若 $|N_{\varepsilon}(j)| \geq M$ （即 $j$ 为核心点），则调用 insertlist($N_{\varepsilon}(j), \lbracev_l\rbrace_{l=1}^N, \lbrace_l\rbrace_{l=1}^N, c_j$, seedlist)，将 $N_{\varepsilon}(j)$ 中未被访问过的节点按照可达距离插入到队列 seedlist 中</p>
 <p>​                        }</p>
 <p>​    }</p>
 </li>
 </ul>
 <p>  }</p>
 <ul>
-<li><p>insertlist($N_{\varepsilon}(j), {v_l}_{l=1}^N, {r_l}_{l=1}^N, c_j$, seedlist) 模块的算法</p>
+<li><p>insertlist($N_{\varepsilon}(j), \lbrace v_l\rbrace_{l=1}^N, \lbrace r_l\rbrace_{l=1}^N, c_j$, seedlist) 模块的算法</p>
 <p>for all $J \in N_{\varepsilon}(K)$ do</p>
 <p>​    if ($v_J = 0$)</p>
-<p>​        $rd = \max { cd_K, d(x_K, x_J)}$</p>
-<p>​        if ($r_J = undefined$)</p>
+<p>​        $\text{rd} = \max \lbrace \text{cd}_K, d(x_K, x_J)\rbrace$</p>
+<p>​        if ($r_J = \text{undefined}$)</p>
 <ol>
-<li><p>令 $r_j = rd$</p>
+<li><p>令 $r_j = \text{rd}$</p>
 </li>
 <li><p>将节点 $J$ 按照可达距离值插入到队列 seedlist 的适当位置</p>
 <p>else</p>
-<p>if ($rd &lt; r_J$)</p>
+<p>if ($\text{rd} &lt; r_J$)</p>
 <ol>
-<li>令 $r_J = rd$</li>
+<li>令 $r_J = \text{rd}$</li>
 <li>将节点 $J$ 按照可达距离值插入到队列 seedlist 的适当位置</li>
 </ol>
 </li>
 </ol>
 </li>
-<li><p>得到数据 ${ p_i }_{i=1}^N, { c_i }_{i=1}^N, { r_i }_{i=1}^N$ 后，就可以利用它们进行聚类。此时还需要一个邻域半径参数 $\lambda \leq \varepsilon$</p>
+<li><p>得到数据 $\lbrace p_i \rbrace_{i=1}^N, \lbrace c_i \rbrace_{i=1}^N, \lbrace r_i \rbrace_{i=1}^N$ 后，就可以利用它们进行聚类。此时还需要一个邻域半径参数 $\lambda \leq \varepsilon$</p>
 </li>
-<li><p>与 DBSCAN 类似，引入 cluster 标记数组<br>$$<br>m_i =<br>\begin{cases}<br>j(&gt;0), &amp;  x_i 属于第 j 个 cluster \\<br>-1, &amp; x_i 为噪声<br>\end{cases}<br>$$<br>所以，要得到一个聚类，只需要生成标记数组 ${ m_i }_{i=1}^N$ 即可</p>
+<li><p>与 DBSCAN 类似，引入 cluster 标记数组<br>$$<br>m_i =<br>\begin{cases}<br>j(&gt;0), &amp;  x_i 属于第 j 个 \text{cluster} \\<br>-1, &amp; x_i 为噪声<br>\end{cases}<br>$$<br>所以，要得到一个聚类，只需要生成标记数组 $\lbrace m_i \rbrace_{i=1}^N$ 即可</p>
 </li>
 <li><p>生成标记数组（ OPTICS Cluster extracting）</p>
 <p>clusterID = -1</p>
 <p>$k = 1$</p>
 <p>for $i = 1, 2, \cdots, N$, do</p>
 <p>​    $j = p_i$</p>
-<p>​    if ($r_j &gt; \lambda$ or $r_j = undefined$)</p>
-<p>​        if ($c_j \neq undefinde$ and $c_j \leq \lambda$)</p>
+<p>​    if ($r_j &gt; \lambda$ or $r_j = \text{undefined}$)</p>
+<p>​        if ($c_j \neq \text{undefinded}$ and $c_j \leq \lambda$)</p>
 <p>​            clusterID = $k$</p>
 <p>​            $k = k + 1$</p>
 <p>​            $m_j = $ clusterID</p>
