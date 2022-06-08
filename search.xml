@@ -16738,6 +16738,59 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
       </tags>
   </entry>
   <entry>
+    <title>使用 sshfs 挂载远程文件系统</title>
+    <url>/2022/06/08/sshfs-mount-rfs-over-ssh/</url>
+    <content><![CDATA[<p>在两台服务器间借助 SSH 连接使用 SFTP 或 SCP 可以互相传输文件，但这确不能共享整个文件系统。当我们想要像访问本地服务器的文件系统一样访问远程服务器的文件系统时，可以使用 sshfs 工具，它通过 SSH 文件传输协议 (SFTP) 挂载远程的文件系统。本篇以 ubuntu 系统为例，所有代码以普通用户运行，部分代码需要 sudo 权限。</p>
+<a id="more"></a>
+
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install sshfs</span><br></pre></td></tr></table></figure>
+
+<h1 id="挂载远程服务器文件系统"><a href="#挂载远程服务器文件系统" class="headerlink" title="挂载远程服务器文件系统"></a>挂载远程服务器文件系统</h1><p>假设本地的用户 jinzhongxu 能够通过 SSH 连接到远程服务器 tencent.test.com</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 创建挂载点</span></span><br><span class="line">sudo mkdir /mnt/tencent</span><br><span class="line">sudo chown -R jinzhongxu:jinzhongxu /mnt/tencent</span><br><span class="line"></span><br><span class="line"><span class="comment"># 挂载远程文件系统到挂载点</span></span><br><span class="line">sshfs jinzhongxu@tencent.test.com:/home/jinzhongxu /mnt/tencent -o allow_other</span><br></pre></td></tr></table></figure>
+
+<p>注意，挂载时因为指定了 allow_other，所以就像普通的磁盘挂载一样。sshfs 默认情况下会阻止这种情况，所以建议带上该参数，否则将导致除 root 用户外其他用户无法访问文件系统。同时，指定该参数，需要在配置文件中放开权限，方法如下：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">sudo vim <span class="regexp">/etc/</span>fuse.conf</span><br></pre></td></tr></table></figure>
+
+<p>修改为如下：</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line"># /etc/fuse.conf - Configuration file for Filesystem in Userspace (FUSE)</span><br><span class="line"></span><br><span class="line"># Set the maximum number of FUSE mounts allowed to non-root users.</span><br><span class="line"># The default is 1000.</span><br><span class="line">#mount_max = 1000</span><br><span class="line"></span><br><span class="line"># Allow non-root users to specify the allow_other or allow_root mount options.</span><br><span class="line">user_allow_other</span><br></pre></td></tr></table></figure>
+
+<p>当挂载成功后，访问 /mnt/tencent 即可访问远程服务器 tencent.test.com 里的 /home/jinzhongxu 文件。</p>
+<p>查看挂载情况</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">df -hT</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fusermount -u /mnt/tencent</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">sudo umount /mnt/tencent</span><br></pre></td></tr></table></figure>
+
+<h1 id="永久挂载"><a href="#永久挂载" class="headerlink" title="永久挂载"></a>永久挂载</h1><p>上面的挂载方法通过 SSH 来实现，当连接断开后则挂载失效。因此，SSHFS 可以作为一种灵活的、临时的挂载方法。但想要永久挂载，可以进行如下配置来实现。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/fstab</span><br></pre></td></tr></table></figure>
+
+<p>在最后一行添加如下内容</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">jinzhongxu@tencent.test.com:/home/jinzhongxu /mnt/tencent fuse.sshfs noauto,x-systemd.automount,_netdev,reconnect,identityfile=/home/jinzhongxu/.ssh/id_rsa,allow_other 0 0</span><br></pre></td></tr></table></figure>
+
+<p>更新 fstab 文件使修改生效</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mount -a</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a href="https://linux.cn/article-7855-1.html">如何使用 SSHFS 通过 SSH 挂载远程的 Linux 文件系统或者目录</a></li>
+<li><a href="https://blog.csdn.net/xianglingchuan/article/details/54411754">linux sshfs挂载命令使用</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh">How To Use SSHFS to Mount Remote File Systems Over SSH</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>linux</tag>
+        <tag>ssh</tag>
+        <tag>sshfs</tag>
+      </tags>
+  </entry>
+  <entry>
     <title></title>
     <url>/categories/index.html</url>
     <content><![CDATA[]]></content>
