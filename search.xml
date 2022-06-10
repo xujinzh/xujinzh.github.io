@@ -15751,7 +15751,7 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 
 <h1 id="正则表达式调用格式"><a href="#正则表达式调用格式" class="headerlink" title="正则表达式调用格式"></a>正则表达式调用格式</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">re_exp = re.compile(<span class="string">r&#x27;xxx&#x27;</span>, flags=flag)</span><br><span class="line">re_exp.match(str_instance)</span><br><span class="line">re_exp.findall(str_instance)</span><br><span class="line">re_exp.search(str_instance)</span><br><span class="line">re_exp.split(str_instance)</span><br><span class="line"></span><br><span class="line"><span class="comment"># or (除了上面编译后在匹配，还可以采用下面的合成形式，实际上内部是采用上面的步骤)</span></span><br><span class="line">re.match(<span class="string">r&#x27;xxx&#x27;</span>, str_instance, flags=flag)</span><br><span class="line">re.findall(<span class="string">r&#x27;xxx&#x27;</span>, str_instance, flags=flag)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
-<p>其中，re 是 python 内置的正则表达式模块，r’xxx’ 为匹配模式，flags 为一个可选参数，称为标记，可配置为是否忽略大小写（re.I）、采用多行模式（re.M）等。re.compile 为将匹配模式编译为正则表达式，会被缓存。match, findall 等编译后的正则表达式对象支持的方法和属性（如 re_exp.flags, re_exp.groups, re_exp.pattern等）。</p>
+<p>其中，re 是 python 内置的正则表达式模块，r’xxx’ 为匹配模式，<font color=orange>flags 为一个可选参数，称为标记，可配置为是否忽略大小写（re.I）、采用多行模式（re.M）等</font>。re.compile 为将匹配模式编译为正则表达式，会被缓存。match, findall 等编译后的正则表达式对象支持的方法和属性（如 re_exp.flags, re_exp.groups, re_exp.pattern等）。</p>
 <h1 id="正则表达式语法-匹配模式"><a href="#正则表达式语法-匹配模式" class="headerlink" title="正则表达式语法-匹配模式"></a>正则表达式语法-匹配模式</h1><p>正则表达式中有一些特殊语法，具体的如下：</p>
 <ol>
 <li>绝大部分普通字符（如 ‘A’, ‘a’, ‘0’ 等）是最简单的表达式，匹配自身；除此之外，还有一些特殊字符。</li>
@@ -15766,7 +15766,7 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 <li><code>&#123;m,n&#125;</code> 对其前面的正则式进行 $m$ 到 $n$ 次匹配，属于贪婪式，会在 $m$ 和 $n$ 之间取尽量多。忽略 $m$ 意指 $m=0$，忽略 $n$ 意指 $n$ 取无穷大。特别注意逗号不能省略，否则无法辨识修饰符应该忽略哪个边界；</li>
 <li><code>&#123;m,n&#125;?</code> 采用非贪婪模式，只匹配 $m$ 和 $n$ 之间尽量少的字符次数；</li>
 <li><code>\</code> 转义字符（允许你匹配上面出现的特殊字符）；</li>
-<li><code>[]</code> 表示在中括号里的字符为字符串中出现的可选字符。只匹配中括号中出现的字符。如 <code>[a-f0-9A-F]</code> 匹配十六进制位、<code>[0-5][0-9]</code>匹配 00 到 59 时间数。如果特殊字符出现在中括号中，则将使特殊字符失去特殊含义，功能同转义字符。<code>[^5]</code> 匹配除了5以外的字符；如果要匹配 <code>]</code>，可以采用：1）前面增加转义字符 <code>[()\]]</code> ；2）放在首位 <code>[]()]</code>，其中 <code>()</code> 为其他需要匹配的字符；</li>
+<li><code>[]</code> 表示在中括号里的字符为字符串中出现的可选字符。只匹配中括号中出现的字符。如 <code>[a-f0-9A-F]</code> 匹配十六进制位、<code>[0-5][0-9]</code>匹配 00 到 59 时间数。如果特殊字符出现在中括号中，则将使特殊字符失去特殊含义，功能同转义字符。<font color=yellow><code>[^5]</code> 匹配除了5以外的字符</font>；如果要匹配 <code>]</code>，可以采用：1）前面增加转义字符 <code>[()\]]</code> ；2）放在首位 <code>[]()]</code>，其中 <code>()</code> 为其他需要匹配的字符；</li>
 <li><code>|</code> 或符号，如 <code>A|B</code> 则正则式 <code>A</code> 或 <code>B</code> ；</li>
 <li><code>()</code> 表示将匹配完成的内容截取除小括号中的内容；</li>
 <li><code>\A</code> 只匹配字符串开始；</li>
@@ -15819,7 +15819,7 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">re.findall(<span class="string">r&quot;(\w+)=(\d+)&quot;</span>, <span class="string">&quot;set width=20 and height=10&quot;</span>)</span><br><span class="line">[(<span class="string">&#x27;width&#x27;</span>, <span class="string">&#x27;20&#x27;</span>), (<span class="string">&#x27;height&#x27;</span>, <span class="string">&#x27;10&#x27;</span>)]</span><br></pre></td></tr></table></figure>
 
-
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 替换，下面例子将 / 替换为 -</span></span><br><span class="line">text=<span class="string">&#x27;datetime：11/28/2022&#x27;</span></span><br><span class="line"><span class="comment"># 小括号里面的为单元项，从左到右依次为 1， 2， 3</span></span><br><span class="line">datepat=re.compile(<span class="string">r&#x27;(\d+)/(\d+)/(\d+)&#x27;</span>)</span><br><span class="line"><span class="comment"># \3 表示前面的第 3 个单元项；\1 表示前面的第 1 个单元项；\2 表示前面的第 2 个单元项</span></span><br><span class="line">print(datepat.sub(<span class="string">r&#x27;\3-\1-\2&#x27;</span>, text))</span><br><span class="line">print(text)</span><br><span class="line"></span><br><span class="line">datetime：<span class="number">2022</span><span class="number">-11</span><span class="number">-28</span></span><br><span class="line">datetime：<span class="number">11</span>/<span class="number">28</span>/<span class="number">2022</span></span><br><span class="line"><span class="comment"># 删除第 2 个单元项</span></span><br><span class="line">print(datepat.sub(<span class="string">r&#x27;\1/\3&#x27;</span>, text))</span><br><span class="line">print(text)</span><br></pre></td></tr></table></figure>
 
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li><a href="https://www.liaoxuefeng.com/wiki/1016959663602400/1017639890281664">正则表达式</a></li>
@@ -16282,7 +16282,7 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 </tr>
 </tbody></table>
 <p>pandoc 的使用方法如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pandoc -f/-r 输入格式 -t/-w 输出格式 输入文件  -o 输出文件</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pandoc -f/-r 输入格式 -t/-w 输出格式 -o 输出文件 输入文件</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>-f 表示 输入格式：–from 格式，可用 -r 或 –read 格式 代替；</li>
@@ -16297,7 +16297,7 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 <ol>
 <li>docx 转 textile</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pandoc -f docx -t textile redmine-test.docx -o redmine-heading.textile</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pandoc -f docx -t textile -o redmine-heading.textile redmine-test.docx</span><br></pre></td></tr></table></figure>
 
 <ol start="2">
 <li>txt 转 pdf</li>
@@ -16328,6 +16328,13 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 <p><a href="https://pandoc.org/demos.html">https://pandoc.org/demos.html</a></p>
 <p>如果不想通过命令手动转，可采用在线格式转换：</p>
 <p><a href="https://alldocs.app/convert-word-docx-to-textile">https://alldocs.app/convert-word-docx-to-textile</a></p>
+<h1 id="python-中调用"><a href="#python-中调用" class="headerlink" title="python 中调用"></a>python 中调用</h1><p>在 Python 中使用 <a href="https://github.com/NicklasTegner/pypandoc">pandoc</a>，可以安装包 pypandoc 来调用系统安装的 pandoc 软件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install pypandoc</span><br></pre></td></tr></table></figure>
+
+<p>使用方法</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 指定 pandoc 软件位置</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ.setdefault(<span class="string">&#x27;PYPANDOC_PANDOC&#x27;</span>, <span class="string">&#x27;/usr/bin/pandoc&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 docx 文件转为 textile 格式</span></span><br><span class="line"><span class="keyword">import</span> pypandoc</span><br><span class="line"></span><br><span class="line">output = pypandoc.convert_file(<span class="string">&#x27;somefile.docx&#x27;</span>, <span class="string">&#x27;textile&#x27;</span>, outputfile=<span class="string">&quot;somefile.textile&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>更多使用方法，如添加格式化参数请参考 <a href="https://pypi.org/project/pypandoc/">pypandoc 官网</a>。</p>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li><a href="https://pandoc.org/index.html">Pandoc a universal document converter</a></li>
 </ol>
@@ -16766,7 +16773,7 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/fstab</span><br></pre></td></tr></table></figure>
 
 <p>在最后一行添加如下内容</p>
-<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">jinzhongxu@tencent.test.com:/home/jinzhongxu /mnt/tencent fuse.sshfs noauto,x-systemd.automount,_netdev,reconnect,identityfile=/home/jinzhongxu/.ssh/id_rsa,allow_other 0 0</span><br></pre></td></tr></table></figure>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">sshfs#jinzhongxu@tencent.test.com:/home/jinzhongxu /mnt/tencent fuse.sshfs noauto,x-systemd.automount,_netdev,reconnect,identityfile=/home/jinzhongxu/.ssh/id_rsa,port=2222,allow_other 0 0</span><br></pre></td></tr></table></figure>
 
 <p>更新 fstab 文件使修改生效</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mount -a</span><br></pre></td></tr></table></figure>

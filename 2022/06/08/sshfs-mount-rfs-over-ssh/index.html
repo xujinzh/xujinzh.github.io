@@ -30,7 +30,7 @@
 <meta property="og:description" content="在两台服务器间借助 SSH 连接使用 SFTP 或 SCP 可以互相传输文件，但这确不能共享整个文件系统。当我们想要像访问本地服务器的文件系统一样访问远程服务器的文件系统时，可以使用 sshfs 工具，它通过 SSH 文件传输协议 (SFTP) 挂载远程的文件系统。本篇以 ubuntu 系统为例，所有代码以普通用户运行，部分代码需要 sudo 权限。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-06-08T06:20:14.000Z">
-<meta property="article:modified_time" content="2022-06-08T06:48:26.438Z">
+<meta property="article:modified_time" content="2022-06-10T06:38:07.303Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="ubuntu">
 <meta property="article:tag" content="linux">
@@ -257,9 +257,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2022-06-08 14:20:14 / 修改时间：14:48:26" itemprop="dateCreated datePublished" datetime="2022-06-08T14:20:14+08:00">2022-06-08</time>
+      <time title="创建时间：2022-06-08 14:20:14" itemprop="dateCreated datePublished" datetime="2022-06-08T14:20:14+08:00">2022-06-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-06-10 14:38:07" itemprop="dateModified" datetime="2022-06-10T14:38:07+08:00">2022-06-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -333,7 +339,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/fstab</span><br></pre></td></tr></table></figure>
 
 <p>在最后一行添加如下内容</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jinzhongxu@tencent.test.com:/home/jinzhongxu /mnt/tencent fuse.sshfs noauto,x-systemd.automount,_netdev,reconnect,identityfile=/home/jinzhongxu/.ssh/id_rsa,allow_other 0 0</span><br></pre></td></tr></table></figure>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sshfs#jinzhongxu@tencent.test.com:/home/jinzhongxu /mnt/tencent fuse.sshfs noauto,x-systemd.automount,_netdev,reconnect,identityfile=/home/jinzhongxu/.ssh/id_rsa,port=2222,allow_other 0 0</span><br></pre></td></tr></table></figure>
 
 <p>更新 fstab 文件使修改生效</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount -a</span><br></pre></td></tr></table></figure>
@@ -436,14 +442,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">598k</span>
+    <span title="站点总字数">599k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:04</span>
+    <span title="站点阅读时长">9:05</span>
   </span>
 </div>
 <div class="busuanzi-count">
