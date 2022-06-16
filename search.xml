@@ -16874,7 +16874,7 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 <p>因为 $A + uv^T$ 可逆，所以 $A^{-1}u=0$，又 $A^{-1}$ 可逆，所以 $u=0$，与假设矛盾。综上可知，充分性成立。</p>
 <p>（必要性 $\Leftarrow$）</p>
 <p>已知 $1+v^TA^{-1}u\neq0$，令 $X=A+uv^T,Y=(A^{-1}-\frac{A^{-1}uv^TA^{-1}}{1+v^TA^{-1}u})$，只需证明：$XY=YX=I$.</p>
-<p>$$<br>XY=(A+uv^T)(A^{-1}-\frac{A^{-1}uv^TA^{-1}}{1+v^TA^{-1}u})\<br>=AA^{-1}+uv^TA^{-1}-\frac{AA^{-1}uv^TA^{-1}+uv^TA^{-1}uv^TA^{-1}}{1+v^TA^{-1}u}\<br>=I+uv^TA^{-1}-\frac{uv^TA^{-1}+uv^TA^{-1}uv^TA^{-1}}{1+v^TA^{-1}u}\<br>=I+uv^TA^{-1}-\frac{u(1+v^TA^{-1}u)v^TA^{-1}}{1+v^TA^{-1}u}\<br>=I+uv^TA^{-1}-uv^TA^{-1}\<br>=I.<br>$$</p>
+<p>$$<br>XY=(A+uv^T)(A^{-1}-\frac{A^{-1}uv^TA^{-1}}{1+v^TA^{-1}u}) \\<br>=AA^{-1}+uv^TA^{-1}-\frac{AA^{-1}uv^TA^{-1}+uv^TA^{-1}uv^TA^{-1}}{1+v^TA^{-1}u} \\<br>=I+uv^TA^{-1}-\frac{uv^TA^{-1}+uv^TA^{-1}uv^TA^{-1}}{1+v^TA^{-1}u} \\<br>=I+uv^TA^{-1}-\frac{u(1+v^TA^{-1}u)v^TA^{-1}}{1+v^TA^{-1}u} \\<br>=I+uv^TA^{-1}-uv^TA^{-1} \\<br>=I.<br>$$</p>
 <p>同样方法能够证明 $YX=I$. 因此必要性成立。</p>
 <h1 id="简单应用"><a href="#简单应用" class="headerlink" title="简单应用"></a>简单应用</h1><p>特别地，当 $A=I$ 时，Sherman-Morrison 公式变为如下，此时，只需要 $1+v^Tu\neq 0$ 即可</p>
 <p>$$<br>(I+uv^T)^{-1}=I-\frac{uv^T}{1+v^Tu}.<br>$$</p>
