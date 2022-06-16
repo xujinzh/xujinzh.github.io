@@ -16838,6 +16838,62 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
       </tags>
   </entry>
   <entry>
+    <title>sherman-morrison-formula</title>
+    <url>/2022/06/15/sherman-morrison-formula/</url>
+    <content><![CDATA[<p>在线性代数中，Sherman-Morrison 公式以 Jack Sherman 和 Winifred J. Morrison 命名，用于计算 $A + uv^T$ 的逆，其中 $A$ 为可逆方阵，$u, v$ 为列向量，$uv^T$ 为向量外积（outer product）。Sherman-Morrison 公式是 Woodbury 公式的一类特殊情况。</p>
+<a id="more"></a>
+
+<h1 id="问题陈述"><a href="#问题陈述" class="headerlink" title="问题陈述"></a>问题陈述</h1><p><strong>定理1（Sherman-Morrison formula）</strong>  假设 $A \in \mathbb{R}^{n\times n}$ 是一个可逆方阵，并且 $u, v\in \mathbb{R}^n$ 是列向量。那么 $A + uv^T$ 是可逆的当且仅当 $1 + v^T A^{-1} u \neq 0$. 当 $A + uv^T$ 可逆时，满足如下等式：</p>
+<p>$$<br>(A + uv^T)^{-1} = A^{-1} - \frac{A^{-1}uv^TA^{-1}}{1+v^TA^{-1}u} \tag{1}.<br>$$</p>
+<p>这里，$uv^T$ 表示两个向量 $u,v$ 的外积。</p>
+<p><em>外积（outer product）说明：假设</em></p>
+<p>$$<br>u =<br>\begin{bmatrix}<br>u_1 \\<br>u_2 \\<br>u_3<br>\end{bmatrix},<br>v =<br>\begin{bmatrix}<br>v_1 \\<br>v_2 \\<br>v_3<br>\end{bmatrix}<br>$$</p>
+<p><em>那么 $u,v$ 的外积定义为</em></p>
+<p>$$<br>u  \otimes v = uv^T =<br>\begin{bmatrix}<br>u_1 \\<br>u_2 \\<br>u_3<br>\end{bmatrix}<br>\begin{bmatrix}<br>v_1 &amp; v_2 &amp; v_3<br>\end{bmatrix}<br>=<br>\begin{bmatrix}<br>u_1 v_1 &amp; u_1 v_2 &amp; u_1 v_3 \\<br>u_2 v_1 &amp; u_2 v_2 &amp; u_2 v_3 \\<br>u_3 v_1 &amp; u_3 v_2 &amp; u_3 v_3<br>\end{bmatrix}<br>$$</p>
+<p><em>从上面的例子可以看到，向量的外积就是两个矩阵的乘积。只不过是对向量（矩阵）乘积的独特称谓。</em></p>
+<p>在证明 <strong>定理1</strong> 之前，我们先证明下面的<strong>矩阵行列式引理</strong></p>
+<p><strong>矩阵行列式引理（Matrix determinant lemma）</strong> 假设 $A$ 是一个可逆方阵，$u,v$ 为列向量。那么下面等式成立：</p>
+<p>$$<br>\textbf{det}(A + uv^T) = (1 + v^TA^{-1}u)\textbf{det}(A) \tag{2}.<br>$$</p>
+<p>这里 $uv^T$ 表示两个向量 $u,v$ 的外积。容易得到公式 (2) 有如下的邻接矩阵表示形式：</p>
+<p>$$<br>\textbf{det}(A + uv^T) = \textbf{det}(A) + v^T \textbf{adj}(A)u \tag{3}.<br>$$</p>
+<p>证明：对于公式（2），首先证明当 $A=I$ 时的情况，此时，公式（2）变成如下等式：</p>
+<p>$$<br>\textbf{det}(I+uv^T) = (1 + v^Tu) \tag{4}.<br>$$</p>
+<p>证明公式（4）只需要验证如下等式成立：</p>
+<p>$$<br>\begin{bmatrix}<br>I &amp; 0 \\<br>v^T &amp; 1<br>\end{bmatrix}<br>\begin{bmatrix}<br>I+uv^T &amp; u \\<br>0 &amp; 1<br>\end{bmatrix}<br>\begin{bmatrix}<br>I &amp; 0 \\<br>-v^T &amp; 1<br>\end{bmatrix}<br>=<br>\begin{bmatrix}<br>I &amp; u \\<br>0 &amp; 1 + v^Tu<br>\end{bmatrix}\tag{5}.<br>$$</p>
+<p>对等式（5）两边同时去行列式，即可得到公式（4），对于公式（2）可以通过简单变换成公式（4）</p>
+<p>$$<br>\textbf{det}(A + uv^T) = \textbf{det}(A)\textbf{det}(I + (A^{-1}u)v^T) = \textbf{det}(A)(1+v^T(A^{-1}u)).<br>$$</p>
+<p>公式（2）的更多推广这里就不介绍了。下面证明<strong>定理1</strong>。</p>
+<h1 id="公式证明"><a href="#公式证明" class="headerlink" title="公式证明"></a>公式证明</h1><p>证明 （充分性 $\Rightarrow$）</p>
+<p>充分性这里给出两种方法。第一种方法如下：</p>
+<p>假设 $1 + v^TA^{-1}u=0$，根据矩阵行列式引理，</p>
+<p>$$<br>\textbf{det}(A+uv^T)=(1+v^TA^{-1}u)\textbf{det}(A)=0.<br>$$</p>
+<p>所以方阵 $(A+uv^T)$ 不可逆，矛盾。所以  $1 + v^T A^{-1} u \neq 0$.</p>
+<p>第二种方法如下：</p>
+<p>当 $u=0$ 时，显然有 $1+v^TA^{-1}u=1\neq0$. 当 $u\neq 0$ 时，假设 $1+v^TA^{-1}u=0$，那么</p>
+<p>$$<br>(A+uv^T)A^{-1}u=u+u(v^TA^{-1}u)=(1+v^TA^{-1}u)u=0.<br>$$</p>
+<p>因为 $A + uv^T$ 可逆，所以 $A^{-1}u=0$，又 $A^{-1}$ 可逆，所以 $u=0$，与假设矛盾。综上可知，充分性成立。</p>
+<p>（必要性 $\Leftarrow$）</p>
+<p>已知 $1+v^TA^{-1}u\neq0$，令 $X=A+uv^T,Y=(A^{-1}-\frac{A^{-1}uv^TA^{-1}}{1+v^TA^{-1}u})$，只需证明：$XY=YX=I$.</p>
+<p>$$<br>XY=(A+uv^T)(A^{-1}-\frac{A^{-1}uv^TA^{-1}}{1+v^TA^{-1}u})\\<br>=AA^{-1}+uv^TA^{-1}-\frac{AA^{-1}uv^TA^{-1}+uv^TA^{-1}uv^TA^{-1}}{1+v^TA^{-1}u}\\<br>=I+uv^TA^{-1}-\frac{uv^TA^{-1}+uv^TA^{-1}uv^TA^{-1}}{1+v^TA^{-1}u}\\<br>=I+uv^TA^{-1}-\frac{u(1+v^TA^{-1}u)v^TA^{-1}}{1+v^TA^{-1}u}\\<br>=I+uv^TA^{-1}-uv^TA^{-1}\\<br>=I.<br>$$</p>
+<p>同样方法能够证明$YX=I$. 因此必要性成立。</p>
+<h1 id="简单应用"><a href="#简单应用" class="headerlink" title="简单应用"></a>简单应用</h1><p>特别地，当 $A=I$ 时，Sherman-Morrison 公式变为如下，此时，只需要 $1+v^Tu\neq 0$ 即可</p>
+<p>$$<br>(I+uv^T)^{-1}=I-\frac{uv^T}{1+v^Tu}.<br>$$</p>
+<p>进一步，如果 $u=v$，此时 $\forall u$，$1+u^Tu\neq0$，都有如下公式成立</p>
+<p>$$<br>(I+uu^T)^{-1} = I-\frac{uu^T}{1+u^Tu}.<br>$$</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a href="https://blog.csdn.net/jclian91/article/details/80254568">Sherman-Morrison公式及其应用_山阴少年的博客-CSDN博客</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>maths</category>
+        <category>algebra</category>
+      </categories>
+      <tags>
+        <tag>maths</tag>
+        <tag>algebra</tag>
+      </tags>
+  </entry>
+  <entry>
     <title></title>
     <url>/categories/index.html</url>
     <content><![CDATA[]]></content>

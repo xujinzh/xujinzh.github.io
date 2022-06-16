@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 5.1.1">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" integrity="sha256-jTIdiMuX/e3DGJUGwl3pKSxuc6YOuqtJYkM0bGQESA4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在线性代数中，Sherman-Morrison 公式以 Jack Sherman 和 Winifred J. Morrison 命名，用于计算 $A + uv^T$ 的逆，其中 $A$ 为可逆方阵，$u, v$ 为列向量，$uv^T$ 为向量外积（outer product）。Sherman-Morrison 公式是 Woodbury 公式的一类特殊情况。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sherman-morrison-formula">
+<meta property="og:url" content="https://xujinzh.github.io/2022/06/15/sherman-morrison-formula/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="在线性代数中，Sherman-Morrison 公式以 Jack Sherman 和 Winifred J. Morrison 命名，用于计算 $A + uv^T$ 的逆，其中 $A$ 为可逆方阵，$u, v$ 为列向量，$uv^T$ 为向量外积（outer product）。Sherman-Morrison 公式是 Woodbury 公式的一类特殊情况。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-15T07:39:19.000Z">
+<meta property="article:modified_time" content="2022-06-16T04:27:05.201Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="maths">
+<meta property="article:tag" content="algebra">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2022/06/15/sherman-morrison-formula/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xujinzh.github.io/2022/06/15/sherman-morrison-formula/","path":"2022/06/15/sherman-morrison-formula/","title":"sherman-morrison-formula"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>sherman-morrison-formula | J. Xu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">J. Xu</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">228</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">22</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">282</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E9%99%88%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题陈述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E8%AF%81%E6%98%8E"><span class="nav-number">2.</span> <span class="nav-text">公式证明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">简单应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">众妙之门</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">282</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">228</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xujinzhong027@outlook.com" title="Mail → mailto:xujinzhong027@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.mathscv.com/power/" title="MathsCVPower → https:&#x2F;&#x2F;www.mathscv.com&#x2F;power&#x2F;" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>MathsCVPower</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2022/06/15/sherman-morrison-formula/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J. Xu">
+      <meta itemprop="description" content="众妙之门">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="sherman-morrison-formula | J. Xu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          sherman-morrison-formula
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-06-15 15:39:19" itemprop="dateCreated datePublished" datetime="2022-06-15T15:39:19+08:00">2022-06-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-06-16 12:27:05" itemprop="dateModified" datetime="2022-06-16T12:27:05+08:00">2022-06-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/maths/" itemprop="url" rel="index"><span itemprop="name">maths</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/maths/algebra/" itemprop="url" rel="index"><span itemprop="name">algebra</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>在线性代数中，Sherman-Morrison 公式以 Jack Sherman 和 Winifred J. Morrison 命名，用于计算 $A + uv^T$ 的逆，其中 $A$ 为可逆方阵，$u, v$ 为列向量，$uv^T$ 为向量外积（outer product）。Sherman-Morrison 公式是 Woodbury 公式的一类特殊情况。</p>
+<a id="more"></a>
+
+<h1 id="问题陈述"><a href="#问题陈述" class="headerlink" title="问题陈述"></a>问题陈述</h1><p><strong>定理1（Sherman-Morrison formula）</strong>  假设 $A \in \mathbb{R}^{n\times n}$ 是一个可逆方阵，并且 $u, v\in \mathbb{R}^n$ 是列向量。那么 $A + uv^T$ 是可逆的当且仅当 $1 + v^T A^{-1} u \neq 0$. 当 $A + uv^T$ 可逆时，满足如下等式：</p>
+<p>$$<br>(A + uv^T)^{-1} = A^{-1} - \frac{A^{-1}uv^TA^{-1}}{1+v^TA^{-1}u} \tag{1}.<br>$$</p>
+<p>这里，$uv^T$ 表示两个向量 $u,v$ 的外积。</p>
+<p><em>外积（outer product）说明：假设</em></p>
+<p>$$<br>u =<br>\begin{bmatrix}<br>u_1 \\<br>u_2 \\<br>u_3<br>\end{bmatrix},<br>v =<br>\begin{bmatrix}<br>v_1 \\<br>v_2 \\<br>v_3<br>\end{bmatrix}<br>$$</p>
+<p><em>那么 $u,v$ 的外积定义为</em></p>
+<p>$$<br>u  \otimes v = uv^T =<br>\begin{bmatrix}<br>u_1 \\<br>u_2 \\<br>u_3<br>\end{bmatrix}<br>\begin{bmatrix}<br>v_1 &amp; v_2 &amp; v_3<br>\end{bmatrix}<br>=<br>\begin{bmatrix}<br>u_1 v_1 &amp; u_1 v_2 &amp; u_1 v_3 \\<br>u_2 v_1 &amp; u_2 v_2 &amp; u_2 v_3 \\<br>u_3 v_1 &amp; u_3 v_2 &amp; u_3 v_3<br>\end{bmatrix}<br>$$</p>
+<p><em>从上面的例子可以看到，向量的外积就是两个矩阵的乘积。只不过是对向量（矩阵）乘积的独特称谓。</em></p>
+<p>在证明 <strong>定理1</strong> 之前，我们先证明下面的<strong>矩阵行列式引理</strong></p>
+<p><strong>矩阵行列式引理（Matrix determinant lemma）</strong> 假设 $A$ 是一个可逆方阵，$u,v$ 为列向量。那么下面等式成立：</p>
+<p>$$<br>\textbf{det}(A + uv^T) = (1 + v^TA^{-1}u)\textbf{det}(A) \tag{2}.<br>$$</p>
+<p>这里 $uv^T$ 表示两个向量 $u,v$ 的外积。容易得到公式 (2) 有如下的邻接矩阵表示形式：</p>
+<p>$$<br>\textbf{det}(A + uv^T) = \textbf{det}(A) + v^T \textbf{adj}(A)u \tag{3}.<br>$$</p>
+<p>证明：对于公式（2），首先证明当 $A=I$ 时的情况，此时，公式（2）变成如下等式：</p>
+<p>$$<br>\textbf{det}(I+uv^T) = (1 + v^Tu) \tag{4}.<br>$$</p>
+<p>证明公式（4）只需要验证如下等式成立：</p>
+<p>$$<br>\begin{bmatrix}<br>I &amp; 0 \\<br>v^T &amp; 1<br>\end{bmatrix}<br>\begin{bmatrix}<br>I+uv^T &amp; u \\<br>0 &amp; 1<br>\end{bmatrix}<br>\begin{bmatrix}<br>I &amp; 0 \\<br>-v^T &amp; 1<br>\end{bmatrix}<br>=<br>\begin{bmatrix}<br>I &amp; u \\<br>0 &amp; 1 + v^Tu<br>\end{bmatrix}\tag{5}.<br>$$</p>
+<p>对等式（5）两边同时去行列式，即可得到公式（4），对于公式（2）可以通过简单变换成公式（4）</p>
+<p>$$<br>\textbf{det}(A + uv^T) = \textbf{det}(A)\textbf{det}(I + (A^{-1}u)v^T) = \textbf{det}(A)(1+v^T(A^{-1}u)).<br>$$</p>
+<p>公式（2）的更多推广这里就不介绍了。下面证明<strong>定理1</strong>。</p>
+<h1 id="公式证明"><a href="#公式证明" class="headerlink" title="公式证明"></a>公式证明</h1><p>证明 （充分性 $\Rightarrow$）</p>
+<p>充分性这里给出两种方法。第一种方法如下：</p>
+<p>假设 $1 + v^TA^{-1}u=0$，根据矩阵行列式引理，</p>
+<p>$$<br>\textbf{det}(A+uv^T)=(1+v^TA^{-1}u)\textbf{det}(A)=0.<br>$$</p>
+<p>所以方阵 $(A+uv^T)$ 不可逆，矛盾。所以  $1 + v^T A^{-1} u \neq 0$.</p>
+<p>第二种方法如下：</p>
+<p>当 $u=0$ 时，显然有 $1+v^TA^{-1}u=1\neq0$. 当 $u\neq 0$ 时，假设 $1+v^TA^{-1}u=0$，那么</p>
+<p>$$<br>(A+uv^T)A^{-1}u=u+u(v^TA^{-1}u)=(1+v^TA^{-1}u)u=0.<br>$$</p>
+<p>因为 $A + uv^T$ 可逆，所以 $A^{-1}u=0$，又 $A^{-1}$ 可逆，所以 $u=0$，与假设矛盾。综上可知，充分性成立。</p>
+<p>（必要性 $\Leftarrow$）</p>
+<p>已知 $1+v^TA^{-1}u\neq0$，令 $X=A+uv^T,Y=(A^{-1}-\frac{A^{-1}uv^TA^{-1}}{1+v^TA^{-1}u})$，只需证明：$XY=YX=I$.</p>
+<p>$$<br>XY=(A+uv^T)(A^{-1}-\frac{A^{-1}uv^TA^{-1}}{1+v^TA^{-1}u})\\<br>=AA^{-1}+uv^TA^{-1}-\frac{AA^{-1}uv^TA^{-1}+uv^TA^{-1}uv^TA^{-1}}{1+v^TA^{-1}u}\\<br>=I+uv^TA^{-1}-\frac{uv^TA^{-1}+uv^TA^{-1}uv^TA^{-1}}{1+v^TA^{-1}u}\\<br>=I+uv^TA^{-1}-\frac{u(1+v^TA^{-1}u)v^TA^{-1}}{1+v^TA^{-1}u}\\<br>=I+uv^TA^{-1}-uv^TA^{-1}\\<br>=I.<br>$$</p>
+<p>同样方法能够证明$YX=I$. 因此必要性成立。</p>
+<h1 id="简单应用"><a href="#简单应用" class="headerlink" title="简单应用"></a>简单应用</h1><p>特别地，当 $A=I$ 时，Sherman-Morrison 公式变为如下，此时，只需要 $1+v^Tu\neq 0$ 即可</p>
+<p>$$<br>(I+uv^T)^{-1}=I-\frac{uv^T}{1+v^Tu}.<br>$$</p>
+<p>进一步，如果 $u=v$，此时 $\forall u$，$1+u^Tu\neq0$，都有如下公式成立</p>
+<p>$$<br>(I+uu^T)^{-1} = I-\frac{uu^T}{1+u^Tu}.<br>$$</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/jclian91/article/details/80254568">Sherman-Morrison公式及其应用_山阴少年的博客-CSDN博客</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>感谢支持！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://xujinzh.github.io/2022/06/15/sherman-morrison-formula/" title="sherman-morrison-formula">https://xujinzh.github.io/2022/06/15/sherman-morrison-formula/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/maths/" rel="tag"><i class="fa fa-tag"></i> maths</a>
+              <a href="/tags/algebra/" rel="tag"><i class="fa fa-tag"></i> algebra</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/06/10/linux-check-ip-domain/" rel="prev" title="linux 上查询 ip 归属地">
+                  <i class="fa fa-chevron-left"></i> linux 上查询 ip 归属地
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">604k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">9:09</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js","integrity":"sha256-7wT34TI0pEBeEFoi4z+vhuSddGh6vUTMWdqJ2SDe2jg="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"xujinzh","repo":"xujinzh.github.io","client_id":"695ca5d39e2ba2f9feb5","client_secret":"9d4027af6364ff54595b7a8580977ec58c38a5ae","admin_user":"xujinzh","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"76a5897544fbcf92f961dc80faf13910"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
