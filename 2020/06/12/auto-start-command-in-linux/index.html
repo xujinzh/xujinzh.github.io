@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E7%A8%8B%E5%BA%8F%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">启动程序命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#etcinit.dappname"><span class="nav-number">1.1.</span> <span class="nav-text">&#x2F;etc&#x2F;init.d&#x2F;appname</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#service"><span class="nav-number">1.2.</span> <span class="nav-text">service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#systemctl"><span class="nav-number">1.3.</span> <span class="nav-text">systemctl</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">设置开机自启命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#update-rc.d"><span class="nav-number">2.1.</span> <span class="nav-text">update-rc.d</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chkconfig"><span class="nav-number">2.2.</span> <span class="nav-text">chkconfig</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#systemctl-1"><span class="nav-number">2.3.</span> <span class="nav-text">systemctl</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E7%A8%8B%E5%BA%8F%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">启动程序命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#x2F-etc-x2F-init-d-x2F-appname"><span class="nav-number">1.1.</span> <span class="nav-text">&#x2F;etc&#x2F;init.d&#x2F;appname</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#service"><span class="nav-number">1.2.</span> <span class="nav-text">service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#systemctl"><span class="nav-number">1.3.</span> <span class="nav-text">systemctl</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">设置开机自启命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#update-rc-d"><span class="nav-number">2.1.</span> <span class="nav-text">update-rc.d</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chkconfig"><span class="nav-number">2.2.</span> <span class="nav-text">chkconfig</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#systemctl-1"><span class="nav-number">2.3.</span> <span class="nav-text">systemctl</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -293,14 +293,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.6k</span>
+      <span>1.7k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
+      <span>2 分钟</span>
     </span>
 </div>
 
@@ -313,30 +313,29 @@
     <div class="post-body" itemprop="articleBody">
         <p>Linux 系统可以通过命令行，有效简便快捷的启动程序、设置开机自启的程序等，并且，往往有多个命令可以达到这一效果。但是，需要我们了解这些命令并知悉它们之间的区别，下面主要简单的总结一下，本篇所有命令以 root 身份运行。</p>
 <a id="more"></a>
-<h1 id="启动程序命令">启动程序命令</h1>
-<h2 id="etcinit.dappname">/etc/init.d/appname</h2>
-<p>常用方法：</p>
+
+<h1 id="启动程序命令"><a href="#启动程序命令" class="headerlink" title="启动程序命令"></a>启动程序命令</h1><h2 id="x2F-etc-x2F-init-d-x2F-appname"><a href="#x2F-etc-x2F-init-d-x2F-appname" class="headerlink" title="&#x2F;etc&#x2F;init.d&#x2F;appname"></a>&#x2F;etc&#x2F;init.d&#x2F;appname</h2><p>常用方法：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看 ssh 服务状态</span></span><br><span class="line">/etc/init.d/ssh status   </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动 ssh 服务</span></span><br><span class="line">/etc/init.d/ssh start</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭 ssh 服务</span></span><br><span class="line">/etc/init.d/ssh stop</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重启 ssh 服务</span></span><br><span class="line">/etc/init.d/ssh restart</span><br></pre></td></tr></table></figure>
-<p>/etc/init.d/ 其实是一个目录，里面存放的都是系统启动时需要运行或关闭的命令，这些命令常常通过软连接，连接到各级启动级别的文件夹中，如 /etc/rc3.d/，通过下面介绍的命令 update-rc.d 和 systemctl 可以设置开机启动或关闭。</p>
-<h2 id="service">service</h2>
-<p>常用方法：</p>
+
+<p>&#x2F;etc&#x2F;init.d&#x2F; 其实是一个目录，里面存放的都是系统启动时需要运行或关闭的命令，这些命令常常通过软连接，连接到各级启动级别的文件夹中，如 &#x2F;etc&#x2F;rc3.d&#x2F;，通过下面介绍的命令 update-rc.d 和 systemctl 可以设置开机启动或关闭。</p>
+<h2 id="service"><a href="#service" class="headerlink" title="service"></a>service</h2><p>常用方法：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看防火墙状态</span></span><br><span class="line">service ufw status</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭防火墙</span></span><br><span class="line">service ufw stop</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动防火墙</span></span><br><span class="line">service ufw start</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重启</span></span><br><span class="line">service ufw restart</span><br></pre></td></tr></table></figure>
-<p>service 是一个运行 System V 的 init script，它其实是运行 /etc/init.d 和 /{lib,run,etc}/systemd/system 中的命令或程序，对于 /etc/init.d/ 就是等同于上面介绍的命令 /etc/init.d/appname.</p>
-<h2 id="systemctl">systemctl</h2>
-<p>常用方法：</p>
+
+<p>service 是一个运行 System V 的 init script，它其实是运行 &#x2F;etc&#x2F;init.d 和  &#x2F;{lib,run,etc}&#x2F;systemd&#x2F;system 中的命令或程序，对于 &#x2F;etc&#x2F;init.d&#x2F; 就是等同于上面介绍的命令 &#x2F;etc&#x2F;init.d&#x2F;appname.</p>
+<h2 id="systemctl"><a href="#systemctl" class="headerlink" title="systemctl"></a>systemctl</h2><p>常用方法：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看 zabbix-agent 运行状态</span></span><br><span class="line">systemctl status zabbix-agent.service</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭 zabbix-agent</span></span><br><span class="line">systemctl stop zabbix-agent.service</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动 zabbix-agent</span></span><br><span class="line">systemctl start zabbix-agent.service</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重启 zabbix-agent</span></span><br><span class="line">systemctl restart zabbix-agent.service</span><br></pre></td></tr></table></figure>
-<p>该命令非常强大，不仅可以启动程序，还可以设置程序开机自启等，不过在 Ubuntu 14.04等之前的系统中未有该命令。在 Centos、Redhat 等系统中，设置程序开机自启的有 chkconfig 等，不过，现在逐渐被抛弃。功能上 systemctl = service + chkconfig.</p>
-<h1 id="设置开机自启命令">设置开机自启命令</h1>
-<h2 id="update-rc.d">update-rc.d</h2>
-<p>常用方法：</p>
+
+<p>该命令非常强大，不仅可以启动程序，还可以设置程序开机自启等，不过在 Ubuntu 14.04等之前的系统中未有该命令。在 Centos、Redhat 等系统中，设置程序开机自启的有 chkconfig 等，不过，现在逐渐被抛弃。功能上 systemctl &#x3D; service + chkconfig.</p>
+<h1 id="设置开机自启命令"><a href="#设置开机自启命令" class="headerlink" title="设置开机自启命令"></a>设置开机自启命令</h1><h2 id="update-rc-d"><a href="#update-rc-d" class="headerlink" title="update-rc.d"></a>update-rc.d</h2><p>常用方法：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 取消开机启动 zabbix-agent，从 /etc/rcN.d 中清除到 /etc/init.d/zabbix-agent 链接</span></span><br><span class="line">update-rc.d -f zabbix-agent remove</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置默认启动级别的 zabbix-agent 开机自启</span></span><br><span class="line">update-rc.d zabbix-agent defaults</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置 zabbix-agent 开机自启</span></span><br><span class="line">update-rc.d zabbix-agent enable</span><br></pre></td></tr></table></figure>
-<h2 id="chkconfig">chkconfig</h2>
-<p>常用方法：</p>
+
+<h2 id="chkconfig"><a href="#chkconfig" class="headerlink" title="chkconfig"></a>chkconfig</h2><p>常用方法：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 设置开机启动z abbix-agent</span></span><br><span class="line">chkconfig --add zabbix-agent</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置开机不启动 zabbix-agent</span></span><br><span class="line">chkconfig --del zabbix-agent</span><br></pre></td></tr></table></figure>
+
 <p>在 Debian、Ubuntu 上无该命令，在 Centos、RedHat 上可以使用。</p>
-<h2 id="systemctl-1">systemctl</h2>
-<p>常用方法：</p>
+<h2 id="systemctl-1"><a href="#systemctl-1" class="headerlink" title="systemctl"></a>systemctl</h2><p>常用方法：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 开机启动ssh服务</span></span><br><span class="line">systemctl enable ssh.socket</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 开机不启动ssh服务</span></span><br><span class="line">systemctl disable ssh.socket</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看zabbix-agent是否开机启动</span></span><br><span class="line">systemctl list-unit-files | grep zabbix-agent</span><br><span class="line">systemctl is-enabled zabbix-agent</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -430,14 +429,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

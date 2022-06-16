@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E9%BB%98%E8%AE%A4%E6%9D%83%E9%99%90umask"><span class="nav-number">1.</span> <span class="nav-text">文件默认权限：umask</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90suid-sgid-sbit"><span class="nav-number">2.</span> <span class="nav-text">文件特殊权限：SUID, SGID, SBIT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#set-uid"><span class="nav-number">2.1.</span> <span class="nav-text">Set UID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#set-gid"><span class="nav-number">2.2.</span> <span class="nav-text">Set GID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sticky-bit"><span class="nav-number">2.3.</span> <span class="nav-text">Sticky Bit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90"><span class="nav-number">2.4.</span> <span class="nav-text">设置特殊权限</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E9%BB%98%E8%AE%A4%E6%9D%83%E9%99%90%EF%BC%9Aumask"><span class="nav-number">1.</span> <span class="nav-text">文件默认权限：umask</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90%EF%BC%9ASUID-SGID-SBIT"><span class="nav-number">2.</span> <span class="nav-text">文件特殊权限：SUID, SGID, SBIT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Set-UID"><span class="nav-number">2.1.</span> <span class="nav-text">Set UID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Set-GID"><span class="nav-number">2.2.</span> <span class="nav-text">Set GID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sticky-Bit"><span class="nav-number">2.3.</span> <span class="nav-text">Sticky Bit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90"><span class="nav-number">2.4.</span> <span class="nav-text">设置特殊权限</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -293,7 +293,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.5k</span>
+      <span>2.6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -313,45 +313,45 @@
     <div class="post-body" itemprop="articleBody">
         <p>对于 Linux 用户而言，当创建文件或目录时都会自动为该文件或目录分配权限，该权限就是默认权限。对于 Linux 文件和目录，除了具有默认权限外，还有特殊权限。默认权限和特殊权限在使用 Linux 系统时非常重要，特别是和团队开发时尤为重要。本篇就介绍一下如何查看和设置默认权限和特殊权限。以 Ubuntu 20.04 为例进行介绍。</p>
 <a id="more"></a>
-<h1 id="文件默认权限umask">文件默认权限：<strong>umask</strong></h1>
-<p>查看用户的默认权限</p>
+
+<h1 id="文件默认权限：umask"><a href="#文件默认权限：umask" class="headerlink" title="文件默认权限：umask"></a>文件默认权限：<strong>umask</strong></h1><p>查看用户的默认权限</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ <span class="built_in">umask</span></span><br><span class="line">002</span><br><span class="line">➜  ~ <span class="built_in">umask</span> -S</span><br><span class="line">u=rwx,g=rwx,o=rx</span><br></pre></td></tr></table></figure>
-<p>以 umask 显示的是数字，加上参数 -S (Symbolic) 显示的是字符。含义解释：文件权限有 r, w, x 三个，分别对应数字 4， 2， 1，002 表示创建文件、目录时剔除 w 写权限。如 umask -S 显示的是创建目录时的默认权限，从上面命令可以看到其他用户 o 缺少 w 写权限。值得注意的是，文件默认是没有可执行权限 x 的。即文件的默认最高权限是 -rw-rw-rw-，目录的默认最高权限是 drwxrwxrwx，因此，剔除 w 写权限时，用户新创建的文件的默认权限是 -rw-rw-r--，新创建的目录的默认权限是 drwxrwxr-x，如下示例</p>
+
+<p>以 umask 显示的是数字，加上参数 -S (Symbolic) 显示的是字符。含义解释：文件权限有 r, w, x 三个，分别对应数字 4， 2， 1，002 表示创建文件、目录时剔除 w 写权限。如 umask -S 显示的是创建目录时的默认权限，从上面命令可以看到其他用户 o 缺少 w 写权限。值得注意的是，文件默认是没有可执行权限 x 的。即文件的默认最高权限是 -rw-rw-rw-，目录的默认最高权限是 drwxrwxrwx，因此，剔除 w 写权限时，用户新创建的文件的默认权限是 -rw-rw-r–，新创建的目录的默认权限是 drwxrwxr-x，如下示例</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ touch test1</span><br><span class="line">➜  ~ mkdir test2</span><br><span class="line">➜  ~ ls -ld <span class="built_in">test</span>[12]  <span class="comment"># -d 表示只显示目录本身，不显示它里面包含的内容；中括号表示中间有个指定的字符，而不是任意字符，任意字符用 *</span></span><br><span class="line">-rw-rw-r-- 1 jinzhongxu jinzhongxu    0 3月  17 15:30 test1</span><br><span class="line">drwxrwxr-x 2 jinzhongxu jinzhongxu 4096 3月  17 15:30 test2</span><br></pre></td></tr></table></figure>
+
 <p>如何修改用户的默认权限</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果想要用户创建的新文件或目录的群组和其他人没有写权限，可以设置如下，即剔除用户的写权限</span></span><br><span class="line"><span class="built_in">umask</span> 022</span><br></pre></td></tr></table></figure>
-<h1 id="文件特殊权限suid-sgid-sbit">文件特殊权限：<strong>SUID, SGID, SBIT</strong></h1>
-<p>对于 Linux 系统中有一个目录 /tmp 它的权限如下</p>
+
+<h1 id="文件特殊权限：SUID-SGID-SBIT"><a href="#文件特殊权限：SUID-SGID-SBIT" class="headerlink" title="文件特殊权限：SUID, SGID, SBIT"></a>文件特殊权限：<strong>SUID, SGID, SBIT</strong></h1><p>对于 Linux 系统中有一个目录 &#x2F;tmp 它的权限如下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ls -ld /tmp</span><br><span class="line">drwxrwxrwt 12 root root 4096 3月  17 15:05 /tmp</span><br></pre></td></tr></table></figure>
-<p>可以看到它的权限中有一个 t，熟悉该目录的人应该知道，/tmp 目录下我们可以自由创建内容，也可以查看别人在该目录下创建的文件和目录，但是，我们不能删除别人创建的文件和目录。同时，别人也不能删除我们自己创建的文件和目录。这一切都要归功于特殊权限。</p>
-<p>​ 又如</p>
+
+<p>可以看到它的权限中有一个 t，熟悉该目录的人应该知道，&#x2F;tmp 目录下我们可以自由创建内容，也可以查看别人在该目录下创建的文件和目录，但是，我们不能删除别人创建的文件和目录。同时，别人也不能删除我们自己创建的文件和目录。这一切都要归功于特殊权限。</p>
+<p>​	又如</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ls -l /usr/bin/passwd</span><br><span class="line">-rwsr-xr-x 1 root root 68208 5月  28  2020 /usr/bin/passwd</span><br><span class="line">➜  ~ ls -l /etc/shadow</span><br><span class="line">-rw-r----- 1 root shadow 1229 3月  14 21:38 /etc/shadow</span><br></pre></td></tr></table></figure>
-<p>在 /etc/shadow 中存储的是所有用户的密码，但只有 root 用户可以查看和修改。但是，有些人可能会疑惑了，明明自己可以修改自己用户的密码啊，使用 passwd 直接修改就可以了，不需要通知 root 进行修改。这是为什么呢？其实，这也要归功于 /usr/bin/passwd 可执行文件特殊权限 s，那么这些特殊权限符号代表什么含义呢，如何进行设置呢？比如，使用 iftop 命令需要输入密码，如何不输入密码直接使用呢？</p>
-<h2 id="set-uid">Set UID</h2>
-<p>当 s 出现在文件拥有者的 x 权限上时，称为 Set UID，简称为 SUID 的特殊权限。关于该特殊权限有如下几个特点：</p>
-<ol type="1">
+
+<p>在 &#x2F;etc&#x2F;shadow 中存储的是所有用户的密码，但只有 root 用户可以查看和修改。但是，有些人可能会疑惑了，明明自己可以修改自己用户的密码啊，使用 passwd 直接修改就可以了，不需要通知 root 进行修改。这是为什么呢？其实，这也要归功于 &#x2F;usr&#x2F;bin&#x2F;passwd 可执行文件特殊权限 s，那么这些特殊权限符号代表什么含义呢，如何进行设置呢？比如，使用 iftop 命令需要输入密码，如何不输入密码直接使用呢？</p>
+<h2 id="Set-UID"><a href="#Set-UID" class="headerlink" title="Set UID"></a>Set UID</h2><p>当 s 出现在文件拥有者的 x 权限上时，称为 Set UID，简称为 SUID 的特殊权限。关于该特殊权限有如下几个特点：</p>
+<ol>
 <li>SUID 权限仅对二进制程序有效，如 passwd, iftop；</li>
 <li>执行者对于该程序需要具有执行权限；</li>
 <li>本权限仅在执行该程序的过程中有效；</li>
 <li>执行者将具有该程序拥有者的权限；</li>
 </ol>
-<p>当普通用户使用 passwd 执行修改密码的时候，因为 passwd 拥有特殊权限，因此，普通用户能够使用该命令，且命令执行期间拥有 root 的权限修改 /etc/shadow 文件</p>
-<h2 id="set-gid">Set GID</h2>
-<p>当 s 出现在群组的 x 上时，称为 Set GID，简称为 SGID，它有如下特点：</p>
-<ol type="1">
+<p>当普通用户使用 passwd 执行修改密码的时候，因为 passwd 拥有特殊权限，因此，普通用户能够使用该命令，且命令执行期间拥有 root 的权限修改 &#x2F;etc&#x2F;shadow 文件</p>
+<h2 id="Set-GID"><a href="#Set-GID" class="headerlink" title="Set GID"></a>Set GID</h2><p>当 s 出现在群组的 x 上时，称为 Set GID，简称为 SGID，它有如下特点：</p>
+<ol>
 <li>SGID 对二进制程序有用；</li>
 <li>程序执行者对于该程序来说，需具备 x 的权限；</li>
 <li>执行者在执行的过程中将会获得该程序群组的支持；</li>
 </ol>
-<h2 id="sticky-bit">Sticky Bit</h2>
-<p>与 Set UID 和 Set GID 不同，Sticky Bit 只针对目录有效。简称为 SBIT，其对目录的作用是：</p>
-<ol type="1">
+<h2 id="Sticky-Bit"><a href="#Sticky-Bit" class="headerlink" title="Sticky Bit"></a>Sticky Bit</h2><p>与 Set UID 和 Set GID 不同，Sticky Bit 只针对目录有效。简称为 SBIT，其对目录的作用是：</p>
+<ol>
 <li>当使用者对于此目录具有 w, x 权限时，即具有写入的权限；</li>
 <li>当使用者在该目录下创建文件或目录时，仅有自己与 root 才有权利删除该文件；</li>
 </ol>
-<p>举例来说，我们的 /tmp 本身的权限是 drwxrwxrwt， 在这样的权限内容下，任何人都可以在 /tmp 内新增、修改文件，但仅有该文件/目录创建者与 root 能够删除自己的目录或文件。</p>
-<h2 id="设置特殊权限">设置特殊权限</h2>
-<p>和读写执行一样，特殊权限也对应有数字：</p>
+<p>举例来说，我们的 &#x2F;tmp 本身的权限是 drwxrwxrwt， 在这样的权限内容下，任何人都可以在 &#x2F;tmp 内新增、修改文件，但仅有该文件&#x2F;目录创建者与 root 能够删除自己的目录或文件。</p>
+<h2 id="设置特殊权限"><a href="#设置特殊权限" class="headerlink" title="设置特殊权限"></a>设置特殊权限</h2><p>和读写执行一样，特殊权限也对应有数字：</p>
 <ul>
 <li>4 为 SUID</li>
 <li>2 为 SGID</li>
@@ -359,14 +359,16 @@
 </ul>
 <p>如下示例进行特殊权限设置</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ touch <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rw-rw-r-- 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ chmod 4664 <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwSrw-r-- 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
 <p>我们发现出现的是大 S，而不是小 s，这是为什么呢？因为文件 test 本身缺乏 x 可执行权限，所以增加特殊权限也为无法执行该文件，大 S 表示空，即无用的特殊权限。想要使用有用的特殊权限，需要我们的文件本身具有执行权限，如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ chmod +x <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwsrwxr-x 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ chmod 6775 <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwsrwsr-x 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ chmod u+s,g+s,o+t <span class="built_in">test</span></span><br><span class="line">➜  ~ ls -l <span class="built_in">test</span></span><br><span class="line">-rwsrwsr-t 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
 <p>可见这样就给文件附加了特殊权限。</p>
 <p>再比如</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod 4755 /usr/sbin/iftop</span><br><span class="line">ll /usr/sbin/iftop</span><br><span class="line">	-rwsr-xr-x 1 root root 68408 9月   5  2019 /usr/sbin/iftop*</span><br></pre></td></tr></table></figure>
+
 <p>这样普通用户就不需要输入密码就可以使用命令 iftop 了。</p>
-<h1 id="参考链接">参考链接</h1>
-<p>鸟哥的 LINUX 私房菜 基础学习篇（第四版）</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>鸟哥的 LINUX 私房菜 基础学习篇（第四版）</p>
 
     </div>
 
@@ -460,14 +462,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

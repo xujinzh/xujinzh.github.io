@@ -306,26 +306,30 @@
     <div class="post-body" itemprop="articleBody">
         <p>Python 是一种解释性、交互式、面向对象的编程语言。在 shell 上可以通过 python 命令方便的运行 <code>.py</code>文件。但是，如果不能正确选择参数，将导致程序运行失败或出错。如，因为依赖引用问题。本篇介绍在命令行运行 python 的常用方法。</p>
 <a id="more"></a>
-<h1 id="直接运行">直接运行</h1>
-<p>直接运行 python 文件，大多数情况下，这种方法可以正常运行，假设 python 文件完整路径为 <code>/pythonprojects/run.py</code></p>
+
+<h1 id="直接运行"><a href="#直接运行" class="headerlink" title="直接运行"></a>直接运行</h1><p>直接运行 python 文件，大多数情况下，这种方法可以正常运行，假设 python 文件完整路径为 <code>/pythonprojects/run.py</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /pythonprojects</span><br><span class="line">python run.py</span><br></pre></td></tr></table></figure>
-<p>当 <code>run.py</code> 中依赖的模块在 python 环境变量中，或者 <code>/pythonprojects</code> 目录下，这种方法运行没有问题。其实，在运行时，python 会把 <code>/pythonprojects</code> 添加到 PYTHONPATH 中第一个。</p>
-<h1 id="添加参数运行">添加参数运行</h1>
-<p>当开发的程序项目比较大，或者出现类似如下结构时，需要增加参数才能正常运行.</p>
-<p>例子来源于：<code>https://github.com/huanglianghua/siamfc-pytorch</code>，假设克隆到 <code>/pythonprojects</code> 下：</p>
+
+<p>当 <code>run.py</code> 中依赖的模块在 python  环境变量中，或者 <code>/pythonprojects</code> 目录下，这种方法运行没有问题。其实，在运行时，python 会把 <code>/pythonprojects</code> 添加到 PYTHONPATH 中第一个。</p>
+<h1 id="添加参数运行"><a href="#添加参数运行" class="headerlink" title="添加参数运行"></a>添加参数运行</h1><p>当开发的程序项目比较大，或者出现类似如下结构时，需要增加参数才能正常运行.</p>
+<p>例子来源于：<code>https://github.com/huanglianghua/siamfc-pytorch</code>，假设克隆到  <code>/pythonprojects</code> 下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span>  /pythonprojects</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/huanglianghua/siamfc-pytorch.git</span><br></pre></td></tr></table></figure>
+
 <p>项目结构如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">siamfc</span><br><span class="line">---- __init__.py</span><br><span class="line">---- backbones.py</span><br><span class="line">---- datasets.py</span><br><span class="line">---- heads.py</span><br><span class="line">---- losses.py</span><br><span class="line">---- ops.py</span><br><span class="line">---- siamfc.py</span><br><span class="line">---- transforms.py</span><br><span class="line">tools</span><br><span class="line">---- demo.py</span><br><span class="line">---- test.py</span><br><span class="line">---- train.py</span><br></pre></td></tr></table></figure>
+
 <p>因为 <code>train.py</code> 中引用了 <code>siamfc</code> 中的模块，因此，直接使用如下方法是运行不成功的。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /pythonprojects/siamfc-pytorch</span><br><span class="line">python tools/train.py</span><br></pre></td></tr></table></figure>
-<p>提示找不到模块： <code>ModuleNotFoundError: No module named 'siamfc'.</code> 这是因为虽然你进入了目录 <code>/pythonprojects/siamfc-pytorch</code>，但是，运行代码 <code>python tools/train.py</code> 时，却将 <code>/pythonprojects/siamfc-pytorch/tools</code> 作为当前运行目录。</p>
+
+<p>提示找不到模块： <code>ModuleNotFoundError: No module named &#39;siamfc&#39;.</code> 这是因为虽然你进入了目录 <code>/pythonprojects/siamfc-pytorch</code>，但是，运行代码 <code>python tools/train.py</code> 时，却将 <code>/pythonprojects/siamfc-pytorch/tools</code> 作为当前运行目录。</p>
 <p>此时，需要使用如下方法运行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /pythonprojects/siamfc-pytorch</span><br><span class="line">python -m tools.train</span><br></pre></td></tr></table></figure>
+
 <p>使用命令 <code>man python</code> 可以查看 <code>-m</code> 参数的含义：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-m module-name</span><br><span class="line">    Searches sys.path <span class="keyword">for</span> the named module and runs the corresponding .py file as a script.</span><br></pre></td></tr></table></figure>
+
 <p>使用 <code>python -m tools.train</code> 运行，会把 <code>/pythonprojects/siamfc-pytorch</code> 当作主目录，以子模块调用的方式运行 <code>train.py</code> 模块</p>
-<h1 id="参考文献">参考文献</h1>
-<ol type="1">
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li>[<a target="_blank" rel="noopener" href="https://www.cnblogs.com/xueweihan/p/5118222.html">python]自问自答：python -m参数？</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.reddit.com/r/learnpython/comments/729u0t/module_not_found_error_when_trying_to_run_from_cmd/">Module Not Found Error when trying to run from cmd</a></li>
 </ol>
@@ -421,14 +425,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

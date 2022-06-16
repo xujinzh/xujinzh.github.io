@@ -156,7 +156,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#seq2seq"><span class="nav-number">1.</span> <span class="nav-text">Seq2seq</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#self-attention"><span class="nav-number">2.</span> <span class="nav-text">Self-attention</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#encoder"><span class="nav-number">3.</span> <span class="nav-text">Encoder</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#decoder"><span class="nav-number">4.</span> <span class="nav-text">Decoder</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">5.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Seq2seq"><span class="nav-number">1.</span> <span class="nav-text">Seq2seq</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Self-attention"><span class="nav-number">2.</span> <span class="nav-text">Self-attention</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Encoder"><span class="nav-number">3.</span> <span class="nav-text">Encoder</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Decoder"><span class="nav-number">4.</span> <span class="nav-text">Decoder</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">5.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -323,61 +323,43 @@
     <div class="post-body" itemprop="articleBody">
         <p>Transformer 是一种 Seq2seq 模型，即 input a sequence, output a sequence. 应用包括语音识别（输入语音，输出文本）、机器翻译（输入一种语言文本，输出另一种语言文本）、语言翻译（输入一种语言的语音，输出是另一种语言的文本，如字幕）、语音合成（输入一种语言文本，输出另一种语言的语音）、聊天机器人（对话）等，这些都可以看作 QA（Question &amp; Answering）问题，都可以使用 Seq2seq 模型解决。</p>
 <a id="more"></a>
-<h1 id="seq2seq">Seq2seq</h1>
-<p>一般的 Seq2seq 模型的一般框架</p>
+
+<h1 id="Seq2seq"><a href="#Seq2seq" class="headerlink" title="Seq2seq"></a>Seq2seq</h1><p>一般的 Seq2seq 模型的一般框架</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">input sequence -&gt; Encoder -&gt; Decoder -&gt; output sequence</span><br></pre></td></tr></table></figure>
+
 <p>如 Transformer 就是该模型的一种。李宏毅老师的课件：<a target="_blank" rel="noopener" href="https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/seq2seq_v9.pdf">Transformer</a></p>
-<h1 id="self-attention">Self-attention</h1>
-<p>self-attention 中文是自注意力，它对于输入的一列向量输出相同数量的一列向量。</p>
-<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/self-attention.png" /></p>
-<p>如上图所示，<span class="math inline">\(a^i, i = 1, 2, 3, 4\)</span> 为输入向量（如词嵌入向量），<span class="math inline">\(q^i, i = 1, 2, 3, 4\)</span> 为 query，<span class="math inline">\(k^i, i = 1, 2, 3, 4\)</span> 为 key，<span class="math inline">\(v^i, i=1, 2, 3, 4\)</span> 为 value，后三者分别有输入向量 <span class="math inline">\(a^i\)</span> 得到 <span class="math display">\[
-q^i = W^q a^i
-\]</span></p>
-<p><span class="math display">\[
-k^i = W^k a^i
-\]</span></p>
-<p><span class="math display">\[
-v^i = W^v a^i
-\]</span></p>
-<p>这里，矩阵 <span class="math inline">\(W^q, W^k, W^v\)</span> 是矩阵，但不一定是方阵，一般是行大于列。行数代表输入向量的维数，列代表乘积后输出的向量 <span class="math inline">\(q^i, k^i, v^i\)</span> 维数。</p>
-<p>而 <span class="math inline">\(\alpha_{2, 1}\)</span> 是由 <span class="math inline">\(q^2\)</span> 与 <span class="math inline">\(k^1\)</span> 做 dot product 而得到的，其他依次类推 <span class="math inline">\(\alpha_{2,2}, \alpha_{2, 3}, \alpha_{2, 4}\)</span>. 然后，通过 Softmax 激活函数，得到 <span class="math inline">\(\alpha^{\prime}_{2, i}, i = 1, 2, 3, 4\)</span> 作为系数与 <span class="math inline">\(v^i, i = 1, 2, 3, 4\)</span> 相乘得到 <span class="math inline">\(b^2 = \sum_i \alpha^{\prime}_{2, i} v^i\)</span>，对于其他 <span class="math inline">\(b^1, b^3, b^4\)</span> 依次类推。</p>
+<h1 id="Self-attention"><a href="#Self-attention" class="headerlink" title="Self-attention"></a>Self-attention</h1><p>self-attention 中文是自注意力，它对于输入的一列向量输出相同数量的一列向量。</p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/self-attention.png"></p>
+<p>如上图所示，$a^i, i &#x3D; 1, 2, 3, 4$ 为输入向量（如词嵌入向量），$q^i, i &#x3D; 1, 2, 3, 4$ 为 query，$k^i, i &#x3D; 1, 2, 3, 4$ 为 key，$v^i, i&#x3D;1, 2, 3, 4$ 为 value，后三者分别有输入向量 $a^i$ 得到<br>$$<br>q^i &#x3D; W^q a^i<br>$$</p>
+<p>$$<br>k^i &#x3D; W^k a^i<br>$$</p>
+<p>$$<br>v^i &#x3D; W^v a^i<br>$$</p>
+<p>这里，矩阵 $W^q, W^k, W^v$ 是矩阵，但不一定是方阵，一般是行大于列。行数代表输入向量的维数，列代表乘积后输出的向量 $q^i, k^i, v^i$ 维数。</p>
+<p>而 $\alpha_{2, 1}$ 是由 $q^2$ 与 $k^1$ 做 dot product 而得到的，其他依次类推 $\alpha_{2,2}, \alpha_{2, 3}, \alpha_{2, 4}$. 然后，通过 Softmax 激活函数，得到  $\alpha^{\prime}<em>{2, i}, i &#x3D; 1, 2, 3, 4$ 作为系数与 $v^i, i &#x3D; 1, 2, 3, 4$ 相乘得到 $b^2 &#x3D; \sum_i \alpha^{\prime}</em>{2, i} v^i$，对于其他 $b^1, b^3, b^4$ 依次类推。</p>
 <p>其实，Self-attention 能够利用矩阵简洁表示如下，这也是其并行化计算的原因</p>
-<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/self-attention-matrix.png" /></p>
-<p>这里 <span class="math inline">\(I = (a^i), i = 1, 2, 3, 4\)</span> 为输入向量列，<span class="math inline">\(W^q, W^k, W^v\)</span> 为需要学习的参数矩阵，<span class="math inline">\(Q, K, V\)</span> 分别为 query, key, value 矩阵，<span class="math inline">\(A\)</span> 为 attention 系数，<span class="math inline">\(A^{\prime}\)</span> 为经过 Sigmoid 归一化后的 attention matrix. <span class="math inline">\(O = (b^i), i = 1, 2, 3, 4\)</span> 为 self-attention 输出的向量列。</p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/self-attention-matrix.png"></p>
+<p>这里 $I &#x3D; (a^i), i &#x3D; 1, 2, 3, 4$ 为输入向量列，$W^q, W^k, W^v$ 为需要学习的参数矩阵，$Q, K, V$ 分别为 query, key, value 矩阵，$A$ 为 attention 系数，$A^{\prime}$ 为经过 Sigmoid 归一化后的 attention matrix. $O &#x3D; (b^i), i &#x3D; 1, 2, 3, 4$ 为 self-attention 输出的向量列。</p>
 <p>在实际使用中，常常采用 multi-head self-attention，如下图所示</p>
-<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/multi-head-self-attention.png" /></p>
-<p>与上面的 self-attention 类似，先通过 <span class="math inline">\(W^q, W^k, W^v\)</span> 得到 <span class="math inline">\(q^i, k^i, v^i\)</span>，然后再分别经过 2 个（这里例子 multi-head 为 2 头的）矩阵得到 2 个 <span class="math display">\[
-q^{i, 1} = W^{q, 1}q^i, q^{i,2} = W^{q,2}q^i
-\]</span></p>
-<p><span class="math display">\[
-k^{i, 1} = W^{k, 1}k^i, k^{i,2} = W^{k,2}k^i
-\]</span></p>
-<p><span class="math display">\[
-v^{i, 1} = W^{v, 1}v^i, v^{i,2} = W^{v,2}v^i
-\]</span></p>
-<p>那计算 <span class="math inline">\(b^{i,2}\)</span> 时，只需要 <span class="math inline">\(q^{i,2}\)</span> 与 <span class="math inline">\(k^{j,2}, j = 1, 2, 3, 4\)</span> 相乘后然后经过 Sigmoid 归一化后得到 attention 系数，然后组合 <span class="math inline">\(v^{i,2}\)</span> 相乘得到 <span class="math display">\[
-b^{i,2} = \sum_j \alpha^{\prime}_{i, 2, j} v^{j, 2}
-\]</span> 注意，这里只需要计算相同头（如 <span class="math inline">\((q^{i,1}, k^{i,1}, v^{i,1}), (q^{j,1}, k^{j,1}, v^{j,1})\)</span>，相同标号 1）的值，计算方法同上面的 selft-attention.</p>
-<p>最后，<span class="math inline">\(b^i = W^0 (b^{i,1}, b^{i,2})^T\)</span> .</p>
-<p>这样，就从 <span class="math inline">\(a^i, i = 1, 2, 3, 4\)</span> 得到 <span class="math inline">\(b^i, i = 1, 2, 3, 4\)</span>.</p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/multi-head-self-attention.png"></p>
+<p>与上面的 self-attention 类似，先通过 $W^q, W^k, W^v$ 得到 $q^i, k^i, v^i$，然后再分别经过 2 个（这里例子 multi-head 为 2 头的）矩阵得到 2 个<br>$$<br>q^{i, 1} &#x3D; W^{q, 1}q^i, q^{i,2} &#x3D; W^{q,2}q^i<br>$$</p>
+<p>$$<br>k^{i, 1} &#x3D; W^{k, 1}k^i, k^{i,2} &#x3D; W^{k,2}k^i<br>$$</p>
+<p>$$<br>v^{i, 1} &#x3D; W^{v, 1}v^i, v^{i,2} &#x3D; W^{v,2}v^i<br>$$</p>
+<p>那计算 $b^{i,2}$ 时，只需要 $q^{i,2}$ 与 $k^{j,2}, j &#x3D; 1, 2, 3, 4$ 相乘后然后经过 Sigmoid 归一化后得到 attention 系数，然后组合 $v^{i,2}$ 相乘得到<br>$$<br>b^{i,2} &#x3D; \sum_j \alpha^{\prime}_{i, 2, j} v^{j, 2}<br>$$<br>注意，这里只需要计算相同头（如 $(q^{i,1}, k^{i,1}, v^{i,1}), (q^{j,1}, k^{j,1}, v^{j,1})$，相同标号 1）的值，计算方法同上面的 selft-attention.</p>
+<p>最后，$b^i &#x3D; W^0 (b^{i,1}, b^{i,2})^T$ .</p>
+<p>这样，就从 $a^i, i &#x3D; 1, 2, 3, 4$ 得到 $b^i, i &#x3D; 1, 2, 3, 4$.</p>
 <p>CNN 和 Self-attention 的关系：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1911.03584.pdf">On The Relationship Between Self-attention And Convolutional Layers</a></p>
-<h1 id="encoder">Encoder</h1>
-<p>输入一排向量，输出另一排同样长度的向量。在 Transformer 中的 Encoder 里用的是 <a target="_blank" rel="noopener" href="https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/self_v7.pdf">Self-attention</a>.</p>
-<p>BERT 是仅仅使用 Transformer 的 Encoder 构建起来的。</p>
-<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/encoder.png" /></p>
-<p>Encoder 是由 <span class="math inline">\(N\)</span> 个 self-attention 模块线性拼接而成，输入向量列增加了位置信息。</p>
-<h1 id="decoder">Decoder</h1>
-<p>输入是 Encoder 的输出向量和一个 special token （标识开始 BEGIN）。</p>
-<p>GPT-2, GPT-3 是仅仅使用 Transformer 的 Decoder 构建起来的，属于 Unsupervised Pre-training model。 在 300 billion tokens of text 上训练得到，它的目标（能够做）Predict the next word.</p>
-<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/decoder.png" /></p>
-<p>Decoder 与 Encoder 的区别是调整为 masked multi-head attention，并在中间增加 cross attention，引入 encoder 的信息。而 masked multi-head attention 是因为后面的单词或向量还未得到，不能像 encoder 里的 multi-head attention 那样使用全面的向量的信息，只能使用已经得到的向量的信息。</p>
-<p>在 cross attention 中，对于 decoder 中 masked multi-head attenion 得到的每一个 <span class="math inline">\(q\)</span> 分别于 encoder 中的 <span class="math inline">\(k^i = W^k a^i, v^i = W^v a^i\)</span> 做 self-attention 操作得到 <span class="math inline">\(v\)</span>，如图所示</p>
-<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/cross-attention.png" /></p>
-<h1 id="代码实现">代码实现</h1>
-<p>TensorFlow: <a target="_blank" rel="noopener" href="https://github.com/tensorflow/tensor2tensor">tensor2tensor</a></p>
+<h1 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h1><p>输入一排向量，输出另一排同样长度的向量。在 Transformer 中的 Encoder 里用的是 <a target="_blank" rel="noopener" href="https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/self_v7.pdf">Self-attention</a>.</p>
+<p> BERT 是仅仅使用 Transformer 的 Encoder 构建起来的。</p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/encoder.png"></p>
+<p>Encoder 是由 $N$ 个 self-attention 模块线性拼接而成，输入向量列增加了位置信息。</p>
+<h1 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h1><p>输入是 Encoder 的输出向量和一个 special token （标识开始 BEGIN）。</p>
+<p> GPT-2, GPT-3 是仅仅使用 Transformer 的 Decoder 构建起来的，属于 Unsupervised Pre-training model。 在 300 billion tokens of text 上训练得到，它的目标（能够做）Predict the next word.</p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/decoder.png"></p>
+<p>Decoder 与 Encoder  的区别是调整为 masked multi-head attention，并在中间增加 cross attention，引入 encoder 的信息。而 masked multi-head attention 是因为后面的单词或向量还未得到，不能像 encoder 里的 multi-head attention 那样使用全面的向量的信息，只能使用已经得到的向量的信息。</p>
+<p>在 cross attention 中，对于 decoder 中 masked multi-head attenion 得到的每一个 $q$ 分别于 encoder 中的 $k^i &#x3D; W^k a^i, v^i &#x3D; W^v a^i$ 做 self-attention 操作得到 $v$，如图所示</p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/transformer/cross-attention.png"></p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>TensorFlow: <a target="_blank" rel="noopener" href="https://github.com/tensorflow/tensor2tensor">tensor2tensor</a></p>
 <p>pyTorch: <a target="_blank" rel="noopener" href="http://nlp.seas.harvard.edu/2018/04/03/attention.html">The Annotated Transformer</a></p>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://www.seldon.io/what-is-covariate-shift/">What is Covariate Shift?</a></li>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/48508221">详解Transformer （Attention Is All You Need）</a></li>
 <li><a target="_blank" rel="noopener" href="http://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer</a></li>
@@ -478,14 +460,14 @@ b^{i,2} = \sum_j \alpha^{\prime}_{i, 2, j} v^{j, 2}
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

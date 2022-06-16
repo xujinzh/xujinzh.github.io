@@ -283,7 +283,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>576</span>
+      <span>568</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -303,22 +303,21 @@
     <div class="post-body" itemprop="articleBody">
         <p>Hexo + GitHub (or VPS) + Markdown 搭配完成博文撰写与发布，记录个人每天学习到的知识以及产生的灵感，是非常方便的。但是，最近发现我的博客出现搜索功能紊乱的问题，有些博文明明存在却搜索不到。因此，经过长时间的探索发现一种解决方法。特此记录下来。</p>
 <a id="more"></a>
-<h1 id="问题描述">问题描述</h1>
-<p>在登录到博客网站后，想要通过关键字搜索某篇博文，搜索不到，但是确信博文是存在的。经过一页一页翻找，确实找到了博文。断定搜索功能失效。</p>
+
+<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>在登录到博客网站后，想要通过关键字搜索某篇博文，搜索不到，但是确信博文是存在的。经过一页一页翻找，确实找到了博文。断定搜索功能失效。</p>
 <p>尝试，在本地重新生成和部署</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> blog</span><br><span class="line">hexo clean</span><br><span class="line">hexo generate </span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
+
 <p>再重新打开博文进行搜索，发现可以使用。但是，写完博文后再次生成部署，发现搜索功能又失效。</p>
-<h1 id="定位问题">定位问题</h1>
-<p>通过网站直接访问搜索网页： https://xujinzh.github.io/search.xml</p>
-<p>发现在顶部有红色错误提示，第<span class="math inline">\(i\)</span>行和第<span class="math inline">\(j\)</span>列，字符编码错误。</p>
-<p>在本地打开 <code>public/search.xml</code> 的第 <span class="math inline">\(i\)</span> 行和第 <span class="math inline">\(j\)</span> 列，看看它属于哪篇博文。</p>
+<h1 id="定位问题"><a href="#定位问题" class="headerlink" title="定位问题"></a>定位问题</h1><p>通过网站直接访问搜索网页： <a href="https://xujinzh.github.io/search.xml">https://xujinzh.github.io/search.xml</a></p>
+<p>发现在顶部有红色错误提示，第$i$行和第$j$列，字符编码错误。</p>
+<p>在本地打开 <code>public/search.xml</code> 的第 $i$ 行和第 $j$ 列，看看它属于哪篇博文。</p>
 <p>在博文中检查是否有不合法的字符出现。清除掉它们。</p>
-<h1 id="重新生成和部署">重新生成和部署</h1>
-<p>清理完所有非法字符后，建议先清除，然后再重新生成和部署</p>
+<h1 id="重新生成和部署"><a href="#重新生成和部署" class="headerlink" title="重新生成和部署"></a>重新生成和部署</h1><p>清理完所有非法字符后，建议先清除，然后再重新生成和部署</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> blog</span><br><span class="line"><span class="comment"># 先清除</span></span><br><span class="line">hexo clean</span><br><span class="line">hexo g -d</span><br></pre></td></tr></table></figure>
+
 <p>之后，在博客上发现搜索功能恢复。重试多次清除、生成和部署后，都能够准确搜索。</p>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Strong997/article/details/104887353">Hexo本地搜索失效</a></li>
 </ol>
 
@@ -414,14 +413,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

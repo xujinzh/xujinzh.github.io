@@ -312,26 +312,29 @@
     <div class="post-body" itemprop="articleBody">
         <p>在 Ubuntu（或其他 Debian 类系统）上安装卸载软件常常都是通过包管理器 apt (或 apt-get) 来实现的。通过 apt remove packagename 和 apt purge packagename 都可以卸载软件，那么它们都有什么区别呢，它们都做了什么呢？本篇进行简单介绍。</p>
 <a id="more"></a>
-<h1 id="remove">remove</h1>
-<p>使用命令</p>
+
+<h1 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h1><p>使用命令 </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt remove packagename </span><br></pre></td></tr></table></figure>
+
 <p>确实能够卸载软件，但是，它会保留软件的配置文件信息。当下次再次安装该软件时，将会检索到保留的配置文件，安装时将会跳过软件的配置环节。</p>
-<h1 id="dpkg">dpkg</h1>
-<p>使用命令 <code>dpkg --list packagename</code> 可以查看软件的信息，如</p>
+<h1 id="dpkg"><a href="#dpkg" class="headerlink" title="dpkg"></a>dpkg</h1><p>使用命令 <code>dpkg --list packagename</code> 可以查看软件的信息，如</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ dpkg --list python</span><br><span class="line">Desired=Unknown/Install/Remove/Purge/Hold</span><br><span class="line">| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend</span><br><span class="line">|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)</span><br><span class="line">||/ Name                     Version           Architecture      Description</span><br><span class="line">+++-========================-=================-=================-======================================================</span><br><span class="line">ii  python                   2.7.15~rc1-1      amd64             interactive high-level object-oriented language</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">not</span>-installed    - The package <span class="keyword">is</span> <span class="keyword">not</span> installed on this system</span><br><span class="line">config-files     - Only the configuration files are deployed to this system</span><br><span class="line">half-installed   - The installation of the package has been started, but <span class="keyword">not</span> completed</span><br><span class="line">unpacked         - The package <span class="keyword">is</span> unpacked, but <span class="keyword">not</span> configured</span><br><span class="line">half-configured  - The package <span class="keyword">is</span> unpacked <span class="keyword">and</span> configuration has started but <span class="keyword">not</span> completed</span><br><span class="line">triggers-awaited - The package awaits trigger processing by another package</span><br><span class="line">triggers-pending - The package has been triggered</span><br><span class="line">installed        - The packaged <span class="keyword">is</span> unpacked <span class="keyword">and</span> configured OK</span><br></pre></td></tr></table></figure>
-<p>当使用命令 <code>apt remove packagename</code> 卸载包后，再使用 <code>dpkg --list packagename</code> 可以看到出现 "rc"，而不是 "ii"，表示卸载（remove）和保留配置文件（config-files）。</p>
+
+<p>当使用命令 <code>apt remove packagename</code> 卸载包后，再使用 <code>dpkg --list packagename</code> 可以看到出现 “rc”，而不是 “ii”，表示卸载（remove）和保留配置文件（config-files）。</p>
 <p>那么如何清理配置文件呢？或者在卸载时同时清空配置文件信息，这样下次安装时能够重新安装并重新配置，使用下面的命令。</p>
-<h1 id="purge">purge</h1>
-<p>使用命令</p>
+<h1 id="purge"><a href="#purge" class="headerlink" title="purge"></a>purge</h1><p>使用命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt purge packagename</span><br></pre></td></tr></table></figure>
+
 <p>能够同时卸载软件和清理软件配置。</p>
 <p>在 Ubuntu 上，很多人会使用 apt autoremove 命令，此命令能够清理多余的软件包，但是，却将配置文件保留在系统中，应慎用。建议以后多使用命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt purge packagename</span><br><span class="line">apt --purge remove packagename</span><br></pre></td></tr></table></figure>
-<p>当然，如果想要保留配置文件，建议直接使用</p>
+
+<p>当然，如果想要保留配置文件，建议直接使用 </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt remove packagename</span><br></pre></td></tr></table></figure>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="http://bencane.com/2014/08/18/removing-packages-and-configurations-with-apt-get/">Removing packages and configurations with apt-get</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f6176973b56f">关于apt-get remove 与 apt-get purge</a></li>
 </ol>
@@ -427,14 +430,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

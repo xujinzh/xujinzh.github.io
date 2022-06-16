@@ -315,22 +315,25 @@
     <div class="post-body" itemprop="articleBody">
         <p>Python 作为一种高级编程语言，简洁高效，开发效率高。将 Python 与 JupyterLab 结合使用非常方便，也是我之前常采用的形式。但本篇主要介绍用 Python 开发桌面等应用程序，利用图形界面实现与用户交互。本篇将包含 Miniconda, PyQt5, pyqt5-tools, Qt Designer, pyinstaller 等。</p>
 <a id="more"></a>
-<h1 id="安装需要的包">安装需要的包</h1>
-<p>首先，从<a target="_blank" rel="noopener" href="https://docs.conda.io/en/latest/miniconda.html">官网</a>下载 Miniconda，配置好开发环境，这时就可以使用 Python 了。</p>
+
+<h1 id="安装需要的包"><a href="#安装需要的包" class="headerlink" title="安装需要的包"></a>安装需要的包</h1><p>首先，从<a target="_blank" rel="noopener" href="https://docs.conda.io/en/latest/miniconda.html">官网</a>下载 Miniconda，配置好开发环境，这时就可以使用 Python 了。</p>
 <p>其次，从 <a target="_blank" rel="noopener" href="https://pypi.org/">Python packages 官网</a> 安装 PyQt5 和 pyqt5-tools（PyQt6 在 2021年1月份已经发布，截止本篇文章，已经到 6.2.1，大家可以自己选择使用）。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install PyQt5</span><br><span class="line">pip install pyqt5-tools</span><br></pre></td></tr></table></figure>
-<p>到目前，所安装的包已经足够开发 Python 图形用户程序，但设计图形界面不是那么直观，可利用下面的 Qt Designer 进行图形设计界面。</p>
+
+<p>到目前，所安装的包已经足够开发 Python 图形用户程序，但设计图形界面不是那么直观，可利用下面的 Qt Designer  进行图形设计界面。</p>
 <p>然后，从网址 <a target="_blank" rel="noopener" href="https://build-system.fman.io/qt-designer-download">fman build system</a> 下载 Qt Designer，包含有 Windows 版和 Mac 版。下载需要的版本，并安装。在 Windows 上利用 Miniconda 安装过 PyQt5 和 pyqt5-tools 后，默认会在路径 <code>miniconda\Lib\site-packages\qt5_applications\Qt\bin</code>下包含有 Qt Designer 工具，只需要把它添加到 PyCharm 中即可，方法如下：<font color=cyan>在设置中搜索 external tools， 打开后，添加，主要是把路径设置好即可。这样在工程主目录右键即可看到 external tools 里的 qt designer (添加时自己设置的名字)</font>。</p>
 <p>最后，安装打包程序 pyinstaller:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pyinstaller</span><br></pre></td></tr></table></figure>
-<h1 id="开发流程">开发流程</h1>
-<p>首先，使用 Qt Designer 设计需要的图形界面，然后保存，如 <code>test.ui</code>.</p>
+
+<h1 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h1><p>首先，使用 Qt Designer 设计需要的图形界面，然后保存，如 <code>test.ui</code>.</p>
 <p>其次，进入该文件的目录，打开 shell 或 cmd，输入如下命令，把其转化为 .py 文件:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyuic5 -x test.ui -o main.py</span><br></pre></td></tr></table></figure>
-<p>只需要把它添加到 PyCharm 中即可，方法如下：<font color=cyan>在设置中搜索 external tools， 打开后，添加，program 选择程序路径，arguments 填写 <code>$FileName$ -o $FileNameWithoutExtension$.py</code>, working directory 填写 <code>$FileDir$</code>， 设置好点确定即可。这样在工程主目录右键即可看到 external tools 里的 PyUIC5 (添加时自己设置的名字)</font>。</p>
+
+<p>只需要把它添加到 PyCharm 中即可，方法如下：<font color=cyan>在设置中搜索 external tools， 打开后，添加，program 选择程序路径，arguments 填写 <code>$FileName$ -o $FileNameWithoutExtension$.py</code>,  working directory 填写 <code>$FileDir$</code>， 设置好点确定即可。这样在工程主目录右键即可看到 external tools 里的 PyUIC5 (添加时自己设置的名字)</font>。</p>
 <p>然后，在该文件中开发，增加各按钮等的功能函数。此时，运行程序能够看到程序演示效果。</p>
 <p>最后，使用 pyinstaller 将 Python 程序打包成可独立运行的应用程序。因为其将运行该程序的所有依赖环境都打包进一个 .exe 或 .app 文件中，所以可以拷贝或传播到其他电脑上使用。打包方法如下（首先进入工程目录，假设 main.py 是程序主入口）：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 常用方法，打包成一个文件夹，该方法比加 -F 打包成一个文件的程序启动速度快3-6倍</span></span><br><span class="line">pyinstaller main.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># -w (--noconsole) 设置程序运行时不显示黑框；-i icon.ico 设置程序图标</span></span><br><span class="line">pyinstaller -w -i icon.ico main.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加额外数据，如图像资源</span></span><br><span class="line"><span class="comment"># pyinstaller x.py --add-data=&quot;源地址;目标地址&quot;。 windows以;分割，linux以:分割</span></span><br><span class="line"><span class="comment"># 如下，会把 main.py 同目录下的 resources 文件夹，打包到 dist/main 文件夹中，命名仍然是 resources</span></span><br><span class="line">pyinstaller main.py --add-data resources;resources</span><br><span class="line"></span><br><span class="line"><span class="comment"># 个人常用方法</span></span><br><span class="line"><span class="comment"># 不显示控制台，清空上次打包痕迹，设置图标，打包到release1.0，添加资源</span></span><br><span class="line">pyinstaller main.py -w --clean -i icon.ico --distpath release1.0 --add-data resources;resources</span><br></pre></td></tr></table></figure>
+
 <p>详细打包方法可参考我的另一篇：<a href="https://xujinzh.github.io/2020/07/21/python-to-exe/">Python 程序编译成 exe 可执行文件</a>.</p>
 <p>此时，点击 dist 目录下的 main.exe 或 main.app 就可以运行程序了。</p>
 <p><font color=cyan>注意：打包时建议使用 conda 另外创建一个新的虚拟环境，该坏境包含运行程序必须的包即可，其他建议不要安装，这样打包的程序会较小。</font></p>
@@ -430,14 +433,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

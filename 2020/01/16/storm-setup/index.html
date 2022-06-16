@@ -147,7 +147,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85jdk"><span class="nav-number">1.</span> <span class="nav-text">安装jdk</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85zookeeper%E5%92%8Cstorm"><span class="nav-number">2.</span> <span class="nav-text">安装Zookeeper和Storm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8zookeeper%E5%92%8Cstorm"><span class="nav-number">3.</span> <span class="nav-text">启动zookeeper和storm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8zookeeper"><span class="nav-number">3.1.</span> <span class="nav-text">启动zookeeper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8storm"><span class="nav-number">3.2.</span> <span class="nav-text">启动storm</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E9%97%AD"><span class="nav-number">4.</span> <span class="nav-text">关闭</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85jdk"><span class="nav-number">1.</span> <span class="nav-text">安装jdk</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Zookeeper%E5%92%8CStorm"><span class="nav-number">2.</span> <span class="nav-text">安装Zookeeper和Storm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8zookeeper%E5%92%8Cstorm"><span class="nav-number">3.</span> <span class="nav-text">启动zookeeper和storm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8zookeeper"><span class="nav-number">3.1.</span> <span class="nav-text">启动zookeeper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8storm"><span class="nav-number">3.2.</span> <span class="nav-text">启动storm</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E9%97%AD"><span class="nav-number">4.</span> <span class="nav-text">关闭</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -290,7 +290,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.5k</span>
+      <span>1.6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -308,49 +308,59 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>Storm的运行需要Zookeeper的协助，主要是为了协调Storm无状态的Master守护进程Nimbus和Worker守护进程Supervisor。所以启动Storm之前需要首先启动Zookeeper，下面分三步进行介绍，注意，这里以单机模式测试，关于Zookeeper的Standalone集群部署请参考我的另一篇文章：<a href="https://xujinzh.github.io/2020/03/03/zookeeper-cluster-deployment/">Zookeeper集群部署</a>, 关于storm的Standalone集群部署请参考我的文章：<a href="https://xujinzh.github.io/2020/03/08/storm-cluster-deployment/">storm集群部署</a></p>
+        <p>Storm的运行需要Zookeeper的协助，主要是为了协调Storm无状态的Master守护进程Nimbus和Worker守护进程Supervisor。所以启动Storm之前需要首先启动Zookeeper，下面分三步进行介绍，注意，这里以单机模式测试，关于Zookeeper的Standalone集群部署请参考我的另一篇文章：<a href="https://xujinzh.github.io/2020/03/03/zookeeper-cluster-deployment/">Zookeeper集群部署</a>, 关于storm的Standalone集群部署请参考我的文章：<a href="https://xujinzh.github.io/2020/03/08/storm-cluster-deployment/">storm集群部署</a> </p>
 <a id="more"></a>
-<h1 id="安装jdk">安装jdk</h1>
-<p>首先从Oracle官网<a target="_blank" rel="noopener" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">下载jdk</a></p>
+
+<h1 id="安装jdk"><a href="#安装jdk" class="headerlink" title="安装jdk"></a>安装jdk</h1><p>首先从Oracle官网<a target="_blank" rel="noopener" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">下载jdk</a></p>
 <p>其次，解压该压缩包</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf jdk*</span><br></pre></td></tr></table></figure>
+
 <p>最后，将Java路径添加到环境变量</p>
-<h1 id="安装zookeeper和storm">安装Zookeeper和Storm</h1>
-<p>首先从官网<a target="_blank" rel="noopener" href="http://zookeeper.apache.org/releases.html#download">下载Zookeeper</a> (<strong>注意：3.4.14版本测试通过，而3.5.6不成功</strong>)和<a target="_blank" rel="noopener" href="https://storm.apache.org/">下载Storm</a></p>
+<h1 id="安装Zookeeper和Storm"><a href="#安装Zookeeper和Storm" class="headerlink" title="安装Zookeeper和Storm"></a>安装Zookeeper和Storm</h1><p>首先从官网<a target="_blank" rel="noopener" href="http://zookeeper.apache.org/releases.html#download">下载Zookeeper</a> (<strong>注意：3.4.14版本测试通过，而3.5.6不成功</strong>)和<a target="_blank" rel="noopener" href="https://storm.apache.org/">下载Storm</a></p>
 <p>其次，解压两个压缩包</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf zookeeper-3.4.14.tar.gz</span><br><span class="line">tar -xzf apache-storm-2.1.0.tar.gz</span><br></pre></td></tr></table></figure>
+
 <p>最后，配置Zookeeper和Storm</p>
-<ol type="1">
+<ol>
 <li>配置Zookeeper</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> zookeeper</span><br><span class="line">mkdir data</span><br><span class="line"><span class="built_in">cd</span> conf/</span><br><span class="line">cp zoo_sample.cfg zoo.cfg</span><br><span class="line">vim zoo.cfg</span><br></pre></td></tr></table></figure>
+
 <p>修改</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataDir=/home/jinzhongxu/zookeeper/data</span><br></pre></td></tr></table></figure>
-<ol start="2" type="1">
+
+
+
+<ol start="2">
 <li>配置Storm</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> storm</span><br><span class="line">mkdir data</span><br><span class="line"><span class="built_in">cd</span> conf/</span><br><span class="line">cp storm.yaml storm.yaml.bak</span><br><span class="line">vim storm.yaml</span><br></pre></td></tr></table></figure>
+
 <p>修改（<strong>注意：‘-’ 与后面的参数值之间有一个空格</strong>）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">storm.zookeeper.servers:</span><br><span class="line">    - &quot;localhost&quot;</span><br><span class="line">storm.local.dir: &quot;/home/jinzhongxu/storm/data&quot;</span><br><span class="line">nimbus.host: &quot;localhost&quot;</span><br><span class="line">supervisor.slots.ports:</span><br><span class="line">    - 6700</span><br><span class="line">    - 6701</span><br><span class="line">    - 6702</span><br><span class="line">    - 6703</span><br></pre></td></tr></table></figure>
-<h1 id="启动zookeeper和storm">启动zookeeper和storm</h1>
-<h2 id="启动zookeeper">启动zookeeper</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> zookeeper</span><br><span class="line">bin/zkServer.sh start</span><br></pre></td></tr></table></figure>
-<h2 id="启动storm">启动storm</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> storm</span><br><span class="line">bin/storm nimbus</span><br><span class="line">bin/storm supervisor</span><br><span class="line">bin/storm ui</span><br></pre></td></tr></table></figure>
+
+<h1 id="启动zookeeper和storm"><a href="#启动zookeeper和storm" class="headerlink" title="启动zookeeper和storm"></a>启动zookeeper和storm</h1><h2 id="启动zookeeper"><a href="#启动zookeeper" class="headerlink" title="启动zookeeper"></a>启动zookeeper</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> zookeeper</span><br><span class="line">bin/zkServer.sh start</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="启动storm"><a href="#启动storm" class="headerlink" title="启动storm"></a>启动storm</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> storm</span><br><span class="line">bin/storm nimbus</span><br><span class="line">bin/storm supervisor</span><br><span class="line">bin/storm ui</span><br></pre></td></tr></table></figure>
+
 <p>也可以使用如下方式，以后台方式打开</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> storm</span><br><span class="line">nohup ./bin/storm nimbus &gt; /dev/null 2&gt;&amp;1 &amp;</span><br><span class="line">nohup ./bin/storm supervisor &gt; /dev/null 2&gt;&amp;1 &amp;</span><br><span class="line">nohup ./bin/storm ui &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
-<ol type="1">
+
+<ol>
 <li>nohup: 表示no hang up，即一直运行</li>
-<li>&gt; /dev/null: 表示将日志输出丢弃到/dev/null中，即直接丢弃，不存储到服务器上</li>
-<li>2&gt;&amp;1: 表示将2的错误输出（stderr）和1的标准输出（stdout）只打开一个通道一起写入1即/dev/null中</li>
+<li>&gt; &#x2F;dev&#x2F;null: 表示将日志输出丢弃到&#x2F;dev&#x2F;null中，即直接丢弃，不存储到服务器上</li>
+<li>2&gt;&amp;1: 表示将2的错误输出（stderr）和1的标准输出（stdout）只打开一个通道一起写入1即&#x2F;dev&#x2F;null中</li>
 <li>最后一个&amp;: 表示以后台方式运行，而不在终端上打印日志信息</li>
 </ol>
-<p>打开本地浏览器，输入网址 http://localhost:8080</p>
-<h1 id="关闭">关闭</h1>
-<p>可以使用命令jps显示是否运行成功，比如单台机器情况如下：</p>
+<p>打开本地浏览器，输入网址 <a target="_blank" rel="noopener" href="http://localhost:8080/">http://localhost:8080</a></p>
+<h1 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h1><p>可以使用命令jps显示是否运行成功，比如单台机器情况如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jinzhongxu@jinzhongxu-PowerEdge-R740:~$ jps</span><br><span class="line">34530 Jps</span><br><span class="line">11305 Main</span><br><span class="line">25930 QuorumPeerMain</span><br><span class="line">33789 UIServer</span><br><span class="line">33373 Supervisor</span><br><span class="line">32910 Nimbus</span><br></pre></td></tr></table></figure>
+
 <p>如果想关闭进行，可直接kill掉相应的pid</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> 32910</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -445,14 +455,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDstorm"><span class="nav-number">1.</span> <span class="nav-text">下载storm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85storm"><span class="nav-number">2.</span> <span class="nav-text">安装Storm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEstorm"><span class="nav-number">3.</span> <span class="nav-text">配置storm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8storm"><span class="nav-number">4.</span> <span class="nav-text">启动storm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Bstorm%E9%9B%86%E7%BE%A4%E5%90%AF%E5%8A%A8%E6%83%85%E5%86%B5"><span class="nav-number">5.</span> <span class="nav-text">查看storm集群启动情况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E9%97%ADstorm"><span class="nav-number">6.</span> <span class="nav-text">关闭storm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Estorm%E7%9A%84%E8%B0%83%E4%BC%98"><span class="nav-number">7.</span> <span class="nav-text">关于storm的调优</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDstorm"><span class="nav-number">1.</span> <span class="nav-text">下载storm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Storm"><span class="nav-number">2.</span> <span class="nav-text">安装Storm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEstorm"><span class="nav-number">3.</span> <span class="nav-text">配置storm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8storm"><span class="nav-number">4.</span> <span class="nav-text">启动storm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Bstorm%E9%9B%86%E7%BE%A4%E5%90%AF%E5%8A%A8%E6%83%85%E5%86%B5"><span class="nav-number">5.</span> <span class="nav-text">查看storm集群启动情况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E9%97%ADstorm"><span class="nav-number">6.</span> <span class="nav-text">关闭storm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Estorm%E7%9A%84%E8%B0%83%E4%BC%98"><span class="nav-number">7.</span> <span class="nav-text">关于storm的调优</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -289,7 +289,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.9k</span>
+      <span>3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -307,58 +307,74 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>Storm 是一个分布式计算框架，主要由Clojure编程语言编写，其主要编程语言是Java 和Clojure。最初是由Nathan Marz及其团队创建于BackType，该项目在被Twitter取得后开源。Storm集群部署需要Zookeeper和python的支持，假设这两个软件已经安装，并成功部署了Zookeeper集群。获取如何Standalone集群部署Zookeeper请参考我的文章：<a href="https://xujinzh.github.io/2020/03/03/zookeeper-cluster-deployment/">Zookeeper集群部署</a></p>
+        <p>Storm 是一个分布式计算框架，主要由Clojure编程语言编写，其主要编程语言是Java 和Clojure。最初是由Nathan Marz及其团队创建于BackType，该项目在被Twitter取得后开源。Storm集群部署需要Zookeeper和python的支持，假设这两个软件已经安装，并成功部署了Zookeeper集群。获取如何Standalone集群部署Zookeeper请参考我的文章：<a href="https://xujinzh.github.io/2020/03/03/zookeeper-cluster-deployment/">Zookeeper集群部署</a> </p>
 <a id="more"></a>
+
 <p>下面分步骤进行Storm的集群部署，假设部署到三台服务器上，其IP地址分别是1.1.1.0， 1.1.1.1， 1.1.1.2，如果想部署更多台，可以后续随意增加，非常方便扩容，这是storm的一个优点。这里将1.1.1.0作为nimbus节点和UI节点，把1.1.1.1 和1.1.1.2 作为supervisor节点。假设部署的zookeeper集群分别是box0, box1, box2，其IP分别是1.1.10.0， 1.1.10.1， 1.1.10.2，并启动了zookeeper服务。</p>
-<h1 id="下载storm">下载storm</h1>
-<p>从官网：<a target="_blank" rel="noopener" href="https://storm.apache.org/downloads.html">Apache Storm downloads</a> 下载喜欢的版本。这里以版本 <a target="_blank" rel="noopener" href="https://www.apache.org/dyn/closer.lua/storm/apache-storm-2.1.0/apache-storm-2.1.0.tar.gz">apache-storm-2.1.0.tar.gz</a> 为例进行安装部署。</p>
-<h1 id="安装storm">安装Storm</h1>
-<p>解压缩下载的storm软件</p>
+<h1 id="下载storm"><a href="#下载storm" class="headerlink" title="下载storm"></a>下载storm</h1><p>从官网：<a target="_blank" rel="noopener" href="https://storm.apache.org/downloads.html">Apache Storm downloads</a> 下载喜欢的版本。这里以版本 <a target="_blank" rel="noopener" href="https://www.apache.org/dyn/closer.lua/storm/apache-storm-2.1.0/apache-storm-2.1.0.tar.gz">apache-storm-2.1.0.tar.gz</a> 为例进行安装部署。</p>
+<h1 id="安装Storm"><a href="#安装Storm" class="headerlink" title="安装Storm"></a>安装Storm</h1><p>解压缩下载的storm软件</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf apache-storm-2.1.0.tar.gz</span><br><span class="line">mv apache-storm-2.1.0 storm</span><br></pre></td></tr></table></figure>
-<h1 id="配置storm">配置storm</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> storm/</span><br><span class="line">mkdir data</span><br><span class="line">vim ./conf/storm.yaml </span><br></pre></td></tr></table></figure>
+
+<h1 id="配置storm"><a href="#配置storm" class="headerlink" title="配置storm"></a>配置storm</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> storm/</span><br><span class="line">mkdir data</span><br><span class="line">vim ./conf/storm.yaml </span><br></pre></td></tr></table></figure>
+
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">storm.zookeeper.servers:</span><br><span class="line">   - &quot;1.1.10.0&quot;</span><br><span class="line">   - &quot;1.1.10.1&quot;</span><br><span class="line">   - &quot;1.1.10.2&quot;</span><br><span class="line">nimbus.seeds: [&quot;1.1.1.0&quot;]</span><br><span class="line">storm.local.dir=&quot;/home/jinzhongxu/storm/data&quot;</span><br><span class="line">supervisor.slots.ports:</span><br><span class="line"> 	- 6701</span><br><span class="line"> 	- 6702</span><br><span class="line"> 	- 6703</span><br><span class="line"> 	- 6704</span><br></pre></td></tr></table></figure>
+
 <p><strong>注意，这里需要严格保证空格，配置各项需要与侧边栏空一格，“-” 与配置参数空一格等</strong>。</p>
 <p>配置好后，将storm文件夹传到其他机器上。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -r storm 1.1.1.1:/home/jinzhongxu/.</span><br><span class="line">scp -r storm 1.1.1.2:/home/jinzhongxu/.</span><br></pre></td></tr></table></figure>
-<h1 id="启动storm">启动storm</h1>
-<p>在机器1.1.1.0上，启动nimbus 和ui</p>
+
+<h1 id="启动storm"><a href="#启动storm" class="headerlink" title="启动storm"></a>启动storm</h1><p>在机器1.1.1.0上，启动nimbus 和ui</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> storm</span><br><span class="line">./bin/storm nimbus</span><br><span class="line">./bin/storm ui</span><br></pre></td></tr></table></figure>
+
 <p>在机器1.1.1.1和1.1.1.2上分别启动supervisor</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> storm</span><br><span class="line">./bin/storm supervisor</span><br></pre></td></tr></table></figure>
+
 <p>如果想要后台启动，可以运行如下类似命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup ./bin/storm supervisor &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
 <p>表示将日志文件（标准输出和标准错误）丢弃并在后台启动</p>
-<h1 id="查看storm集群启动情况">查看storm集群启动情况</h1>
-<p>可以在各运行storm的集群上使用</p>
+<h1 id="查看storm集群启动情况"><a href="#查看storm集群启动情况" class="headerlink" title="查看storm集群启动情况"></a>查看storm集群启动情况</h1><p>可以在各运行storm的集群上使用</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps</span><br></pre></td></tr></table></figure>
+
 <p>命令查看，如果发现有nimbus 或 supervisor则证明启动成功。</p>
 <p>可以通过访问 1.1.1.0:8080 来查看storm UI</p>
-<h1 id="关闭storm">关闭storm</h1>
-<p>可以使用命令</p>
+<h1 id="关闭storm"><a href="#关闭storm" class="headerlink" title="关闭storm"></a>关闭storm</h1><p>可以使用命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps</span><br></pre></td></tr></table></figure>
-<p>查看storm服务的pid，比如，pid=2384然后</p>
+
+<p>查看storm服务的pid，比如，pid&#x3D;2384然后</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> 2384</span><br></pre></td></tr></table></figure>
+
 <p>杀死服务</p>
-<h1 id="关于storm的调优">关于storm的调优</h1>
-<ol type="1">
-<li><p>关于配置项 supervisor.slots.ports 表示该集群上为storm 的worker进程开通的端口号，一般一个worker需要消耗768+64=832M内存，当然，可以通过设置<strong>worker.childopts: "-Xmx2048m"</strong> 为2048M内存等。到底开几个端口需要看本机器的内存和cpu核心数。</p></li>
-<li><p>在定义一个拓扑时，可以通过 <strong>conf.setNumWorkers()</strong> 函数来指定一个 topolgoy 的 worker 数量，要小于（supervisor个数*每个supervisor的slots ports数）。如果worker数太大也不好，因为storm进程间通信比进程内耗费时间长，所以需要为topology设置一个合理的worker数。</p></li>
-<li><p>当storm与Kafka集成时，最好设置<strong>Kafka Partition == Storm Spout</strong>。</p></li>
-<li><p>当设置bolt 分组时，<strong>优先使用localOrShuffleGrouping</strong>代替shuffleGrouping，优先使用自带的分组而不是自己编写的分组方式。</p></li>
-<li><p>如果代码执行时间长，则需要通过增加Worker数量来将压力分散到更多的节点上以提升并发能力。<strong>worker.heap.memory.mb、topology.worker.max.heap.size.mb</strong>用来调整分配给每个 Worker的内存。当运行程序的Worker报出内存溢出的情况下，比较管用。</p></li>
-<li><p><strong>topology.max.spout.pending:</strong> 最大 Spout 挂起时间。一般Spout 的发射速度会快于下游的 Bolt 的消费速度，当下游的 Bolt 还有 pending中的 Tuple 没有消费完时，Spout 会停下来等待，该配置作用于 Spout 的每个 task。因此这个参数需要合理设置。conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 10000)。</p></li>
-<li><p><strong>acker数量：</strong>默认情况下，Storm 会在每个 worker 进程里面启动1个 acker 线程，以为 spout/bolt 提供 ack/fail 服务，该线程通常不太耗费资源，因此也无须配置过多，大多数情况下1个就足够了。最好 numAckers == numWorkers.</p></li>
-<li><p><strong>storm rebalance mytopology -n 5 -e blue-spout=3 -e yellow-bolt=10</strong> 表示为拓扑mytopology 设置workers=5， blue-spout=3， yellow-bolt=10，其10个进程中包含3个spout和10个bolt并行运行拓扑。</p></li>
-<li><p>要找出并行度的最佳取值，主要结合 Storm UI 来做决策。</p></li>
+<h1 id="关于storm的调优"><a href="#关于storm的调优" class="headerlink" title="关于storm的调优"></a>关于storm的调优</h1><ol>
+<li><p>关于配置项 supervisor.slots.ports 表示该集群上为storm 的worker进程开通的端口号，一般一个worker需要消耗768+64&#x3D;832M内存，当然，可以通过设置<strong>worker.childopts: “-Xmx2048m”</strong> 为2048M内存等。到底开几个端口需要看本机器的内存和cpu核心数。</p>
+</li>
+<li><p>在定义一个拓扑时，可以通过 <strong>conf.setNumWorkers()</strong> 函数来指定一个 topolgoy 的 worker 数量，要小于（supervisor个数*每个supervisor的slots ports数）。如果worker数太大也不好，因为storm进程间通信比进程内耗费时间长，所以需要为topology设置一个合理的worker数。</p>
+</li>
+<li><p>当storm与Kafka集成时，最好设置<strong>Kafka Partition &#x3D;&#x3D; Storm Spout</strong>。</p>
+</li>
+<li><p>当设置bolt 分组时，<strong>优先使用localOrShuffleGrouping</strong>代替shuffleGrouping，优先使用自带的分组而不是自己编写的分组方式。</p>
+</li>
+<li><p>如果代码执行时间长，则需要通过增加Worker数量来将压力分散到更多的节点上以提升并发能力。<strong>worker.heap.memory.mb、topology.worker.max.heap.size.mb</strong>用来调整分配给每个 Worker的内存。当运行程序的Worker报出内存溢出的情况下，比较管用。</p>
+</li>
+<li><p><strong>topology.max.spout.pending:</strong> 最大 Spout 挂起时间。一般Spout 的发射速度会快于下游的 Bolt 的消费速度，当下游的 Bolt 还有 pending中的 Tuple 没有消费完时，Spout 会停下来等待，该配置作用于 Spout 的每个 task。因此这个参数需要合理设置。conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 10000)。</p>
+</li>
+<li><p><strong>acker数量：</strong>默认情况下，Storm 会在每个 worker 进程里面启动1个 acker 线程，以为 spout&#x2F;bolt 提供 ack&#x2F;fail 服务，该线程通常不太耗费资源，因此也无须配置过多，大多数情况下1个就足够了。最好 numAckers &#x3D;&#x3D; numWorkers.</p>
+</li>
+<li><p><strong>storm rebalance mytopology -n 5 -e blue-spout&#x3D;3 -e yellow-bolt&#x3D;10</strong> 表示为拓扑mytopology 设置workers&#x3D;5， blue-spout&#x3D;3， yellow-bolt&#x3D;10，其10个进程中包含3个spout和10个bolt并行运行拓扑。</p>
+</li>
+<li><p>要找出并行度的最佳取值，主要结合 Storm UI 来做决策。</p>
+</li>
 <li><p>操作系统配置，使用</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ulimit</span> -a</span><br></pre></td></tr></table></figure>
+
 <p>查看</p>
-<ol type="1">
-<li><p>open files：当前用户可以打开的文件描述符数；</p></li>
+<ol>
+<li><p>open files：当前用户可以打开的文件描述符数；</p>
+</li>
 <li><p>max user processes：当前用户可以运行的进程数，此参数太小将引起storm的一个错误，如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">java.lang.OutOfMemoryError: unable to create new native thread</span><br><span class="line">       	at java.lang.Thread.start0 (Native Method) [na:xxx]</span><br><span class="line">	at java.lang.Thread.start (Thread.java: 640) [na:xxx]</span><br><span class="line">       	at java.lang.UNIXProcess$1.run (UNIXProcess.java:141) ~ [na:xxx]</span><br><span class="line">	at java.security.AccessController.doPrivileged (Native Method) ~ [na:xxx]</span><br></pre></td></tr></table></figure></li>
-</ol></li>
+</ol>
+</li>
 </ol>
 
     </div>
@@ -453,14 +469,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

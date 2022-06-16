@@ -145,7 +145,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#os.path.getsize"><span class="nav-number">1.</span> <span class="nav-text">os.path.getsize</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#os.stat"><span class="nav-number">2.</span> <span class="nav-text">os.stat</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6%E8%8E%B7%E5%BE%97%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.</span> <span class="nav-text">打开文件读取文件，获得大小</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-pathlib.pathfile_path.stat"><span class="nav-number">4.</span> <span class="nav-text">使用 pathlib.Path(file_path).stat()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">5.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#os-path-getsize"><span class="nav-number">1.</span> <span class="nav-text">os.path.getsize</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#os-stat"><span class="nav-number">2.</span> <span class="nav-text">os.stat</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6%EF%BC%8C%E8%8E%B7%E5%BE%97%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.</span> <span class="nav-text">打开文件读取文件，获得大小</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-pathlib-Path-file-path-stat"><span class="nav-number">4.</span> <span class="nav-text">使用 pathlib.Path(file_path).stat()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">5.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -286,7 +286,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>517</span>
+      <span>525</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -304,22 +304,22 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>Python 是非常优秀的编程语言，开发效率高。在 Shell 中可以非常方便的使用 <code>ls -l filepath</code> 获得文件的大小，那么在 Python 中如何获取文件的大小呢，下面给出4中方法。假设我们的文件路径是 <code>file_path = '/test-file.txt'</code>.</p>
+        <p>Python 是非常优秀的编程语言，开发效率高。在 Shell 中可以非常方便的使用 <code>ls -l filepath</code> 获得文件的大小，那么在 Python 中如何获取文件的大小呢，下面给出4中方法。假设我们的文件路径是 <code>file_path = &#39;/test-file.txt&#39;</code>.</p>
 <a id="more"></a>
-<h1 id="os.path.getsize">os.path.getsize</h1>
-<p>使用该函数能够获得文件的大小，单位为字节</p>
+
+<h1 id="os-path-getsize"><a href="#os-path-getsize" class="headerlink" title="os.path.getsize"></a>os.path.getsize</h1><p>使用该函数能够获得文件的大小，单位为字节</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">os.path.getsize(file_path)</span><br></pre></td></tr></table></figure>
-<h1 id="os.stat">os.stat</h1>
-<p>使用该函数能够获得文件的大小，单位为字节</p>
+
+<h1 id="os-stat"><a href="#os-stat" class="headerlink" title="os.stat"></a>os.stat</h1><p>使用该函数能够获得文件的大小，单位为字节</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">os.stat(file_path).st_size</span><br></pre></td></tr></table></figure>
-<h1 id="打开文件读取文件获得大小">打开文件读取文件，获得大小</h1>
-<p>使用该方法能够获得文件的大小，单位为字节</p>
+
+<h1 id="打开文件读取文件，获得大小"><a href="#打开文件读取文件，获得大小" class="headerlink" title="打开文件读取文件，获得大小"></a>打开文件读取文件，获得大小</h1><p>使用该方法能够获得文件的大小，单位为字节</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(file_path, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.seek(<span class="number">0</span>, os.SEEK_END)</span><br><span class="line">    print(f.tell())</span><br></pre></td></tr></table></figure>
-<h1 id="使用-pathlib.pathfile_path.stat">使用 pathlib.Path(file_path).stat()</h1>
-<p>使用该方法能够获得文件的大小，单位为字节</p>
+
+<h1 id="使用-pathlib-Path-file-path-stat"><a href="#使用-pathlib-Path-file-path-stat" class="headerlink" title="使用 pathlib.Path(file_path).stat()"></a>使用 pathlib.Path(file_path).stat()</h1><p>使用该方法能够获得文件的大小，单位为字节</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"></span><br><span class="line">Path(file_path).stat().st_size</span><br></pre></td></tr></table></figure>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/how-to-get-file-size-in-python/">How to get file size in Python?</a></li>
 </ol>
 
@@ -414,14 +414,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

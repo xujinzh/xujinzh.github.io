@@ -287,7 +287,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>732</span>
+      <span>737</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -305,18 +305,19 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>Linux 系统上有很多服务是使用 <code>systemctl</code> 来管理的，如何查看这些服务的日志信息呢？下面以 Ubuntu 18.04/CentOS 7 为例，所有命令以 root 身份运行。</p>
+        <p>Linux 系统上有很多服务是使用 <code>systemctl</code> 来管理的，如何查看这些服务的日志信息呢？下面以 Ubuntu 18.04&#x2F;CentOS 7 为例，所有命令以 root 身份运行。</p>
 <a id="more"></a>
-<h1 id="journalctl">journalctl</h1>
-<p><code>journalctl</code> 命令是一个管理工具，能够查询 <code>systemd</code> 日志，同时管理、查看由内核、initrd 以及服务等产生的信息。</p>
+
+<h1 id="journalctl"><a href="#journalctl" class="headerlink" title="journalctl"></a>journalctl</h1><p><code>journalctl</code> 命令是一个管理工具，能够查询 <code>systemd</code> 日志，同时管理、查看由内核、initrd 以及服务等产生的信息。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 jupyterhub 的日志信息, -u 表示按单元（--unit）</span></span><br><span class="line">journalctl -u jupyterhub.service</span><br><span class="line"><span class="comment"># 查看 jupyterhub 的最新的日志信息</span></span><br><span class="line">journalctl -u jupyterhub.service -r</span><br><span class="line"><span class="comment"># 实时的查看系统查看的最新日志信息，类似于 tail -f </span></span><br><span class="line">journalctl -f</span><br><span class="line"><span class="comment"># 查看从凌晨到3：20的日志信息</span></span><br><span class="line">journalctl --since <span class="string">&quot;today&quot;</span> --until <span class="string">&quot;3:20&quot;</span></span><br><span class="line"><span class="comment"># 查看 journalctl 如何使用</span></span><br><span class="line">man journalctl</span><br></pre></td></tr></table></figure>
+
 <p>日记本身是 <code>systemd</code> 管理的系统服务，全名为 <code>systemd-journald.service</code>。它会根据从内核、用户进程、标准输入和系统服务错误收到的日志记录信息，维护结构化的索引日记，并以此方式来收集和储存日志记录数据。<code>systemd-journald</code> 服务默认处于启用状态。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status systemd-journald.service</span><br></pre></td></tr></table></figure>
-<h1 id="systemctl">systemctl</h1>
-<p>有时也可以利用 <code>systemctl</code> 简单的查看最新几条信息</p>
+
+<h1 id="systemctl"><a href="#systemctl" class="headerlink" title="systemctl"></a>systemctl</h1><p>有时也可以利用 <code>systemctl</code> 简单的查看最新几条信息</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status jupyterhub.service -l</span><br></pre></td></tr></table></figure>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/zstack_org/article/details/56274966">如何使用Journalctl查看并操作Systemd日志</a></li>
 <li><a target="_blank" rel="noopener" href="https://documentation.suse.com/zh-cn/sles/12-SP4/html/SLES-all/cha-journalctl.html">15 <code>journalctl</code>：查询 <code>systemd</code> 日记</a></li>
 </ol>
@@ -413,14 +414,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

@@ -145,7 +145,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ubuntudebian-%E4%B8%8A%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">1.</span> <span class="nav-text">Ubuntu&#x2F;Debian 上防火墙</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#centos-%E4%B8%8A%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">2.</span> <span class="nav-text">CentOS 上防火墙</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%BF%9E%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考连接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu-x2F-Debian-%E4%B8%8A%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">1.</span> <span class="nav-text">Ubuntu&#x2F;Debian 上防火墙</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CentOS-%E4%B8%8A%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">2.</span> <span class="nav-text">CentOS 上防火墙</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%BF%9E%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考连接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -292,7 +292,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.4k</span>
+      <span>1.5k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -310,21 +310,25 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>无论是 Windows 系统还是 Linux 系统都有防火墙，防火墙能够防护电脑免受外界攻击，保护电脑安全。本篇介绍如何在 Ubuntu/Debian/CentOS 上安装和使用防火墙。</p>
+        <p>无论是 Windows 系统还是 Linux 系统都有防火墙，防火墙能够防护电脑免受外界攻击，保护电脑安全。本篇介绍如何在 Ubuntu&#x2F;Debian&#x2F;CentOS 上安装和使用防火墙。</p>
 <a id="more"></a>
-<h1 id="ubuntudebian-上防火墙">Ubuntu/Debian 上防火墙</h1>
-<p>安装防火墙</p>
+
+<h1 id="Ubuntu-x2F-Debian-上防火墙"><a href="#Ubuntu-x2F-Debian-上防火墙" class="headerlink" title="Ubuntu&#x2F;Debian 上防火墙"></a>Ubuntu&#x2F;Debian 上防火墙</h1><p>安装防火墙</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install ufw</span><br></pre></td></tr></table></figure>
+
 <p>防火墙使用</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开启防火墙</span></span><br><span class="line">sudo ufw <span class="built_in">enable</span></span><br><span class="line"><span class="comment"># 查看防火墙状态</span></span><br><span class="line">sudo ufw status</span><br><span class="line"><span class="comment"># 开启指定端口</span></span><br><span class="line">sudo ufw allow 22</span><br><span class="line"><span class="comment"># 开启指定端口的tcp</span></span><br><span class="line">sudo ufw allow 22/tcp</span><br><span class="line"><span class="comment"># 打开端口范围，此时必须指定 tcp 或 udp</span></span><br><span class="line">sudo ufw allow 7000:7070/tcp</span><br><span class="line"><span class="comment"># 允许指定IP地址</span></span><br><span class="line">sudo ufw allow from xxx.xxx.xxx.xxx</span><br><span class="line"><span class="comment"># 允许指定IP地址访问指定端口</span></span><br><span class="line">sudo ufw allow from xxx.xxx.xxx.xxx to any port 22</span><br><span class="line"><span class="comment"># 运行子网</span></span><br><span class="line">sudo ufw allow from 192.168.1.0/24 to any port 3306</span><br><span class="line"><span class="comment"># 运行指定网络接口的连接</span></span><br><span class="line">sudo ufw allow <span class="keyword">in</span> on eth0 to any port 3306</span><br><span class="line"><span class="comment"># 删除指定端口</span></span><br><span class="line">sudo ufw delete allow 8888</span><br><span class="line"><span class="comment"># 禁止连接</span></span><br><span class="line">sudo ufw deny from 192.168.1.0/24</span><br><span class="line"><span class="comment"># 指定端口禁止连接</span></span><br><span class="line">sudo ufw deny from 192.168.1.0/24 to any port 80</span><br><span class="line"><span class="comment"># 按序号查看</span></span><br><span class="line">sudo ufw status numbered</span><br><span class="line"><span class="comment"># 删除对应序号10的规则</span></span><br><span class="line">sudo ufw delete 10</span><br><span class="line"><span class="comment"># 禁止防火墙</span></span><br><span class="line">sudo ufw <span class="built_in">disable</span></span><br><span class="line"><span class="comment"># 重置防火墙</span></span><br><span class="line">sudo ufw reset</span><br></pre></td></tr></table></figure>
+
 <p><strong>注意</strong>，开启防火墙后，注意打开指定的SSH连接端口，不然重启后将无法使用SSH连接</p>
-<h1 id="centos-上防火墙">CentOS 上防火墙</h1>
-<p>安装防火墙</p>
+<h1 id="CentOS-上防火墙"><a href="#CentOS-上防火墙" class="headerlink" title="CentOS 上防火墙"></a>CentOS 上防火墙</h1><p>安装防火墙</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install firewalld</span><br></pre></td></tr></table></figure>
+
 <p>使用防火墙</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看状态</span></span><br><span class="line">sudo firewall-cmd --state</span><br><span class="line"><span class="comment"># 开启防火墙</span></span><br><span class="line">sudo systemctl start firewalld.service</span><br><span class="line"><span class="comment"># 关闭防火墙</span></span><br><span class="line">sudo systemctl stop firewalld.service</span><br><span class="line"><span class="comment"># 设置开机启动防火墙</span></span><br><span class="line">sudo systemctl <span class="built_in">enable</span> firewalld.service</span><br><span class="line"><span class="comment"># 禁止开机启动防火墙</span></span><br><span class="line">sudo systemctl <span class="built_in">disable</span> firewalld.service</span><br><span class="line"><span class="comment"># 查看防火墙是否会开机自启</span></span><br><span class="line">sudo systemctl list-unit-file | grep firewalld</span><br><span class="line">sudo systemctl is-enabled firewalld</span><br><span class="line"><span class="comment"># 开放指定端口</span></span><br><span class="line">sudo firewall-cmd --zone=public --add-port=22/tcp --permanent</span><br><span class="line"><span class="comment"># 关闭指定端口</span></span><br><span class="line">sudo firewall-cmd --zone=public --remove-port=80/tcp --permanent</span><br><span class="line"><span class="comment"># 重新载入，才能生效</span></span><br><span class="line">sudo firewall-cmd --reload</span><br><span class="line"><span class="comment"># 查询端口是否开放</span></span><br><span class="line">sudo firewall-cmd --query-port=22/tcp</span><br></pre></td></tr></table></figure>
-<h1 id="参考连接">参考连接</h1>
-<ol type="1">
+
+
+
+<h1 id="参考连接"><a href="#参考连接" class="headerlink" title="参考连接"></a>参考连接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1626614">如何在 Debian 10 上使用 UFW 来设置防火墙</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/xc_zhou/article/details/103758308">[745]Debian打开关闭防火墙</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ytangdigl/article/details/79796961">CentOS7查看和关闭防火墙</a></li>
@@ -422,14 +426,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

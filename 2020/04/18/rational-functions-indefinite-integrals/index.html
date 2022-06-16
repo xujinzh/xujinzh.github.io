@@ -22,12 +22,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="有理函数的不定积分 有理函数是指由两个多项式函数的商所表示的函数，其一般形式为">
+    <meta name="description" content="有理函数的不定积分有理函数是指由两个多项式函数的商所表示的函数，其一般形式为">
 <meta property="og:type" content="article">
 <meta property="og:title" content="有理函数的不定积分">
 <meta property="og:url" content="https://xujinzh.github.io/2020/04/18/rational-functions-indefinite-integrals/index.html">
 <meta property="og:site_name" content="J. Xu">
-<meta property="og:description" content="有理函数的不定积分 有理函数是指由两个多项式函数的商所表示的函数，其一般形式为">
+<meta property="og:description" content="有理函数的不定积分有理函数是指由两个多项式函数的商所表示的函数，其一般形式为">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-04-18T04:09:53.000Z">
 <meta property="article:modified_time" content="2021-11-09T10:42:04.896Z">
@@ -293,7 +293,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>7.4k</span>
+      <span>7.6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -311,39 +311,18 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h1 id="有理函数的不定积分">有理函数的不定积分</h1>
-<p>有理函数是指由两个多项式函数的商所表示的函数，其一般形式为</p>
+        <h1 id="有理函数的不定积分"><a href="#有理函数的不定积分" class="headerlink" title="有理函数的不定积分"></a>有理函数的不定积分</h1><p>有理函数是指由两个多项式函数的商所表示的函数，其一般形式为</p>
 <a id="more"></a>
-<p><span class="math display">\[
-R(x) = \frac{P(x)}{Q(x)} = \frac{\alpha_0 x^n + \alpha_1 x^{n-1} + \cdots + \alpha_n}{\beta_0 x^m + \beta_1 x^{m-1} + \cdots + \beta_m},
-\]</span> 其中<span class="math inline">\(n,m\)</span>为非负整数，<span class="math inline">\(\alpha_0, \alpha_1,\cdots, \alpha_n\)</span>与<span class="math inline">\(\beta_0,\beta_1, \cdots, \beta_m\)</span>都是常数，且<span class="math inline">\(\alpha_0 \neq 0, \beta_0 \neq 0\)</span>.若<span class="math inline">\(m &gt; n\)</span>，则称它为真分式；若<span class="math inline">\(m \leq n\)</span>，则称它为假分式。由多项式的除法可知，假分式总能化为一个多项式与一个真分式之和。多项式的不定积分容易求得，只需要关注真分式的不定积分。</p>
+<p>$$<br>R(x) &#x3D; \frac{P(x)}{Q(x)} &#x3D; \frac{\alpha_0 x^n + \alpha_1 x^{n-1} + \cdots + \alpha_n}{\beta_0 x^m + \beta_1 x^{m-1} + \cdots + \beta_m},<br>$$<br>其中$n,m$为非负整数，$\alpha_0, \alpha_1,\cdots, \alpha_n$与$\beta_0,\beta_1, \cdots, \beta_m$都是常数，且$\alpha_0 \neq 0, \beta_0 \neq 0$.若$m &gt; n$，则称它为真分式；若$m \leq n$，则称它为假分式。由多项式的除法可知，假分式总能化为一个多项式与一个真分式之和。多项式的不定积分容易求得，只需要关注真分式的不定积分。</p>
 <p>根据代数知识，有理真分式必定可以表示成若干个部分分式之和（称为部分分式分解）。因而问题归结为求那些部分分式的不定积分。为此，先把如何分解部分分式的方法简述如下：</p>
-<p>第一步 对分母<span class="math inline">\(Q(x)\)</span>在实系数内作标准因式分解： <span class="math display">\[
-Q(x) = (x - a_1)^{\lambda_1}\cdots(x - a_k)^{\lambda_k}(x^2 + p_1 x + q_1)^{\mu_1}\cdots(x^2 + p_l x + q_l)^{\mu_l}, 
-\]</span> 其中<span class="math inline">\(\beta_0 = 1, \lambda_i, \mu_j(i = 1, 2, \cdots, k; j = 1, 2, \cdots, l)\)</span>均为自然数，而且 <span class="math display">\[
-\sum^k_{i=1}\lambda_i + 2\sum^l_{j=1}\mu_j = m; \\\\
-p^2_j - 4q_j &lt; 0, j = 1, 2, \cdots, l.
-\]</span> 第二步 根据分母的各个因式分别写出与之相应的部分分式：对于每个形如<span class="math inline">\((x-a)^k\)</span>的因式，它所对应的部分分式是 <span class="math display">\[
-\frac{A_1}{x-a} + \frac{A_2}{(x-a)J^2} + \cdots + \frac{A_k}{(x-a)^k};
-\]</span> 对每个形如<span class="math inline">\((x^2 + px + q)^k\)</span>的因式，它所对应的部分分式是 <span class="math display">\[
-\frac{B_1 x + C_1}{x^2 + px + q} + \frac{B_2 x + C_2}{(x^2 + px + q)^2} + \cdots + \frac{B_k x + C_k}{(x^2 + px + q)^k}.
-\]</span> 把所有部分分式加起来，使之等于<span class="math inline">\(R(x)\)</span>. 其中的<span class="math inline">\(A_i, B_i, C_i\)</span>为待定的。</p>
-<p>第三步 确定待定系数：一般方法是将所有部分分式同分相加，所得分式的分母即为原分母<span class="math inline">\(Q(x)\)</span>，而其分子也应与原分子<span class="math inline">\(P(x)\)</span>恒等。于是，按同幂项系数必定相等，得到一组关于待定系数的线性方程，这组方程的解就是需要确定的系数。</p>
-<p><strong>例子</strong> 对<span class="math inline">\(R(x) = \frac{2x^4 - x^3 + 4x^2 + 9x - 10}{x^5 + x^4 - 5x^3 - 2x^2 + 4x - 8}\)</span>作部分分式分解。</p>
-<p>解 首先对分母<span class="math inline">\(Q(x) = x^5 + x^4 - 5x^3 - 2x^2 + 4x - 8\)</span>作因式分解。因<span class="math inline">\(Q(x)\)</span>首项系数为1，且常数项-8的整数因子有<span class="math inline">\(\pm 1, \pm 2, \pm 4, \pm8\)</span>，分别带入这8个因子到<span class="math inline">\(Q(x)\)</span>发现<span class="math inline">\(\pm 2\)</span>为其整数根。</p>
-<p>其次利用综合除法对<span class="math inline">\(Q(x)\)</span>按照整数根进行因式分解。</p>
+<p>第一步	对分母$Q(x)$在实系数内作标准因式分解：<br>$$<br>Q(x) &#x3D; (x - a_1)^{\lambda_1}\cdots(x - a_k)^{\lambda_k}(x^2 + p_1 x + q_1)^{\mu_1}\cdots(x^2 + p_l x + q_l)^{\mu_l},<br>$$<br>其中$\beta_0 &#x3D; 1, \lambda_i, \mu_j(i &#x3D; 1, 2, \cdots, k; j &#x3D; 1, 2, \cdots, l)$均为自然数，而且<br>$$<br>\sum^k_{i&#x3D;1}\lambda_i + 2\sum^l_{j&#x3D;1}\mu_j &#x3D; m; \\<br>p^2_j - 4q_j &lt; 0, j &#x3D; 1, 2, \cdots, l.<br>$$<br>第二步	根据分母的各个因式分别写出与之相应的部分分式：对于每个形如$(x-a)^k$的因式，它所对应的部分分式是<br>$$<br>\frac{A_1}{x-a} + \frac{A_2}{(x-a)J^2} + \cdots + \frac{A_k}{(x-a)^k};<br>$$<br>对每个形如$(x^2 + px + q)^k$的因式，它所对应的部分分式是<br>$$<br>\frac{B_1 x + C_1}{x^2 + px + q} + \frac{B_2 x + C_2}{(x^2 + px + q)^2} + \cdots + \frac{B_k x + C_k}{(x^2 + px + q)^k}.<br>$$<br>把所有部分分式加起来，使之等于$R(x)$. 其中的$A_i, B_i, C_i$为待定的。</p>
+<p>第三步	确定待定系数：一般方法是将所有部分分式同分相加，所得分式的分母即为原分母$Q(x)$，而其分子也应与原分子$P(x)$恒等。于是，按同幂项系数必定相等，得到一组关于待定系数的线性方程，这组方程的解就是需要确定的系数。</p>
+<p><strong>例子</strong>	对$R(x) &#x3D; \frac{2x^4 - x^3 + 4x^2 + 9x - 10}{x^5 + x^4 - 5x^3 - 2x^2 + 4x - 8}$作部分分式分解。</p>
+<p>解	首先对分母$Q(x) &#x3D; x^5 + x^4 - 5x^3 - 2x^2 + 4x - 8$作因式分解。因$Q(x)$首项系数为1，且常数项-8的整数因子有$\pm 1, \pm 2, \pm 4, \pm8$，分别带入这8个因子到$Q(x)$发现$\pm 2$为其整数根。</p>
+<p>其次利用综合除法对$Q(x)$按照整数根进行因式分解。</p>
 <table>
-<colgroup>
-<col style="width: 2%" />
-<col style="width: 9%" />
-<col style="width: 10%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 27%" />
-<col style="width: 26%" />
-</colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>整因子</th>
 <th>最高次项系数</th>
 <th>次高次项系数</th>
@@ -353,8 +332,7 @@ p^2_j - 4q_j &lt; 0, j = 1, 2, \cdots, l.
 <th>更低一次项系数</th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
+<tbody><tr>
 <td>2</td>
 <td>1</td>
 <td>1</td>
@@ -363,7 +341,7 @@ p^2_j - 4q_j &lt; 0, j = 1, 2, \cdots, l.
 <td>4</td>
 <td>-8</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td></td>
 <td>2（左下角值1乘2）</td>
@@ -372,16 +350,16 @@ p^2_j - 4q_j &lt; 0, j = 1, 2, \cdots, l.
 <td>0（左下角值0乘2）</td>
 <td>8（左下角值4乘2）</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>-2</td>
 <td>1（从上上格值1拉下）</td>
 <td>3（上上格1值加上格值2）</td>
 <td>1（上上格-5值加上格值6）</td>
 <td>0（上上格-2值加上格值2）</td>
 <td>4（上上格4值加上格值0）</td>
-<td>0（上上格-8值加上格值8，如果该值为0，说明<span class="math inline">\(x-2\)</span>整除<span class="math inline">\(Q(x)\)</span>）</td>
+<td>0（上上格-8值加上格值8，如果该值为0，说明$x-2$整除$Q(x)$）</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td></td>
 <td>-2</td>
@@ -390,134 +368,43 @@ p^2_j - 4q_j &lt; 0, j = 1, 2, \cdots, l.
 <td>-4</td>
 <td></td>
 </tr>
-<tr class="odd">
+<tr>
 <td></td>
 <td>1</td>
 <td>1</td>
 <td>-1</td>
 <td>2</td>
-<td>0（说明<span class="math inline">\(x-(-2) = x+2\)</span>整除<span class="math inline">\(\frac{Q(x)}{x-2} = x^4 + 3x^3 + 1x^2 + 4\)</span></td>
+<td>0（说明$x-(-2) &#x3D; x+2$整除$\frac{Q(x)}{x-2} &#x3D; x^4 + 3x^3 + 1x^2 + 4$</td>
 <td></td>
 </tr>
-</tbody>
-</table>
-<p>得到<span class="math inline">\(Q(x) = (x-2)(x+2)(x^3 + x^2 - x + 2)\)</span></p>
-<p>对于<span class="math inline">\(x^3 + x^2 - x + 2\)</span>可检验常数项4的整数分解因子<span class="math inline">\(\pm 1, \pm 2\)</span>，发现只有<span class="math inline">\(-2\)</span>是其整数根，即<span class="math inline">\(x + 2\)</span>能够整除<span class="math inline">\(x^3 + x^2 - x + 2\)</span>，利用如上表的综合除法，可以分解如下 <span class="math display">\[
-x^3 + x^2 - x + 2 = (x + 2)(x^2 - x + 1).
-\]</span> 因此，对<span class="math inline">\(R(x)\)</span>的分母<span class="math inline">\(Q(x)\)</span>可以因式分解为如下 <span class="math display">\[
-Q(x) = (x - 2)(x + 2)^2(x^2 - x + 1).
-\]</span> 然后，按照本节的有理函数因式分解方法，可写出部分分式分解的待定形式为 <span class="math display">\[
-R(x) = \frac{A_0}{x - 2} + \frac{A_1}{x + 2} + \frac{A_2}{(x + 2)^2} + \frac{Bx + C}{x^2 - x + 1}.
-\]</span> 通分后，比较分子与<span class="math inline">\(2x^4 - x^3 + 4x^2 + 9x - 10\)</span>的各次项系数，可求得参数<span class="math inline">\(A_0, A_1, A_2, B, C\)</span>.</p>
-<p>最后，代入待定形式记得<span class="math inline">\(R(x)\)</span>的部分分式分解 <span class="math display">\[
-R(x) = \frac{1}{x - 2} + \frac{2}{x + 2} - \frac{1}{(x + 2)^2} - \frac{x - 1}{x^2 - x + 1}.
-\]</span> 一旦完成了部分分式分解，最后归结为求如下两类有理真分式的不定积分：</p>
-<ol type="1">
-<li><span class="math inline">\(\int \frac{1}{(x - a)^k} \mathrm{d}x\)</span>; (2) <span class="math inline">\(\int \frac{Lx + M}{(x^2 + ps + q)^k} \mathrm{d}x( p^2 - 4q &lt; 0)\)</span>.</li>
-</ol>
-<p>对于（1）， <span class="math display">\[
-\int \frac{1}{(x - a)^k} \mathrm{d}x =
-\begin{cases}
-\ln |x - a| + C, k = 1, \\\\
-\frac{1}{(1 - k)(x - a)^{k - 1}} + C, k &gt; 1.
-\end{cases}
-\]</span> 对于（2），只要作适当换元（令<span class="math inline">\(t = x + \frac{p}{2}\)</span>），便化为 <span class="math display">\[
-\int \frac{Lx + M}{(x^2 + px + q)^k} \mathrm{d}x = \int \frac{Lt + N}{(t^2 + r^2)^k}\mathrm{d}t \\\\
-= L\int\frac{t}{(t^2 + r^2)^k} \mathrm{d}t + N\int \frac{dt}{(t^2 + r^2)^k},
-\]</span> 其中<span class="math inline">\(r^2 = q - \frac{p^2}{4}, N = M - \frac{p}{2}L.\)</span></p>
-<p>当<span class="math inline">\(k = 1\)</span>时，上式右边两个不定积分分别为 <span class="math display">\[
-\int \frac{t}{t^2 + r^2}\mathrm{d}t = \frac{1}{2}\ln (t^2 + r^2) + C, \\\\
-\int \frac{\mathrm{d}t}{t^2 + r^2} = \frac{1}{r} \arctan \frac{t}{r} + C.
-\]</span> 当<span class="math inline">\(k \geq 2\)</span>时，上式右边第一个不定积分为 <span class="math display">\[
-\int \frac{t}{t^2 + r^2} \mathrm{d}t = \frac{1}{2(1 - k)(t^2 + r^2)^{k - 1}} + C.
-\]</span> 对于第二个不定积分，记 <span class="math display">\[
-I_k = \int \frac{\mathrm{d}t}{(t^2 + r^2)^k},
-\]</span> 可用分部积分法导出递推公式如下: <span class="math display">\[
-I_k = \frac{1}{r^2} \int \frac{(t^2 + r^2) - t^2}{(t^2 + r^2)^k}\mathrm{d}t \\\\
-\quad = \frac{1}{r^2}I_{k-1} - \frac{1}{r^2}\int \frac{t^2}{(t^2 + r^2)^k}\mathrm{d}t \\\\
-\quad = \frac{1}{r^2}I_{k-1} + \frac{1}{2r^2(k-1)}\int t \mathrm{d}(\frac{1}{(t^2 + r^2)^{k-1}}) \\\\
-\quad = \frac{1}{r^2}I_{k-1} + \frac{1}{2r^2(k-1)}[\frac{t}{(t^2 + r^2)^{k-1}} - I_{k-1}].
-\]</span> 经整理得到 <span class="math display">\[
-I_k = \frac{t}{2r^2(k-1)(t^2+r^2)^{k-1}} + \frac{2k-3}{2r^2}(k-1)I_{k-1}.
-\]</span> 重复使用上面的递推公式，最终归为计算<span class="math inline">\(I_1\)</span>，<span class="math inline">\(I_1\)</span>已经上面计算出。把所有这些局部结果代回，并令<span class="math inline">\(t = x + \frac{p}{2}\)</span>就完成了对不定积分（2）的计算。</p>
-<h1 id="三角函数有理式的不定积分">三角函数有理式的不定积分</h1>
-<p>由<span class="math inline">\(u(x), v(x)\)</span>及常数经过有限次四则运算所得到的函数称为关于<span class="math inline">\(u(x), v(x)\)</span>的有理式，并用<span class="math inline">\(R(u(x), v(x))\)</span>表示。</p>
-<p><span class="math inline">\(\int R(\sin x, \cos x) \mathrm{d}x\)</span> 是三角函数有理式的不定积分。一般使用如下的万能公式，令<span class="math inline">\(t = \tan \frac{x}{2}\)</span>,有 <span class="math display">\[
-\sin x = \frac{2\sin \frac{x}{2}\cos \frac{x}{2}}{\sin^2\frac{x}{2} + \cos^2 \frac{x}{2}} = \frac{2\tan \frac{x}{2}}{1 + \tan^2 \frac{x}{2}} = \frac{2t}{1 + t^2}, \\\\
-\cos x = \frac{\cos^2 \frac{x}{2} - \sin^2\frac{x}{2}}{\sin^2\frac{x}{2} + \cos^2\frac{x}{2}} = \frac{1-\tan^2\frac{x}{2}}{1+\tan^2\frac{x}{2}} = \frac{1-t^2}{1+t^2}, \\\\
-\tan x = \frac{\sin x}{\cos x} = \frac{2t}{1-t^2}.
-\]</span> 又 <span class="math display">\[
-\mathrm{d}x = \frac{2}{1 + t^2} \mathrm{d}t,
-\]</span> 所以，<span class="math inline">\(\int R(\sin x, \cos x) \mathrm{d}x = \int R(\frac{2t}{1+t^2}, \frac{1-t^2}{1+t^2})\frac{2}{1+t^2} \mathrm{d}t\)</span>. 这就是上面的有理函数的不定积分。</p>
-<p>虽然万能公式适用性比较广，但是在某些情况下却不是简便的方法。如在如下类型中 <span class="math display">\[
-\int \frac{a \sin^2 x + b\cos^2 x}{c \sin^2 x + d \cos^2 x} \mathrm{d}x,
-\]</span> （分子分母同除以<span class="math inline">\(\cos^2 x\)</span>后令<span class="math inline">\(t = \tan x\)</span>）</p>
-<p><strong>通常被积函数是<span class="math inline">\(\sin^2 x, \cos^2 x, \sin x \cos x\)</span>的有理式时，采用变换<span class="math inline">\(t = \tan x\)</span>往往简便</strong> <span class="math display">\[
-\int \frac{a \sin x + b \cos x}{c \sin x + d \cos x} \mathrm{d}x,
-\]</span> （把分子形式的写为 <span class="math display">\[
-a \sin x + b \cos x = A(c \sin x + d \cos x) + B(c \sin x + d \cos x)^{\prime}
-\]</span> 然后，比较系数求出<span class="math inline">\(A, B\)</span>，即可化为 <span class="math display">\[
-A\int \mathrm{d}x + B\int \frac{\mathrm{d}(c \sin x + d \cos x)}{c \sin x + d \cos x}.
-\]</span></p>
-<h1 id="某些无理根式的不定积分">某些无理根式的不定积分</h1>
-<h2 id="第一种无理根式">第一种无理根式</h2>
-<p><span class="math inline">\(\int R(x, \sqrt[n]{\frac{ax + b}{cx + d}}) \mathrm{d}x\)</span> 型不定积分<span class="math inline">\((ad - bc \neq 0)\)</span>。对此只需令<span class="math inline">\(t = \sqrt[n]{\frac{ax + b}{cx + d}}\)</span>, 就可化为有理函数的不定积分。</p>
-<h2 id="第二种无理根式">第二种无理根式</h2>
-<p><span class="math inline">\(\int R(x, \sqrt{ax^2 + bx + c}) \mathrm{d}x\)</span>型不定积分（<span class="math inline">\(a &gt; 0\)</span>时<span class="math inline">\(b^2 - 4ac \neq 0,\ a &lt; 0\)</span>时<span class="math inline">\(b^2 - 4ac &gt; 0\)</span>）。由于 <span class="math display">\[
-ax^2 + bx + c = a[(x + \frac{b}{2a})^2 + \frac{4ac - b^2}{4a^2}],
-\]</span> 若记<span class="math inline">\(u = x + \frac{b}{2a}, k^2 = |\frac{4ac - b^2}{4a^2}|\)</span>，则此二次三项式必属于以下三种情形之一： <span class="math display">\[
-|a|(u^2 + k^2), \quad |a|(u^2 - k^2), \quad |a|(k^2 - u^2).
-\]</span> 因此上述无理根式的不定积分也就转化为以下三种类型之一： <span class="math display">\[
-\int R(u, \sqrt{u^2 \pm k^2}) \mathrm{d}u, \quad \int R(u, \sqrt{k^2 - u^2}) \mathrm{d}u.
-\]</span> 当分别令<span class="math inline">\(u = k\tan t, u = k\sec t, u = k \sin t\)</span>后，它们都化为三角有理式的不定积分。</p>
-<p><strong>一般地，二次三项式<span class="math inline">\(ax^2 + bx + c\)</span>中若<span class="math inline">\(a&gt;0\)</span>，则可令</strong> <span class="math display">\[
-\sqrt{ax^2 + bx + c} = \sqrt{a}x \pm t;
-\]</span> <strong>若<span class="math inline">\(c&gt;0\)</span>，还可令</strong> <span class="math display">\[
-\sqrt{ax^2 + bx + c} = xt \pm \sqrt{c}.
-\]</span> <strong>这类变换称为<font color=#dd0000dd>欧拉变换</font></strong>。</p>
-<p>至此，已经学了求不定积分的基本方法，以及某些特殊类型不定积分的求法。需要指出的是，通常所说的“求不定积分”是指<font color=dddddd00>用初等函数的形式把不定积分表示出来</font>。在这个意义下，并不是任何初等函数的不定积分都能“求出来”的，如 <span class="math display">\[
-\int e^{\pm x^2} \mathrm{d}x, \quad \int \frac{\mathrm{d}x}{\ln x}, \quad \int \frac{\sin x}{x}\mathrm{d}x, \quad \int \sqrt{1 - k^2 \sin^2 x} \mathrm{d}x \ (0 &lt; k^2 &lt; 1).
-\]</span> 等等，虽然它们都存在，但却无法用初等函数来表示。这一结论是有刘维尔（Liouville）于1835年作出过证明。因此，初等函数的原函数不一定是初等函数。但是，这些函数可以采用定积分形式来表示。</p>
+</tbody></table>
+<p>得到$Q(x) &#x3D; (x-2)(x+2)(x^3 + x^2 - x + 2)$</p>
+<p>对于$x^3 + x^2 - x + 2$可检验常数项4的整数分解因子$\pm 1, \pm 2$，发现只有$-2$是其整数根，即$x + 2$能够整除$x^3 + x^2 - x + 2$，利用如上表的综合除法，可以分解如下<br>$$<br>x^3 + x^2 - x + 2 &#x3D; (x + 2)(x^2 - x + 1).<br>$$<br>因此，对$R(x)$的分母$Q(x)$可以因式分解为如下<br>$$<br>Q(x) &#x3D; (x - 2)(x + 2)^2(x^2 - x + 1).<br>$$<br>然后，按照本节的有理函数因式分解方法，可写出部分分式分解的待定形式为<br>$$<br>R(x) &#x3D; \frac{A_0}{x - 2} + \frac{A_1}{x + 2} + \frac{A_2}{(x + 2)^2} + \frac{Bx + C}{x^2 - x + 1}.<br>$$<br>通分后，比较分子与$2x^4 - x^3 + 4x^2 + 9x - 10$的各次项系数，可求得参数$A_0, A_1, A_2, B, C$.</p>
+<p>最后，代入待定形式记得$R(x)$的部分分式分解<br>$$<br>R(x) &#x3D; \frac{1}{x - 2} + \frac{2}{x + 2} - \frac{1}{(x + 2)^2} - \frac{x - 1}{x^2 - x + 1}.<br>$$<br>一旦完成了部分分式分解，最后归结为求如下两类有理真分式的不定积分：</p>
+<p>(1)  $\int \frac{1}{(x - a)^k} \mathrm{d}x$;	(2) $\int \frac{Lx + M}{(x^2 + ps + q)^k} \mathrm{d}x( p^2 - 4q &lt; 0)$.</p>
+<p>对于（1），<br>$$<br>\int \frac{1}{(x - a)^k} \mathrm{d}x &#x3D;<br>\begin{cases}<br>\ln |x - a| + C, k &#x3D; 1, \\<br>\frac{1}{(1 - k)(x - a)^{k - 1}} + C, k &gt; 1.<br>\end{cases}<br>$$<br>对于（2），只要作适当换元（令$t &#x3D; x + \frac{p}{2}$），便化为<br>$$<br>\int \frac{Lx + M}{(x^2 + px + q)^k} \mathrm{d}x &#x3D; \int \frac{Lt + N}{(t^2 + r^2)^k}\mathrm{d}t \\<br>&#x3D; L\int\frac{t}{(t^2 + r^2)^k} \mathrm{d}t + N\int \frac{dt}{(t^2 + r^2)^k},<br>$$<br>其中$r^2 &#x3D; q - \frac{p^2}{4}, N &#x3D; M - \frac{p}{2}L.$</p>
+<p>当$k &#x3D; 1$时，上式右边两个不定积分分别为<br>$$<br>\int \frac{t}{t^2 + r^2}\mathrm{d}t &#x3D; \frac{1}{2}\ln (t^2 + r^2) + C, \\<br>\int \frac{\mathrm{d}t}{t^2 + r^2} &#x3D; \frac{1}{r} \arctan \frac{t}{r} + C.<br>$$<br>当$k \geq 2$时，上式右边第一个不定积分为<br>$$<br>\int \frac{t}{t^2 + r^2} \mathrm{d}t &#x3D; \frac{1}{2(1 - k)(t^2 + r^2)^{k - 1}} + C.<br>$$<br>对于第二个不定积分，记<br>$$<br>I_k &#x3D; \int \frac{\mathrm{d}t}{(t^2 + r^2)^k},<br>$$<br>可用分部积分法导出递推公式如下:<br>$$<br>I_k &#x3D; \frac{1}{r^2} \int \frac{(t^2 + r^2) - t^2}{(t^2 + r^2)^k}\mathrm{d}t \\<br>\quad &#x3D; \frac{1}{r^2}I_{k-1} - \frac{1}{r^2}\int \frac{t^2}{(t^2 + r^2)^k}\mathrm{d}t \\<br>\quad &#x3D; \frac{1}{r^2}I_{k-1} + \frac{1}{2r^2(k-1)}\int t \mathrm{d}(\frac{1}{(t^2 + r^2)^{k-1}}) \\<br>\quad &#x3D; \frac{1}{r^2}I_{k-1} + \frac{1}{2r^2(k-1)}[\frac{t}{(t^2 + r^2)^{k-1}} - I_{k-1}].<br>$$<br>经整理得到<br>$$<br>I_k &#x3D; \frac{t}{2r^2(k-1)(t^2+r^2)^{k-1}} + \frac{2k-3}{2r^2}(k-1)I_{k-1}.<br>$$<br>重复使用上面的递推公式，最终归为计算$I_1$，$I_1$已经上面计算出。把所有这些局部结果代回，并令$t &#x3D; x + \frac{p}{2}$就完成了对不定积分（2）的计算。</p>
+<h1 id="三角函数有理式的不定积分"><a href="#三角函数有理式的不定积分" class="headerlink" title="三角函数有理式的不定积分"></a>三角函数有理式的不定积分</h1><p>由$u(x), v(x)$及常数经过有限次四则运算所得到的函数称为关于$u(x), v(x)$的有理式，并用$R(u(x), v(x))$表示。</p>
+<p>$\int R(\sin x, \cos x) \mathrm{d}x$ 是三角函数有理式的不定积分。一般使用如下的万能公式，令$t &#x3D; \tan \frac{x}{2}$,有<br>$$<br>\sin x &#x3D; \frac{2\sin \frac{x}{2}\cos \frac{x}{2}}{\sin^2\frac{x}{2} + \cos^2 \frac{x}{2}} &#x3D; \frac{2\tan \frac{x}{2}}{1 + \tan^2 \frac{x}{2}} &#x3D; \frac{2t}{1 + t^2}, \\<br>\cos x &#x3D; \frac{\cos^2 \frac{x}{2} - \sin^2\frac{x}{2}}{\sin^2\frac{x}{2} + \cos^2\frac{x}{2}} &#x3D; \frac{1-\tan^2\frac{x}{2}}{1+\tan^2\frac{x}{2}} &#x3D; \frac{1-t^2}{1+t^2}, \\<br>\tan x &#x3D; \frac{\sin x}{\cos x} &#x3D; \frac{2t}{1-t^2}.<br>$$<br>又<br>$$<br>\mathrm{d}x &#x3D; \frac{2}{1 + t^2} \mathrm{d}t,<br>$$<br>所以，$\int R(\sin x, \cos x) \mathrm{d}x &#x3D; \int R(\frac{2t}{1+t^2}, \frac{1-t^2}{1+t^2})\frac{2}{1+t^2} \mathrm{d}t$. 这就是上面的有理函数的不定积分。</p>
+<p>虽然万能公式适用性比较广，但是在某些情况下却不是简便的方法。如在如下类型中<br>$$<br>\int \frac{a \sin^2 x + b\cos^2 x}{c \sin^2 x + d \cos^2 x} \mathrm{d}x,<br>$$<br>（分子分母同除以$\cos^2 x$后令$t &#x3D; \tan x$）</p>
+<p><strong>通常被积函数是$\sin^2 x, \cos^2 x, \sin x \cos x$的有理式时，采用变换$t &#x3D; \tan x$往往简便</strong><br>$$<br>\int \frac{a \sin x + b \cos x}{c \sin x + d \cos x} \mathrm{d}x,<br>$$<br>（把分子形式的写为<br>$$<br>a \sin x + b \cos x &#x3D; A(c \sin x + d \cos x) + B(c \sin x + d \cos x)^{\prime}<br>$$<br>然后，比较系数求出$A, B$，即可化为<br>$$<br>A\int \mathrm{d}x + B\int \frac{\mathrm{d}(c \sin x + d \cos x)}{c \sin x + d \cos x}.<br>$$</p>
+<h1 id="某些无理根式的不定积分"><a href="#某些无理根式的不定积分" class="headerlink" title="某些无理根式的不定积分"></a>某些无理根式的不定积分</h1><h2 id="第一种无理根式"><a href="#第一种无理根式" class="headerlink" title="第一种无理根式"></a>第一种无理根式</h2><p>$\int R(x, \sqrt[n]{\frac{ax + b}{cx + d}}) \mathrm{d}x$ 型不定积分$(ad - bc \neq 0)$。对此只需令$t &#x3D; \sqrt[n]{\frac{ax + b}{cx + d}}$, 就可化为有理函数的不定积分。</p>
+<h2 id="第二种无理根式"><a href="#第二种无理根式" class="headerlink" title="第二种无理根式"></a>第二种无理根式</h2><p>$\int R(x, \sqrt{ax^2 + bx + c}) \mathrm{d}x$型不定积分（$a &gt; 0$时$b^2 - 4ac \neq 0,\ a &lt; 0$时$b^2 - 4ac &gt; 0$）。由于<br>$$<br>ax^2 + bx + c &#x3D; a[(x + \frac{b}{2a})^2 + \frac{4ac - b^2}{4a^2}],<br>$$<br>若记$u &#x3D; x + \frac{b}{2a}, k^2 &#x3D; |\frac{4ac - b^2}{4a^2}|$，则此二次三项式必属于以下三种情形之一：<br>$$<br>|a|(u^2 + k^2), \quad |a|(u^2 - k^2), \quad |a|(k^2 - u^2).<br>$$<br>因此上述无理根式的不定积分也就转化为以下三种类型之一：<br>$$<br>\int R(u, \sqrt{u^2 \pm k^2}) \mathrm{d}u, \quad \int R(u, \sqrt{k^2 - u^2}) \mathrm{d}u.<br>$$<br>当分别令$u &#x3D; k\tan t, u &#x3D; k\sec t, u &#x3D; k \sin t$后，它们都化为三角有理式的不定积分。</p>
+<p><strong>一般地，二次三项式$ax^2 + bx + c$中若$a&gt;0$，则可令</strong><br>$$<br>\sqrt{ax^2 + bx + c} &#x3D; \sqrt{a}x \pm t;<br>$$<br><strong>若$c&gt;0$，还可令</strong><br>$$<br>\sqrt{ax^2 + bx + c} &#x3D; xt \pm \sqrt{c}.<br>$$<br>**这类变换称为<font color=#dd0000dd>欧拉变换</font>**。</p>
+<p>至此，已经学了求不定积分的基本方法，以及某些特殊类型不定积分的求法。需要指出的是，通常所说的“求不定积分”是指<font color=dddddd00>用初等函数的形式把不定积分表示出来</font>。在这个意义下，并不是任何初等函数的不定积分都能“求出来”的，如<br>$$<br>\int e^{\pm x^2} \mathrm{d}x, \quad \int \frac{\mathrm{d}x}{\ln x}, \quad \int \frac{\sin x}{x}\mathrm{d}x, \quad \int \sqrt{1 - k^2 \sin^2 x} \mathrm{d}x \ (0 &lt; k^2 &lt; 1).<br>$$<br>等等，虽然它们都存在，但却无法用初等函数来表示。这一结论是有刘维尔（Liouville）于1835年作出过证明。因此，初等函数的原函数不一定是初等函数。但是，这些函数可以采用定积分形式来表示。</p>
 <p>求不定积分除了使用手动推到的方法，也可以利用某些计算器（如TI-92型）和计算机软件（如Mathemetica, Maple, Python包Sympy）来作。例如使用Python的Sympy包求函数:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sympy <span class="keyword">import</span> *</span><br><span class="line">x = symbols(<span class="string">&#x27;x&#x27;</span>)</span><br><span class="line">expr = sin(x) / x</span><br><span class="line">expr_int = Integral(expr, x)</span><br><span class="line">expr_int</span><br></pre></td></tr></table></figure>
-<p>结果显示 <span class="math display">\[
-\int \frac{\sin(x)}{x} \mathrm{d}x
-\]</span></p>
+
+<p>结果显示<br>$$<br>\int \frac{\sin(x)}{x} \mathrm{d}x<br>$$</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expr_int.doit()</span><br></pre></td></tr></table></figure>
-<p>结果显示 <span class="math display">\[
-Si(x)
-\]</span> 值得注意的是，虽然该函数有显示表达式，但却不属于初等函数范畴，其定义式如下 <span class="math display">\[
-Si(x) = \int^x_0 \frac{\sin(x)}{x} \mathrm{d}x.
-\]</span></p>
-<p>利用python还可以算出 <span class="math display">\[
-\int e^{-x^2} \mathrm{d}x = \frac{\sqrt{\pi}\cdot erf(x)}{2}, \\\\
-\int e^{x^2} \mathrm{d}x = \frac{\sqrt{\pi}\cdot erfi(x)}{2}, \\\\
-\int \frac{1}{\ln x} \mathrm{d}x = li(x), \\\\
-\int \sqrt{1 - k^2 \sin^2 x} \mathrm{d}x = E(x|k^2).
-\]</span> 需要注意的是，<span class="math inline">\(\int \sqrt{1 - k^2 \sin^2 x} \mathrm{d}x \ (0 &lt; k^2 &lt; 1)\)</span>, 计算花费的时间会长一些，其他都是及时返回结果。</p>
-<h1 id="重要例子">重要例子</h1>
-<ol type="1">
-<li><span class="math inline">\(\int \frac{\mathrm{d}x}{1 + x^4}\)</span></li>
-</ol>
-<p>解 因为 <span class="math display">\[
-1 + x^4 = (1 + 2x^2 + x^4) - 2x^2 \\\\
-\quad = (1 + x^2)^2 - (\sqrt{2}x)^2 \\\\
-\quad = (1 + \sqrt{2}x + x^2)(1 - \sqrt{2}x + x^2).
-\]</span> 所以，原式子可以化为 <span class="math display">\[
-\int \frac{1}{1 + x^4} \mathrm{d}x = \int \frac{1}{(1 + \sqrt{2}x + x^2)(1 -\sqrt{2}x + x^2)} \mathrm{d}x
-\]</span> 然后，再利用有理函数的不定积分方法计算。</p>
+
+<p>结果显示<br>$$<br>Si(x)<br>$$<br>值得注意的是，虽然该函数有显示表达式，但却不属于初等函数范畴，其定义式如下<br>$$<br>Si(x) &#x3D; \int^x_0 \frac{\sin(x)}{x} \mathrm{d}x.<br>$$</p>
+<p>利用python还可以算出<br>$$<br>\int e^{-x^2} \mathrm{d}x &#x3D; \frac{\sqrt{\pi}\cdot erf(x)}{2}, \\<br>\int e^{x^2} \mathrm{d}x &#x3D; \frac{\sqrt{\pi}\cdot erfi(x)}{2}, \\<br>\int \frac{1}{\ln x} \mathrm{d}x &#x3D; li(x), \\<br>\int \sqrt{1 - k^2 \sin^2 x} \mathrm{d}x &#x3D; E(x|k^2).<br>$$<br>需要注意的是，$\int \sqrt{1 - k^2 \sin^2 x} \mathrm{d}x \ (0 &lt; k^2 &lt; 1)$, 计算花费的时间会长一些，其他都是及时返回结果。</p>
+<h1 id="重要例子"><a href="#重要例子" class="headerlink" title="重要例子"></a>重要例子</h1><p>(1) $\int \frac{\mathrm{d}x}{1 + x^4}$</p>
+<p>解	因为<br>$$<br>1 + x^4 &#x3D; (1 + 2x^2 + x^4) - 2x^2 \\<br>\quad &#x3D; (1 + x^2)^2 - (\sqrt{2}x)^2 \\<br>\quad &#x3D; (1 + \sqrt{2}x + x^2)(1 - \sqrt{2}x + x^2).<br>$$<br>所以，原式子可以化为<br>$$<br>\int \frac{1}{1 + x^4} \mathrm{d}x &#x3D; \int \frac{1}{(1 + \sqrt{2}x + x^2)(1 -\sqrt{2}x + x^2)} \mathrm{d}x<br>$$<br>然后，再利用有理函数的不定积分方法计算。</p>
 <p>值得注意的，也可以利用如下方法求解。</p>
-<p>解 注意到 <span class="math display">\[
-x^2 + \frac{1}{x^2} = (x + \frac{1}{x})^2 - 2 = (x - \frac{1}{x})^2 + 2.
-\]</span> 所以， <span class="math display">\[
-\int \frac{1}{1 + x^4} \mathrm{d}x = \int \frac{\frac{1}{x^2}}{x^2 + \frac{1}{x^2}} \mathrm{d}x = \frac{1}{2}\int \frac{(1+\frac{1}{x^2}) - (1 - \frac{1}{x^2})}{x^2 + \frac{1}{x^2}} \mathrm{d}x \\\\
-\quad = \frac{1}{2}[\int \frac{\mathrm{d}(x - \frac{1}{x})}{(x-\frac{1}{x})^2 + 2} - \int \frac{\mathrm{d}(x + \frac{1}{x})}{(x + \frac{1}{x})^2 - 2}] \\\\
-\quad = \frac{1}{2}[\frac{1}{\sqrt{2}}\arctan\frac{x-\frac{1}{x}}{\sqrt{2}} - \frac{1}{2\sqrt{2}}\ln |\frac{x + \frac{1}{x} - \sqrt{2}}{x + \frac{1}{x} + \sqrt{2}}|] + C.
-\]</span> （2）<span class="math inline">\(\int \frac{\mathrm{d}x}{\sqrt{x^2 + x}}\)</span></p>
-<p>解<br />
-<span class="math display">\[
-\int \frac{\mathrm{d}x}{\sqrt{x^2 + x}} = \int \frac{\mathrm{d}x}{\sqrt{x}\sqrt{x + 1}} = 2\int\frac{\mathrm{d}\sqrt{x}}{\sqrt{(\sqrt{x})^2 + 1}} = 2 \ln |\sqrt{x} + \sqrt{x + 1}| + C.
-\]</span> 利用换元<span class="math inline">\(\sqrt{x} = \tan t\)</span>.</p>
+<p>解	注意到<br>$$<br>x^2 + \frac{1}{x^2} &#x3D; (x + \frac{1}{x})^2 - 2 &#x3D; (x - \frac{1}{x})^2 + 2.<br>$$<br>所以，<br>$$<br>\int \frac{1}{1 + x^4} \mathrm{d}x &#x3D; \int \frac{\frac{1}{x^2}}{x^2 + \frac{1}{x^2}} \mathrm{d}x &#x3D; \frac{1}{2}\int \frac{(1+\frac{1}{x^2}) - (1 - \frac{1}{x^2})}{x^2 + \frac{1}{x^2}} \mathrm{d}x \\<br>\quad &#x3D; \frac{1}{2}[\int \frac{\mathrm{d}(x - \frac{1}{x})}{(x-\frac{1}{x})^2 + 2} - \int \frac{\mathrm{d}(x + \frac{1}{x})}{(x + \frac{1}{x})^2 - 2}] \\<br>\quad &#x3D; \frac{1}{2}[\frac{1}{\sqrt{2}}\arctan\frac{x-\frac{1}{x}}{\sqrt{2}} - \frac{1}{2\sqrt{2}}\ln |\frac{x + \frac{1}{x} - \sqrt{2}}{x + \frac{1}{x} + \sqrt{2}}|] + C.<br>$$<br>（2）$\int \frac{\mathrm{d}x}{\sqrt{x^2 + x}}$</p>
+<p>解	<br>$$<br>\int \frac{\mathrm{d}x}{\sqrt{x^2 + x}} &#x3D; \int \frac{\mathrm{d}x}{\sqrt{x}\sqrt{x + 1}} &#x3D; 2\int\frac{\mathrm{d}\sqrt{x}}{\sqrt{(\sqrt{x})^2 + 1}} &#x3D; 2 \ln |\sqrt{x} + \sqrt{x + 1}| + C.<br>$$<br>利用换元$\sqrt{x} &#x3D; \tan t$.</p>
 
     </div>
 
@@ -611,14 +498,14 @@ x^2 + \frac{1}{x^2} = (x + \frac{1}{x})^2 - 2 = (x - \frac{1}{x})^2 + 2.
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

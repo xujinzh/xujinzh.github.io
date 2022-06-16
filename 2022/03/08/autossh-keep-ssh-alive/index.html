@@ -313,23 +313,25 @@
     <div class="post-body" itemprop="articleBody">
         <p>SSH 能够方便我们连接远程服务器，而且，数据的传输是通过加密的方式进行的。有时候，想要进行远程端口转发或者本地端口转发时，总是会因为网络不稳定等以及其他原因导致 SSH 连接中断，这就导致转发的不稳定。本篇介绍一个工具 autossh，它能够保持 SSH 连接的稳定性，即使断网，当网络恢复时也能够自动连接。以 Ubuntu 18.04 为例。</p>
 <a id="more"></a>
-<h1 id="安装-autossh">安装 autossh</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install autossh</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装-autossh"><a href="#安装-autossh" class="headerlink" title="安装 autossh"></a>安装 autossh</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install autossh</span><br></pre></td></tr></table></figure>
+
 <p>如果是 Mac 系统，可以使用如下命令:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install autossh</span><br></pre></td></tr></table></figure>
-<h1 id="autossh-命令介绍">autossh 命令介绍</h1>
-<p>autossh 工具自带的参数不多，但 ssh 命令带的参数很多。autossh 命令可以代替 ssh，并且使用 ssh 命令的参数。ssh 的参数可以使用 <code>man ssh</code> 查看。</p>
+
+<h1 id="autossh-命令介绍"><a href="#autossh-命令介绍" class="headerlink" title="autossh 命令介绍"></a>autossh 命令介绍</h1><p>autossh 工具自带的参数不多，但 ssh 命令带的参数很多。autossh 命令可以代替 ssh，并且使用 ssh 命令的参数。ssh 的参数可以使用 <code>man ssh</code> 查看。</p>
 <p>autossh 的简单语法:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">autossh [-V] [-M port[:echo_port]] [-f] [SSH_OPTIONS]</span><br></pre></td></tr></table></figure>
+
 <p>autossh 自带的参数有</p>
 <ul>
 <li>V: causes autossh to display its version number and exit.</li>
-<li>M: specifies the base monitoring port to use. 该参数是重要参数，用于保持 SSH 连接出问题的监控端口，一般在<font color=red>本地</font>服务器上需要保证设置的该"端口"和"端口 + 1"打开 。</li>
+<li>M: specifies the base monitoring port to use. 该参数是重要参数，用于保持 SSH 连接出问题的监控端口，一般在<font color=red>本地</font>服务器上需要保证设置的该”端口”和”端口 + 1”打开 。</li>
 <li>f: causes autossh to drop to the background before running ssh. 该参数类似于 ssh 的参数。</li>
 </ul>
 <p>autossh 可以使用 ssh 的参数，参数介绍以及如何使用 ssh 进行端口转发，请参考：<a href="https://xujinzh.github.io/2022/01/20/ssh-forwarding-more/">SSH 转发知识汇总</a>、<a href="https://xujinzh.github.io/2022/01/19/ssh-forwarding-service/">SSH 转发的一些记录</a>.</p>
-<h1 id="autossh-的使用">autossh 的使用</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">autossh -M 8080 -f -R 3030:127.0.0.1:22 -NT -g jinzhongxu@hellokitty.com</span><br></pre></td></tr></table></figure>
+<h1 id="autossh-的使用"><a href="#autossh-的使用" class="headerlink" title="autossh 的使用"></a>autossh 的使用</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">autossh -M 8080 -f -R 3030:127.0.0.1:22 -NT -g jinzhongxu@hellokitty.com</span><br></pre></td></tr></table></figure>
+
 <p>使用 autossh 进行远程端口转发，将本地 127.0.0.1 的 22 端口映射到远程服务器 hellokitty.com 上的 3030 端口。这样就可以连接远程服务器的 3030 端口达到连接本地的 22 端口。</p>
 <ul>
 <li>-M：表示 hellokitty.com 上的监控端口，请在服务器上将 8080 和 8081 端口开放</li>
@@ -339,9 +341,8 @@
 <li>-T: 不分配伪终端 tty</li>
 <li>-g: 允许代理服务器连接到本地转发端口</li>
 </ul>
-<p><font color=red>注意：远程端口转发需要设置 <code>/etc/ssh/sshd_config</code> 中 <code>GatewayPorts yes</code> 。默认情况下，OpenSSH 只允许从服务器主机连接到远程转发端口。能够防止从服务器计算机外部连接到转发端口。设置成 'yes' 后，外部主机就可以连接了。</font></p>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+<p><font color=red>注意：远程端口转发需要设置 <code>/etc/ssh/sshd_config</code> 中 <code>GatewayPorts yes</code> 。默认情况下，OpenSSH 只允许从服务器主机连接到远程转发端口。能够防止从服务器计算机外部连接到转发端口。设置成 ‘yes’ 后，外部主机就可以连接了。</font></p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ae2cd8d9a368">autossh工具进行端口转发</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.51cto.com/mageedu/2774113"><strong>用autossh工具进行端口转发</strong></a></li>
 </ol>
@@ -438,14 +439,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

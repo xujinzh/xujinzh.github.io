@@ -313,30 +313,15 @@
     <div class="post-body" itemprop="articleBody">
         <p>导数的逆运算是不定积分，而定积分是某种特殊和式的极限。不定积分与定积分既有联系又有区别。</p>
 <a id="more"></a>
-<h1 id="概念的引出">概念的引出</h1>
-<p>定积分的概念提出是基于：1、曲边梯形的面积；2、变力所做的功。总体思想是：<strong>分割，近似求和，取极限</strong>。</p>
-<h1 id="定积分的定义">定积分的定义</h1>
-<p><strong>定义</strong> 设闭区间 <span class="math inline">\([a, b]\)</span> 上有 <span class="math inline">\(n-1\)</span> 个点，依次为 <span class="math display">\[
-a = x_0 &lt; x_1 &lt; x_2 &lt; \cdots &lt; x_{n-1} &lt; x_n = b,
-\]</span> 它们把 <span class="math inline">\([a, b]\)</span> 分成 <span class="math inline">\(n\)</span> 个小区间 <span class="math inline">\(\Delta_i = [x_{i-1}, x_i], i=1,2,\cdots,n\)</span>. 这些分点或这些闭区间构成对 <span class="math inline">\([a,b]\)</span> 的一个分割，记为 <span class="math display">\[
-T = \{x_0, x_1, \cdots, x_n\} 或 \{\Delta_1, \Delta_2, \cdots, \Delta_n\}.
-\]</span> 小区间 <span class="math inline">\(\Delta_i\)</span> 的长度为 <span class="math inline">\(\Delta x_i = x_i - x_{i-1},\)</span> 并记 <span class="math display">\[
-\|T\| = \max_{1\leq i \leq n} \{\Delta x_i\},
-\]</span> 称为分割 <span class="math inline">\(T\)</span> 的模。</p>
-<p><strong>注意</strong> 由于 <span class="math inline">\(\Delta x_i \leq \|T\|, i = 1, 2, \cdots, n,\)</span> 因此 <span class="math inline">\(\|T\|\)</span> 可用来反应 <span class="math inline">\([a, b]\)</span> 被分割的细密程度。另外，分割 <span class="math inline">\(T\)</span> 一旦给出，<span class="math inline">\(\|T\|\)</span> 就随之而确定；但是，具有同一细度 <span class="math inline">\(\|T\|\)</span> 的分割 <span class="math inline">\(T\)</span> 却有无限多个。</p>
-<p><strong>定义</strong> 设 <span class="math inline">\(f\)</span> 是定义在 <span class="math inline">\([a, b]\)</span> 上的一个函数，对于 <span class="math inline">\([a, b]\)</span> 的一个分割 <span class="math inline">\(T = \{\Delta_1, \Delta_2, \cdots, \Delta_n\}\)</span>，任取点 <span class="math inline">\(\xi_i \in \Delta_i, i = 1,2,\cdots, n,\)</span> 并作和式 <span class="math display">\[
-\sum^n_{i=1}f(\xi_i)\Delta x_i.
-\]</span> 称此和式为函数 <span class="math inline">\(f\)</span> 在 <span class="math inline">\([a, b]\)</span> 上的一个积分和，也称为黎曼和。</p>
-<p>有定义可知，积分和既与分割 <span class="math inline">\(T\)</span> 有关，又与所选取的点集 <span class="math inline">\(\{\xi_i\}\)</span> 有关。</p>
-<p><strong>定义</strong> 设 <span class="math inline">\(f\)</span> 是定义在 <span class="math inline">\([a, b]\)</span> 上的一个函数，<span class="math inline">\(J\)</span> 是一个确定的实数，若对任给的正数 <span class="math inline">\(\varepsilon\)</span>, 总存在某一正数 <span class="math inline">\(\delta\)</span>, 使得对 <span class="math inline">\([a, b]\)</span> 的任何分割 <span class="math inline">\(T\)</span>, 以及在其上任意选取的点集 <span class="math inline">\(\{\xi_i\}\)</span>，只要 <span class="math inline">\(\|T\| &lt; \delta\)</span>，就有 <span class="math display">\[
-\left | \sum^n_{i=1}f(\xi_i)\Delta x_i - J \right | &lt; \varepsilon,
-\]</span> 则称函数 <span class="math inline">\(f\)</span> 在区间 <span class="math inline">\([a, b]\)</span> 上可积或黎曼可积；数 <span class="math inline">\(J\)</span> 称为 <span class="math inline">\(f\)</span> 在 <span class="math inline">\([a, b]\)</span> 上的定积分或黎曼积分，记作 <span class="math display">\[
-J = \int^b_a f(x) \mathrm{d}x.
-\]</span> 其中， <span class="math inline">\(f\)</span> 称为被积函数，<span class="math inline">\(x\)</span> 称为积分变量，<span class="math inline">\([a, b]\)</span> 称为积分区间，<span class="math inline">\(a, b\)</span> 分别称为这个定积分的下限和上限。</p>
-<p>定积分的几何意义 对于 <span class="math inline">\([a, b]\)</span> 上的连续函数 <span class="math inline">\(f\)</span>，当 <span class="math inline">\(f \geq 0, x\in[a,b]\)</span> 时，定积分的几何意义就是该曲边梯形的面积；当 <span class="math inline">\(f(x) \leq 0, x\in [a,b]\)</span> 时，这时 <span class="math inline">\(J = - \int^b_a [-f(x)] \mathrm{d}x\)</span> 是位于 <span class="math inline">\(x\)</span> 轴下方的曲边梯形面积的相反数，不妨称之为“负面积”；对于一般非定号的 <span class="math inline">\(f(x)\)</span> 而言，定积分 <span class="math inline">\(J\)</span> 的值则是曲线 <span class="math inline">\(y=f(x)\)</span> 在 <span class="math inline">\(x\)</span> 轴上方部分所有曲边梯形的正面积与下方部分所有曲边梯形的负面积的代数和。</p>
-<p><strong>注意</strong> 定积分作为积分和的极限，它的值只与被积函数 <span class="math inline">\(f\)</span> 和积分区间 <span class="math inline">\([a, b]\)</span> 有关，而与积分变量所用的符号无关，即 <span class="math display">\[
-\int^b_a f(x) \mathrm{d}x = \int^b_a f(t) \mathrm{d}t = \int^b_a f(\theta) \mathrm{d} \theta.
-\]</span></p>
+
+<h1 id="概念的引出"><a href="#概念的引出" class="headerlink" title="概念的引出"></a>概念的引出</h1><p>定积分的概念提出是基于：1、曲边梯形的面积；2、变力所做的功。总体思想是：<strong>分割，近似求和，取极限</strong>。</p>
+<h1 id="定积分的定义"><a href="#定积分的定义" class="headerlink" title="定积分的定义"></a>定积分的定义</h1><p><strong>定义</strong>	设闭区间 $[a, b]$ 上有 $n-1$ 个点，依次为<br>$$<br>a &#x3D; x_0 &lt; x_1 &lt; x_2 &lt; \cdots &lt; x_{n-1} &lt; x_n &#x3D; b,<br>$$<br>它们把 $[a, b]$ 分成 $n$ 个小区间 $\Delta_i &#x3D; [x_{i-1}, x_i], i&#x3D;1,2,\cdots,n$. 这些分点或这些闭区间构成对 $[a,b]$ 的一个分割，记为<br>$$<br>T &#x3D; {x_0, x_1, \cdots, x_n} 或 {\Delta_1, \Delta_2, \cdots, \Delta_n}.<br>$$<br>小区间 $\Delta_i$ 的长度为 $\Delta x_i &#x3D; x_i - x_{i-1},$ 并记<br>$$<br>|T| &#x3D; \max_{1\leq i \leq n} {\Delta x_i},<br>$$<br>称为分割 $T$ 的模。</p>
+<p><strong>注意</strong>	由于 $\Delta x_i \leq |T|, i &#x3D; 1, 2, \cdots, n,$ 因此 $|T|$ 可用来反应 $[a, b]$ 被分割的细密程度。另外，分割 $T$ 一旦给出，$|T|$ 就随之而确定；但是，具有同一细度 $|T|$ 的分割 $T$ 却有无限多个。</p>
+<p><strong>定义</strong>	设 $f$ 是定义在 $[a, b]$ 上的一个函数，对于 $[a, b]$ 的一个分割 $T &#x3D; {\Delta_1, \Delta_2, \cdots, \Delta_n}$，任取点 $\xi_i \in \Delta_i, i &#x3D; 1,2,\cdots, n,$ 并作和式<br>$$<br>\sum^n_{i&#x3D;1}f(\xi_i)\Delta x_i.<br>$$<br>称此和式为函数 $f$ 在 $[a, b]$ 上的一个积分和，也称为黎曼和。</p>
+<p>有定义可知，积分和既与分割 $T$ 有关，又与所选取的点集 ${\xi_i}$ 有关。</p>
+<p><strong>定义</strong>	设 $f$ 是定义在 $[a, b]$ 上的一个函数，$J$ 是一个确定的实数，若对任给的正数 $\varepsilon$, 总存在某一正数 $\delta$, 使得对 $[a, b]$ 的任何分割 $T$, 以及在其上任意选取的点集 ${\xi_i}$，只要 $|T| &lt; \delta$，就有<br>$$<br>\left | \sum^n_{i&#x3D;1}f(\xi_i)\Delta x_i - J \right | &lt; \varepsilon,<br>$$<br>则称函数 $f$ 在区间 $[a, b]$ 上可积或黎曼可积；数 $J$ 称为 $f$ 在 $[a, b]$ 上的定积分或黎曼积分，记作<br>$$<br>J &#x3D; \int^b_a f(x) \mathrm{d}x.<br>$$<br>其中， $f$ 称为被积函数，$x$ 称为积分变量，$[a, b]$ 称为积分区间，$a, b$ 分别称为这个定积分的下限和上限。</p>
+<p>定积分的几何意义	对于 $[a, b]$ 上的连续函数 $f$，当 $f \geq 0, x\in[a,b]$ 时，定积分的几何意义就是该曲边梯形的面积；当 $f(x) \leq 0, x\in [a,b]$ 时，这时 $J &#x3D; - \int^b_a [-f(x)] \mathrm{d}x$ 是位于 $x$ 轴下方的曲边梯形面积的相反数，不妨称之为“负面积”；对于一般非定号的 $f(x)$ 而言，定积分 $J$ 的值则是曲线 $y&#x3D;f(x)$ 在 $x$ 轴上方部分所有曲边梯形的正面积与下方部分所有曲边梯形的负面积的代数和。</p>
+<p><strong>注意</strong>	定积分作为积分和的极限，它的值只与被积函数 $f$ 和积分区间 $[a, b]$ 有关，而与积分变量所用的符号无关，即<br>$$<br>\int^b_a f(x) \mathrm{d}x &#x3D; \int^b_a f(t) \mathrm{d}t &#x3D; \int^b_a f(\theta) \mathrm{d} \theta.<br>$$</p>
 
     </div>
 
@@ -430,14 +415,14 @@ J = \int^b_a f(x) \mathrm{d}x.
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

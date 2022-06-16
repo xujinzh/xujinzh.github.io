@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9-ssh-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">修改 SSH 配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">2.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9-SSH-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">修改 SSH 配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">2.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -313,20 +313,23 @@
     <div class="post-body" itemprop="articleBody">
         <p>使用 SSH 登录 CentOS 时，总是比登录 Ubuntu 等系统慢。解决方法就是如下设置。本文以 CentOS 7 为例。</p>
 <a id="more"></a>
-<h1 id="修改-ssh-配置">修改 SSH 配置</h1>
-<ol type="1">
-<li><p>登录系统</p></li>
+
+<h1 id="修改-SSH-配置"><a href="#修改-SSH-配置" class="headerlink" title="修改 SSH 配置"></a>修改 SSH 配置</h1><ol>
+<li><p>登录系统</p>
+</li>
 <li><p>打开 SSH 配置文件：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>修改 UseDNS 为如下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UseDNS no</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UseDNS no</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>修改 GSSAPIAuthentication 为如下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GSSAPIAuthentication no</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GSSAPIAuthentication no</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>重启 SSHD 服务</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">service sshd restart</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">systemctl restart sshd</span><br></pre></td></tr></table></figure></li>
 </ol>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_30264689/article/details/89314555">centos ssh连接登录慢解决</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/leeyisong/article/details/81558478">centos7解决ssh登录速度慢的问题</a></li>
 </ol>
@@ -423,14 +426,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

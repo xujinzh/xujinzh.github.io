@@ -32,8 +32,8 @@
 <meta property="article:published_time" content="2020-09-19T01:44:17.000Z">
 <meta property="article:modified_time" content="2021-11-09T10:42:04.843Z">
 <meta property="article:author" content="Jinzhong Xu">
-<meta property="article:tag" content="definite integral">
 <meta property="article:tag" content="maths">
+<meta property="article:tag" content="definite integral">
 <meta property="article:tag" content="integral">
 <meta name="twitter:card" content="summary">
 
@@ -314,90 +314,38 @@
     <div class="post-body" itemprop="articleBody">
         <p>首先给出一个结论：连续函数必定存在原函数。</p>
 <a id="more"></a>
-<h1 id="变限积分与原函数的存在性">变限积分与原函数的存在性</h1>
-<p>假设<span class="math inline">\(f(x)\)</span>在<span class="math inline">\([a,b]\)</span>上可积，对于任何的<span class="math inline">\(x\in[a,b]\)</span>，<span class="math inline">\(f\)</span>在<span class="math inline">\([a,x]\)</span>上也可积，定义 <span class="math display">\[
-\Phi(x) = \int^x_a f(t) \mathrm{d}t, x\in [a, b]
-\]</span> 为以积分上限<span class="math inline">\(x\)</span>为自变量的函数，称为变上限的定积分。同样，定义变下限的定积分为 <span class="math display">\[
-\Psi(x) = \int^b_x f(t) \mathrm{d}t, x\in[a,b].
-\]</span> 统称<span class="math inline">\(\Psi\)</span>与<span class="math inline">\(\Phi\)</span>为变限积分。由于<span class="math inline">\(\int^b_x f(t) \mathrm{d}t = -\int^x_b f(t)\mathrm{d}t\)</span>，因此下面只讨论变上限积分。</p>
-<p><strong>定理 9.9</strong> 若<span class="math inline">\(f\)</span>在<span class="math inline">\([a,b]\)</span>上可积，则<span class="math inline">\(\Phi\)</span>在<span class="math inline">\([a,b]\)</span>上连续。</p>
-<p><strong>定理 9.10</strong> （原函数存在定理）若<span class="math inline">\(f\)</span>在<span class="math inline">\([a,b]\)</span>上连续，则<span class="math inline">\(\Phi\)</span>在<span class="math inline">\([a,b]\)</span>上处处可导，且 <span class="math display">\[
-\Phi^{\prime}(x) = \frac{\mathrm{d}}{\mathrm{d}x}\int^x_a f(t)\mathrm{d}t = f(x), x \in [a, b].
-\]</span> <strong>定理 9.11</strong> （积分第二中值定理）设函数<span class="math inline">\(f\)</span>在<span class="math inline">\([a,b]\)</span>上可积，</p>
+
+<h1 id="变限积分与原函数的存在性"><a href="#变限积分与原函数的存在性" class="headerlink" title="变限积分与原函数的存在性"></a>变限积分与原函数的存在性</h1><p>假设$f(x)$在$[a,b]$上可积，对于任何的$x\in[a,b]$，$f$在$[a,x]$上也可积，定义<br>$$<br>\Phi(x) &#x3D; \int^x_a f(t) \mathrm{d}t, x\in [a, b]<br>$$<br>为以积分上限$x$为自变量的函数，称为变上限的定积分。同样，定义变下限的定积分为<br>$$<br>\Psi(x) &#x3D; \int^b_x f(t) \mathrm{d}t, x\in[a,b].<br>$$<br>统称$\Psi$与$\Phi$为变限积分。由于$\int^b_x f(t) \mathrm{d}t &#x3D; -\int^x_b f(t)\mathrm{d}t$，因此下面只讨论变上限积分。</p>
+<p><strong>定理 9.9</strong>	若$f$在$[a,b]$上可积，则$\Phi$在$[a,b]$上连续。</p>
+<p><strong>定理 9.10</strong>	（原函数存在定理）若$f$在$[a,b]$上连续，则$\Phi$在$[a,b]$上处处可导，且<br>$$<br>\Phi^{\prime}(x) &#x3D; \frac{\mathrm{d}}{\mathrm{d}x}\int^x_a f(t)\mathrm{d}t &#x3D; f(x), x \in [a, b].<br>$$<br><strong>定理 9.11</strong>	（积分第二中值定理）设函数$f$在$[a,b]$上可积，</p>
 <ul>
-<li>若函数<span class="math inline">\(g\)</span>在<span class="math inline">\([a,b]\)</span>上减，且<span class="math inline">\(g(x)\geq 0\)</span>，则存在<span class="math inline">\(\xi \in [a,b]\)</span>，使得</li>
+<li>若函数$g$在$[a,b]$上减，且$g(x)\geq 0$，则存在$\xi \in [a,b]$，使得</li>
 </ul>
-<p><span class="math display">\[
-\int^b_a f(x)g(x) \mathrm{d}x = g(a) \int^{\xi}_a f(x) \mathrm{d}x.
-\]</span> - 若函数<span class="math inline">\(g\)</span>在<span class="math inline">\([a,b]\)</span>上增，且<span class="math inline">\(g(x)\geq 0\)</span>，则存在<span class="math inline">\(\eta \in [a,b]\)</span>，使得</p>
-<p><span class="math display">\[
-\int^b_a f(x) g(x) \mathrm{d}x = g(b) \int^b_{\eta} f(x) \mathrm{d}x.
-\]</span> - 推广：若函数<span class="math inline">\(g\)</span>在<span class="math inline">\([a,b]\)</span>上单调，则存在<span class="math inline">\(\xi \in [a,b]\)</span>使得</p>
-<p><span class="math display">\[
-\int_{a}^{b} f(x)g(x) \mathrm{d}x = g(a) \int_{a}^{\xi} f(x) \mathrm{d}x + g(b) \int_{\xi}^{b} f(x) \mathrm{d}x.
-\]</span></p>
-<h1 id="换元积分法与分部积分法">换元积分法与分部积分法</h1>
-<p><strong>定理 9.12</strong> （定积分换元积分法）若函数<span class="math inline">\(f\)</span>在<span class="math inline">\([a,b]\)</span>上连续，<span class="math inline">\(\varphi^{\prime}\)</span>在<span class="math inline">\([a,b]\)</span>上可积，且满足 <span class="math display">\[
-\varphi(\alpha)=a, \varphi(\beta)=b, \varphi([\alpha, \beta]) \subset [a,b],
-\]</span> 则有定积分换元公式： <span class="math display">\[
-\int^b_a f(x) \mathrm{d}x = \int^{\beta}_{\alpha}f(\varphi(t))\varphi^{\prime}(t) \mathrm{d}t.
-\]</span> <strong>定理 9.13</strong> （定积分分部积分法）若<span class="math inline">\(u(x),v(x)\)</span>为<span class="math inline">\([a,b]\)</span>上的可微函数，且<span class="math inline">\(u^{\prime}(x)\)</span>和<span class="math inline">\(v^{\prime}(x)\)</span>都在<span class="math inline">\([a,b]\)</span>上可积，则有定积分分部积分公式： <span class="math display">\[
-\int^b_a u(x)v^{\prime}(x) \mathrm{d}x = u(x)v(x)\vert^b_a - \int^b_a u^{\prime}(x)v(x)\mathrm{d}x.
-\]</span></p>
-<h1 id="泰勒公式的积分型余项">泰勒公式的积分型余项</h1>
-<p>若在<span class="math inline">\([a,b]\)</span>上<span class="math inline">\(u(x),v(x)\)</span>有<span class="math inline">\(n+1\)</span>阶连续导函数，则有 <span class="math display">\[
-\int^b_a u(x)v^{(n+1)}(x)\mathrm{d}x = [u(x)v^{(n)}(x) - u^{\prime}v^{(n-1)}(x) + \cdots + \\\\
-(-1)^n u^{(n)}(x)v(x)]^b_a + (-1)^{n+1}\int^b_a u^{(n+1)}(x) v(x) \mathrm{d}x \\\\
-(n = 1, 2, \cdots)
-\]</span> 假设函数<span class="math inline">\(f\)</span>在点<span class="math inline">\(x_0\)</span>的某领域<span class="math inline">\(U(x_0)\)</span>上有<span class="math inline">\(n+1\)</span>阶连续导函数，令<span class="math inline">\(x\in U(x_0)\)</span>，<span class="math inline">\(u(t) = (x-t)^n, v(t) = f(t), t\in [x_0, x]\)</span> （或<span class="math inline">\([x, x_0]\)</span>）， <span class="math display">\[
-\int^x_{x_0} (x-t)^n f^{(n+1)}(t) \mathrm{d}t = [(x-t)^n f^{(n)}(t) + n(x-t)^{n-1}f^{(n-1)}(t) + \cdots + \\\\
-n! f(t)]^x_{x_0} + \int^x_{x_0} 0 \cdot f(t) \mathrm{d}t \\\\
-= n! f(x) - n! [f(x_0) + f^{\prime}(x_0)(x-x_0) + \cdots + \frac{f^{(n)}(x_0)}{n!}(x-x_0)^n] \\\\
-= n! R_n(x)
-\]</span> 其中<span class="math inline">\(R_n(x)\)</span>即为泰勒公式的<span class="math inline">\(n\)</span>阶余项。由此求得 <span class="math display">\[
-R_n(x) = \frac{1}{n!} \int^x_{x_0} f^{(n+1)}(t)(x-t)^n \mathrm{d}t,
-\]</span> 这就是泰勒公式的积分型余项。</p>
-<p>由于<span class="math inline">\(f^{(n+1)}(t)\)</span>连续，<span class="math inline">\((x-t)^n\)</span>在<span class="math inline">\([x_0, x]\)</span>（或<span class="math inline">\([x, x_0]\)</span>）上保持同号，因此由推广的积分第一中值定理，可得 <span class="math display">\[
-R_n(x) = \frac{1}{n!} f^{(n+1)}(\xi) \int^x_{x_0} (x-t)^n \mathrm{d}t \\\\
-= \frac{1}{(n+1)!}f^{(n+1)}(\xi)(x-x_0)^{n+1},
-\]</span> 其中<span class="math inline">\(\xi = x_0 + \theta(x-x_0), 0\leq \theta \leq 1\)</span>，得到得结果就是拉格朗日型余项。</p>
-<p>如果直接运用积分第一中值定理，那么 <span class="math display">\[
-R_n(x) = \frac{1}{n!}f^{(n+1)}(\xi)(x-\xi)^n(x-x_0), \\\\
-\xi = x_0 + \theta(x-x_0), 0 \leq \theta \leq 1.
-\]</span> 由于 <span class="math display">\[
-(x-\xi)^n (x-x_0) = [x-x_0 - \theta(x-x_0)]^n(x-x_0) \\\\
-=(1-\theta)^n(x-x_0)^{n+1},
-\]</span> 因此 <span class="math display">\[
-R_n(x) = \frac{1}{n!}f^{(n+1)}(x_0 + \theta(x-x_0))(1-\theta)^n(x-x_0)^{n+1}, \\\\
-0 \leq \theta \leq 1.
-\]</span> 特别地，当<span class="math inline">\(x_0 = 0\)</span>时，又有 <span class="math display">\[
-R_n(x) = \frac{1}{n!}f^{(n+1)}(\theta x)(1 - \theta)^n x^{n+1}, 0\leq \theta \leq 1.
-\]</span> 称为泰勒公式得柯西型余项。</p>
-<h1 id="三角函数积分技巧">三角函数积分技巧</h1>
+<p>$$<br>\int^b_a f(x)g(x) \mathrm{d}x &#x3D; g(a) \int^{\xi}_a f(x) \mathrm{d}x.<br>$$</p>
 <ul>
-<li><p><span class="math inline">\(\int_{0}^{\frac{\pi}{2}} f(\sin x, \cos x)\mathrm{d}x = \int_{0}^{\frac{\pi}{2}} f(\cos x, \sin x)\mathrm{d}x.\)</span></p></li>
-<li><p><span class="math inline">\(I(m,n) = \int^{\frac{\pi}{2}}_0 \cos^m x \sin^n x \mathrm{d}x\)</span>，<span class="math inline">\(m,n\)</span>为正整数，则</p></li>
+<li>若函数$g$在$[a,b]$上增，且$g(x)\geq 0$，则存在$\eta \in [a,b]$，使得</li>
 </ul>
-<p><span class="math display">\[
-I(m,n) = \frac{m-1}{m+n}I(m-2,n) = \frac{n-1}{n+m}I(m,n-2), m,n=2,3,\cdots.
-\]</span></p>
-<p><span class="math display">\[
-I(m,n) = 
-\begin{cases}
-\frac{(m-1)!! \cdot (n-1)!!}{(m+n)!!} \frac{\pi}{2}, m,n 都是偶数;\\\\
-\frac{(m-1)!! \cdot (n-1)!!}{(m+n)!!}, 其他.
-\end{cases}
-\]</span></p>
+<p>$$<br>\int^b_a f(x) g(x) \mathrm{d}x &#x3D; g(b) \int^b_{\eta} f(x) \mathrm{d}x.<br>$$</p>
 <ul>
-<li><span class="math inline">\(\int^{\frac{\pi}{2}}_0 \sin^n x \mathrm{d}x = \int^{\frac{\pi}{2}}_0 \cos^n x \mathrm{d}x = I(n, 0)\)</span></li>
+<li>推广：若函数$g$在$[a,b]$上单调，则存在$\xi \in [a,b]$使得</li>
 </ul>
-<p><span class="math display">\[
-I(n, 0) = 
-\begin{cases}
-\frac{(n-1)!!}{n!!}\frac{\pi}{2}, n 是偶数;\\\\
-\frac{(n-1)!!}{n!!}.
-\end{cases}
-\]</span></p>
+<p>$$<br>\int_{a}^{b} f(x)g(x) \mathrm{d}x &#x3D; g(a) \int_{a}^{\xi} f(x) \mathrm{d}x + g(b) \int_{\xi}^{b} f(x) \mathrm{d}x.<br>$$</p>
+<h1 id="换元积分法与分部积分法"><a href="#换元积分法与分部积分法" class="headerlink" title="换元积分法与分部积分法"></a>换元积分法与分部积分法</h1><p><strong>定理 9.12</strong>	（定积分换元积分法）若函数$f$在$[a,b]$上连续，$\varphi^{\prime}$在$[a,b]$上可积，且满足<br>$$<br>\varphi(\alpha)&#x3D;a, \varphi(\beta)&#x3D;b, \varphi([\alpha, \beta]) \subset [a,b],<br>$$<br>则有定积分换元公式：<br>$$<br>\int^b_a f(x) \mathrm{d}x &#x3D; \int^{\beta}_{\alpha}f(\varphi(t))\varphi^{\prime}(t) \mathrm{d}t.<br>$$<br><strong>定理 9.13</strong>	（定积分分部积分法）若$u(x),v(x)$为$[a,b]$上的可微函数，且$u^{\prime}(x)$和$v^{\prime}(x)$都在$[a,b]$上可积，则有定积分分部积分公式：<br>$$<br>\int^b_a u(x)v^{\prime}(x) \mathrm{d}x &#x3D; u(x)v(x)\vert^b_a - \int^b_a u^{\prime}(x)v(x)\mathrm{d}x.<br>$$</p>
+<h1 id="泰勒公式的积分型余项"><a href="#泰勒公式的积分型余项" class="headerlink" title="泰勒公式的积分型余项"></a>泰勒公式的积分型余项</h1><p>若在$[a,b]$上$u(x),v(x)$有$n+1$阶连续导函数，则有<br>$$<br>\int^b_a u(x)v^{(n+1)}(x)\mathrm{d}x &#x3D; [u(x)v^{(n)}(x) - u^{\prime}v^{(n-1)}(x) + \cdots + \\<br>(-1)^n u^{(n)}(x)v(x)]^b_a + (-1)^{n+1}\int^b_a u^{(n+1)}(x) v(x) \mathrm{d}x \\<br>(n &#x3D; 1, 2, \cdots)<br>$$<br>假设函数$f$在点$x_0$的某领域$U(x_0)$上有$n+1$阶连续导函数，令$x\in U(x_0)$，$u(t) &#x3D; (x-t)^n, v(t) &#x3D; f(t), t\in [x_0, x]$ （或$[x, x_0]$），<br>$$<br>\int^x_{x_0} (x-t)^n f^{(n+1)}(t) \mathrm{d}t &#x3D; [(x-t)^n f^{(n)}(t) + n(x-t)^{n-1}f^{(n-1)}(t) + \cdots + \\<br>n! f(t)]^x_{x_0} + \int^x_{x_0} 0 \cdot f(t) \mathrm{d}t \\<br>&#x3D; n! f(x) - n! [f(x_0) + f^{\prime}(x_0)(x-x_0) + \cdots + \frac{f^{(n)}(x_0)}{n!}(x-x_0)^n] \\<br>&#x3D; n! R_n(x)<br>$$<br>其中$R_n(x)$即为泰勒公式的$n$阶余项。由此求得<br>$$<br>R_n(x) &#x3D; \frac{1}{n!} \int^x_{x_0} f^{(n+1)}(t)(x-t)^n \mathrm{d}t,<br>$$<br>这就是泰勒公式的积分型余项。</p>
+<p>由于$f^{(n+1)}(t)$连续，$(x-t)^n$在$[x_0, x]$（或$[x, x_0]$）上保持同号，因此由推广的积分第一中值定理，可得<br>$$<br>R_n(x) &#x3D; \frac{1}{n!} f^{(n+1)}(\xi) \int^x_{x_0} (x-t)^n \mathrm{d}t \\<br>&#x3D; \frac{1}{(n+1)!}f^{(n+1)}(\xi)(x-x_0)^{n+1},<br>$$<br>其中$\xi &#x3D; x_0 + \theta(x-x_0), 0\leq \theta \leq 1$，得到得结果就是拉格朗日型余项。</p>
+<p>如果直接运用积分第一中值定理，那么<br>$$<br>R_n(x) &#x3D; \frac{1}{n!}f^{(n+1)}(\xi)(x-\xi)^n(x-x_0), \\<br>\xi &#x3D; x_0 + \theta(x-x_0), 0 \leq \theta \leq 1.<br>$$<br>由于<br>$$<br>(x-\xi)^n (x-x_0) &#x3D; [x-x_0 - \theta(x-x_0)]^n(x-x_0) \\<br>&#x3D;(1-\theta)^n(x-x_0)^{n+1},<br>$$<br>因此<br>$$<br>R_n(x) &#x3D; \frac{1}{n!}f^{(n+1)}(x_0 + \theta(x-x_0))(1-\theta)^n(x-x_0)^{n+1}, \\<br>0 \leq \theta \leq 1.<br>$$<br>特别地，当$x_0 &#x3D; 0$时，又有<br>$$<br>R_n(x) &#x3D; \frac{1}{n!}f^{(n+1)}(\theta x)(1 - \theta)^n x^{n+1}, 0\leq \theta \leq 1.<br>$$<br>称为泰勒公式得柯西型余项。</p>
+<h1 id="三角函数积分技巧"><a href="#三角函数积分技巧" class="headerlink" title="三角函数积分技巧"></a>三角函数积分技巧</h1><ul>
+<li><p>$\int_{0}^{\frac{\pi}{2}} f(\sin x, \cos x)\mathrm{d}x &#x3D; \int_{0}^{\frac{\pi}{2}} f(\cos x, \sin x)\mathrm{d}x.$ </p>
+</li>
+<li><p>$I(m,n) &#x3D; \int^{\frac{\pi}{2}}_0 \cos^m x \sin^n x \mathrm{d}x$，$m,n$为正整数，则</p>
+</li>
+</ul>
+<p>$$<br>I(m,n) &#x3D; \frac{m-1}{m+n}I(m-2,n) &#x3D; \frac{n-1}{n+m}I(m,n-2), m,n&#x3D;2,3,\cdots.<br>$$</p>
+<p>$$<br>I(m,n) &#x3D;<br>\begin{cases}<br>\frac{(m-1)!! \cdot (n-1)!!}{(m+n)!!} \frac{\pi}{2}, m,n 都是偶数;\\<br>\frac{(m-1)!! \cdot (n-1)!!}{(m+n)!!}, 其他.<br>\end{cases}<br>$$</p>
+<ul>
+<li>$\int^{\frac{\pi}{2}}_0 \sin^n x \mathrm{d}x &#x3D; \int^{\frac{\pi}{2}}_0 \cos^n x \mathrm{d}x &#x3D; I(n, 0)$</li>
+</ul>
+<p>$$<br>I(n, 0) &#x3D;<br>\begin{cases}<br>\frac{(n-1)!!}{n!!}\frac{\pi}{2}, n 是偶数;\\<br>\frac{(n-1)!!}{n!!}.<br>\end{cases}<br>$$</p>
 
     </div>
 
@@ -442,8 +390,8 @@ I(n, 0) =
 </div>
 
           <div class="post-tags">
-              <a href="/tags/definite-integral/" rel="tag"><i class="fa fa-tag"></i> definite integral</a>
               <a href="/tags/maths/" rel="tag"><i class="fa fa-tag"></i> maths</a>
+              <a href="/tags/definite-integral/" rel="tag"><i class="fa fa-tag"></i> definite integral</a>
               <a href="/tags/integral/" rel="tag"><i class="fa fa-tag"></i> integral</a>
           </div>
 
@@ -492,14 +440,14 @@ I(n, 0) =
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

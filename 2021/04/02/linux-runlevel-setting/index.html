@@ -312,34 +312,46 @@
     <div class="post-body" itemprop="articleBody">
         <p>Linux 系统默认有多种运行级别，如 Ubuntu 系统有 7 种运行级别，通过设置不同的运行级别，可以对计算机进行访问控制（如单用户模式，多用户模式等）、关机、重启、关闭图形界面、打开图形界面等。下面分别对这些运行级别进行介绍，并给出如何使用，如关闭图形界面，节省计算资源。</p>
 <a id="more"></a>
-<h1 id="runlevel">runlevel</h1>
-<p>查看当前计算机的运行级别</p>
+
+<h1 id="runlevel"><a href="#runlevel" class="headerlink" title="runlevel"></a>runlevel</h1><p>查看当前计算机的运行级别</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ runlevel</span><br><span class="line">N 3</span><br><span class="line"><span class="comment"># 运行级别是 3，说明是多用户控制台模式</span></span><br></pre></td></tr></table></figure>
+
 <p>通过命令可以查看各个运行级别信息</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ man runlevel</span><br><span class="line">Table 1. Mapping between runlevels and systemd targets</span><br><span class="line">       ┌─────────┬───────────────────┐</span><br><span class="line">       │Runlevel │ Target            │</span><br><span class="line">       ├─────────┼───────────────────┤</span><br><span class="line">       │0        │ poweroff.target   │</span><br><span class="line">       ├─────────┼───────────────────┤</span><br><span class="line">       │1        │ rescue.target     │</span><br><span class="line">       ├─────────┼───────────────────┤</span><br><span class="line">       │2, 3, 4  │ multi-user.target │</span><br><span class="line">       ├─────────┼───────────────────┤</span><br><span class="line">       │5        │ graphical.target  │</span><br><span class="line">       ├─────────┼───────────────────┤</span><br><span class="line">       │6        │ reboot.target     │</span><br><span class="line">       └─────────┴───────────────────┘</span><br></pre></td></tr></table></figure>
+
 <ul>
-<li><p>运行级别 0：系统停机状态，系统默认运行级别不要设为 0，否则不能正常启动；</p></li>
-<li><p>运行级别 1：单用户工作状态，具有 root 权限，用于系统维护，禁止远程登陆；</p></li>
-<li><p>运行级别 2：多用户状态 ( 没有NFS，不能联网 )；</p></li>
-<li><p>运行级别 3：完全的多用户状态 ( 有 NFS，能联网 )，登陆后进入控制台命令行模式；</p></li>
-<li><p>运行级别 4：系统未使用，保留；</p></li>
-<li><p>运行级别 5：X11 控制台，登陆后进入图形 GUI 模式；</p></li>
-<li><p>运行级别 6：系统正常关闭并重启，默认运行级别不能设为 6，否则不能正常启动；</p></li>
+<li><p>运行级别 0：系统停机状态，系统默认运行级别不要设为 0，否则不能正常启动；</p>
+</li>
+<li><p>运行级别 1：单用户工作状态，具有 root 权限，用于系统维护，禁止远程登陆；</p>
+</li>
+<li><p>运行级别 2：多用户状态 ( 没有NFS，不能联网 )；</p>
+</li>
+<li><p>运行级别 3：完全的多用户状态 ( 有 NFS，能联网 )，登陆后进入控制台命令行模式；</p>
+</li>
+<li><p>运行级别 4：系统未使用，保留；</p>
+</li>
+<li><p>运行级别 5：X11 控制台，登陆后进入图形 GUI 模式；</p>
+</li>
+<li><p>运行级别 6：系统正常关闭并重启，默认运行级别不能设为 6，否则不能正常启动；</p>
+</li>
 </ul>
 <p>因此，普通用户一般较多使用运行级别 5 或者 3.</p>
-<h1 id="切换运行级别">切换运行级别</h1>
-<p>关闭计算机</p>
+<h1 id="切换运行级别"><a href="#切换运行级别" class="headerlink" title="切换运行级别"></a>切换运行级别</h1><p>关闭计算机</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">init 0</span><br></pre></td></tr></table></figure>
+
 <p>重启计算机</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">init 6</span><br></pre></td></tr></table></figure>
+
 <p>查看默认启动级别</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl get-default</span><br></pre></td></tr></table></figure>
+
 <p>设置默认启动为多用户控制台模式 3</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">set</span>-default multi-user.target</span><br></pre></td></tr></table></figure>
+
 <p>从控制台模式切换到图形界面</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不需要输入用户名和密码</span></span><br><span class="line">startx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要输入用户名和密码</span></span><br><span class="line">systemctl isolate graphical.target  <span class="comment"># 可以通过systemctl isolate multi-user.target再切换回命令行模式</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要输入用户名和密码</span></span><br><span class="line">init 5   <span class="comment">#可以通过 init 3 再切换回命令行模式</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 快捷键方法</span></span><br><span class="line">可使用 Ctrl + Alt + F1~6 进行切换，Ctrl + Alt + 1 为图形界面</span><br></pre></td></tr></table></figure>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/25816300">Linux系统7个运行级别(runlevel)详解</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/liu1055087125/article/details/48381007">Linux 的Run level介绍</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/yiifaa/article/details/77266951">Linux(一)：运行级别查询及切换</a></li>
@@ -437,14 +449,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

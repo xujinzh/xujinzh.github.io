@@ -148,7 +148,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-miniconda"><span class="nav-number">1.</span> <span class="nav-text">安装 Miniconda</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%89%B9%E5%AE%9A%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">安装特定环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-jupyter-kernel"><span class="nav-number">3.</span> <span class="nav-text">安装 jupyter kernel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD%E4%B8%8D%E6%83%B3%E8%A6%81%E7%9A%84-jupyter-kernel"><span class="nav-number">4.</span> <span class="nav-text">卸载不想要的 jupyter kernel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%8A%E5%8C%85%E7%89%88%E6%9C%AC%E5%8F%B7%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">把包版本号写入文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8E%E7%8E%AF%E5%A2%83%E6%96%87%E4%BB%B6%E5%AE%89%E8%A3%85%E7%89%B9%E5%AE%9A%E7%89%88%E6%9C%AC%E7%9A%84%E5%8C%85"><span class="nav-number">6.</span> <span class="nav-text">从环境文件安装特定版本的包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">7.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Miniconda"><span class="nav-number">1.</span> <span class="nav-text">安装 Miniconda</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%89%B9%E5%AE%9A%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">安装特定环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-jupyter-kernel"><span class="nav-number">3.</span> <span class="nav-text">安装  jupyter kernel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD%E4%B8%8D%E6%83%B3%E8%A6%81%E7%9A%84-jupyter-kernel"><span class="nav-number">4.</span> <span class="nav-text">卸载不想要的 jupyter kernel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%8A%E5%8C%85%E7%89%88%E6%9C%AC%E5%8F%B7%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">把包版本号写入文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8E%E7%8E%AF%E5%A2%83%E6%96%87%E4%BB%B6%E5%AE%89%E8%A3%85%E7%89%B9%E5%AE%9A%E7%89%88%E6%9C%AC%E7%9A%84%E5%8C%85"><span class="nav-number">6.</span> <span class="nav-text">从环境文件安装特定版本的包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">7.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -315,39 +315,47 @@
     <div class="post-body" itemprop="articleBody">
         <p>Miniconda 是一个 python 简约发行版，集成了 python、pip、conda 等，利用 conda 进行 python 软件包管理非常方便。另外，也可以为特定的项目创建特定的运行环境，再结合 jupyter 等能够非常方便切换各种独立环境。下面给出如何利用 conda 创建特定环境。</p>
 <a id="more"></a>
-<h1 id="安装-miniconda">安装 Miniconda</h1>
-<p>从官网下载 miniconda 并安装</p>
+
+<h1 id="安装-Miniconda"><a href="#安装-Miniconda" class="headerlink" title="安装 Miniconda"></a>安装 Miniconda</h1><p>从官网下载 miniconda 并安装</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装最新版 miniconda</span></span><br><span class="line">wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh</span><br><span class="line">chmod +x Miniconda3*</span><br><span class="line">./Miniconda3*</span><br></pre></td></tr></table></figure>
-<h1 id="安装特定环境">安装特定环境</h1>
-<p>创建新的环境，命名为 toplayer，安装 python 版本 3.8</p>
+
+<h1 id="安装特定环境"><a href="#安装特定环境" class="headerlink" title="安装特定环境"></a>安装特定环境</h1><p>创建新的环境，命名为 toplayer，安装 python 版本 3.8</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果安装 miniconda 时没有初始化，需要初始化，重新登陆</span></span><br><span class="line">conda init</span><br><span class="line"><span class="comment"># 建议安装 jupyterlab，这样在虚拟环境中就可以不用安装了</span></span><br><span class="line">pip install jupyterlab</span><br></pre></td></tr></table></figure>
+
 <p>创建虚拟环境</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装虚拟环境</span></span><br><span class="line">conda create -n toplayer python=3.8</span><br><span class="line"><span class="comment"># 激活虚拟环境</span></span><br><span class="line">conda activate toplayer</span><br><span class="line"><span class="comment"># 退出虚拟环境</span></span><br><span class="line">conda deactivate</span><br></pre></td></tr></table></figure>
+
 <p><font size=3 color=cyan>删除虚拟环境</font></p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除虚拟环境</span></span><br><span class="line">conda <span class="builtin-name">remove</span> -n toplayer --all</span><br></pre></td></tr></table></figure>
+
 <p>注意，conda 版本要求 4.6+</p>
 <p>列出所有安装的环境</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在主环境下</span></span><br><span class="line">conda env list</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">conda info -e</span><br></pre></td></tr></table></figure>
-<h1 id="安装-jupyter-kernel">安装 jupyter kernel</h1>
-<p>在虚拟环境安装需要的软件</p>
+
+<h1 id="安装-jupyter-kernel"><a href="#安装-jupyter-kernel" class="headerlink" title="安装  jupyter kernel"></a>安装  jupyter kernel</h1><p>在虚拟环境安装需要的软件</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 首先激活虚拟环境</span></span><br><span class="line">conda activate toplayer</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装需要软件</span></span><br><span class="line">conda install ipython jupyterlab</span><br><span class="line"><span class="comment"># 如果在 base 主环境中已经安装了 jupyterlab，那么可以只需要安装 ipykernel</span></span><br><span class="line">pip install ipykernel</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在虚拟环境安装 jupyter kernel，并命名</span></span><br><span class="line">python -m ipykernel install --user --name toplayer --display-name <span class="string">&quot;Python3(toplayer)&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在主环境中打开 jupyterlab</span></span><br><span class="line">conda deactivate</span><br><span class="line"><span class="comment"># 注意这里尝试退出虚拟环境，并进入到主环境，主环境以 base 显示，如果没有显示任何环境名，可以使用如下命令进入主环境</span></span><br><span class="line">conda activate</span><br><span class="line"><span class="comment"># 打开 jupyterlab</span></span><br><span class="line">jupyterlab</span><br></pre></td></tr></table></figure>
+
 <p>此时，刷新 jupyter notebook 就可以从 kernel 中看到名为 Python3(toplayer) 的 kernel</p>
-<h1 id="卸载不想要的-jupyter-kernel">卸载不想要的 jupyter kernel</h1>
-<p>查看有哪些 jupyter kernel</p>
+<h1 id="卸载不想要的-jupyter-kernel"><a href="#卸载不想要的-jupyter-kernel" class="headerlink" title="卸载不想要的 jupyter kernel"></a>卸载不想要的 jupyter kernel</h1><p>查看有哪些 jupyter kernel</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter kernelspec list</span><br></pre></td></tr></table></figure>
+
 <p>显示结果如下（示例）</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Available kernels:</span><br><span class="line">  perslay     /home/jinzhongxu/.<span class="built_in">local</span>/share/jupyter/kernels/perslay</span><br><span class="line">  toplayer    /home/jinzhongxu/.<span class="built_in">local</span>/share/jupyter/kernels/toplayer</span><br><span class="line">  python3     /usr/<span class="built_in">local</span>/miniconda/share/jupyter/kernels/python3</span><br><span class="line">  c           /usr/<span class="built_in">local</span>/share/jupyter/kernels/c</span><br></pre></td></tr></table></figure>
+
 <p>删除不需要的 kernel</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jupyter kernelspec uninstall toplayer</span><br><span class="line">jupyter kernelspec uninstall perslay</span><br><span class="line">jupyter kernelspec uninstall c</span><br></pre></td></tr></table></figure>
-<h1 id="把包版本号写入文件">把包版本号写入文件</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m pip freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
-<h1 id="从环境文件安装特定版本的包">从环境文件安装特定版本的包</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
-<li><p><a target="_blank" rel="noopener" href="http://echrislynch.com/2019/02/01/adding-an-environment-to-jupyter-notebooks/">Adding An Environment to Jupyter Notebooks</a></p></li>
-<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lyy14011305/article/details/59500819">用conda创建python虚拟环境</a></p></li>
-<li><p><a target="_blank" rel="noopener" href="https://pip.pypa.io/en/stable/cli/pip_freeze/">pip freeze</a></p></li>
+
+<h1 id="把包版本号写入文件"><a href="#把包版本号写入文件" class="headerlink" title="把包版本号写入文件"></a>把包版本号写入文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m pip freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+
+<h1 id="从环境文件安装特定版本的包"><a href="#从环境文件安装特定版本的包" class="headerlink" title="从环境文件安装特定版本的包"></a>从环境文件安装特定版本的包</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><p><a target="_blank" rel="noopener" href="http://echrislynch.com/2019/02/01/adding-an-environment-to-jupyter-notebooks/">Adding An Environment to Jupyter Notebooks</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lyy14011305/article/details/59500819">用conda创建python虚拟环境</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://pip.pypa.io/en/stable/cli/pip_freeze/">pip freeze</a></p>
+</li>
 </ol>
 
     </div>
@@ -444,14 +452,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

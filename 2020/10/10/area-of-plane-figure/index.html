@@ -22,18 +22,18 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="由定积分的几何意义我们知道，连续曲线 \(y &#x3D; f(x) (\geq 0)\) 在区间 \([a, b]\) 上与 \(x\) 轴所围曲边梯形的面积为 \[ A &#x3D; \int_a^b f(x) \mathrm{d}x &#x3D; \int_a^b y \mathrm{d}x. \]">
+    <meta name="description" content="由定积分的几何意义我们知道，连续曲线 $y &#x3D; f(x) (\geq 0)$ 在区间 $[a, b]$ 上与 $x$ 轴所围曲边梯形的面积为$$A &#x3D; \int_a^b f(x) \mathrm{d}x &#x3D; \int_a^b y \mathrm{d}x.$$">
 <meta property="og:type" content="article">
 <meta property="og:title" content="利用定积分求平面图形的面积">
 <meta property="og:url" content="https://xujinzh.github.io/2020/10/10/area-of-plane-figure/index.html">
 <meta property="og:site_name" content="J. Xu">
-<meta property="og:description" content="由定积分的几何意义我们知道，连续曲线 \(y &#x3D; f(x) (\geq 0)\) 在区间 \([a, b]\) 上与 \(x\) 轴所围曲边梯形的面积为 \[ A &#x3D; \int_a^b f(x) \mathrm{d}x &#x3D; \int_a^b y \mathrm{d}x. \]">
+<meta property="og:description" content="由定积分的几何意义我们知道，连续曲线 $y &#x3D; f(x) (\geq 0)$ 在区间 $[a, b]$ 上与 $x$ 轴所围曲边梯形的面积为$$A &#x3D; \int_a^b f(x) \mathrm{d}x &#x3D; \int_a^b y \mathrm{d}x.$$">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-10T05:59:32.000Z">
-<meta property="article:modified_time" content="2021-11-09T10:42:04.841Z">
+<meta property="article:modified_time" content="2022-06-16T06:38:14.499Z">
 <meta property="article:author" content="Jinzhong Xu">
-<meta property="article:tag" content="definite integral">
 <meta property="article:tag" content="maths">
+<meta property="article:tag" content="definite integral">
 <meta property="article:tag" content="integral">
 <meta name="twitter:card" content="summary">
 
@@ -264,7 +264,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+      <time title="修改时间：2022-06-16 14:38:14" itemprop="dateModified" datetime="2022-06-16T14:38:14+08:00">2022-06-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,7 +294,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.4k</span>
+      <span>1.5k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -312,39 +312,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>由定积分的几何意义我们知道，连续曲线 <span class="math inline">\(y = f(x) (\geq 0)\)</span> 在区间 <span class="math inline">\([a, b]\)</span> 上与 <span class="math inline">\(x\)</span> 轴所围曲边梯形的面积为 <span class="math display">\[
-A = \int_a^b f(x) \mathrm{d}x = \int_a^b y \mathrm{d}x.
-\]</span> <a id="more"></a></p>
-<h1 id="负面积">负面积</h1>
-<p>如果 <span class="math inline">\(f(x)\)</span> 在 <span class="math inline">\([a, b]\)</span> 上不都是非负的，则所围图形的面积为 <span class="math display">\[
-A = \int_a^b |f(x)| \mathrm{d}x = \int_a^b |y| \mathrm{d}x.
-\]</span> 一般地，由上、下两条连续曲线 <span class="math inline">\(y = f_2(x)\)</span> 与 <span class="math inline">\(y = f_1(x)\)</span> 在区间 <span class="math inline">\([a, b]\)</span> 上所围的平面图形面积计算公式为 <span class="math display">\[
-A = \int_a^b [f_2(x) - f_1(x)] \mathrm{d}x.
-\]</span> 同样 <span class="math inline">\(x = g_2(y)\)</span> 和 <span class="math inline">\(x = g_1(y)\)</span> 在区间 <span class="math inline">\([\alpha, \beta]\)</span> 上所围面积，计算公式如下 <span class="math display">\[
-A = \int_{\alpha}^{\beta} [g_2(y) - g_1(y)] \mathrm{d}y.
-\]</span></p>
-<h1 id="参数方程">参数方程</h1>
-<p>设曲线 <span class="math inline">\(C\)</span> 由参数方程 <span class="math display">\[
-x = x(t), y = y(t), t \in [\alpha, \beta]
-\]</span> 给出，在 <span class="math inline">\([\alpha, \beta]\)</span> 上 <span class="math inline">\(y(t)\)</span> 连续， <span class="math inline">\(x(t)\)</span>连续可微且 <span class="math inline">\(x^{\prime}(t) \neq 0\)</span>（对于 <span class="math inline">\(y(t)\)</span> 连续可微且 <span class="math inline">\(y^{\prime}(t) \neq 0\)</span> 的情形可类似地讨论）.记 <span class="math inline">\(a = x(\alpha), b = x(\beta) (a &lt; b 或者 b &lt; a)\)</span>，则曲线 <span class="math inline">\(C\)</span> 及直线 <span class="math inline">\(x = a, x = b\)</span> 和 <span class="math inline">\(x\)</span> 轴所围的图形，其面积计算公式为 <span class="math display">\[
-A = \int_{\alpha}^{\beta} |y(t)x^{\prime}(t)| \mathrm{d}t.
-\]</span> 求图形面积最好画出图形，根据对称性约简计算过程。</p>
-<p>如果参数方程所表示的曲线是封闭的，即 <span class="math display">\[
-x(\alpha) = x(\beta), y(\alpha) = y(\beta)
-\]</span> 且在 <span class="math inline">\((\alpha, \beta)\)</span> 上曲线自身不再相交，那么曲线自身所围图形的面积为 <span class="math display">\[
-A = \left \vert \int_{\alpha}^{\beta} y(t) x^{\prime}(t) \mathrm{d}t \right \vert ,
-\]</span> 或 <span class="math display">\[
-A = \left \vert \int_{\alpha}^{\beta} x(t) y^{\prime}(t) \mathrm{d}t \right \vert .
-\]</span></p>
-<h1 id="极坐标方程">极坐标方程</h1>
-<p>设曲线 <span class="math inline">\(C\)</span> 由极坐标方程 <span class="math display">\[
-r = r(\theta), \theta \in [\alpha, \beta]
-\]</span> 给出，其中 <span class="math inline">\(r(\theta)\)</span> 在 <span class="math inline">\([\alpha, \beta]\)</span> 上连续，<span class="math inline">\(\beta - \alpha \leq 2 \pi\)</span>. 由曲线 <span class="math inline">\(C\)</span> 与两条射线 <span class="math inline">\(\theta = \alpha, \theta = \beta\)</span> 所围成的平面图形，通常也称为扇形，此扇形的面积计算公式为 <span class="math display">\[
-A = \frac{1}{2} \int_{\alpha}^{\beta} r^2 (\theta) \mathrm{d} \theta.
-\]</span> 圆扇形的弧长是 <span class="math inline">\(r \cdot \theta\)</span></p>
-<p>圆扇形的面积是 <span class="math inline">\(\frac{1}{2} r^2 \cdot \theta\)</span></p>
-<p>圆周长是 <span class="math inline">\(2\pi r\)</span></p>
-<p>圆面积是 <span class="math inline">\(\pi r^2\)</span></p>
+        <p>由定积分的几何意义我们知道，连续曲线 $y &#x3D; f(x) (\geq 0)$ 在区间 $[a, b]$ 上与 $x$ 轴所围曲边梯形的面积为<br>$$<br>A &#x3D; \int_a^b f(x) \mathrm{d}x &#x3D; \int_a^b y \mathrm{d}x.<br>$$</p>
+<a id="more"></a>
+
+<h1 id="负面积"><a href="#负面积" class="headerlink" title="负面积"></a>负面积</h1><p>如果 $f(x)$ 在 $[a, b]$ 上不都是非负的，则所围图形的面积为<br>$$<br>A &#x3D; \int_a^b |f(x)| \mathrm{d}x &#x3D; \int_a^b |y| \mathrm{d}x.<br>$$<br>一般地，由上、下两条连续曲线 $y &#x3D; f_2(x)$ 与 $y &#x3D; f_1(x)$ 在区间 $[a, b]$ 上所围的平面图形面积计算公式为<br>$$<br>A &#x3D; \int_a^b [f_2(x) - f_1(x)] \mathrm{d}x.<br>$$<br>同样 $x &#x3D; g_2(y)$ 和 $x &#x3D; g_1(y)$ 在区间 $[\alpha, \beta]$ 上所围面积，计算公式如下<br>$$<br>A &#x3D; \int_{\alpha}^{\beta} [g_2(y) - g_1(y)] \mathrm{d}y.<br>$$</p>
+<h1 id="参数方程"><a href="#参数方程" class="headerlink" title="参数方程"></a>参数方程</h1><p>设曲线 $C$ 由参数方程<br>$$<br>x &#x3D; x(t), y &#x3D; y(t), t \in [\alpha, \beta]<br>$$<br>给出，在 $[\alpha, \beta]$ 上 $y(t)$ 连续， $x(t)$连续可微且 $x^{\prime}(t) \neq 0$（对于 $y(t)$ 连续可微且 $y^{\prime}(t) \neq 0$ 的情形可类似地讨论）.记 $a &#x3D; x(\alpha), b &#x3D; x(\beta) (a &lt; b 或者 b &lt; a)$，则曲线 $C$ 及直线 $x &#x3D; a, x &#x3D; b$ 和 $x$ 轴所围的图形，其面积计算公式为<br>$$<br>A &#x3D; \int_{\alpha}^{\beta} |y(t)x^{\prime}(t)| \mathrm{d}t.<br>$$<br>求图形面积最好画出图形，根据对称性约简计算过程。</p>
+<p>如果参数方程所表示的曲线是封闭的，即<br>$$<br>x(\alpha) &#x3D; x(\beta), y(\alpha) &#x3D; y(\beta)<br>$$<br>且在 $(\alpha, \beta)$ 上曲线自身不再相交，那么曲线自身所围图形的面积为<br>$$<br>A &#x3D; \left \vert \int_{\alpha}^{\beta} y(t) x^{\prime}(t) \mathrm{d}t \right \vert ,<br>$$<br>或<br>$$<br>A &#x3D; \left \vert \int_{\alpha}^{\beta} x(t) y^{\prime}(t) \mathrm{d}t \right \vert .<br>$$</p>
+<h1 id="极坐标方程"><a href="#极坐标方程" class="headerlink" title="极坐标方程"></a>极坐标方程</h1><p>设曲线 $C$ 由极坐标方程<br>$$<br>r &#x3D; r(\theta), \theta \in [\alpha, \beta]<br>$$<br>给出，其中 $r(\theta)$ 在 $[\alpha, \beta]$ 上连续，$\beta - \alpha \leq 2 \pi$. 由曲线 $C$ 与两条射线 $\theta &#x3D; \alpha, \theta &#x3D; \beta$ 所围成的平面图形，通常也称为扇形，此扇形的面积计算公式为<br>$$<br>A &#x3D; \frac{1}{2} \int_{\alpha}^{\beta} r^2 (\theta) \mathrm{d} \theta.<br>$$<br>圆扇形的弧长是 $r \cdot \theta$</p>
+<p>圆扇形的面积是 $\frac{1}{2} r^2 \cdot \theta$</p>
+<p>圆周长是 $2\pi r$</p>
+<p>圆面积是 $\pi r^2$</p>
 <p>面积求导得到弧长，弧长求导得到弧度。</p>
 
     </div>
@@ -390,8 +367,8 @@ A = \frac{1}{2} \int_{\alpha}^{\beta} r^2 (\theta) \mathrm{d} \theta.
 </div>
 
           <div class="post-tags">
-              <a href="/tags/definite-integral/" rel="tag"><i class="fa fa-tag"></i> definite integral</a>
               <a href="/tags/maths/" rel="tag"><i class="fa fa-tag"></i> maths</a>
+              <a href="/tags/definite-integral/" rel="tag"><i class="fa fa-tag"></i> definite integral</a>
               <a href="/tags/integral/" rel="tag"><i class="fa fa-tag"></i> integral</a>
           </div>
 
@@ -440,14 +417,14 @@ A = \frac{1}{2} \int_{\alpha}^{\beta} r^2 (\theta) \mathrm{d} \theta.
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

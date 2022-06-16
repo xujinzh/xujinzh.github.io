@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85-redmine"><span class="nav-number">1.</span> <span class="nav-text">下载安装 Redmine</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-nginx"><span class="nav-number">2.</span> <span class="nav-text">配置 Nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B3%E8%AF%B7%E8%AF%81%E4%B9%A6"><span class="nav-number">2.1.</span> <span class="nav-text">申请证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-nginx-1"><span class="nav-number">2.2.</span> <span class="nav-text">配置 nginx</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#redmine-%E5%BC%80%E5%85%B3"><span class="nav-number">3.</span> <span class="nav-text">redmine 开关</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85-Redmine"><span class="nav-number">1.</span> <span class="nav-text">下载安装 Redmine</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-Nginx"><span class="nav-number">2.</span> <span class="nav-text">配置 Nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B3%E8%AF%B7%E8%AF%81%E4%B9%A6"><span class="nav-number">2.1.</span> <span class="nav-text">申请证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-nginx"><span class="nav-number">2.2.</span> <span class="nav-text">配置 nginx</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#redmine-%E5%BC%80%E5%85%B3"><span class="nav-number">3.</span> <span class="nav-text">redmine 开关</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -313,14 +313,14 @@
     <div class="post-body" itemprop="articleBody">
         <p>Redmine 是一个网页界面的项目管理与缺陷跟踪管理系统的自由及开放源代码软件工具，可以同时处理多个项目。它集成了项目管理所需的各项功能，包括日历、燃尽图和甘特图以协助可视化表现项目与时间限制，问题跟踪和版本控制。本篇介绍如何安装 Redmine，以 Bitnami Redmine + Debian 10 为例，所有命令以普通用户 jinzhongxu 运行，但需要 sudo 权限。</p>
 <a id="more"></a>
-<h1 id="下载安装-redmine">下载安装 Redmine</h1>
-<p>这里提供两个版本，均是 bitnami 官网版本：</p>
-<ol type="1">
+
+<h1 id="下载安装-Redmine"><a href="#下载安装-Redmine" class="headerlink" title="下载安装 Redmine"></a>下载安装 Redmine</h1><p>这里提供两个版本，均是 bitnami 官网版本：</p>
+<ol>
 <li><a target="_blank" rel="noopener" href="https://downloads.bitnami.com/files/stacks/redmine/3.4.6-5/bitnami-redmine-3.4.6-5-linux-x64-installer.run">bitnami-redmine-3.4.6-5-linux-x64-installer.run</a></li>
 <li><a target="_blank" rel="noopener" href="https://downloads.bitnami.com/files/stacks/redmine/4.2.1-3/bitnami-redmine-4.2.1-3-linux-x64-installer.run">bitnami-redmine-4.2.1-3-linux-x64-installer.run</a></li>
 </ol>
 <p>本篇以 4.2.1-3 为例，并使用 nginx 作为反向代理。需要注意的是，需要开放个别端口：</p>
-<ol type="1">
+<ol>
 <li>3690：svnserve</li>
 <li>3306：mysqld</li>
 <li>8443：httpd</li>
@@ -328,32 +328,37 @@
 <li>80，443：nginx</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 版本 3.4.6-5</span></span><br><span class="line"><span class="comment"># wget https://downloads.bitnami.com/files/stacks/redmine/3.4.6-5/bitnami-redmine-3.4.6-5-linux-x64-installer.run</span></span><br><span class="line"><span class="comment"># chmod 755 bitnami-redmine-3.4.6-5-linux-x64-installer.run</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 版本 4.2.1-3</span></span><br><span class="line"><span class="comment"># 下载并赋予执行权限</span></span><br><span class="line">wget https://downloads.bitnami.com/files/stacks/redmine/4.2.1-3/bitnami-redmine-4.2.1-3-linux-x64-installer.run</span><br><span class="line">chmod 755 bitnami-redmine-4.2.1-3-linux-x64-installer.run</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装依赖包</span></span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install -y libncurses5 perl htop nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建安装路径，这个路径在安装时使用</span></span><br><span class="line">sudo mkdir -p /usr/<span class="built_in">local</span>/redmine</span><br><span class="line">sudo chown -R jinzhongxu /usr/<span class="built_in">local</span>/redmine</span><br><span class="line"></span><br><span class="line"><span class="comment"># 要求内存至少 2G，如果内存不够，可以创建虚拟内存，注意以 root 用户执行</span></span><br><span class="line"><span class="comment">#fallocate -l 2G /swapfile</span></span><br><span class="line"><span class="comment">#chmod 600 /swapfile</span></span><br><span class="line"><span class="comment">#mkswap /swapfile</span></span><br><span class="line"><span class="comment">#swapon /swapfile</span></span><br><span class="line"><span class="comment">#cp /etc/fstab /etc/fstab.bak</span></span><br><span class="line"><span class="comment">#echo &#x27;/swapfile none swap sw 0 0&#x27; | sudo tee -a /etc/fstab</span></span><br><span class="line"><span class="comment">#echo &#x27;vm.swappiness=10&#x27; &gt;&gt; /etc/sysctl.conf</span></span><br><span class="line"><span class="comment">#echo &#x27;vm.vfs_cache_pressure=50&#x27; &gt;&gt; /etc/sysctl.conf</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">./bitnami-redmine-4.2.1-3-linux-x64-installer.run </span><br></pre></td></tr></table></figure>
-<p>假设服务器 IP 地址是：1.1.0.x，安装后，打开 http://1.1.0.x:8080 即可访问 redmine</p>
-<h1 id="配置-nginx">配置 Nginx</h1>
-<p>假设已经购买了域名: www.redmine-test.com，并指向 IP 地址: 1.1.0.x</p>
-<h2 id="申请证书">申请证书</h2>
-<p>下面代码以 <strong>root</strong> 身份运行</p>
+
+<p>假设服务器 IP 地址是：1.1.0.x，安装后，打开 <a target="_blank" rel="noopener" href="http://1.1.0.x:8080/">http://1.1.0.x:8080</a> 即可访问 redmine</p>
+<h1 id="配置-Nginx"><a href="#配置-Nginx" class="headerlink" title="配置 Nginx"></a>配置 Nginx</h1><p>假设已经购买了域名: <a target="_blank" rel="noopener" href="http://www.redmine-test.com,并指向/">www.redmine-test.com，并指向</a> IP 地址: 1.1.0.x</p>
+<h2 id="申请证书"><a href="#申请证书" class="headerlink" title="申请证书"></a>申请证书</h2><p>下面代码以 <strong>root</strong> 身份运行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装程序</span></span><br><span class="line">curl https://get.acme.sh | sh -s email=xxx@yyy.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 standalone 方式申请证书，首先需要停止 nginx，空闲 80 端口</span></span><br><span class="line">systemctl stop nginx</span><br><span class="line"></span><br><span class="line">~/.acme.sh/acme.sh --issue --standalone -d www.redmine-test.com -k ec-256 --ecc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 证书存储位置</span></span><br><span class="line">mkdir -p /etc/nginx/cert</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装证书</span></span><br><span class="line">~/.acme.sh/acme.sh  --installcert  -d  www.redmine-test.com --ecc   \</span><br><span class="line">        --key-file   /etc/nginx/cert/private.key   \</span><br><span class="line">        --fullchain-file /etc/nginx/cert/fullchain.cer</span><br></pre></td></tr></table></figure>
-<h2 id="配置-nginx-1">配置 nginx</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/nginx/nginx.conf</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置-nginx"><a href="#配置-nginx" class="headerlink" title="配置 nginx"></a>配置 nginx</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/nginx/nginx.conf</span><br></pre></td></tr></table></figure>
+
 <p>添加如下内容</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">user  root;</span><br><span class="line">worker_processes  1;</span><br><span class="line">error_log  /var/<span class="built_in">log</span>/nginx/error.log warn;</span><br><span class="line">pid        /var/run/nginx.pid;</span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line">http &#123;</span><br><span class="line">    include       /etc/nginx/mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    log_format  main  <span class="string">&#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;</span>;</span><br><span class="line">    access_log  /var/<span class="built_in">log</span>/nginx/access.log  main;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    <span class="comment">#tcp_nopush     on;</span></span><br><span class="line">    keepalive_timeout  120;</span><br><span class="line">    client_max_body_size 20m;</span><br><span class="line">    <span class="comment">#gzip  on;</span></span><br><span class="line">    server &#123;</span><br><span class="line">        listen 80; </span><br><span class="line">        listen [::]:80;</span><br><span class="line">        server_name www.redmine-test.com;</span><br><span class="line">        <span class="built_in">return</span> 301 https://<span class="variable">$server_name</span><span class="variable">$request_uri</span>;  <span class="comment"># 强制走 HTTPS</span></span><br><span class="line">    &#125;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen 443 ssl;</span><br><span class="line">        server_name www.redmine-test.com;</span><br><span class="line">        ssl_certificate   /etc/nginx/cert/fullchain.cer; </span><br><span class="line">        ssl_certificate_key  /etc/nginx/cert/private.key;</span><br><span class="line">        ssl_session_timeout 5m;</span><br><span class="line">        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;</span><br><span class="line">        ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;</span><br><span class="line">        ssl_prefer_server_ciphers on;</span><br><span class="line">        location /redmine &#123;</span><br><span class="line">            proxy_pass           http://127.0.0.1:8080/redmine;</span><br><span class="line">            proxy_set_header     Host <span class="variable">$host</span>;</span><br><span class="line">            proxy_set_header     X-Real-Scheme <span class="variable">$scheme</span>;</span><br><span class="line">            proxy_set_header     X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">            proxy_set_header     X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">            proxy_http_version   1.1;</span><br><span class="line">            <span class="comment"># proxy_set_header     Upgrade $http_upgrade;  # redmine 4.2.1 需要注释这两行，非 websocket</span></span><br><span class="line">            <span class="comment"># proxy_set_header     Connection &#x27;upgrade&#x27;;</span></span><br><span class="line">            proxy_read_timeout   120s;</span><br><span class="line">            proxy_next_upstream  error;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>重启 nginx</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart nginx.service</span><br></pre></td></tr></table></figure>
-<p>现在可以使用 https 协议访问 redmine，地址：https://www.redmine-test.com/redmine/</p>
-<h1 id="redmine-开关">redmine 开关</h1>
-<p>查看运行状态</p>
+
+<p>现在可以使用 https 协议访问 redmine，地址：<a target="_blank" rel="noopener" href="https://www.redmine-test.com/redmine/">https://www.redmine-test.com/redmine/</a></p>
+<h1 id="redmine-开关"><a href="#redmine-开关" class="headerlink" title="redmine 开关"></a>redmine 开关</h1><p>查看运行状态</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/redmine</span><br><span class="line">$ ./ctlscript.sh status</span><br><span class="line">subversion already running</span><br><span class="line">apache already running</span><br><span class="line">mysql already running</span><br></pre></td></tr></table></figure>
+
 <p>关闭</p>
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./ctlscript.<span class="keyword">sh</span> <span class="keyword">stop</span></span><br></pre></td></tr></table></figure>
+
 <p>开启</p>
 <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./ctlscript.sh <span class="literal">start</span></span><br></pre></td></tr></table></figure>
+
 <p>更多配置将去如下地址查看，包括数据库登录名和密码（database.yml）：<code>/usr/local/redmine/apps/redmine/htdocs/config</code></p>
 <p>把 MySQL 地址添加到环境变量，可直接在命令行运行 MySQL</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;PATH=/usr/local/redmine/mysql/bin:$PATH&#x27;</span> &gt;&gt; .bashrc</span><br><span class="line"><span class="built_in">source</span> .bashrc</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u bitnami -p</span><br></pre></td></tr></table></figure>
-<h1 id="参考文献">参考文献</h1>
-<ol type="1">
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/yunyin_link/article/details/101100351">Redmine安装神器：Bitnami redmine 的安装指导（Linux的安装方法）</a></li>
 </ol>
 
@@ -449,14 +454,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

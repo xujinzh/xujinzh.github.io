@@ -307,26 +307,25 @@
     <div class="post-body" itemprop="articleBody">
         <p>深度学习模型需要大量的训练数据，特别是标注数据。数据的标注非常重要，这对标注软件提出了很高的要求，易用、免费、高效的标注软件是深度学习从业人员的必备工具。deeplabcut 是一款面向位姿识别的标注软件（也可以进行模型训练），它开源、高效、易用，本篇介绍该软件的安装与简单使用。</p>
 <a id="more"></a>
-<h1 id="deeplabcut-的安装">deeplabcut 的安装</h1>
-<p>假设已经按照好了 miniconda，下面介绍安装 deeplabcut</p>
+
+<h1 id="deeplabcut-的安装"><a href="#deeplabcut-的安装" class="headerlink" title="deeplabcut 的安装"></a>deeplabcut 的安装</h1><p>假设已经按照好了 miniconda，下面介绍安装 deeplabcut</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/DeepLabCut/DeepLabCut.git</span><br><span class="line"><span class="built_in">cd</span> DeepLabCut/conda-environments</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果不想克隆源代码仓库，可以直接从官网下载配置文件</span></span><br><span class="line">wget http://www.mackenziemathislab.org/s/DEEPLABCUT.yaml</span><br><span class="line"></span><br><span class="line">conda env create -f DEEPLABCUT.yaml</span><br></pre></td></tr></table></figure>
-<h1 id="deeplabcut-的使用">deeplabcut 的使用</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">conda env list</span><br><span class="line">conda activate DEEPLABCUT</span><br><span class="line"></span><br><span class="line">pythonw -m deeplabcut</span><br><span class="line"><span class="comment"># 或者，会将后台信息打印在控制台上</span></span><br><span class="line">python -m deeplabcut</span><br></pre></td></tr></table></figure>
+
+<h1 id="deeplabcut-的使用"><a href="#deeplabcut-的使用" class="headerlink" title="deeplabcut 的使用"></a>deeplabcut 的使用</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">conda env list</span><br><span class="line">conda activate DEEPLABCUT</span><br><span class="line"></span><br><span class="line">pythonw -m deeplabcut</span><br><span class="line"><span class="comment"># 或者，会将后台信息打印在控制台上</span></span><br><span class="line">python -m deeplabcut</span><br></pre></td></tr></table></figure>
+
 <p>此时，会打开 deeplabcut 的 GUI 界面。</p>
-<h2 id="创建工程">创建工程</h2>
-<p>在首次打开软件时，需要创建一个工程（如果已经有工程的配置文件，可选择加载存在的工程），输入工程名和实验名，选择视频，选择工程保存路径（路径中不能有中文字符）并选择标注对象是否是多个目标。点击确定，则会生成配置文件。</p>
+<h2 id="创建工程"><a href="#创建工程" class="headerlink" title="创建工程"></a>创建工程</h2><p>在首次打开软件时，需要创建一个工程（如果已经有工程的配置文件，可选择加载存在的工程），输入工程名和实验名，选择视频，选择工程保存路径（路径中不能有中文字符）并选择标注对象是否是多个目标。点击确定，则会生成配置文件。</p>
 <p>建议打开配置文件，根据个人情况设置里面的参数。下面介绍几个重要参数。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">bodyparts:  <span class="comment"># 这里是你要标注的对象的关键点，可以根据字节情况设置，如 head, middle, tail 等</span></span><br><span class="line">- bodypart1</span><br><span class="line">- bodypart2</span><br><span class="line">- bodypart3</span><br><span class="line">- objectA</span><br><span class="line"></span><br><span class="line">numframes2pick: 20  <span class="comment"># 这里是设置提取帧的个数，设置成你需要提取的图像个数</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Plotting configuration</span></span><br><span class="line">skeleton:  <span class="comment"># 骨架，和 bodyparts 对应，标识通过依次链接关键点得到对象的骨架网络</span></span><br><span class="line">- - bodypart1</span><br><span class="line">  - bodypart2</span><br><span class="line">- - objectA</span><br><span class="line">  - bodypart3</span><br><span class="line">  </span><br><span class="line"><span class="comment"># 当选择的是多个对象时，配置信息会像下面这样</span></span><br><span class="line">individuals:  <span class="comment"># 几个对象</span></span><br><span class="line">- nematodes1</span><br><span class="line">- nematodes2</span><br><span class="line">- nematodes3</span><br><span class="line">uniquebodyparts: []</span><br><span class="line">multianimalbodyparts:  <span class="comment"># 每个对象标注的关键点位置</span></span><br><span class="line">- head</span><br><span class="line">- middle</span><br><span class="line">- tail</span><br></pre></td></tr></table></figure>
-<h2 id="提取帧">提取帧</h2>
-<p>当创建工程后，界面会增加多个标题栏，首先我们需要对视频进行帧随机提取，用于标注。假设我的配置文件已经根据标注要求进行设置完成。那么首先我们选择配置文件，然后提取方法我们可以选择自动或手动。如果选择自动提取，则下面会有选择的算法。</p>
+
+
+
+<h2 id="提取帧"><a href="#提取帧" class="headerlink" title="提取帧"></a>提取帧</h2><p>当创建工程后，界面会增加多个标题栏，首先我们需要对视频进行帧随机提取，用于标注。假设我的配置文件已经根据标注要求进行设置完成。那么首先我们选择配置文件，然后提取方法我们可以选择自动或手动。如果选择自动提取，则下面会有选择的算法。</p>
 <p>提取的图片会自动放到 <code>工程名/labeled-data/视频名</code> 目录下，图片格式为 <code>.png</code>。如果自动提取的帧不能够很好的用来进行标注，可以选择手动的提取方法。但这种方法对于视频较长的情况将会非常耗时的。此时，可以使用程序先将视频转化为图片序列，然后人工筛选质量较好的图片，并将筛选的图片格式转化为 <code>.png</code>. 视频转图片序列以及图片格式转换可参考我的代码库：<a target="_blank" rel="noopener" href="https://gitee.com/xu-jinzhong/mymodule/blob/master/cv/video.py">toolkit</a>. 然后将转换好的图片序列放到 <code>工程名/labeled-data/视频名</code> 目录下。</p>
-<h2 id="标注数据">标注数据</h2>
-<p>假设上面的图片已经提取完成，此时，可以选择标注数据标题。首先选择配置文件，然后选择标注帧，其次，选择加载帧，选择上面的放置提取的图片序列的文件夹。此时，图片会按照文件名顺序加载到标注工具框中。右上角为对象（当配置多个对象时）和关键点。默认打开图像时选择第一个关键点。右键为标注关键点，点击缩放 zoom 可以对小对象放大然后精细标注，点击 home 则返回正常尺寸。如果标注好当前图片，可以点击 save 保存标注信息，也可以标注多张图像后再点击保存。previous 和 next 分别标识前一帧和后一阵，可查看前后两种对象的变化情况。鼠标中键可以删除某个标注，需要先选择该标注，然后点击鼠标中键，然后点击 save，然后切换帧，返回当前帧后可重新标注。更多可查看 help 页面。</p>
+<h2 id="标注数据"><a href="#标注数据" class="headerlink" title="标注数据"></a>标注数据</h2><p>假设上面的图片已经提取完成，此时，可以选择标注数据标题。首先选择配置文件，然后选择标注帧，其次，选择加载帧，选择上面的放置提取的图片序列的文件夹。此时，图片会按照文件名顺序加载到标注工具框中。右上角为对象（当配置多个对象时）和关键点。默认打开图像时选择第一个关键点。右键为标注关键点，点击缩放 zoom 可以对小对象放大然后精细标注，点击 home 则返回正常尺寸。如果标注好当前图片，可以点击 save 保存标注信息，也可以标注多张图像后再点击保存。previous 和 next 分别标识前一帧和后一阵，可查看前后两种对象的变化情况。鼠标中键可以删除某个标注，需要先选择该标注，然后点击鼠标中键，然后点击 save，然后切换帧，返回当前帧后可重新标注。更多可查看 help 页面。</p>
 <p>标注完成后，点击 quit 退出当前标注。标注的信息会保存在 <code>工程名/labeled-data/视频名</code> 下的 <code>CollectedData_实验名.csv</code> 和 <code>CollectedData_实验名.h5</code> 中。</p>
-<h2 id="其他功能">其他功能</h2>
-<p>除了进行图像标注以外，deeplabcut 还提供了：create traing dataset, train, evaluate, analyze videos, create videos 等功能。有兴趣的伙伴可以探索。</p>
-<h1 id="参考文献">参考文献</h1>
-<ol type="1">
+<h2 id="其他功能"><a href="#其他功能" class="headerlink" title="其他功能"></a>其他功能</h2><p>除了进行图像标注以外，deeplabcut 还提供了：create traing dataset, train, evaluate, analyze videos, create videos 等功能。有兴趣的伙伴可以探索。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://github.com/DeepLabCut/DeepLabCut/blob/master/docs/installation.md">How To Install DeepLabCut</a></li>
 <li><a target="_blank" rel="noopener" href="http://www.mackenziemathislab.org/deeplabcut">deeplabcut</a></li>
 </ol>
@@ -423,14 +422,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

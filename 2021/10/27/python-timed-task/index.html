@@ -149,7 +149,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#time"><span class="nav-number">1.</span> <span class="nav-text">Time</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#threading.timer"><span class="nav-number">2.</span> <span class="nav-text">Threading.Timer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#schedule"><span class="nav-number">3.</span> <span class="nav-text">schedule</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#apscheduler"><span class="nav-number">4.</span> <span class="nav-text">apscheduler</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">5.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Time"><span class="nav-number">1.</span> <span class="nav-text">Time</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Threading-Timer"><span class="nav-number">2.</span> <span class="nav-text">Threading.Timer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#schedule"><span class="nav-number">3.</span> <span class="nav-text">schedule</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#apscheduler"><span class="nav-number">4.</span> <span class="nav-text">apscheduler</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">5.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -296,14 +296,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.6k</span>
+      <span>1.7k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
+      <span>2 分钟</span>
     </span>
 </div>
 
@@ -316,27 +316,26 @@
     <div class="post-body" itemprop="articleBody">
         <p>利用计算机能够帮助我们执行定时定点或者间隔时间段的任务，特别是对于容易遗忘、重复操作、准点执行等任务非常方便。除了在 Linux 上使用 corntab 等完成之外，在 Python 中也可以编程实现定时定点等任务的执行。本篇介绍 time, threading.Timer, schedule, apscheduler 等四个模块。</p>
 <a id="more"></a>
-<h1 id="time">Time</h1>
-<p>定时 3 秒后，依次执行相同任务 5 次</p>
+
+<h1 id="Time"><a href="#Time" class="headerlink" title="Time"></a>Time</h1><p>定时 3 秒后，依次执行相同任务 5 次</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">showTime</span>(<span class="params">count</span>):</span></span><br><span class="line">    time.sleep(count)</span><br><span class="line">    print(datetime.now().strftime(<span class="string">&quot;%Y/%m/%d %H:%M:%S&quot;</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 while 可永久执行</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">    showTime(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-<h1 id="threading.timer">Threading.Timer</h1>
-<p>定时 3 秒后，同时执行相同任务 5 次</p>
+
+<h1 id="Threading-Timer"><a href="#Threading-Timer" class="headerlink" title="Threading.Timer"></a>Threading.Timer</h1><p>定时 3 秒后，同时执行相同任务 5 次</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> threading <span class="keyword">import</span> Timer</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">showTime</span>():</span></span><br><span class="line">    print(datetime.now().strftime(<span class="string">&quot;%Y/%m/%d %H:%M:%S&quot;</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 while 可永久执行</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">    count = <span class="number">3</span></span><br><span class="line">    t = Timer(count, showTime)</span><br><span class="line">    t.start()</span><br></pre></td></tr></table></figure>
-<h1 id="schedule">schedule</h1>
-<p>每个 3 秒，执行任务</p>
+
+<h1 id="schedule"><a href="#schedule" class="headerlink" title="schedule"></a>schedule</h1><p>每个 3 秒，执行任务</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> schedule</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">showTime</span>():</span></span><br><span class="line">    print(datetime.now().strftime(<span class="string">&quot;%Y/%m/%d %H:%M:%S&quot;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">schedule.every(<span class="number">3</span>).seconds.do(showTime)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    schedule.run_pending()</span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<h1 id="apscheduler">apscheduler</h1>
-<p>定时顶点/间隔执行任务</p>
+
+<h1 id="apscheduler"><a href="#apscheduler" class="headerlink" title="apscheduler"></a>apscheduler</h1><p>定时顶点&#x2F;间隔执行任务</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> apscheduler.schedulers.blocking <span class="keyword">import</span> BlockingScheduler</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定制执行任务</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">showTime</span>():</span></span><br><span class="line">    print(datetime.now().strftime(<span class="string">&quot;%Y/%m/%d %H:%M:%S&quot;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建调度器对象，并设置时区</span></span><br><span class="line">scheduler = BlockingScheduler(timezone=<span class="string">&quot;Asia/Shanghai&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分配任务</span></span><br><span class="line"><span class="comment">## 使用 cron，类似 Linux 中 crontab</span></span><br><span class="line"><span class="comment"># scheduler.add_job(func=showTime, trigger=&quot;cron&quot;, day_of_week=&#x27;0-6&#x27;, hour=14, minute=15, second=1)</span></span><br><span class="line">scheduler.add_job(func=showTime, trigger=<span class="string">&quot;cron&quot;</span>, second=<span class="string">&#x27;*/3&#x27;</span>) <span class="comment"># 每隔 3 秒执行一次</span></span><br><span class="line"><span class="comment">## 固定间隔</span></span><br><span class="line"><span class="comment"># scheduler.add_job(func=showTime, trigger=&quot;interval&quot;, seconds=3)</span></span><br><span class="line"><span class="comment">## 定点执行</span></span><br><span class="line"><span class="comment"># scheduler.add_job(func=showTime, trigger=&#x27;date&#x27;, run_date=&#x27;2021-10-27 15:48:05&#x27;, args=[])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动调度器</span></span><br><span class="line">scheduler.start()</span><br></pre></td></tr></table></figure>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/traditional/p/10991231.html">你知道 Python 中的定时任务吗？</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.coder.work/article/2034431">python - 如何通过APScheduler 3.0的UTC时区？</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/-wenli/p/12790257.html">APScheduler定时框架</a></li>
 <li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011084828">Python任务调度模块APScheduler</a></li>
 </ol>
-<iframe src="//player.bilibili.com/player.html?aid=976240224&amp;bvid=BV1v44y1v7jA&amp;cid=428973248&amp;page=13" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
-</iframe>
+<iframe src="//player.bilibili.com/player.html?aid=976240224&bvid=BV1v44y1v7jA&cid=428973248&page=13" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
     </div>
 
@@ -433,14 +432,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

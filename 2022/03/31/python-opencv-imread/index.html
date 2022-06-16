@@ -145,7 +145,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-opencv"><span class="nav-number">1.</span> <span class="nav-text">安装 OpenCV</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E5%9B%BE%E5%83%8F"><span class="nav-number">2.</span> <span class="nav-text">读取图像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E7%9A%84%E5%9B%BE%E5%83%8F%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">支持的图像类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-OpenCV"><span class="nav-number">1.</span> <span class="nav-text">安装 OpenCV</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E5%9B%BE%E5%83%8F"><span class="nav-number">2.</span> <span class="nav-text">读取图像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E7%9A%84%E5%9B%BE%E5%83%8F%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">支持的图像类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -312,24 +312,27 @@
     <div class="post-body" itemprop="articleBody">
         <p>Python 中有很多包能够处理图像，如 matplotlib, PIL, imageio, OpenCV 等。其中，OpenCV 提供了强大的图像处理模块，但是，OpenCV 读取图像的方式与其他包差别较大，比如读取的彩色图像通道顺序是 BGR。同时，OpenCV 读取图像的能力也很强大，不仅能够读取灰度、彩色，还能读取任何可能颜色格式的图像。这也为使用 OpenCV 读取图像变得难以掌握。本篇介绍如何使用 OpenCV 读取图像。</p>
 <a id="more"></a>
-<h1 id="安装-opencv">安装 OpenCV</h1>
-<p>假设已经安装了 <a target="_blank" rel="noopener" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>, 那么安装 OpenCV 只需要一条命令：</p>
+
+<h1 id="安装-OpenCV"><a href="#安装-OpenCV" class="headerlink" title="安装 OpenCV"></a>安装 OpenCV</h1><p>假设已经安装了 <a target="_blank" rel="noopener" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>, 那么安装 OpenCV 只需要一条命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install opencv-python</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">pip install opencv-contrib-python</span><br></pre></td></tr></table></figure>
+
 <p>上面两个命令都能安装 OpenCV，其中 opencv-python 为基本包，包含了 OpenCV 中的主要模块，常规使用足够。opencv-contrib-python 中除了包含主要模块外，还包括一些扩展模块，这些扩展模块包含了一些带专利的算法（比如 shift 特征检测模块）以及一些新添加的测试模块（稳定后合并到主要模块）。</p>
-<h1 id="读取图像">读取图像</h1>
-<p>安装好后，使用 OpenCV 读取图像只需要一条命令：</p>
+<h1 id="读取图像"><a href="#读取图像" class="headerlink" title="读取图像"></a>读取图像</h1><p>安装好后，使用 OpenCV 读取图像只需要一条命令：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2 <span class="keyword">as</span> cv</span><br><span class="line"></span><br><span class="line">img = cv.imread(img_path, flag)</span><br></pre></td></tr></table></figure>
+
 <p>安装 OpenCV 后，导入的模块是 cv2，img_path 为图像文件路径，flag 为读取文件标识。flag 有如下取值，需要根据不同的图像类型进行选择：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">IMREAD_UNCHANGED            = <span class="number">-1</span>, //返回包含alpha通道的加载图像</span><br><span class="line">IMREAD_GRAYSCALE            = <span class="number">0</span>,  //返回一个灰度图像</span><br><span class="line">IMREAD_COLOR                = <span class="number">1</span>,  //返回一个BGR通道的图像</span><br><span class="line">IMREAD_ANYDEPTH             = <span class="number">2</span>,  //当输入具有相应的深度时返回<span class="number">16</span>位/ <span class="number">32</span>位图像，否则将其转换为<span class="number">8</span>位。.</span><br><span class="line">IMREAD_ANYCOLOR             = <span class="number">4</span>,  //则以任何可能的颜色格式读取图像。</span><br><span class="line">IMREAD_LOAD_GDAL            = <span class="number">8</span>,  //使用GDAL的驱动加载图像。</span><br><span class="line">IMREAD_REDUCED_GRAYSCALE_2  = <span class="number">16</span>, //将图像转换为单通道灰度图像，图像大小减少<span class="number">1</span>/<span class="number">2</span>。</span><br><span class="line">IMREAD_REDUCED_COLOR_2      = <span class="number">17</span>, //转换图像的<span class="number">3</span>通道BGR彩色图像和图像的大小减少<span class="number">1</span>/<span class="number">2</span>。</span><br><span class="line">IMREAD_REDUCED_GRAYSCALE_4  = <span class="number">32</span>, //将图像转换为单通道灰度图像，图像大小减少<span class="number">1</span>/<span class="number">4</span>。</span><br><span class="line">IMREAD_REDUCED_COLOR_4      = <span class="number">33</span>, //转换图像的<span class="number">3</span>通道BGR彩色图像和图像的大小减少<span class="number">1</span>/<span class="number">4</span>。</span><br><span class="line">IMREAD_REDUCED_GRAYSCALE_8  = <span class="number">64</span>, //将图像转换为单通道灰度图像，图像大小减少<span class="number">1</span>/<span class="number">8</span>。</span><br><span class="line">IMREAD_REDUCED_COLOR_8      = <span class="number">65</span>, //转换图像的<span class="number">3</span>通道BGR色彩图像和图像大小减少<span class="number">1</span>/<span class="number">8</span>。</span><br><span class="line">IMREAD_IGNORE_ORIENTATION   = <span class="number">128</span> //不旋转图像根据EXIF的定位标志。</span><br></pre></td></tr></table></figure>
+
 <p>读取图像时，flag 可以传入整数值或标识，如下命令读取彩色图像（注意，如果不传 flag，默认为 1）：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">img = cv.imread(img_path, <span class="number">1</span>)</span><br><span class="line"><span class="comment"># 等价于</span></span><br><span class="line">img = cv.imread(img_path, IMREAD_COLOR)</span><br></pre></td></tr></table></figure>
+
 <p>OpenCV 读取的图像是 numpy.ndarray 对象，且彩色图像的通道顺序为 BGR，通过查看 ndarray 形状，可获知图像的高、宽信息：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">img.shape</span><br><span class="line">(<span class="number">417</span>, <span class="number">563</span>, <span class="number">3</span>)</span><br><span class="line"><span class="comment"># (height, width, channels)</span></span><br></pre></td></tr></table></figure>
-<h1 id="支持的图像类型">支持的图像类型</h1>
-<p>OpenCV 支持多种图像类型，具体如下：</p>
+
+<h1 id="支持的图像类型"><a href="#支持的图像类型" class="headerlink" title="支持的图像类型"></a>支持的图像类型</h1><p>OpenCV 支持多种图像类型，具体如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-   Windows bitmaps - \*.bmp, \*.dib (always supported)</span><br><span class="line">-   JPEG files - \*.jpeg, \*.jpg, \*.jpe (see the *Note* section)</span><br><span class="line">-   JPEG <span class="number">2000</span> files - \*.jp2 (see the *Note* section)</span><br><span class="line">-   Portable Network Graphics - \*.png (see the *Note* section)</span><br><span class="line">-   WebP - \*.webp (see the *Note* section)</span><br><span class="line">-   Portable image format - \*.pbm, \*.pgm, \*.ppm \*.pxm, \*.pnm (always supported)</span><br><span class="line">-   PFM files - \*.pfm (see the *Note* section)</span><br><span class="line">-   Sun rasters - \*.sr, \*.ras (always supported)</span><br><span class="line">-   TIFF files - \*.tiff, \*.tif (see the *Note* section)</span><br><span class="line">-   OpenEXR Image files - \*.exr (see the *Note* section)</span><br><span class="line">-   Radiance HDR - \*.hdr, \*.pic (always supported)</span><br><span class="line">-   Raster <span class="keyword">and</span> Vector geospatial data supported by GDAL (see the *Note* section)</span><br></pre></td></tr></table></figure>
-<h1 id="参考文献">参考文献</h1>
-<ol type="1">
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/34640480">OpenCV之imread,imwrite,imshow</a></li>
 </ol>
 
@@ -424,14 +427,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

@@ -308,13 +308,17 @@
     <div class="post-body" itemprop="articleBody">
         <p>在使用 teamviewer 连接 Ubuntu18.04 桌面系统时，总是出现重启 Ubuntu 系统后，通过 teamviewer 连接不上的问题。但是，当登录上 Ubuntu 系统后，发现可以用 teamviewer 连接。（After reboot, I cannot connect via Teamviewer. Following manual login, Teamviewer is able to connect at the login screen until the next reboot.）</p>
 <a id="more"></a>
+
 <p>这是因为，teamviewer 服务需要用户登陆系统后才能打开，因此，可以通过修改配置让 teamviewer 服务自动打开，这样就可以再重启 Ubuntu 系统后，直接用 teamviewer 连接。具体的</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/gdm3/custom.conf</span><br></pre></td></tr></table></figure>
+
 <p>把</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WaylandEnable=false</span><br></pre></td></tr></table></figure>
+
 <p>注销掉</p>
 <p>然后，重启系统</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo reboot</span><br></pre></td></tr></table></figure>
+
 <p>重启 Ubuntu 系统后，就可以使用 teamviewer 进行连接。</p>
 
     </div>
@@ -409,14 +413,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

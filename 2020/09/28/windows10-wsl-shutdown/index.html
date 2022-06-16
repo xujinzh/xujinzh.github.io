@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#system32"><span class="nav-number">1.</span> <span class="nav-text">System32</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shutdown"><span class="nav-number">2.</span> <span class="nav-text">Shutdown</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#System32"><span class="nav-number">1.</span> <span class="nav-text">System32</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Shutdown"><span class="nav-number">2.</span> <span class="nav-text">Shutdown</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -313,16 +313,19 @@
     <div class="post-body" itemprop="articleBody">
         <p>使用 Windows 10 的子系统能够非常方便的体验到 Linux 系统的简洁美（方便开发），同时也能够体验到 Windows10 图形界面的直接美（方便使用常用软件）。Windows 10 结合 WSL 能够在一定程度上消除了装载虚拟机的时间。但 WSL 只有终端界面没有图形界面，那么如何通过 WSL 关闭 Windows 10呢？这里以 Ubuntu-18.04 为例介绍。</p>
 <a id="more"></a>
-<h1 id="system32">System32</h1>
-<p>首先需要通过终端进入 System32 目录下</p>
+
+<h1 id="System32"><a href="#System32" class="headerlink" title="System32"></a>System32</h1><p>首先需要通过终端进入 System32 目录下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /mnt/c/Windows/System32</span><br></pre></td></tr></table></figure>
-<h1 id="shutdown">Shutdown</h1>
-<p>其次使用 shutdown.exe 进行管理计算机开机、重启、休眠等</p>
+
+<h1 id="Shutdown"><a href="#Shutdown" class="headerlink" title="Shutdown"></a>Shutdown</h1><p>其次使用 shutdown.exe 进行管理计算机开机、重启、休眠等</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 取消关机</span></span><br><span class="line">./shutdown.exe -a           </span><br><span class="line"><span class="comment"># 关机</span></span><br><span class="line">./shutdown.exe -s   </span><br><span class="line"><span class="comment"># 强行关闭应用程序</span></span><br><span class="line">./shutdown.exe -f            </span><br><span class="line"><span class="comment"># 控制远程计算机</span></span><br><span class="line">./shutdown.exe -m computer-name</span><br><span class="line"><span class="comment"># 显示远程关机图形用户界面，但必须是shutdown的第一个参数</span></span><br><span class="line">./shutdown.exe -i</span><br><span class="line"><span class="comment"># 注销当前用户</span></span><br><span class="line">./shutdown.exe -l</span><br><span class="line"><span class="comment"># 关机并重启，默认1分钟后关机</span></span><br><span class="line">./shutdown.exe -r</span><br><span class="line"><span class="comment"># 设置关机倒计时</span></span><br><span class="line">./shutdown.exe -s -t time</span><br><span class="line"><span class="comment"># 休眠，休眠后需要按一下开机键才能唤醒主机</span></span><br><span class="line">./shutdown.exe -h</span><br></pre></td></tr></table></figure>
+
 <p>例子如下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 30秒后关机</span></span><br><span class="line">./shutdown.exe -s -t 30</span><br><span class="line"><span class="comment"># 如果不想关机，可以取消关机</span></span><br><span class="line">./shutdown.exe -a</span><br><span class="line"><span class="comment"># 关机前先关闭软件</span></span><br><span class="line">./shutdown.exe -f</span><br><span class="line"><span class="comment"># 1秒后关机并重启，近似实时关机重启</span></span><br><span class="line">./shutdown.exe -r -t 1</span><br></pre></td></tr></table></figure>
+
 <p>如果想打开 Windows 10 上面的软件，同样也可以，如打开 teamviewer</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /mnt/c/Program\ Files\ \(x86\)/TeamViewer</span><br><span class="line">./TeamViewer.exe</span><br><span class="line"><span class="comment"># 打开后，可以按 ctrl + c 返回 terminal，不会影响已经打开的 teamviewer</span></span><br></pre></td></tr></table></figure>
+
 <p>参考</p>
 <p><a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/48b558e30df4947f39c09a42.html">win10系统如何CMD中进行电脑关机或重启</a></p>
 
@@ -418,14 +421,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0-mysql%E8%BD%AF%E4%BB%B6%E5%AD%98%E5%82%A8%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">添加 MySQL软件存储库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-mysql"><span class="nav-number">2.</span> <span class="nav-text">安装 MySQL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-mysql-%E5%AE%89%E5%85%A8%E9%A1%B9"><span class="nav-number">3.</span> <span class="nav-text">配置 MySQL 安全项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-mysql"><span class="nav-number">4.</span> <span class="nav-text">测试 MySQL</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0-MySQL%E8%BD%AF%E4%BB%B6%E5%AD%98%E5%82%A8%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">添加 MySQL软件存储库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-MySQL"><span class="nav-number">2.</span> <span class="nav-text">安装 MySQL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-MySQL-%E5%AE%89%E5%85%A8%E9%A1%B9"><span class="nav-number">3.</span> <span class="nav-text">配置 MySQL 安全项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-MySQL"><span class="nav-number">4.</span> <span class="nav-text">测试 MySQL</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -307,20 +307,23 @@
     <div class="post-body" itemprop="articleBody">
         <p>MySQL 数据库一个关系数据库管理系统 (Relational Database Management System, RDBMS) ，最初是有瑞典的MySQL AB 公司开发，2008 年该公司被昇阳微系统收购。2009 年，甲骨文公司收购昇阳微系统公司，MySQL 就成为了 Oracle 产品。其性能高、成本低、可靠性好，一度成为最流行的开源数据库。非常流行的开源软件组合 LAMP 中的 “M” 指的就是 MySQL。MySQL 分为免费的社区版与收费的标准版、企业版等。甲骨文公司收购 MySQL 后，大幅调涨 MySQL 商业版的售价，自由软体社群们对于 Oracle 是否还会持续支援 MySQL 社区版（ MySQL 之中唯一的免费版本）有所隐忧。MySQL的创始人麦克尔·维德纽斯以 MySQL 为基础，成立分支计划 MariaDB。如果只是安装并使用 MySQL，不需要 Oracle 的技术支持，或一些企业版工具或插件，或修改 MySQL 源代码并作为闭源的软件等等情形。可以继续使用社区版。本篇介绍如何在 Debian 系统上安装 MySQL，所有命令以普通用户运行，但需要 sudo 权限。</p>
 <a id="more"></a>
+
 <p>本篇介绍的是添加存储库，然后命令安装 MySQL。参考我的另一篇 <a href="https://xujinzh.github.io/2021/05/03/mac-mysql/">Mac 上安装使用 MySQL</a>下载源包安装。</p>
 <p>MySQL 源码地址请查看<a target="_blank" rel="noopener" href="https://github.com/mysql/mysql-server">GitHub</a>。</p>
-<h1 id="添加-mysql软件存储库">添加 MySQL软件存储库</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install gnupg</span><br></pre></td></tr></table></figure>
+<h1 id="添加-MySQL软件存储库"><a href="#添加-MySQL软件存储库" class="headerlink" title="添加 MySQL软件存储库"></a>添加 MySQL软件存储库</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install gnupg</span><br></pre></td></tr></table></figure>
+
 <p>登录 <a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/repo/apt/">MySQL APT Repository</a>，下载最新的 mysql-apt-config，或使用如下命令下载指定版本</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://repo.mysql.com/mysql-apt-config_0.8.22-1_all.deb</span><br><span class="line">sudo dpkg -i mysql-apt-config_0.8.22-1_all.deb</span><br></pre></td></tr></table></figure>
-<h1 id="安装-mysql">安装 MySQL</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 上面添加存储库后一定要再次更新 apt</span></span><br><span class="line">sudo apt update</span><br><span class="line"><span class="comment"># 安装时提示输入 root 用户密码</span></span><br><span class="line"><span class="comment"># 普通用户建议选择默认配置，选择 ok 项</span></span><br><span class="line">sudo apt install mysql-server</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装-MySQL"><a href="#安装-MySQL" class="headerlink" title="安装 MySQL"></a>安装 MySQL</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 上面添加存储库后一定要再次更新 apt</span></span><br><span class="line">sudo apt update</span><br><span class="line"><span class="comment"># 安装时提示输入 root 用户密码</span></span><br><span class="line"><span class="comment"># 普通用户建议选择默认配置，选择 ok 项</span></span><br><span class="line">sudo apt install mysql-server</span><br></pre></td></tr></table></figure>
+
 <p>查看运行状态</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status mysql</span><br></pre></td></tr></table></figure>
-<h1 id="配置-mysql-安全项">配置 MySQL 安全项</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql_secure_installation</span><br></pre></td></tr></table></figure>
-<h1 id="测试-mysql">测试 MySQL</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输入上面设置的密码，查看 MySQL 版本信息</span></span><br><span class="line">mysqladmin -u root -p version</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置-MySQL-安全项"><a href="#配置-MySQL-安全项" class="headerlink" title="配置 MySQL 安全项"></a>配置 MySQL 安全项</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql_secure_installation</span><br></pre></td></tr></table></figure>
+
+<h1 id="测试-MySQL"><a href="#测试-MySQL" class="headerlink" title="测试 MySQL"></a>测试 MySQL</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输入上面设置的密码，查看 MySQL 版本信息</span></span><br><span class="line">mysqladmin -u root -p version</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -414,14 +417,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

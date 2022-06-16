@@ -312,18 +312,20 @@
     <div class="post-body" itemprop="articleBody">
         <p>在 java 程序中，想要通过一条语句打印输出多个变量的值，就像在 python 中那样，将变量以逗号分隔罗列到 print 函数中是不行的，在 java 中可以使用如下方法。</p>
 <a id="more"></a>
-<h1 id="字符串拼接和占位符">字符串拼接和占位符</h1>
-<ol type="1">
+
+<h1 id="字符串拼接和占位符"><a href="#字符串拼接和占位符" class="headerlink" title="字符串拼接和占位符"></a>字符串拼接和占位符</h1><ol>
 <li>通过字符串拼接在函数 System.out.println() 中；</li>
 <li>通过占位符在函数 System.out.printf() 中；</li>
 </ol>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">2147483647</span>;</span><br><span class="line">        <span class="keyword">int</span> i2 = -<span class="number">2147483648</span>;</span><br><span class="line">        <span class="keyword">int</span> i3 = <span class="number">2_000_000</span>;</span><br><span class="line">        <span class="keyword">int</span> i4 = <span class="number">0xff0000</span>;</span><br><span class="line">        <span class="keyword">int</span> i5 = <span class="number">0b1000000000</span>;</span><br><span class="line">        <span class="keyword">long</span> l = <span class="number">9000000000000000000L</span>;</span><br><span class="line">        <span class="comment">// 通过 &quot;+&quot; 对字符串进行拼接</span></span><br><span class="line">        System.out.println(i + <span class="string">&quot;, &quot;</span> + i2 + <span class="string">&quot;, &quot;</span> + i3 + <span class="string">&quot;, &quot;</span> + i4 + <span class="string">&quot;, &quot;</span> + i5 + <span class="string">&quot;, &quot;</span> + l);</span><br><span class="line">        <span class="comment">// 注意 printf 最后面没有换行符，想要换行需要手动添加</span></span><br><span class="line">        <span class="comment">// 通过占位符，打印多个变量</span></span><br><span class="line">        System.out.printf(<span class="string">&quot;%d, %d, %d, %d, %d, %d\n&quot;</span>, i, i2, i3, i4, i5, l);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>打印结果如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2147483647</span>, -<span class="number">2147483648</span>, <span class="number">2000000</span>, <span class="number">16711680</span>, <span class="number">512</span>, <span class="number">9000000000000000000</span></span><br><span class="line"><span class="number">2147483647</span>, -<span class="number">2147483648</span>, <span class="number">2000000</span>, <span class="number">16711680</span>, <span class="number">512</span>, <span class="number">9000000000000000000</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <p>printf 支持的占位符如下：</p>
 <figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">%c        单个字符 </span></span><br><span class="line"><span class="comment">%d        十进制整数 </span></span><br><span class="line"><span class="comment">%f        十进制浮点数 </span></span><br><span class="line"><span class="comment">%o        八进制数 </span></span><br><span class="line"><span class="comment">%s        字符串 </span></span><br><span class="line"><span class="comment">%u        无符号十进制数 </span></span><br><span class="line"><span class="comment">%x        十六进制数 </span></span><br><span class="line"><span class="comment">%08x      十六进制数，用0补足8位</span></span><br><span class="line"><span class="comment">%e	      格式化输出科学计数法表示的浮点数</span></span><br><span class="line"><span class="comment">%%        输出百分号% </span></span><br></pre></td></tr></table></figure>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/CrayonK/article/details/84822448">java一条System.out语句打印多个变量</a></li>
 </ol>
 
@@ -418,14 +420,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

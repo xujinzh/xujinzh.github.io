@@ -310,589 +310,596 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>you-get 能够方便的下载很多网站上面的视频/音频/图片，如 bilibili 等，特别是能够下载整个视频集所有视频。下面介绍如何使用它下载视频。</p>
+        <p>you-get 能够方便的下载很多网站上面的视频&#x2F;音频&#x2F;图片，如 bilibili 等，特别是能够下载整个视频集所有视频。下面介绍如何使用它下载视频。</p>
 <a id="more"></a>
-<h1 id="安装-you-get">安装 you-get</h1>
-<p>you-get 官网地址: <a target="_blank" rel="noopener" href="https://you-get.org/">https://you-get.org/</a>. 推荐的下载方法是通过 pip 安装，pip 作为 python 的包管理工具，非常方便下载各种 python 包，you-get 就是其中一个。建议安装 pip 可以使用 <a target="_blank" rel="noopener" href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a>。假设 miniconda 已经安装，且安装好了pip 包管理工具，那么如下一条命令便可以安装 you-get：</p>
+
+<h1 id="安装-you-get"><a href="#安装-you-get" class="headerlink" title="安装 you-get"></a>安装 you-get</h1><p>you-get 官网地址: <a target="_blank" rel="noopener" href="https://you-get.org/">https://you-get.org/</a>. 推荐的下载方法是通过 pip 安装，pip 作为 python 的包管理工具，非常方便下载各种 python 包，you-get 就是其中一个。建议安装 pip 可以使用 <a target="_blank" rel="noopener" href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a>。假设 miniconda 已经安装，且安装好了pip 包管理工具，那么如下一条命令便可以安装 you-get：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install you-get</span><br></pre></td></tr></table></figure>
+
 <p>如果是 Mac 系统，也可以使用如下命令安装</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install you-get</span><br></pre></td></tr></table></figure>
-<h1 id="使用-you-get">使用 you-get</h1>
-<h2 id="查看视频信息">查看视频信息</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">you-get -i https://www.bilibili.com/video/BV1oW411w7Gc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果如下</span></span><br><span class="line">site:                Bilibili</span><br><span class="line">title:               2018俄罗斯世界杯主题曲</span><br><span class="line">streams:             <span class="comment"># Available quality and codecs</span></span><br><span class="line">    [ DASH ] ____________________________________</span><br><span class="line">    - format:        dash-flv480</span><br><span class="line">      container:     mp4</span><br><span class="line">      quality:       清晰 480P</span><br><span class="line">      size:          22.6 MiB (23743204 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=dash-flv480 [URL]</span></span><br><span class="line"></span><br><span class="line">    - format:        dash-flv720</span><br><span class="line">      container:     mp4</span><br><span class="line">      quality:       高清 720P</span><br><span class="line">      size:          22.6 MiB (23709899 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=dash-flv720 [URL]</span></span><br><span class="line"></span><br><span class="line">    - format:        dash-flv360</span><br><span class="line">      container:     mp4</span><br><span class="line">      quality:       流畅 360P</span><br><span class="line">      size:          11.5 MiB (12022486 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=dash-flv360 [URL]</span></span><br><span class="line"></span><br><span class="line">    [ DEFAULT ] _________________________________</span><br><span class="line">    - format:        flv720</span><br><span class="line">      container:     flv</span><br><span class="line">      quality:       高清 720P</span><br><span class="line">      size:          22.8 MiB (23896119 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=flv720 [URL]</span></span><br><span class="line"></span><br><span class="line">    - format:        flv480</span><br><span class="line">      container:     flv</span><br><span class="line">      quality:       清晰 480P</span><br><span class="line">      size:          22.5 MiB (23641056 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=flv480 [URL]</span></span><br><span class="line"></span><br><span class="line">    - format:        flv360</span><br><span class="line">      container:     flv</span><br><span class="line">      quality:       流畅 360P</span><br><span class="line">      size:          11.6 MiB (12117112 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=flv360 [URL]</span></span><br></pre></td></tr></table></figure>
-<h2 id="下载单个视频">下载单个视频</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认下载视频信息中第一个</span></span><br><span class="line">you-get https://www.bilibili.com/video/BV1oW411w7Gc</span><br></pre></td></tr></table></figure>
-<h2 id="下载指定的格式视频">下载指定的格式视频</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用如下的方法下载视频信息中指定的一个</span></span><br><span class="line">you-get --format=dash-flv720 https://www.bilibili.com/video/BV1oW411w7Gc</span><br></pre></td></tr></table></figure>
-<h2 id="下载图片">下载图片</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">you-get https://stallman.org/rms.jpg</span><br></pre></td></tr></table></figure>
-<h2 id="下载到特定目录并重命名视频">下载到特定目录并重命名视频</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># --output-dir/-o 保存目录</span></span><br><span class="line"><span class="comment"># --output-filename/-O 重命名视频文件</span></span><br><span class="line">you-get -o ~/Videos -O 2018.mp4 https://www.bilibili.com/video/BV1oW411w7Gc</span><br></pre></td></tr></table></figure>
-<h2 id="代理下载视频">代理下载视频</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此命令参考官网</span></span><br><span class="line">you-get -x 127.0.0.1:8087 <span class="string">&#x27;https://www.youtube.com/watch?v=jNQXAC9IVRw&#x27;</span></span><br></pre></td></tr></table></figure>
-<h2 id="下载到视频播放器">下载到视频播放器</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 边下载边播放</span></span><br><span class="line">you-get -p vlc https://www.bilibili.com/video/BV1oW411w7Gc</span><br><span class="line">you-get -p chromium https://www.bilibili.com/video/BV1oW411w7Gc</span><br></pre></td></tr></table></figure>
-<h2 id="下载视频集">下载视频集</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">you-get --playlist https://www.bilibili.com/video/BV1Sv411r7vd\?p\=1</span><br></pre></td></tr></table></figure>
-<h1 id="支持的网站">支持的网站</h1>
-<p>从官网获取</p>
+
+<h1 id="使用-you-get"><a href="#使用-you-get" class="headerlink" title="使用 you-get"></a>使用 you-get</h1><h2 id="查看视频信息"><a href="#查看视频信息" class="headerlink" title="查看视频信息"></a>查看视频信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">you-get -i https://www.bilibili.com/video/BV1oW411w7Gc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果如下</span></span><br><span class="line">site:                Bilibili</span><br><span class="line">title:               2018俄罗斯世界杯主题曲</span><br><span class="line">streams:             <span class="comment"># Available quality and codecs</span></span><br><span class="line">    [ DASH ] ____________________________________</span><br><span class="line">    - format:        dash-flv480</span><br><span class="line">      container:     mp4</span><br><span class="line">      quality:       清晰 480P</span><br><span class="line">      size:          22.6 MiB (23743204 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=dash-flv480 [URL]</span></span><br><span class="line"></span><br><span class="line">    - format:        dash-flv720</span><br><span class="line">      container:     mp4</span><br><span class="line">      quality:       高清 720P</span><br><span class="line">      size:          22.6 MiB (23709899 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=dash-flv720 [URL]</span></span><br><span class="line"></span><br><span class="line">    - format:        dash-flv360</span><br><span class="line">      container:     mp4</span><br><span class="line">      quality:       流畅 360P</span><br><span class="line">      size:          11.5 MiB (12022486 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=dash-flv360 [URL]</span></span><br><span class="line"></span><br><span class="line">    [ DEFAULT ] _________________________________</span><br><span class="line">    - format:        flv720</span><br><span class="line">      container:     flv</span><br><span class="line">      quality:       高清 720P</span><br><span class="line">      size:          22.8 MiB (23896119 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=flv720 [URL]</span></span><br><span class="line"></span><br><span class="line">    - format:        flv480</span><br><span class="line">      container:     flv</span><br><span class="line">      quality:       清晰 480P</span><br><span class="line">      size:          22.5 MiB (23641056 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=flv480 [URL]</span></span><br><span class="line"></span><br><span class="line">    - format:        flv360</span><br><span class="line">      container:     flv</span><br><span class="line">      quality:       流畅 360P</span><br><span class="line">      size:          11.6 MiB (12117112 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=flv360 [URL]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="下载单个视频"><a href="#下载单个视频" class="headerlink" title="下载单个视频"></a>下载单个视频</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认下载视频信息中第一个</span></span><br><span class="line">you-get https://www.bilibili.com/video/BV1oW411w7Gc</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载指定的格式视频"><a href="#下载指定的格式视频" class="headerlink" title="下载指定的格式视频"></a>下载指定的格式视频</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用如下的方法下载视频信息中指定的一个</span></span><br><span class="line">you-get --format=dash-flv720 https://www.bilibili.com/video/BV1oW411w7Gc</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载图片"><a href="#下载图片" class="headerlink" title="下载图片"></a>下载图片</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">you-get https://stallman.org/rms.jpg</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载到特定目录并重命名视频"><a href="#下载到特定目录并重命名视频" class="headerlink" title="下载到特定目录并重命名视频"></a>下载到特定目录并重命名视频</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># --output-dir/-o 保存目录</span></span><br><span class="line"><span class="comment"># --output-filename/-O 重命名视频文件</span></span><br><span class="line">you-get -o ~/Videos -O 2018.mp4 https://www.bilibili.com/video/BV1oW411w7Gc</span><br></pre></td></tr></table></figure>
+
+<h2 id="代理下载视频"><a href="#代理下载视频" class="headerlink" title="代理下载视频"></a>代理下载视频</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此命令参考官网</span></span><br><span class="line">you-get -x 127.0.0.1:8087 <span class="string">&#x27;https://www.youtube.com/watch?v=jNQXAC9IVRw&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="下载到视频播放器"><a href="#下载到视频播放器" class="headerlink" title="下载到视频播放器"></a>下载到视频播放器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 边下载边播放</span></span><br><span class="line">you-get -p vlc https://www.bilibili.com/video/BV1oW411w7Gc</span><br><span class="line">you-get -p chromium https://www.bilibili.com/video/BV1oW411w7Gc</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载视频集"><a href="#下载视频集" class="headerlink" title="下载视频集"></a>下载视频集</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">you-get --playlist https://www.bilibili.com/video/BV1Sv411r7vd\?p\=1</span><br></pre></td></tr></table></figure>
+
+<h1 id="支持的网站"><a href="#支持的网站" class="headerlink" title="支持的网站"></a>支持的网站</h1><p>从官网获取</p>
 <table>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">Site</td>
-<td style="text-align: left;">URL</td>
-<td style="text-align: center;">Videos?</td>
-<td style="text-align: center;">Images?</td>
-<td style="text-align: center;">Audios?</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>YouTube</strong></td>
-<td style="text-align: left;">https://www.youtube.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><strong>Twitter</strong></td>
-<td style="text-align: left;">https://twitter.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">VK</td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://vk.com/">http://vk.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Vine</td>
-<td style="text-align: left;">https://vine.co/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Vimeo</td>
-<td style="text-align: left;">https://vimeo.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Veoh</td>
-<td style="text-align: left;">http://www.veoh.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>Tumblr</strong></td>
-<td style="text-align: left;">https://www.tumblr.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">TED</td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://www.ted.com/">http://www.ted.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">SoundCloud</td>
-<td style="text-align: left;">https://soundcloud.com/</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">SHOWROOM</td>
-<td style="text-align: left;">https://www.showroom-live.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Pinterest</td>
-<td style="text-align: left;">https://www.pinterest.com/</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">MTV81</td>
-<td style="text-align: left;">http://www.mtv81.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Mixcloud</td>
-<td style="text-align: left;">https://www.mixcloud.com/</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Metacafe</td>
-<td style="text-align: left;">http://www.metacafe.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Magisto</td>
-<td style="text-align: left;">http://www.magisto.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Khan Academy</td>
-<td style="text-align: left;">https://www.khanacademy.org/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Internet Archive</td>
-<td style="text-align: left;">https://archive.org/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><strong>Instagram</strong></td>
-<td style="text-align: left;">https://instagram.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">InfoQ</td>
-<td style="text-align: left;">http://www.infoq.com/presentations/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Imgur</td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://imgur.com/">http://imgur.com/</a></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Heavy Music Archive</td>
-<td style="text-align: left;">http://www.heavy-music.ru/</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Freesound</td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://www.freesound.org/">http://www.freesound.org/</a></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Flickr</td>
-<td style="text-align: left;">https://www.flickr.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">FC2 Video</td>
-<td style="text-align: left;">http://video.fc2.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Facebook</td>
-<td style="text-align: left;">https://www.facebook.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">eHow</td>
-<td style="text-align: left;">http://www.ehow.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Dailymotion</td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://www.dailymotion.com/">http://www.dailymotion.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Coub</td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://coub.com/">http://coub.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">CBS</td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://www.cbs.com/">http://www.cbs.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Bandcamp</td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://bandcamp.com/">http://bandcamp.com/</a></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">AliveThai</td>
-<td style="text-align: left;">http://alive.in.th/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">interest.me</td>
-<td style="text-align: left;">http://ch.interest.me/tvn</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>755 ナナゴーゴー</strong></td>
-<td style="text-align: left;">http://7gogo.jp/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><strong>niconico ニコニコ動画</strong></td>
-<td style="text-align: left;">http://www.nicovideo.jp/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>163 网易视频 网易云音乐</strong></td>
-<td style="text-align: left;">http://v.163.com/ <a target="_blank" rel="noopener" href="https://music.163.com/">http://music.163.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">56网</td>
-<td style="text-align: left;">http://www.56.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>AcFun</strong></td>
-<td style="text-align: left;">http://www.acfun.cn/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><strong>Baidu 百度贴吧</strong></td>
-<td style="text-align: left;">http://tieba.baidu.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">爆米花网</td>
-<td style="text-align: left;">http://www.baomihua.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><strong>bilibili 哔哩哔哩</strong></td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://www.bilibili.com/">http://www.bilibili.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">豆瓣</td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://www.douban.com/">http://www.douban.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">斗鱼</td>
-<td style="text-align: left;">http://www.douyutv.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">凤凰视频</td>
-<td style="text-align: left;">http://v.ifeng.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">风行网</td>
-<td style="text-align: left;">http://www.fun.tv/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">iQIYI 爱奇艺</td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://www.iqiyi.com/">http://www.iqiyi.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">激动网</td>
-<td style="text-align: left;">http://www.joy.cn/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">酷6网</td>
-<td style="text-align: left;">http://www.ku6.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">酷狗音乐</td>
-<td style="text-align: left;">http://www.kugou.com/</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">酷我音乐</td>
-<td style="text-align: left;">http://www.kuwo.cn/</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">乐视网</td>
-<td style="text-align: left;">http://www.le.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">荔枝FM</td>
-<td style="text-align: left;">http://www.lizhi.fm/</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">懒人听书</td>
-<td style="text-align: left;">http://www.lrts.me/</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">秒拍</td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://www.miaopai.com/">http://www.miaopai.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">MioMio弹幕网</td>
-<td style="text-align: left;">http://www.miomio.tv/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">MissEvan 猫耳FM</td>
-<td style="text-align: left;">http://www.missevan.com/</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">✓</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">痞客邦</td>
-<td style="text-align: left;">https://www.pixnet.net/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">PPTV聚力</td>
-<td style="text-align: left;">http://www.pptv.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">齐鲁网</td>
-<td style="text-align: left;">http://v.iqilu.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">QQ 腾讯视频</td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://v.qq.com/">http://v.qq.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">企鹅直播</td>
-<td style="text-align: left;">http://live.qq.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Sina 新浪视频 微博秒拍视频</td>
-<td style="text-align: left;">http://video.sina.com.cn/ <a target="_blank" rel="noopener" href="https://video.weibo.com/">http://video.weibo.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Sohu 搜狐视频</td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://tv.sohu.com/">http://tv.sohu.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>Tudou 土豆</strong></td>
-<td style="text-align: left;">http://www.tudou.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">阳光卫视</td>
-<td style="text-align: left;">http://www.isuntv.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>Youku 优酷</strong></td>
-<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://www.youku.com/">http://www.youku.com/</a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">战旗TV</td>
-<td style="text-align: left;">http://www.zhanqi.tv/lives</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">央视网</td>
-<td style="text-align: left;">http://www.cntv.cn/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Naver 네이버</td>
-<td style="text-align: left;">http://tvcast.naver.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">芒果TV</td>
-<td style="text-align: left;">http://www.mgtv.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">火猫TV</td>
-<td style="text-align: left;">http://www.huomao.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">阳光宽频网</td>
-<td style="text-align: left;">http://www.365yg.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">西瓜视频</td>
-<td style="text-align: left;">https://www.ixigua.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">新片场</td>
-<td style="text-align: left;">https://www.xinpianchang.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">快手</td>
-<td style="text-align: left;">https://www.kuaishou.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">抖音</td>
-<td style="text-align: left;">https://www.douyin.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">TikTok</td>
-<td style="text-align: left;">https://www.tiktok.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">中国体育(TV)</td>
-<td style="text-align: left;">http://v.zhibo.tv/ http://video.zhibo.tv/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">知乎</td>
-<td style="text-align: left;">https://www.zhihu.com/</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-</tbody>
-</table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="left"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Site</td>
+<td align="left">URL</td>
+<td align="center">Videos?</td>
+<td align="center">Images?</td>
+<td align="center">Audios?</td>
+</tr>
+<tr>
+<td align="center"><strong>YouTube</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.youtube.com/">https://www.youtube.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>Twitter</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://twitter.com/">https://twitter.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">VK</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://vk.com/">http://vk.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Vine</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://vine.co/">https://vine.co/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Vimeo</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://vimeo.com/">https://vimeo.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Veoh</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.veoh.com/">http://www.veoh.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>Tumblr</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.tumblr.com/">https://www.tumblr.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">TED</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.ted.com/">http://www.ted.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">SoundCloud</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://soundcloud.com/">https://soundcloud.com/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">SHOWROOM</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.showroom-live.com/">https://www.showroom-live.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Pinterest</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.pinterest.com/">https://www.pinterest.com/</a></td>
+<td align="center"></td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">MTV81</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.mtv81.com/">http://www.mtv81.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Mixcloud</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.mixcloud.com/">https://www.mixcloud.com/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">Metacafe</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.metacafe.com/">http://www.metacafe.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Magisto</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.magisto.com/">http://www.magisto.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Khan Academy</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.khanacademy.org/">https://www.khanacademy.org/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Internet Archive</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://archive.org/">https://archive.org/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>Instagram</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://instagram.com/">https://instagram.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">InfoQ</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.infoq.com/presentations/">http://www.infoq.com/presentations/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Imgur</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://imgur.com/">http://imgur.com/</a></td>
+<td align="center"></td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Heavy Music Archive</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.heavy-music.ru/">http://www.heavy-music.ru/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">Freesound</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.freesound.org/">http://www.freesound.org/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">Flickr</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.flickr.com/">https://www.flickr.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">FC2 Video</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://video.fc2.com/">http://video.fc2.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Facebook</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.facebook.com/">https://www.facebook.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">eHow</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.ehow.com/">http://www.ehow.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Dailymotion</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.dailymotion.com/">http://www.dailymotion.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Coub</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://coub.com/">http://coub.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">CBS</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.cbs.com/">http://www.cbs.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Bandcamp</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://bandcamp.com/">http://bandcamp.com/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">AliveThai</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://alive.in.th/">http://alive.in.th/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">interest.me</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://ch.interest.me/tvn">http://ch.interest.me/tvn</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>755 ナナゴーゴー</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://7gogo.jp/">http://7gogo.jp/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>niconico ニコニコ動画</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.nicovideo.jp/">http://www.nicovideo.jp/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>163 网易视频 网易云音乐</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://v.163.com/">http://v.163.com/</a> <a target="_blank" rel="noopener" href="https://music.163.com/">http://music.163.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">56网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.56.com/">http://www.56.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>AcFun</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.acfun.cn/">http://www.acfun.cn/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>Baidu 百度贴吧</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://tieba.baidu.com/">http://tieba.baidu.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">爆米花网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.baomihua.com/">http://www.baomihua.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>bilibili 哔哩哔哩</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.bilibili.com/">http://www.bilibili.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">豆瓣</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.douban.com/">http://www.douban.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">斗鱼</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.douyutv.com/">http://www.douyutv.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">凤凰视频</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://v.ifeng.com/">http://v.ifeng.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">风行网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.fun.tv/">http://www.fun.tv/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">iQIYI 爱奇艺</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.iqiyi.com/">http://www.iqiyi.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">激动网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.joy.cn/">http://www.joy.cn/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">酷6网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.ku6.com/">http://www.ku6.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">酷狗音乐</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.kugou.com/">http://www.kugou.com/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">酷我音乐</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.kuwo.cn/">http://www.kuwo.cn/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">乐视网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.le.com/">http://www.le.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">荔枝FM</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.lizhi.fm/">http://www.lizhi.fm/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">懒人听书</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.lrts.me/">http://www.lrts.me/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">秒拍</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.miaopai.com/">http://www.miaopai.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">MioMio弹幕网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.miomio.tv/">http://www.miomio.tv/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">MissEvan 猫耳FM</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.missevan.com/">http://www.missevan.com/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">痞客邦</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.pixnet.net/">https://www.pixnet.net/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">PPTV聚力</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.pptv.com/">http://www.pptv.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">齐鲁网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://v.iqilu.com/">http://v.iqilu.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">QQ 腾讯视频</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://v.qq.com/">http://v.qq.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">企鹅直播</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://live.qq.com/">http://live.qq.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Sina 新浪视频 微博秒拍视频</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://video.sina.com.cn/">http://video.sina.com.cn/</a> <a target="_blank" rel="noopener" href="https://video.weibo.com/">http://video.weibo.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Sohu 搜狐视频</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://tv.sohu.com/">http://tv.sohu.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>Tudou 土豆</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.tudou.com/">http://www.tudou.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">阳光卫视</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.isuntv.com/">http://www.isuntv.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>Youku 优酷</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.youku.com/">http://www.youku.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">战旗TV</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.zhanqi.tv/lives">http://www.zhanqi.tv/lives</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">央视网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.cntv.cn/">http://www.cntv.cn/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Naver 네이버</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://tvcast.naver.com/">http://tvcast.naver.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">芒果TV</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.mgtv.com/">http://www.mgtv.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">火猫TV</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.huomao.com/">http://www.huomao.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">阳光宽频网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.365yg.com/">http://www.365yg.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">西瓜视频</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.ixigua.com/">https://www.ixigua.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">新片场</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.xinpianchang.com/">https://www.xinpianchang.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">快手</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.kuaishou.com/">https://www.kuaishou.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">抖音</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.douyin.com/">https://www.douyin.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">TikTok</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.tiktok.com/">https://www.tiktok.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">中国体育(TV)</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://v.zhibo.tv/">http://v.zhibo.tv/</a> <a target="_blank" rel="noopener" href="http://video.zhibo.tv/">http://video.zhibo.tv/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">知乎</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.zhihu.com/">https://www.zhihu.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
 
     </div>
 
@@ -985,14 +992,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

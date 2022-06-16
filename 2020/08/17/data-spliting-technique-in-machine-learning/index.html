@@ -22,12 +22,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="机器学习中划分数据集的主要目的是为了避免过拟合。 在机器学习领域，为了避免过拟合和模型选择偏差常常划分数据集为三类：  训练集（training set） 验证集（cross-validation set or development set or dev set） 测试集（testing set）">
+    <meta name="description" content="机器学习中划分数据集的主要目的是为了避免过拟合。 在机器学习领域，为了避免过拟合和模型选择偏差常常划分数据集为三类：  训练集（training set）  验证集（cross-validation set or development set or dev set）  测试集（testing set）">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习中的数据划分技巧">
 <meta property="og:url" content="https://xujinzh.github.io/2020/08/17/data-spliting-technique-in-machine-learning/index.html">
 <meta property="og:site_name" content="J. Xu">
-<meta property="og:description" content="机器学习中划分数据集的主要目的是为了避免过拟合。 在机器学习领域，为了避免过拟合和模型选择偏差常常划分数据集为三类：  训练集（training set） 验证集（cross-validation set or development set or dev set） 测试集（testing set）">
+<meta property="og:description" content="机器学习中划分数据集的主要目的是为了避免过拟合。 在机器学习领域，为了避免过拟合和模型选择偏差常常划分数据集为三类：  训练集（training set）  验证集（cross-validation set or development set or dev set）  测试集（testing set）">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-08-17T09:07:59.000Z">
 <meta property="article:modified_time" content="2021-11-09T10:42:04.857Z">
@@ -313,28 +313,27 @@
     <div class="post-body" itemprop="articleBody">
         <p>机器学习中划分数据集的主要目的是为了避免过拟合。</p>
 <p>在机器学习领域，为了避免过拟合和模型选择偏差常常划分数据集为三类：</p>
-<ol type="1">
-<li><p>训练集（training set）</p></li>
-<li><p>验证集（cross-validation set or development set or dev set）</p></li>
+<ol>
+<li><p>训练集（training set）</p>
+</li>
+<li><p>验证集（cross-validation set or development set or dev set）</p>
+</li>
 <li><p>测试集（testing set）</p>
 <a id="more"></a></li>
 </ol>
 <p>我们尝试在训练集上构建模型，然后在验证集上尽可能优化超参数。最后，在我们的模型准备好后，在测试集上评估我们的模型。</p>
 <p>对于机器学习算法研究员，有时候会省略测试集。测试集旨在对算法在现实世界中数据上进行无偏估计，此时，整个数据集分为两部分。将数据集分为两部分的研究员通常将验证集称为测试集。</p>
-<h1 id="训练集">训练集</h1>
-<p>用于拟合模型的数据样本，即我们用于训练模型的数据集的实际子集（在神经网络的中估算权重和偏差）。该模型从该数据中学习并优化模型参数。</p>
-<h1 id="验证集">验证集</h1>
-<p>我们通过最小化交叉验证集上的误差来选择适当的模型或多项式的阶数（如果仅使用回归模型）。</p>
-<h1 id="测试集">测试集</h1>
-<p>用于对训练数据集上的最终模型进行无偏评估的数据样本。仅在使用训练集和验证集对模型进行完全训练之后，才使用它。因此，测试集是一种用于一旦将模型部署在现实场景使用时将遇到的情况评估集。</p>
+<h1 id="训练集"><a href="#训练集" class="headerlink" title="训练集"></a>训练集</h1><p>用于拟合模型的数据样本，即我们用于训练模型的数据集的实际子集（在神经网络的中估算权重和偏差）。该模型从该数据中学习并优化模型参数。</p>
+<h1 id="验证集"><a href="#验证集" class="headerlink" title="验证集"></a>验证集</h1><p>我们通过最小化交叉验证集上的误差来选择适当的模型或多项式的阶数（如果仅使用回归模型）。</p>
+<h1 id="测试集"><a href="#测试集" class="headerlink" title="测试集"></a>测试集</h1><p>用于对训练数据集上的最终模型进行无偏评估的数据样本。仅在使用训练集和验证集对模型进行完全训练之后，才使用它。因此，测试集是一种用于一旦将模型部署在现实场景使用时将遇到的情况评估集。</p>
 <p>该测试集通常用于评估Kaggle或Analytics Vidhya的竞赛中的不同模型。通常，在机器学习黑客马拉松中，交叉验证集会与训练集一起发布，而实际测试集只会在比赛即将结束时才发布，而测试集上模型的得分决定了优胜者。</p>
-<h1 id="如何划分数据集">如何划分数据集</h1>
-<p>答案通常在于数据集本身。比例是根据我们可用数据的大小和类型（对于时间序列数据，拆分技术有所不同）确定的。</p>
+<h1 id="如何划分数据集"><a href="#如何划分数据集" class="headerlink" title="如何划分数据集"></a>如何划分数据集</h1><p>答案通常在于数据集本身。比例是根据我们可用数据的大小和类型（对于时间序列数据，拆分技术有所不同）确定的。</p>
 <p>如果我们的数据集的大小在100到1000000之间，则将其按60:20:20的比例进行分配。即60％的数据将进入训练集，20％的数据将进入验证集，其余数据将进入测试集。 如果数据集的大小大于一百万，那么我们可以将其拆分为类似98：1：1或99：0.5：0.5的大小。</p>
 <p>决定分割率的主要目的是所有三个集合都应具有原始数据集的总体趋势。如果我们的研究员收集的数据很少，那么最终我们可能会选择一些偏向于仅在研究员收集数据表现的趋势的模型。训练集也是如此-太少的数据会使模型偏向仅在数据集的那个子集中发现的某些趋势。</p>
-<p>我们部署的模型不过是估算器，用于了解数据中的统计趋势。因此，重要的是用于学习的数据以及用于验证或测试模型的数据应遵循尽可能相似的统计分布。尽可能完美地实现这一目标的方法之一是随机选择子集（这里是训练集，验证集和/或测试集）。例如，假设您正在进行人脸检测项目，并且人脸训练图片是从网络上拍摄的，而验证/测试图片是从用户手机中获取的，那么训练集和验证/测试集的属性将不匹配。</p>
+<p>我们部署的模型不过是估算器，用于了解数据中的统计趋势。因此，重要的是用于学习的数据以及用于验证或测试模型的数据应遵循尽可能相似的统计分布。尽可能完美地实现这一目标的方法之一是随机选择子集（这里是训练集，验证集和&#x2F;或测试集）。例如，假设您正在进行人脸检测项目，并且人脸训练图片是从网络上拍摄的，而验证&#x2F;测试图片是从用户手机中获取的，那么训练集和验证&#x2F;测试集的属性将不匹配。</p>
 <p>一种划分训练集、验证集、测试集为0.6，0.2，0.2的方法如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入scikit-learn中数据集划分包</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line"><span class="comment"># 随机划分20%的数据样本为测试集</span></span><br><span class="line">x, x_test, y, y_test = train_test_split(data, labels, test_size=<span class="number">0.2</span>, train_size=<span class="number">0.8</span>, random_state=<span class="number">3</span>)</span><br><span class="line"><span class="comment"># 随机划分剩下（80%）的25%为验证集（整个样本的20%=80%*25%）和75%为训练集（整个样本的60%=80%*75%）</span></span><br><span class="line">x_train, x_cross_validation, y_train, y_cross_validation = train_test_split(x, y, test_size=<span class="number">0.25</span>, train_size=<span class="number">0.75</span>, random_state=<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -428,14 +427,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

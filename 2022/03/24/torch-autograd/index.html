@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E5%B1%80%E9%83%A8%E8%AE%A1%E7%AE%97%E7%AE%A1%E7%90%86%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">常用的局部计算管理器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#torch.no_grad"><span class="nav-number">2.</span> <span class="nav-text">torch.no_grad</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#with-torch.no_grad"><span class="nav-number">2.1.</span> <span class="nav-text">with torch.no_grad()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch.no_grad-1"><span class="nav-number">2.2.</span> <span class="nav-text">@torch.no_grad()</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#torch.enable_grad"><span class="nav-number">3.</span> <span class="nav-text">torch.enable_grad</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#with-torch.enable_grad"><span class="nav-number">3.1.</span> <span class="nav-text">with torch.enable_grad()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch.enable_grad-1"><span class="nav-number">3.2.</span> <span class="nav-text">@torch.enable_grad()</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#torch.set_grad_enabledmode"><span class="nav-number">4.</span> <span class="nav-text">torch.set_grad_enabled(mode)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%B1%E8%BF%91%E5%8E%9F%E5%88%99"><span class="nav-number">5.</span> <span class="nav-text">就近原则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E5%B1%80%E9%83%A8%E8%AE%A1%E7%AE%97%E7%AE%A1%E7%90%86%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">常用的局部计算管理器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#torch-no-grad"><span class="nav-number">2.</span> <span class="nav-text">torch.no_grad</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#with-torch-no-grad"><span class="nav-number">2.1.</span> <span class="nav-text">with torch.no_grad()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-no-grad-1"><span class="nav-number">2.2.</span> <span class="nav-text">@torch.no_grad()</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#torch-enable-grad"><span class="nav-number">3.</span> <span class="nav-text">torch.enable_grad</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#with-torch-enable-grad"><span class="nav-number">3.1.</span> <span class="nav-text">with torch.enable_grad()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-enable-grad-1"><span class="nav-number">3.2.</span> <span class="nav-text">@torch.enable_grad()</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#torch-set-grad-enabled-mode"><span class="nav-number">4.</span> <span class="nav-text">torch.set_grad_enabled(mode)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%B1%E8%BF%91%E5%8E%9F%E5%88%99"><span class="nav-number">5.</span> <span class="nav-text">就近原则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -313,64 +313,56 @@
     <div class="post-body" itemprop="articleBody">
         <p>pytorch 为数值函数提供了自动求导包 <code>torch.autograd</code>，只需要在 Tensor 定义时增加 <code>requires_grad=True</code> 关键字。但是，有时我们需要在局部需要设置某些计算不进行梯度计算，这可以节省内存开销。本篇所有代码在 jupyterlab 中运行。</p>
 <a id="more"></a>
-<h1 id="常用的局部计算管理器">常用的局部计算管理器</h1>
-<p>如下的上下文管理器均是类。</p>
+
+<h1 id="常用的局部计算管理器"><a href="#常用的局部计算管理器" class="headerlink" title="常用的局部计算管理器"></a>常用的局部计算管理器</h1><p>如下的上下文管理器均是类。</p>
 <table>
-<colgroup>
-<col style="width: 21%" />
-<col style="width: 78%" />
-</colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>管理器</th>
 <th>说明</th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
+<tbody><tr>
 <td>no_grad</td>
 <td>Context-manager that disabled gradient calculation.</td>
 </tr>
-<tr class="even">
+<tr>
 <td>enable_grad</td>
 <td>Context-manager that enables gradient calculation.</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>set_grad_enabled</td>
 <td>Context-manager that sets gradient calculation to on or off.</td>
 </tr>
-<tr class="even">
+<tr>
 <td>inference_mode</td>
 <td>Context-manager that enables or disables inference mode.</td>
 </tr>
-</tbody>
-</table>
-<h1 id="torch.no_grad">torch.no_grad</h1>
-<p>该上下文管理器用于禁止梯度计算，常采用如下两种方法。</p>
-<h2 id="with-torch.no_grad">with torch.no_grad()</h2>
-<p>代码示例：</p>
+</tbody></table>
+<h1 id="torch-no-grad"><a href="#torch-no-grad" class="headerlink" title="torch.no_grad"></a>torch.no_grad</h1><p>该上下文管理器用于禁止梯度计算，常采用如下两种方法。</p>
+<h2 id="with-torch-no-grad"><a href="#with-torch-no-grad" class="headerlink" title="with torch.no_grad()"></a>with torch.no_grad()</h2><p>代码示例：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">x = torch.tensor([<span class="number">1.</span>], requires_grad=<span class="literal">True</span>)</span><br><span class="line">x</span><br><span class="line"><span class="comment"># tensor([1.], requires_grad=True)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    y = x * <span class="number">2</span></span><br><span class="line">y</span><br><span class="line"><span class="comment"># tensor([2.])</span></span><br><span class="line">y.requires_grad</span><br><span class="line"><span class="comment"># False</span></span><br></pre></td></tr></table></figure>
-<h2 id="torch.no_grad-1"><span class="citation" data-cites="torch.no_grad">@torch.no_grad</span>()</h2>
-<p>作为装饰器，将函数中不进行梯度计算，接续上面代码：</p>
+
+<h2 id="torch-no-grad-1"><a href="#torch-no-grad-1" class="headerlink" title="@torch.no_grad()"></a>@torch.no_grad()</h2><p>作为装饰器，将函数中不进行梯度计算，接续上面代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@torch.no_grad()</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">doubler</span>(<span class="params">x</span>):</span></span><br><span class="line">    <span class="keyword">return</span> x * <span class="number">2</span></span><br><span class="line">    </span><br><span class="line">z = doubler(x)</span><br><span class="line">z</span><br><span class="line"><span class="comment"># tensor([2.])</span></span><br><span class="line">z.requires_grad</span><br><span class="line"><span class="comment"># False</span></span><br></pre></td></tr></table></figure>
-<h1 id="torch.enable_grad">torch.enable_grad</h1>
-<p>该上下文管理器用于启用梯度计算，常采用如下两种方法。</p>
-<h2 id="with-torch.enable_grad">with torch.enable_grad()</h2>
-<p>代码示例：</p>
+
+<h1 id="torch-enable-grad"><a href="#torch-enable-grad" class="headerlink" title="torch.enable_grad"></a>torch.enable_grad</h1><p>该上下文管理器用于启用梯度计算，常采用如下两种方法。</p>
+<h2 id="with-torch-enable-grad"><a href="#with-torch-enable-grad" class="headerlink" title="with torch.enable_grad()"></a>with torch.enable_grad()</h2><p>代码示例：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">x = torch.tensor([<span class="number">1.</span>], requires_grad=<span class="literal">True</span>)</span><br><span class="line">x</span><br><span class="line"><span class="comment"># tensor([1.], requires_grad=True)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    <span class="keyword">with</span> torch.enable_grad():</span><br><span class="line">        y = x * <span class="number">2</span></span><br><span class="line"></span><br><span class="line">y</span><br><span class="line"><span class="comment"># tensor([2.], grad_fn=&lt;MulBackward0&gt;)</span></span><br><span class="line">y.requires_grad</span><br><span class="line"><span class="comment"># True</span></span><br><span class="line"></span><br><span class="line">y.backward()</span><br><span class="line">x.grad</span><br><span class="line"><span class="comment"># tensor([2.])</span></span><br></pre></td></tr></table></figure>
-<h2 id="torch.enable_grad-1"><span class="citation" data-cites="torch.enable_grad">@torch.enable_grad</span>()</h2>
-<p>作为装饰器，函数中进行梯度计算，接续上面代码：</p>
+
+<h2 id="torch-enable-grad-1"><a href="#torch-enable-grad-1" class="headerlink" title="@torch.enable_grad()"></a>@torch.enable_grad()</h2><p>作为装饰器，函数中进行梯度计算，接续上面代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@torch.enable_grad()</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">doubler</span>(<span class="params">x</span>):</span></span><br><span class="line">    <span class="keyword">return</span> x * <span class="number">2</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    z = doubler(x)</span><br><span class="line">z</span><br><span class="line"><span class="comment"># tensor([2.], grad_fn=&lt;MulBackward0&gt;)</span></span><br><span class="line">z.requires_grad</span><br><span class="line"><span class="comment"># True</span></span><br><span class="line">z.backward()</span><br><span class="line">x.grad</span><br><span class="line"><span class="comment"># tensor([4.])  # 这里因为是接续上面代码，所以x的梯度分别是y和z对x的梯度和。如果在代码块前增加对x的重新初始化，则只有z对x反向求导的梯度</span></span><br></pre></td></tr></table></figure>
-<h1 id="torch.set_grad_enabledmode">torch.set_grad_enabled(mode)</h1>
-<p>将梯度计算设置为打开或关闭的上下文管理器。</p>
+
+<h1 id="torch-set-grad-enabled-mode"><a href="#torch-set-grad-enabled-mode" class="headerlink" title="torch.set_grad_enabled(mode)"></a>torch.set_grad_enabled(mode)</h1><p>将梯度计算设置为打开或关闭的上下文管理器。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">x = torch.tensor([<span class="number">1.</span>], requires_grad=<span class="literal">True</span>)</span><br><span class="line">x</span><br><span class="line"><span class="comment"># tensor([1.], requires_grad=True)</span></span><br><span class="line"></span><br><span class="line">is_train = <span class="literal">False</span></span><br><span class="line"><span class="keyword">with</span> torch.set_grad_enabled(is_train):</span><br><span class="line">      y = x * <span class="number">2</span></span><br><span class="line">y</span><br><span class="line"><span class="comment"># tensor([2.])</span></span><br><span class="line"></span><br><span class="line">y.requires_grad</span><br><span class="line"><span class="comment"># False</span></span><br><span class="line"></span><br><span class="line">torch.set_grad_enabled(<span class="literal">True</span>)</span><br><span class="line">y = x * <span class="number">2</span></span><br><span class="line">y</span><br><span class="line"><span class="comment"># tensor([2.], grad_fn=&lt;MulBackward0&gt;)</span></span><br><span class="line"></span><br><span class="line">y.requires_grad</span><br><span class="line"><span class="comment"># True</span></span><br></pre></td></tr></table></figure>
-<h1 id="就近原则">就近原则</h1>
-<p>当混用前面的三个管理器时，采用就近原则。</p>
+
+<h1 id="就近原则"><a href="#就近原则" class="headerlink" title="就近原则"></a>就近原则</h1><p>当混用前面的三个管理器时，采用就近原则。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">x = torch.tensor([<span class="number">1.</span>], requires_grad=<span class="literal">True</span>)</span><br><span class="line">x</span><br><span class="line"><span class="comment"># tensor([1.], requires_grad=True)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> torch.enable_grad():</span><br><span class="line">    torch.set_grad_enabled(<span class="literal">False</span>)</span><br><span class="line">    y = x * <span class="number">2</span></span><br><span class="line">y</span><br><span class="line"><span class="comment"># tensor([2.])</span></span><br><span class="line"></span><br><span class="line">y.requires_grad</span><br><span class="line"><span class="comment"># False</span></span><br></pre></td></tr></table></figure>
+
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">x = torch.tensor([<span class="number">1.</span>], requires_grad=<span class="literal">True</span>)</span><br><span class="line">x</span><br><span class="line"><span class="comment"># tensor([1.], requires_grad=True)</span></span><br><span class="line"></span><br><span class="line">torch.set_anomaly_enabled(<span class="literal">True</span>)</span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    z = x * <span class="number">2</span></span><br><span class="line">z</span><br><span class="line"><span class="comment"># tensor([2.])</span></span><br><span class="line"></span><br><span class="line">z.requires_grad</span><br><span class="line"><span class="comment"># False</span></span><br></pre></td></tr></table></figure>
-<h1 id="参考文献">参考文献</h1>
-<ol type="1">
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Answer3664/article/details/99460175">pytorch禁止/允许计算局部梯度</a></li>
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Answer3664/article/details/99460175">pytorch禁止&#x2F;允许计算局部梯度</a></li>
 </ol>
 
     </div>
@@ -465,14 +457,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">创建虚拟环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%BF%80%E6%B4%BB-jmatlab-%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">激活 jmatlab 环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-jupyterlab-%E5%92%8C-matlab-%E5%86%85%E6%A0%B8"><span class="nav-number">3.</span> <span class="nav-text">安装 jupyterlab 和 matlab 内核</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%AE%89%E8%A3%85%E7%9A%84%E5%86%85%E6%A0%B8"><span class="nav-number">4.</span> <span class="nav-text">查看安装的内核</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-matlab-%E5%BC%95%E6%93%8E"><span class="nav-number">5.</span> <span class="nav-text">安装 Matlab 引擎</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E5%90%AF-jupyterlab"><span class="nav-number">6.</span> <span class="nav-text">重启 jupyterlab</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">7.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">创建虚拟环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%BF%80%E6%B4%BB-jmatlab-%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">激活 jmatlab 环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-jupyterlab-%E5%92%8C-matlab-%E5%86%85%E6%A0%B8"><span class="nav-number">3.</span> <span class="nav-text">安装 jupyterlab 和 matlab 内核</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%AE%89%E8%A3%85%E7%9A%84%E5%86%85%E6%A0%B8"><span class="nav-number">4.</span> <span class="nav-text">查看安装的内核</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Matlab-%E5%BC%95%E6%93%8E"><span class="nav-number">5.</span> <span class="nav-text">安装 Matlab 引擎</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E5%90%AF-jupyterlab"><span class="nav-number">6.</span> <span class="nav-text">重启 jupyterlab</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">7.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -313,23 +313,23 @@
     <div class="post-body" itemprop="articleBody">
         <p>Jupyter 为创建交互式脚本提供了一个强大且广泛的平台，在这里介绍一种在 Jupyter 中调用 Matlab 的方法。假设已经安装了 Miniconda 或者 Anaconda， Matlab 版本是 2020a，安装在路径：<code>/usr/local/MATLAB</code> 下。</p>
 <a id="more"></a>
-<h1 id="创建虚拟环境">创建虚拟环境</h1>
-<p>因为 Matlab 2020a 对用的 Python 版本最高为 3.7，所以这里安装对于版本，虚拟环境名字命名为 jmatlab</p>
+
+<h1 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h1><p>因为 Matlab 2020a 对用的 Python 版本最高为 3.7，所以这里安装对于版本，虚拟环境名字命名为 jmatlab</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda create -vv -n jmatlab python=3.7 jupyter</span><br></pre></td></tr></table></figure>
-<h1 id="激活-jmatlab-环境">激活 jmatlab 环境</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda activate jmatlab</span><br></pre></td></tr></table></figure>
-<h1 id="安装-jupyterlab-和-matlab-内核">安装 jupyterlab 和 matlab 内核</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install jupyterlab</span><br><span class="line">pip install matlab_kernel</span><br><span class="line">python -m matlab_kernel install</span><br></pre></td></tr></table></figure>
-<h1 id="查看安装的内核">查看安装的内核</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter kernelspec list</span><br></pre></td></tr></table></figure>
+
+<h1 id="激活-jmatlab-环境"><a href="#激活-jmatlab-环境" class="headerlink" title="激活 jmatlab 环境"></a>激活 jmatlab 环境</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda activate jmatlab</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装-jupyterlab-和-matlab-内核"><a href="#安装-jupyterlab-和-matlab-内核" class="headerlink" title="安装 jupyterlab 和 matlab 内核"></a>安装 jupyterlab 和 matlab 内核</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install jupyterlab</span><br><span class="line">pip install matlab_kernel</span><br><span class="line">python -m matlab_kernel install</span><br></pre></td></tr></table></figure>
+
+<h1 id="查看安装的内核"><a href="#查看安装的内核" class="headerlink" title="查看安装的内核"></a>查看安装的内核</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter kernelspec list</span><br></pre></td></tr></table></figure>
+
 <p>您应该在可用内核列表中看到 Matlab.</p>
-<h1 id="安装-matlab-引擎">安装 Matlab 引擎</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/MATLAB/extern/engines/python</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
+<h1 id="安装-Matlab-引擎"><a href="#安装-Matlab-引擎" class="headerlink" title="安装 Matlab 引擎"></a>安装 Matlab 引擎</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/MATLAB/extern/engines/python</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
+
 <p>这将允许从 Python 会话中调用 Matlab 引擎。</p>
-<h1 id="重启-jupyterlab">重启 jupyterlab</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart jupyterhub.service</span><br></pre></td></tr></table></figure>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+<h1 id="重启-jupyterlab"><a href="#重启-jupyterlab" class="headerlink" title="重启 jupyterlab"></a>重启 jupyterlab</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart jupyterhub.service</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="http://www.jmlilly.net/jupyter-matlab">Using Jupyter Notebooks and JupyterLab with Matlab</a></li>
 </ol>
 
@@ -425,14 +425,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

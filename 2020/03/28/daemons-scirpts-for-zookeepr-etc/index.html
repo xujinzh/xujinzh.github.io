@@ -306,15 +306,19 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>对于分布式大数据处理框架，如Zookeeper、Kafka、Storm等，在启动、关闭、查看状态时都需要一个一个的去各节点机器上查看，效率非常低，这里给出一个脚本，用于管理大数据处理框架如Zookeeper集群，具体脚本代码参看我的GitHub网站：https://github.com/xujinzh/archive/tree/master/big-data</p>
+        <p>对于分布式大数据处理框架，如Zookeeper、Kafka、Storm等，在启动、关闭、查看状态时都需要一个一个的去各节点机器上查看，效率非常低，这里给出一个脚本，用于管理大数据处理框架如Zookeeper集群，具体脚本代码参看我的GitHub网站：<a target="_blank" rel="noopener" href="https://github.com/xujinzh/archive/tree/master/big-data">https://github.com/xujinzh/archive/tree/master/big-data</a>	</p>
 <a id="more"></a>
+
 <p>命令使用说明，这里假设Zookeeper集群部署在box0, box1, box2上，我们在本地可以通过ssh连接这些集群服务器。在本地运行shell脚本。注意，这里的脚本需要你修改为自己的启动参数，如用户名，启动初始位置等。可以通过vim zks-daemons.sh来修改相应内容。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(base) jinzhongxu@jinzhongxu-PowerEdge-R740:~/Documents/daemons$ ./zks-daemons.sh status</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /home/jinzhongxu/zookeeper/bin/../conf/zoo.cfg</span><br><span class="line">Mode: leader</span><br><span class="line">Zookeeper node is box0, run status <span class="built_in">command</span>.</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /home/jinzhongxu/zookeeper/bin/../conf/zoo.cfg</span><br><span class="line">Mode: follower</span><br><span class="line">Zookeeper node is box1, run status <span class="built_in">command</span>.</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /home/jinzhongxu/zookeeper/bin/../conf/zoo.cfg</span><br><span class="line">Mode: follower</span><br><span class="line">Zookeeper node is box2, run status <span class="built_in">command</span>.</span><br></pre></td></tr></table></figure>
+
 <p>可以发现，box0被选为leader，box1和box2为follower.</p>
 <p>同样的，我们可以关闭zookeeper集群</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./zks-daemons.sh stop</span><br></pre></td></tr></table></figure>
+
 <p>启动Zookeeper集群</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./zks-daemons.sh start</span><br></pre></td></tr></table></figure>
+
 <p>类似的，我们可以使用脚本管理Kafka集群等。</p>
 
     </div>
@@ -409,14 +413,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

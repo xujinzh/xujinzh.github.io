@@ -312,18 +312,21 @@
     <div class="post-body" itemprop="articleBody">
         <p>利用 Python 的 print 函数可以方便的打印输出，但是，这些输出不能够很好的给别人传看，特别是打印行数较多，又不便更改原模块的代码时。这里，给出一个方法，不动原模块，将打印输出到文件中。</p>
 <a id="more"></a>
-<h1 id="所有打印都输入文件">所有打印都输入文件</h1>
-<p>假设，我们打印输出的模块是 main.py 里的 inspect 函数。这里创建 test.py 模块</p>
+
+<h1 id="所有打印都输入文件"><a href="#所有打印都输入文件" class="headerlink" title="所有打印都输入文件"></a>所有打印都输入文件</h1><p>假设，我们打印输出的模块是 main.py 里的 inspect 函数。这里创建 test.py 模块</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> main <span class="keyword">import</span> inspect</span><br><span class="line"></span><br><span class="line">sys.stdout = open(<span class="string">&#x27;output.txt&#x27;</span>, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line">inspect(ids_dir)</span><br><span class="line">sys.stdout.close()</span><br></pre></td></tr></table></figure>
+
 <p>或者</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> main <span class="keyword">import</span> inspect</span><br><span class="line"></span><br><span class="line">original_stdout = sys.stdout</span><br><span class="line"><span class="keyword">with</span> open(<span class="string">&#x27;output.txt&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    sys.stdout = f <span class="comment"># Change the standard output to the file we created.</span></span><br><span class="line">    inspect(ids_dir)</span><br><span class="line">sys.stdout = original_stdout <span class="comment"># Reset the standard output to its original value</span></span><br></pre></td></tr></table></figure>
-<h1 id="有选择的打印输出到文件">有选择的打印输出到文件</h1>
-<p>如果想要有选择性的把打印内容输出到文件，可以如下：</p>
+
+<h1 id="有选择的打印输出到文件"><a href="#有选择的打印输出到文件" class="headerlink" title="有选择的打印输出到文件"></a>有选择的打印输出到文件</h1><p>如果想要有选择性的把打印内容输出到文件，可以如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">&quot;Hello Python!&quot;</span>, file=open(<span class="string">&#x27;output.txt&#x27;</span>,<span class="string">&#x27;a&#x27;</span>))</span><br><span class="line">print(<span class="string">&quot;We are printing to file.&quot;</span>, file=open(<span class="string">&#x27;output.txt&#x27;</span>,<span class="string">&#x27;a&#x27;</span>))</span><br></pre></td></tr></table></figure>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
-<li><a target="_blank" rel="noopener" href="https://stackabuse.com/writing-to-a-file-with-pythons-print-function/">Writing to a File with Python's print() Function</a></li>
-<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/7152762/how-to-redirect-print-output-to-a-file">How to redirect 'print' output to a file?</a></li>
+
+
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://stackabuse.com/writing-to-a-file-with-pythons-print-function/">Writing to a File with Python’s print() Function</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/7152762/how-to-redirect-print-output-to-a-file">How to redirect ‘print’ output to a file?</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.kite.com/python/answers/how-to-redirect-print-output-to-a-text-file-in-python">How to redirect print output to a text file in Python</a></li>
 </ol>
 
@@ -418,14 +421,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

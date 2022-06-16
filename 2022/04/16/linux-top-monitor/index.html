@@ -313,11 +313,12 @@
     <div class="post-body" itemprop="articleBody">
         <p>Linux 系统在运行中可能会出现各种情况，如内存占用过多、cpu 占用过大等，这些都会影响 Linux 系统的运行，导致用户体验降低，如何查看、监控 Linux 系统中的程序运行情况，并停止内存占用多、cpu 占用大的进程。本篇介绍 top 命令（类似于 Windows 中的任务管理器），实现此目的。</p>
 <a id="more"></a>
-<h1 id="top-命令介绍">top 命令介绍</h1>
-<p>简单的在命令后输入 <code>top</code> 命令查看当前系统进程情况。</p>
+
+<h1 id="top-命令介绍"><a href="#top-命令介绍" class="headerlink" title="top 命令介绍"></a>top 命令介绍</h1><p>简单的在命令后输入 <code>top</code> 命令查看当前系统进程情况。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">top - 15:32:30 up 4 days, 58 min,  2 users,  load average: 1.15, 1.28, 1.31</span><br><span class="line">Tasks: 959 total,   3 running, 611 sleeping,   0 stopped,   0 zombie</span><br><span class="line">%Cpu(s):  1.4 us,  0.1 sy,  0.3 ni, 97.8 id,  0.4 wa,  0.0 hi,  0.1 si,  0.0 st</span><br><span class="line">KiB Mem : 97398976 total, 81255760 free,  3827788 used, 12315424 buff/cache</span><br><span class="line">KiB Swap:  2097148 total,  2097148 free,        0 used. 92583264 avail Mem </span><br><span class="line"></span><br><span class="line">  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND </span><br></pre></td></tr></table></figure>
+
 <p>各参数解释如下：</p>
-<ol type="1">
+<ol>
 <li><strong>15:32:30</strong> 表示当前时间；</li>
 <li><strong>up 4 days, 58 min</strong> 表示系统运行时长；</li>
 <li><strong>2 users</strong> 表示当前系统有2个用户在使用；</li>
@@ -330,17 +331,17 @@
 <li><strong>USER</strong> 表示进程所有者；</li>
 <li><strong>PR</strong> 表示进程优先级；</li>
 <li><strong>NI</strong> 表示nice值。负值表示高优先级，正值表示低优先级；</li>
-<li><strong>VIRT</strong> 表示进程使用的虚拟内存总量，单位kb。VIRT=SWAP+RES；</li>
-<li><strong>RES</strong> 表示进程使用的、未被换出的物理内存大小，单位kb。RES=CODE+DATA；</li>
+<li><strong>VIRT</strong> 表示进程使用的虚拟内存总量，单位kb。VIRT&#x3D;SWAP+RES；</li>
+<li><strong>RES</strong> 表示进程使用的、未被换出的物理内存大小，单位kb。RES&#x3D;CODE+DATA；</li>
 <li><strong>SHR</strong> 表示共享内存大小，单位kb；</li>
-<li><strong>S</strong> 表示进程状态。D=不可中断的睡眠状态 R=运行 S=睡眠 T=跟踪/停止 Z=僵尸进程；</li>
+<li><strong>S</strong> 表示进程状态。D&#x3D;不可中断的睡眠状态 R&#x3D;运行 S&#x3D;睡眠 T&#x3D;跟踪&#x2F;停止 Z&#x3D;僵尸进程；</li>
 <li><strong>%CPU</strong> 表示上次更新到现在的CPU时间占用百分比；</li>
 <li><strong>%MEM</strong> 表示进程使用的物数理内存百分比；</li>
-<li><strong>TIME+</strong> 表示进程使用的CPU时间总计，单位1/100秒；</li>
-<li><strong>COMMAND</strong> 表示进程名称（命令名/命令行）。</li>
+<li><strong>TIME+</strong> 表示进程使用的CPU时间总计，单位1&#x2F;100秒；</li>
+<li><strong>COMMAND</strong> 表示进程名称（命令名&#x2F;命令行）。</li>
 </ol>
-<h1 id="top-命令使用">top 命令使用</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每 1 秒刷新一次；默认是 3 秒</span></span><br><span class="line">top -d 1</span><br></pre></td></tr></table></figure>
+<h1 id="top-命令使用"><a href="#top-命令使用" class="headerlink" title="top 命令使用"></a>top 命令使用</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每 1 秒刷新一次；默认是 3 秒</span></span><br><span class="line">top -d 1</span><br></pre></td></tr></table></figure>
+
 <p>进入之后，可以使用如下参数有针对性的显示</p>
 <ul>
 <li><strong>P</strong>：以 cpu 使用率排序，默认以此排序；</li>
@@ -351,8 +352,7 @@
 <li><strong>k</strong>: 杀掉进程，需输入进程 PID，然后输入信号，如 9，即强制杀掉（kill -9 pid）</li>
 </ul>
 <p>如果输入错误可按 esc 健返回。</p>
-<h1 id="参考文献">参考文献</h1>
-<ol type="1">
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316399.html">linux的top命令参数详解</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/niuben/p/12017242.html">Linux top命令详解</a></li>
 </ol>
@@ -449,14 +449,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

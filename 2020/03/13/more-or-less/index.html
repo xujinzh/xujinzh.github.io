@@ -312,29 +312,46 @@
     <div class="post-body" itemprop="articleBody">
         <p>Linux 系统有命令 more 和 less 来在终端查看文件内容，但是，两者有什么区别呢？总的来说，less 比 more 更有效率更快，因为 less 不会立即加载整个文件，而是动态加载，对于比较大的文件可以使用该命令。而 more 命令会一次加载整个文件内容。</p>
 <a id="more"></a>
-<h1 id="more-命令">more 命令</h1>
-<p>查看 test.log 文件内容，同时显示剩余内容百分比，可以使用 <strong>Enter</strong>（一次一行）和 <strong>Spacebar</strong>（一次一页）来翻页，使用 <strong>q</strong> 退出查看。此时，文件内容会保留在终端上。</p>
+
+<h1 id="more-命令"><a href="#more-命令" class="headerlink" title="more 命令"></a>more 命令</h1><p>查看 test.log 文件内容，同时显示剩余内容百分比，可以使用 <strong>Enter</strong>（一次一行）和 <strong>Spacebar</strong>（一次一页）来翻页，使用 <strong>q</strong> 退出查看。此时，文件内容会保留在终端上。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">more test.log</span><br><span class="line">cat -n test.log | more</span><br></pre></td></tr></table></figure>
+
+
+
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只显示文件 test.log 的前 5 行</span></span><br><span class="line">more -5 test.log</span><br></pre></td></tr></table></figure>
+
+
+
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从文件 test.log 的第 6 行开始显示，内容铺满整个屏幕，具体看屏幕大小</span></span><br><span class="line">more +6 test.log</span><br></pre></td></tr></table></figure>
+
 <p>在用命令 more 打开文件后，输入 <code>=</code> 显示当前行号，输入 <code>:f</code> 显示文件名和当前行号。</p>
-<h1 id="less-命令">less 命令</h1>
-<p>查看 test.log 文件内容，可以使用 <strong>Enter</strong>（一次一行）和 <strong>Spacebar</strong>（一次一页）来翻页，另外，也可以使用 <strong>pageup</strong> 和 <strong>pagedown</strong> 来上翻页和下翻页。使用 <strong>q</strong> 退出查看。此时，文件内容不会保留在终端上，而是退回命令行。</p>
+<h1 id="less-命令"><a href="#less-命令" class="headerlink" title="less 命令"></a>less 命令</h1><p>查看 test.log 文件内容，可以使用 <strong>Enter</strong>（一次一行）和 <strong>Spacebar</strong>（一次一页）来翻页，另外，也可以使用 <strong>pageup</strong> 和 <strong>pagedown</strong> 来上翻页和下翻页。使用 <strong>q</strong> 退出查看。此时，文件内容不会保留在终端上，而是退回命令行。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">less test.log</span><br><span class="line">cat -n test.log | less</span><br></pre></td></tr></table></figure>
+
+
+
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从文件 test.log 的第 6 行开始显示</span></span><br><span class="line">less +6 test.log</span><br></pre></td></tr></table></figure>
+
+
+
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示文件内容的同时显示行号</span></span><br><span class="line">less -N test.log</span><br></pre></td></tr></table></figure>
+
+
+
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当查看到最后页面时自动退出，不需要再按 q 键</span></span><br><span class="line">less -e test.log</span><br><span class="line">less -E test.log</span><br></pre></td></tr></table></figure>
+
+
+
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示第一次出现 ssh 的地方在最顶部</span></span><br><span class="line">less +/ssh test.log</span><br></pre></td></tr></table></figure>
+
 <p>less 也可以在打开文件后，进行交互查看，如输入<code>/python</code> 查看文件中第一次出现 python 的地方，按下 <code>n</code> 查找下一个，按下 <code>N</code> 查找上一个。 相反地，如输入<code>?python</code> 查看文件中第一次出现 python 的地方，按下 <code>N</code> 查找下一个，按下 <code>n</code> 查找上一个。</p>
-<h1 id="其他查看文件的命令">其他查看文件的命令</h1>
-<ol type="1">
+<h1 id="其他查看文件的命令"><a href="#其他查看文件的命令" class="headerlink" title="其他查看文件的命令"></a>其他查看文件的命令</h1><ol>
 <li><strong>cat</strong>，常有参数 <code>cat -n test.log</code>，把内容打印到终端并显示行号；</li>
-<li><strong>echo</strong>, 常用命令 <code>echo $PATH</code>，用来查看系统环境变量<code>echo "date" &gt;&gt; test.log</code>，向文件中添加新内容；</li>
+<li><strong>echo</strong>, 常用命令 <code>echo $PATH</code>，用来查看系统环境变量<code>echo &quot;date&quot; &gt;&gt; test.log</code>，向文件中添加新内容；</li>
 <li><strong>head</strong>，查看文件前 10 行，常用参数 <code>head -n 5 test.log</code>，把前 5 行打印到终端；</li>
-<li><strong>tail</strong>，查看文件后 10 行，常用参数 <code>tail -n 5 test.log</code>，把后 5 行打印到终端；实时监控文件更新：<code>tail -f test.log</code>，ctrl + c 结束监控。</li>
+<li><strong>tail</strong>，查看文件后 10 行，常用参数 <code>tail -n 5 test.log</code>，把后 5 行打印到终端；实时监控文件更新：<code>tail -f test.log</code>，ctrl  + c 结束监控。</li>
 </ol>
-<h1 id="参考资料">参考资料</h1>
-<ul>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://www.tecmint.com/linux-more-command-and-less-command-examples/">Learn Why ‘less’ is Faster Than ‘more’ Command for Effective File Navigation</a></li>
 </ul>
 
@@ -429,14 +446,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

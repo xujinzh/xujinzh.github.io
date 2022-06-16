@@ -22,12 +22,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="PyTorch 是一个非常优秀的深度学习框架，特别是在 GPU 上运行 PyTorch 代码能够加速深度网络的训练，但是，当服务器的 GPU 型号不匹配、性能差别较大、个人指定使用某个 GPU 时，需要进行特别的设置。本篇以 Ubuntu 18.04 为例，介绍如何在运行 PyTorch 代码时指定 GPU 训练模型。">
+    <meta name="description" content="PyTorch 是一个非常优秀的深度学习框架，特别是在 GPU 上运行 PyTorch 代码能够加速深度网络的训练，但是，当服务器的 GPU 型号不匹配、性能差别较大、个人指定使用某个 GPU 时，需要进行特别的设置。本篇以 Ubuntu 18.04 为例，介绍如何在运行 PyTorch  代码时指定 GPU 训练模型。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pytorch 中设置使用指定的 GPU">
 <meta property="og:url" content="https://xujinzh.github.io/2022/04/01/pytorch-cuda-visible-devices/index.html">
 <meta property="og:site_name" content="J. Xu">
-<meta property="og:description" content="PyTorch 是一个非常优秀的深度学习框架，特别是在 GPU 上运行 PyTorch 代码能够加速深度网络的训练，但是，当服务器的 GPU 型号不匹配、性能差别较大、个人指定使用某个 GPU 时，需要进行特别的设置。本篇以 Ubuntu 18.04 为例，介绍如何在运行 PyTorch 代码时指定 GPU 训练模型。">
+<meta property="og:description" content="PyTorch 是一个非常优秀的深度学习框架，特别是在 GPU 上运行 PyTorch 代码能够加速深度网络的训练，但是，当服务器的 GPU 型号不匹配、性能差别较大、个人指定使用某个 GPU 时，需要进行特别的设置。本篇以 Ubuntu 18.04 为例，介绍如何在运行 PyTorch  代码时指定 GPU 训练模型。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-04-01T03:07:39.000Z">
 <meta property="article:modified_time" content="2022-04-01T03:33:49.447Z">
@@ -305,28 +305,30 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>PyTorch 是一个非常优秀的深度学习框架，特别是在 GPU 上运行 PyTorch 代码能够加速深度网络的训练，但是，当服务器的 GPU 型号不匹配、性能差别较大、个人指定使用某个 GPU 时，需要进行特别的设置。本篇以 Ubuntu 18.04 为例，介绍如何在运行 PyTorch 代码时指定 GPU 训练模型。</p>
+        <p>PyTorch 是一个非常优秀的深度学习框架，特别是在 GPU 上运行 PyTorch 代码能够加速深度网络的训练，但是，当服务器的 GPU 型号不匹配、性能差别较大、个人指定使用某个 GPU 时，需要进行特别的设置。本篇以 Ubuntu 18.04 为例，介绍如何在运行 PyTorch  代码时指定 GPU 训练模型。</p>
 <a id="more"></a>
-<h1 id="代码中设置">代码中设置</h1>
-<p>当安装（<a href="https://xujinzh.github.io/2019/12/21/dl-gpu/">深度学习的 GPU 环境的配置</a>）了 GPU、cuda、cudnn 后，可以使用如下命令查看 GPU 信息：</p>
+
+<h1 id="代码中设置"><a href="#代码中设置" class="headerlink" title="代码中设置"></a>代码中设置</h1><p>当安装（<a href="https://xujinzh.github.io/2019/12/21/dl-gpu/">深度学习的 GPU 环境的配置</a>）了 GPU、cuda、cudnn 后，可以使用如下命令查看 GPU 信息：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ nvidia-smi</span><br><span class="line">或</span><br><span class="line">$ nvidia-smi -L</span><br></pre></td></tr></table></figure>
+
 <p>结果大概如下：</p>
 <figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">GPU</span> <span class="selector-tag">0</span>: <span class="selector-tag">Tesla</span> <span class="selector-tag">V100-PCIE-32GB</span> (<span class="attribute">UUID</span>: GPU-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx)</span><br><span class="line"><span class="selector-tag">GPU</span> <span class="selector-tag">1</span>: <span class="selector-tag">GeForce</span> <span class="selector-tag">GTX</span> <span class="selector-tag">TITAN</span> <span class="selector-tag">X</span> (<span class="attribute">UUID</span>: GPU-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx)</span><br><span class="line"><span class="selector-tag">GPU</span> <span class="selector-tag">2</span>: <span class="selector-tag">GeForce</span> <span class="selector-tag">GTX</span> <span class="selector-tag">TITAN</span> <span class="selector-tag">X</span> (<span class="attribute">UUID</span>: GPU-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx)</span><br></pre></td></tr></table></figure>
+
 <p>可见，服务器上安装了 3 块 GPU，但型号不同。</p>
 <p>在编写 PyTorch 代码时，我们可以在主程序中增加如下代码，设置本程序运行只使用某些 GPU:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment"># 只使用 GPU 0</span></span><br><span class="line">os.environ[<span class="string">&quot;CUDA_VISIBLE_DEVICES&quot;</span>] = <span class="string">&#x27;0&#x27;</span></span><br><span class="line"><span class="comment"># 只使用 GPU 1,2</span></span><br><span class="line">os.environ[<span class="string">&quot;CUDA_VISIBLE_DEVICES&quot;</span>] = <span class="string">&#x27;1,2&#x27;</span></span><br></pre></td></tr></table></figure>
-<h1 id="命令行设置">命令行设置</h1>
-<p>有时候克隆别人的代码，不便修改代码内容，此时，我们可以在命令行运行代码时同时设置指定的 GPU，方法如下：</p>
+
+<h1 id="命令行设置"><a href="#命令行设置" class="headerlink" title="命令行设置"></a>命令行设置</h1><p>有时候克隆别人的代码，不便修改代码内容，此时，我们可以在命令行运行代码时同时设置指定的 GPU，方法如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只使用 GPU 0</span></span><br><span class="line">CUDA_VISIBLE_DEVICES=0 python -m main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只使用 GPU 1,2</span></span><br><span class="line">CUDA_VISIBLE_DEVICES=1,2 python -m main</span><br></pre></td></tr></table></figure>
-<h1 id="环境变量设置">环境变量设置</h1>
-<p>有时候实验室 GPU 资源紧张，安装的 GPU 都是分配到每个人使用的，那么个人只能使用固定的 GPU，此时，如果还向上面两种方法那样设置，会显得有些繁琐，需要每次运行时都要设置一次。通过个人用户下设置环境变量，可以限制每次运行都使用指定的 GPU，方法如下（假设使用的是 bash）：</p>
+
+<h1 id="环境变量设置"><a href="#环境变量设置" class="headerlink" title="环境变量设置"></a>环境变量设置</h1><p>有时候实验室 GPU 资源紧张，安装的 GPU 都是分配到每个人使用的，那么个人只能使用固定的 GPU，此时，如果还向上面两种方法那样设置，会显得有些繁琐，需要每次运行时都要设置一次。通过个人用户下设置环境变量，可以限制每次运行都使用指定的 GPU，方法如下（假设使用的是 bash）：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;export CUDA_VISIBLE_DEVICES=0&quot;</span> &gt;&gt; .bashrc</span><br><span class="line"><span class="built_in">source</span> .bashrc</span><br></pre></td></tr></table></figure>
+
 <p>有些使用 pycharm 的人员可以参考下面的参考文献进行设置。</p>
-<h1 id="参考文献">参考文献</h1>
-<ol type="1">
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/lscelory/article/details/83579062">选择要用的GPU: CUDA_VISIBLE_DEVICES</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44229976/article/details/121892585?spm=1001.2101.3001.6650.1&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_default&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_default&amp;utm_relevant_index=2">os.environ[‘CUDA_VISIBLE_DEVICES‘]指定GPU无法生效解决方案</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/abc13526222160/article/details/109532767">『Pytorch笔记』Pycharm中使用CUDA_VISIBLE_DEVICES=0！</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44229976/article/details/121892585?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-1.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-1.pc_relevant_default&utm_relevant_index=2">os.environ[‘CUDA_VISIBLE_DEVICES‘]指定GPU无法生效解决方案</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/abc13526222160/article/details/109532767">『Pytorch笔记』Pycharm中使用CUDA_VISIBLE_DEVICES&#x3D;0！</a></li>
 </ol>
 
     </div>
@@ -421,14 +423,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

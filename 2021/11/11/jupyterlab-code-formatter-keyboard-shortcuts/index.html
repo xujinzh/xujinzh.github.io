@@ -313,28 +313,33 @@
     <div class="post-body" itemprop="articleBody">
         <p>Jupyterlab Code Formatter 能够在 notebook 中对代码进行格式化，安装成功后，只需要点击代码格式化按钮。那么如何像在 pycharm 中一样使用快捷键对代码进行格式化呢，本篇记录一下。</p>
 <a id="more"></a>
-<h1 id="安装格式化包">安装格式化包</h1>
-<ol type="1">
+
+<h1 id="安装格式化包"><a href="#安装格式化包" class="headerlink" title="安装格式化包"></a>安装格式化包</h1><ol>
 <li><p>安装插件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install jupyterlab_code_formatter</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install jupyterlab_code_formatter</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>安装格式化支持</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install black isort</span><br></pre></td></tr></table></figure></li>
-<li><p>重启 Jupyterlab</p></li>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install black isort</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>重启 Jupyterlab</p>
+</li>
 </ol>
-<h1 id="设置快捷键">设置快捷键</h1>
-<p>打开 Jupyterlab，点击 settings -&gt; Advanced Settings Editor -&gt; Keyboard Shortcuts</p>
+<h1 id="设置快捷键"><a href="#设置快捷键" class="headerlink" title="设置快捷键"></a>设置快捷键</h1><p>打开 Jupyterlab，点击 settings -&gt; Advanced Settings Editor -&gt; Keyboard Shortcuts</p>
 <p>在 User Preferences 中输入（下面是针对单个单元格进行格式化）</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;shortcuts&quot;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;command&quot;</span>: <span class="string">&quot;jupyterlab_code_formatter:black&quot;</span>,</span><br><span class="line">        <span class="string">&quot;keys&quot;</span>: [</span><br><span class="line">            <span class="string">&quot;Ctrl Alt L&quot;</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="string">&quot;selector&quot;</span>: <span class="string">&quot;.jp-Notebook.jp-mod-editMode&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
 <p>我这里设置的快捷键是 <code>Ctrl Alt L</code></p>
 <p>如果想要针对整个 notebook 进行代码格式化，可以如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;shortcuts&quot;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;command&quot;</span>: <span class="string">&quot;jupyterlab_code_formatter:format_all&quot;</span>,</span><br><span class="line">        <span class="string">&quot;keys&quot;</span>: [</span><br><span class="line">            <span class="string">&quot;Ctrl Alt L&quot;</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="string">&quot;selector&quot;</span>: <span class="string">&quot;.jp-Notebook.jp-mod-editMode&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<h1 id="其他快捷键设置">其他快捷键设置</h1>
-<p>比如，我想设置重启并允许所有单元格，方法如下：</p>
-<p>打开 Keyboard Shortcuts 后搜索 restart，可定位到 runmenu:restart-and-run-all，把代码拷贝到右侧。设置快捷键，如我设置为 "Ctrl Alt R"</p>
+
+<h1 id="其他快捷键设置"><a href="#其他快捷键设置" class="headerlink" title="其他快捷键设置"></a>其他快捷键设置</h1><p>比如，我想设置重启并允许所有单元格，方法如下：</p>
+<p>打开 Keyboard Shortcuts 后搜索 restart，可定位到 runmenu:restart-and-run-all，把代码拷贝到右侧。设置快捷键，如我设置为 “Ctrl Alt R”</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;shortcuts&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;command&quot;</span>: <span class="string">&quot;jupyterlab_code_formatter:format_all&quot;</span>,</span><br><span class="line">            <span class="string">&quot;keys&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;Ctrl Alt L&quot;</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="string">&quot;selector&quot;</span>: <span class="string">&quot;.jp-Notebook.jp-mod-editMode&quot;</span></span><br><span class="line">        &#125;, </span><br><span class="line">         &#123;</span><br><span class="line">            <span class="string">&quot;command&quot;</span>: <span class="string">&quot;runmenu:restart-and-run-all&quot;</span>,</span><br><span class="line">            <span class="string">&quot;keys&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;Ctrl Alt R&quot;</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="string">&quot;selector&quot;</span>: <span class="string">&quot;[data-jp-code-runner]&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>保存后，退出。即可使用快捷键。</p>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://jupyterlab-code-formatter.readthedocs.io/en/latest/installation.html#installation-step-1-installing-the-plugin-itself">jupyterlab-code-formatter Prerequisites and Installation Steps</a></li>
 </ol>
 
@@ -430,14 +435,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

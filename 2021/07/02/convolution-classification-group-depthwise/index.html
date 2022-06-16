@@ -317,27 +317,25 @@
     <div class="post-body" itemprop="articleBody">
         <p>卷积能够提取图像特征，不同的卷积操作能够获得不同的效果，同时有些卷积能够降低待学习的参数量，达到正则化的目的。</p>
 <a id="more"></a>
-<h1 id="分组卷积">分组卷积</h1>
-<p>分组卷积（Group Convolution）最早见于2012年 ImageNet 竞赛中的 AlexNet 网路中，被用来切分网络，使得模型能够在2个GPU上并行运行，AlexNet 的网络结构如下：</p>
-<p><img data-src="https://s2.ax1x.com/2019/01/08/FLPm1P.png" /></p>
-<h2 id="分组卷积的定义">分组卷积的定义</h2>
-<p>对于常规卷积，如果输入的特征图是 <span class="math inline">\(C * H * W\)</span>，卷积核个数是 <span class="math inline">\(N\)</span>，输出特征图的数量也是 <span class="math inline">\(N\)</span>，其与卷积核的数量相同。假设卷积和的尺寸是 <span class="math inline">\(C * K * K\)</span>，那么 <span class="math inline">\(N\)</span> 个卷积核的总参数量为 <span class="math inline">\(N * C * K * K\)</span>，输入特征图与输出特征图的连接方式如下左图：</p>
-<p><img data-src="https://s2.ax1x.com/2019/01/08/FLPc1x.png" /></p>
-<p>分组卷积是对输入特征图先分组，然后每组分别卷积。假设输入特征图的尺寸仍为 <span class="math inline">\(C * H * W\)</span>，输出特征图的数量为 <span class="math inline">\(N\)</span>个，如果要分成 <span class="math inline">\(G\)</span> 个组，则每组的输入特征通道数为 <span class="math inline">\(\frac{C}{G}\)</span>，每组的输出特征图通道数为 <span class="math inline">\(\frac{N}{G}\)</span>，每个卷积核的尺寸为 <span class="math inline">\(\frac{C}{G} * K * K\)</span>，卷积核的总数仍为 <span class="math inline">\(N\)</span>个，但每组的卷积核数为 <span class="math inline">\(\frac{N}{G}\)</span>，卷积核只与其同组的输入特征图进行卷积，卷积核的总参数量为 <span class="math inline">\(N * \frac{C}{G} * K * K\)</span>，可见，总参数量减少为原来的 <span class="math inline">\(\frac{1}{G}\)</span>，输入特征图与输出特征图的连接方式如上右图。针对 group1 （group2, group3 相同）的输入特征图是4个，因此其卷积核的通道数为4，输出特征图的通道数为2，表示有两个卷积核，卷积核不与其他组的输入特征图做卷积，只与同组的特征图卷积。</p>
-<h2 id="分组卷积的意义">分组卷积的意义</h2>
-<ol type="1">
-<li><font size=3 color=red>减少参数量，分成 <span class="math inline">\(G\)</span>组，则该层的参数量减少为原来的 <span class="math inline">\(\frac{1}{G}\)</span></font>；</li>
-<li>分组卷积可以看成是 structured sparse，每个卷积核的尺寸从 <span class="math inline">\(C * K * K\)</span> 变为 <span class="math inline">\(\frac{C}{G} * K *K\)</span>，可以将其余的 <span class="math inline">\((C - \frac{C}{G}) * K * K\)</span>的参数视为 0，有时甚至可以在减少参数量的同时获得更好的效果（相当于正则化）；</li>
-<li>当分组数量等于输入特征图的数量时，即每一个通道的输入特征图一个分组，输出特征图的数量等于输入特征图的数量，即 <span class="math inline">\(G = N = C\)</span>，<span class="math inline">\(N\)</span> 个卷积核每个尺寸为 <span class="math inline">\(1 * K * K\)</span>时，分组卷积 Group Convolution 就变成了深度卷积 Depthwise Convolution，参数量进一步减少，参见 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1704.04861">MobileNet</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1610.02357">Xception</a>. 如下图所示：</li>
+
+<h1 id="分组卷积"><a href="#分组卷积" class="headerlink" title="分组卷积"></a>分组卷积</h1><p>分组卷积（Group Convolution）最早见于2012年 ImageNet 竞赛中的 AlexNet 网路中，被用来切分网络，使得模型能够在2个GPU上并行运行，AlexNet 的网络结构如下：</p>
+<p><img data-src="https://s2.ax1x.com/2019/01/08/FLPm1P.png"></p>
+<h2 id="分组卷积的定义"><a href="#分组卷积的定义" class="headerlink" title="分组卷积的定义"></a>分组卷积的定义</h2><p>对于常规卷积，如果输入的特征图是 $C * H * W$，卷积核个数是 $N$，输出特征图的数量也是 $N$，其与卷积核的数量相同。假设卷积和的尺寸是 $C * K * K$，那么 $N$ 个卷积核的总参数量为 $N * C * K * K$，输入特征图与输出特征图的连接方式如下左图：</p>
+<p><img data-src="https://s2.ax1x.com/2019/01/08/FLPc1x.png"></p>
+<p>分组卷积是对输入特征图先分组，然后每组分别卷积。假设输入特征图的尺寸仍为 $C * H * W$，输出特征图的数量为 $N$个，如果要分成 $G$ 个组，则每组的输入特征通道数为  $\frac{C}{G}$，每组的输出特征图通道数为 $\frac{N}{G}$，每个卷积核的尺寸为 $\frac{C}{G} * K * K$，卷积核的总数仍为 $N$个，但每组的卷积核数为 $\frac{N}{G}$，卷积核只与其同组的输入特征图进行卷积，卷积核的总参数量为 $N * \frac{C}{G} * K * K$，可见，总参数量减少为原来的 $\frac{1}{G}$，输入特征图与输出特征图的连接方式如上右图。针对 group1 （group2, group3 相同）的输入特征图是4个，因此其卷积核的通道数为4，输出特征图的通道数为2，表示有两个卷积核，卷积核不与其他组的输入特征图做卷积，只与同组的特征图卷积。</p>
+<h2 id="分组卷积的意义"><a href="#分组卷积的意义" class="headerlink" title="分组卷积的意义"></a>分组卷积的意义</h2><ol>
+<li><font size=3 color=red>减少参数量，分成 $G$组，则该层的参数量减少为原来的 $\frac{1}{G}$</font>；</li>
+<li>分组卷积可以看成是 structured sparse，每个卷积核的尺寸从 $C * K * K$ 变为 $\frac{C}{G} * K *K$，可以将其余的 $(C - \frac{C}{G}) * K * K$的参数视为 0，有时甚至可以在减少参数量的同时获得更好的效果（相当于正则化）；</li>
+<li>当分组数量等于输入特征图的数量时，即每一个通道的输入特征图一个分组，输出特征图的数量等于输入特征图的数量，即 $G &#x3D; N &#x3D; C$，$N$ 个卷积核每个尺寸为 $1 * K * K$时，分组卷积 Group Convolution 就变成了深度卷积 Depthwise Convolution，参数量进一步减少，参见 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1704.04861">MobileNet</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1610.02357">Xception</a>. 如下图所示：</li>
 </ol>
-<p><img data-src="https://s2.ax1x.com/2019/01/08/FLkxED.png" /></p>
-<ol start="4" type="1">
-<li><p>更进一步，如果分组数 <span class="math inline">\(G = N = C\)</span>，即每个通道一个分组，同时卷积核的尺寸与输入特征图的尺寸相同，即 <span class="math inline">\(K = H = W\)</span>，则输出特征图为 <span class="math inline">\(C * 1 * 1\)</span>，得到长度为 <span class="math inline">\(C\)</span> 的向量，此时称之为 Global Depthwise Convolution (GDC)，参加 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1804.07573">MobileFaceNet</a>，可以看成是全局加权池化，与 Global Average Pooling (GAP) 的不同之处在于 GDC 给每个位置赋予可学习的权重（对于已经对齐的图像很有效，比如人脸，中心位置和边界位置的权重自然应该不同），而 GAP 每个位置的权重相同，全局取平均，如下图所示：</p>
-<p><img data-src="https://s2.ax1x.com/2019/01/08/FLEneK.png" /></p></li>
+<p><img data-src="https://s2.ax1x.com/2019/01/08/FLkxED.png"></p>
+<ol start="4">
+<li><p>更进一步，如果分组数 $G &#x3D; N &#x3D; C$，即每个通道一个分组，同时卷积核的尺寸与输入特征图的尺寸相同，即 $K &#x3D; H &#x3D; W$，则输出特征图为 $C * 1 * 1$，得到长度为 $C$ 的向量，此时称之为  Global Depthwise Convolution (GDC)，参加 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1804.07573">MobileFaceNet</a>，可以看成是全局加权池化，与 Global Average Pooling (GAP) 的不同之处在于 GDC 给每个位置赋予可学习的权重（对于已经对齐的图像很有效，比如人脸，中心位置和边界位置的权重自然应该不同），而 GAP 每个位置的权重相同，全局取平均，如下图所示：</p>
+<p><img data-src="https://s2.ax1x.com/2019/01/08/FLEneK.png"></p>
+</li>
 </ol>
 <p>简言之，分组卷积表面上将输入特征图通道数分组，本质上是将卷积核通道数压缩，且只关注输入特征某些通道（组内）上的特征。</p>
-<h1 id="参考连接">参考连接</h1>
-<ol type="1">
+<h1 id="参考连接"><a href="#参考连接" class="headerlink" title="参考连接"></a>参考连接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/shine-lee/p/10243114.html">Group Convolution分组卷积，以及Depthwise Convolution和Global Depthwise Convolution</a></li>
 <li><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.conv2d.html">TORCH.NN.FUNCTIONAL.CONV2D</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/HappinessSourceL/article/details/106207022">pytorch的conv2d函数groups分组卷积使用及理解</a></li>
@@ -434,14 +432,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

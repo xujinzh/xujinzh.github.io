@@ -147,7 +147,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#rename"><span class="nav-number">1.</span> <span class="nav-text">rename</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#c%E8%AF%AD%E8%A8%80%E7%89%88%E6%9C%AC"><span class="nav-number">1.1.</span> <span class="nav-text">C语言版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#perl%E8%AF%AD%E8%A8%80%E7%89%88%E6%9C%AC"><span class="nav-number">1.2.</span> <span class="nav-text">Perl语言版本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sed"><span class="nav-number">2.</span> <span class="nav-text">sed</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#rename"><span class="nav-number">1.</span> <span class="nav-text">rename</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#C%E8%AF%AD%E8%A8%80%E7%89%88%E6%9C%AC"><span class="nav-number">1.1.</span> <span class="nav-text">C语言版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Perl%E8%AF%AD%E8%A8%80%E7%89%88%E6%9C%AC"><span class="nav-number">1.2.</span> <span class="nav-text">Perl语言版本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sed"><span class="nav-number">2.</span> <span class="nav-text">sed</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -314,28 +314,36 @@
     <div class="post-body" itemprop="articleBody">
         <p>在 Linux 系统上，包含有大量相同字段的文件名，想要把这些字段（中文字段）改成其他字段（数字或其他英文字段），因为某些程序的需要，不支持中文文件名，此时可以使用命令 rename 批量修改文件名。当文件中包含有大量相同字段，想要修改，但是，收到修改又比较浪费时间。此时，可以使用命令 sed 完成。</p>
 <a id="more"></a>
-<h1 id="rename">rename</h1>
-<p>在 linux 系统中重命名文件，经常用到 mv命令，批量重命名文件 rename 是最好的选择。</p>
-<p>linux的 rename命令有两个版本，一个是c语言版本的，一个是perl语言版本的，判断方法：输入man rename</p>
-<h2 id="c语言版本">C语言版本</h2>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rename 原字符串 新字符串 文件名</span><br></pre></td></tr></table></figure>
+
+<h1 id="rename"><a href="#rename" class="headerlink" title="rename"></a>rename</h1><p>在 linux 系统中重命名文件，经常用到 mv命令，批量重命名文件 rename 是最好的选择。</p>
+<p>linux的 rename命令有两个版本，一个是c语言版本的，一个是perl语言版本的，判断方法：输入man rename </p>
+<h2 id="C语言版本"><a href="#C语言版本" class="headerlink" title="C语言版本"></a>C语言版本</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rename 原字符串 新字符串 文件名</span><br></pre></td></tr></table></figure>
+
 <p>示例：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rename 第三阶段 3 *</span><br><span class="line"><span class="comment"># * 代表所有字符</span></span><br><span class="line"><span class="comment"># ？代表单个字符</span></span><br></pre></td></tr></table></figure>
-<h2 id="perl语言版本">Perl语言版本</h2>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rename &#x27;s/原字符串/新字符串/&#x27; 文件名</span><br></pre></td></tr></table></figure>
+
+<h2 id="Perl语言版本"><a href="#Perl语言版本" class="headerlink" title="Perl语言版本"></a>Perl语言版本</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rename &#x27;s/原字符串/新字符串/&#x27; 文件名</span><br></pre></td></tr></table></figure>
+
 <p>示例：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rename <span class="string">&#x27;s/第三阶段/3/&#x27;</span> *</span><br><span class="line">rename <span class="string">&quot;s/$/.txt/&quot;</span> * //把所有的文件名都以txt结尾</span><br></pre></td></tr></table></figure>
-<h1 id="sed">sed</h1>
-<p>linux下批量替换文件内容</p>
+
+<h1 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h1><p>linux下批量替换文件内容</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 针对单个文件</span></span><br><span class="line">sed -i <span class="string">&quot;s/查找字段/替换字段/g&quot;</span> 文件名</span><br><span class="line"><span class="comment"># 针对目录下的所有文件</span></span><br><span class="line">sed -i <span class="string">&quot;s/查找字段/替换字段/g&quot;</span> `grep 查找字段 -rl 路径`</span><br><span class="line"><span class="comment"># r 表示递归</span></span><br><span class="line"><span class="comment"># l 表示 -files-with-matches</span></span><br></pre></td></tr></table></figure>
+
 <p>示例：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;s/www.baidu.com/baidu.com/g&quot;</span> file.config</span><br><span class="line">sed -i <span class="string">&quot;s/www.baidu.com/baidu.com/g&quot;</span> `grep www.baidu.com -rl /home`</span><br></pre></td></tr></table></figure>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
-<li><p><a target="_blank" rel="noopener" href="https://blog.51cto.com/jiemian/1846951">linux下rename命令用法详解(重命名文件)</a></p></li>
-<li><p><a target="_blank" rel="noopener" href="https://wangchujiang.com/linux-command/c/rename.html">rename</a></p></li>
-<li><p><a target="_blank" rel="noopener" href="http://einverne.github.io/post/2018/01/rename-files-batch.html">每天学习一个命令: rename 批量修改文件名</a></p></li>
-<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/hnlyyk/article/details/49299909">linux下批量替换文件内容</a></p></li>
+
+
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><p><a target="_blank" rel="noopener" href="https://blog.51cto.com/jiemian/1846951">linux下rename命令用法详解(重命名文件)</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://wangchujiang.com/linux-command/c/rename.html">rename</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://einverne.github.io/post/2018/01/rename-files-batch.html">每天学习一个命令: rename 批量修改文件名</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/hnlyyk/article/details/49299909">linux下批量替换文件内容</a></p>
+</li>
 </ol>
 
     </div>
@@ -431,14 +439,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

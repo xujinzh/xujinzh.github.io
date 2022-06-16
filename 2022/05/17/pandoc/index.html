@@ -312,112 +312,114 @@
     <div class="post-body" itemprop="articleBody">
         <p>Pandoc 是使用 Haskell 语言编写的一款跨平台、自由开源及命令行界面的标记语言转换工具，可实现不同标记语言间的格式转换，堪称该领域中的“瑞士军刀”。本篇以 Ubuntu 18.04 为例进行演示。</p>
 <a id="more"></a>
-<h1 id="安装">安装</h1>
-<p>安装 pandoc 可以通过如下方法</p>
+
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>安装  pandoc  可以通过如下方法</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install pandoc</span><br></pre></td></tr></table></figure>
-<h1 id="示例">示例</h1>
-<p>使用 pandoc 可以进行很多种文本格式的转换，如 docx, markdown, textile, pdf 等等。下表更详细的列出：</p>
+
+<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><p>使用 pandoc 可以进行很多种文本格式的转换，如 docx, markdown, textile, pdf 等等。下表更详细的列出：</p>
 <table>
-<colgroup>
-<col style="width: 25%" />
-<col style="width: 74%" />
-</colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Pandoc 可读取的源格式</th>
 <th>Pandoc 可生成的目标格式</th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
+<tbody><tr>
 <td>Markdown</td>
 <td>HTML格式：包括XHTML，HTML5及HTML slide</td>
 </tr>
-<tr class="even">
+<tr>
 <td>reStructuredText</td>
 <td>文字处理软件格式：包括docx、odt、OpenDocument XML</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Textile</td>
 <td>电子书格式：包括EPUB（第2版及第3版）、FictionBook2</td>
 </tr>
-<tr class="even">
+<tr>
 <td>HTML</td>
 <td>技术文档格式：包括DocBook、GNU TexInfo、Groff manpages、Haddock</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>DocBook</td>
 <td>页面布局格式：InDesign ICML</td>
 </tr>
-<tr class="even">
+<tr>
 <td>LaTeX</td>
 <td>大纲处理标记语言格式：OPML</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>MediaWiki</td>
 <td>TeX格式：包括LaTeX、ConTeXt、LaTeX Beamer</td>
 </tr>
-<tr class="even">
+<tr>
 <td>OPML</td>
 <td>PDF格式：需要LaTeX支持</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Org-Mode</td>
 <td>轻量级标记语言格式：包括Markdown、reStructuredText、textile、Org-Mode、MediaWiki标记语言、AsciiDoc</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Haddock</td>
 <td>自定义格式：可使用lua自定义转换规则</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p>pandoc 的使用方法如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandoc -f/-r 输入格式 -t/-w 输出格式 -o 输出文件 输入文件</span><br></pre></td></tr></table></figure>
+
 <ul>
-<li>-f 表示 输入格式：--from 格式，可用 -r 或 --read 格式 代替；</li>
-<li>-t 表示 输出格式：-to 格式，可用 -w 或 --write 格式 代替；</li>
-<li>-o 表示 输出文件：--output 文件；</li>
-<li>-s 表示 输出单个文件: --standalone；</li>
+<li>-f 表示 输入格式：–from 格式，可用 -r 或 –read 格式 代替；</li>
+<li>-t 表示 输出格式：-to 格式，可用 -w 或 –write 格式 代替；</li>
+<li>-o 表示 输出文件：–output 文件；</li>
+<li>-s 表示 输出单个文件: –standalone；</li>
 </ul>
 <p>更多参考，可通过如下命令查看</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man pandoc</span><br></pre></td></tr></table></figure>
+
 <p>下面演示几个转格式的例子</p>
-<ol type="1">
+<ol>
 <li>docx 转 textile</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandoc -f docx -t textile -o redmine-heading.textile redmine-test.docx</span><br></pre></td></tr></table></figure>
-<ol start="2" type="1">
+
+<ol start="2">
 <li>txt 转 pdf</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 需要安装 pdflatex，方法如下</span></span><br><span class="line"><span class="comment"># sudo apt install texlive-latex-base</span></span><br><span class="line">pandoc test.txt -o test.pdf</span><br></pre></td></tr></table></figure>
-<ol start="3" type="1">
+
+<ol start="3">
 <li>markdown 转 ipynb</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandoc numpy-test.md -o numpy-test.ipynb</span><br></pre></td></tr></table></figure>
-<ol start="4" type="1">
+
+<ol start="4">
 <li>txt 转 html</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pandoc -o output.html input.txt</span><br><span class="line"><span class="comment"># 生成一个文件</span></span><br><span class="line">pandoc -s -o output.html input.txt</span><br></pre></td></tr></table></figure>
-<ol start="5" type="1">
+
+<ol start="5">
 <li>markdown 转 txt</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandoc -f markdown -t latex hello.txt</span><br></pre></td></tr></table></figure>
-<ol start="6" type="1">
+
+<ol start="6">
 <li>html 转 markdown</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandoc -f html -t markdown hello.html</span><br></pre></td></tr></table></figure>
+
 <p>更多例子参考：</p>
-<p>https://pandoc.org/demos.html</p>
+<p><a target="_blank" rel="noopener" href="https://pandoc.org/demos.html">https://pandoc.org/demos.html</a></p>
 <p>如果不想通过命令手动转，可采用在线格式转换：</p>
-<p>https://alldocs.app/convert-word-docx-to-textile</p>
-<h1 id="python-中调用">python 中调用</h1>
-<p>在 Python 中使用 <a target="_blank" rel="noopener" href="https://github.com/NicklasTegner/pypandoc">pandoc</a>，可以安装包 pypandoc 来调用系统安装的 pandoc 软件</p>
+<p><a target="_blank" rel="noopener" href="https://alldocs.app/convert-word-docx-to-textile">https://alldocs.app/convert-word-docx-to-textile</a></p>
+<h1 id="python-中调用"><a href="#python-中调用" class="headerlink" title="python 中调用"></a>python 中调用</h1><p>在 Python 中使用 <a target="_blank" rel="noopener" href="https://github.com/NicklasTegner/pypandoc">pandoc</a>，可以安装包 pypandoc 来调用系统安装的 pandoc 软件</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pypandoc</span><br></pre></td></tr></table></figure>
+
 <p>使用方法</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 指定 pandoc 软件位置</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ.setdefault(<span class="string">&#x27;PYPANDOC_PANDOC&#x27;</span>, <span class="string">&#x27;/usr/bin/pandoc&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 docx 文件转为 textile 格式</span></span><br><span class="line"><span class="keyword">import</span> pypandoc</span><br><span class="line"></span><br><span class="line">output = pypandoc.convert_file(<span class="string">&#x27;somefile.docx&#x27;</span>, <span class="string">&#x27;textile&#x27;</span>, outputfile=<span class="string">&quot;somefile.textile&quot;</span>)</span><br></pre></td></tr></table></figure>
+
 <p>更多使用方法，如添加格式化参数请参考 <a target="_blank" rel="noopener" href="https://pypi.org/project/pypandoc/">pypandoc 官网</a>。</p>
-<h1 id="参考文献">参考文献</h1>
-<ol type="1">
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://pandoc.org/index.html">Pandoc a universal document converter</a></li>
 </ol>
 
@@ -512,14 +514,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

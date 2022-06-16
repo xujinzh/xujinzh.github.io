@@ -310,8 +310,8 @@
         <p>重新启动Linux系统和关闭Linux系统推荐使用shutdown命令。</p>
 <p>下面分别介绍重新Linxu系统的命令：shutdown, reboot, init等命令，以及关机命令：shutdown, halt, init, poweroff</p>
 <a id="more"></a>
-<h1 id="shutdown">shutdown</h1>
-<p>该命令需要root权限，且功能比较强大，像reboot，halt等都是基于该命令。</p>
+
+<h1 id="shutdown"><a href="#shutdown" class="headerlink" title="shutdown"></a>shutdown</h1><p>该命令需要root权限，且功能比较强大，像reboot，halt等都是基于该命令。</p>
 <p>shutdown命令比较安全，使用该命令后，它会在系统关闭之前给系统上的所有登录用户一条警告。同时该命令搭配不同的参数，可以设置不同的重启操作。</p>
 <p>该命令的一般格式：<font size=3 color=red> shutdown [选项] [时间] [警告信息] </font></p>
 <p>选项的含义:</p>
@@ -323,55 +323,58 @@
 <li>n: 快速关机不经过init 程序</li>
 <li>c: 取消一个已经运行的shutdown</li>
 </ul>
-<h1 id="reboot">reboot</h1>
-<p>reboot 命令比较粗暴，重启系统时直接删除所有进程，不是平稳安全的关闭它们。但简单粗暴的它可以快速关闭系统。容易造成其他用户的数据丢失。所以建议在单用户模式下才使用reboot命令，在多用户模式下使用shutdown命令。</p>
-<h1 id="init">init</h1>
-<p>init命令主要用于切换系统的运行级别，切换是立即完成的。</p>
+<h1 id="reboot"><a href="#reboot" class="headerlink" title="reboot"></a>reboot</h1><p>reboot 命令比较粗暴，重启系统时直接删除所有进程，不是平稳安全的关闭它们。但简单粗暴的它可以快速关闭系统。容易造成其他用户的数据丢失。所以建议在单用户模式下才使用reboot命令，在多用户模式下使用shutdown命令。</p>
+<h1 id="init"><a href="#init" class="headerlink" title="init"></a>init</h1><p>init命令主要用于切换系统的运行级别，切换是立即完成的。</p>
 <p>init 0：表示将运行级别切换为0，表示关机；</p>
 <p>init 6：表示将运行级别切换为6，表示重启。</p>
-<h1 id="halt">halt</h1>
-<p>该命令类似于reboot，是相对简单的关机命令。但实质上是调用了shutdown -h，但它有如下一些恐怖的参数</p>
+<h1 id="halt"><a href="#halt" class="headerlink" title="halt"></a>halt</h1><p>该命令类似于reboot，是相对简单的关机命令。但实质上是调用了shutdown -h，但它有如下一些恐怖的参数</p>
 <ul>
 <li>f: 没有调用shutdown而强制关机或重启</li>
 <li>i: 关机或重新启动之前，关掉所有的网络接口</li>
 <li>p: 关机时调用poweroff，此选项为缺省选项</li>
 </ul>
-<h1 id="poweroff">poweroff</h1>
-<p><strong>poweroff命令</strong>用来关闭计算机操作系统并且切断系统电源。它有如下参数</p>
+<h1 id="poweroff"><a href="#poweroff" class="headerlink" title="poweroff"></a>poweroff</h1><p><strong>poweroff命令</strong>用来关闭计算机操作系统并且切断系统电源。它有如下参数</p>
 <ul>
 <li>n：关闭操作系统时不执行sync操作；</li>
-<li>w：不真正关闭操作系统，仅在日志文件“/var/log/wtmp”中；</li>
-<li>d：关闭操作系统时，不将操作写入日志文件“/var/log/wtmp”中添加相应的记录；</li>
+<li>w：不真正关闭操作系统，仅在日志文件“&#x2F;var&#x2F;log&#x2F;wtmp”中；</li>
+<li>d：关闭操作系统时，不将操作写入日志文件“&#x2F;var&#x2F;log&#x2F;wtmp”中添加相应的记录；</li>
 <li>f：强制关闭操作系统；</li>
 <li>i：关闭操作系统之前关闭所有的网络接口；</li>
 <li>h：关闭操作系统之前将系统中所有的硬件设置为备用模式。</li>
 </ul>
-<h1 id="如何重启">如何重启</h1>
-<p>下面总结一些常用的重启命令:</p>
+<h1 id="如何重启"><a href="#如何重启" class="headerlink" title="如何重启"></a>如何重启</h1><p>下面总结一些常用的重启命令:</p>
 <p>立即安全的重启（推荐的命令），可以考虑参数r与reboot对应</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutdown -r now</span><br></pre></td></tr></table></figure>
+
 <p>10分钟后重启</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutdown -r +10</span><br></pre></td></tr></table></figure>
+
 <p>立刻重启</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br><span class="line">init 6</span><br></pre></td></tr></table></figure>
-<h1 id="常用关机命令">常用关机命令</h1>
-<p>下面总结一些常用的关机命令：</p>
+
+<h1 id="常用关机命令"><a href="#常用关机命令" class="headerlink" title="常用关机命令"></a>常用关机命令</h1><p>下面总结一些常用的关机命令：</p>
 <p>立即安全的关机（推荐的命令），可以考虑参数h与halt对应</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo shutdown -h now</span><br></pre></td></tr></table></figure>
+
 <p>10分钟后关机</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo shutdown -h +10</span><br></pre></td></tr></table></figure>
+
 <p>晚上18：30关机</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo shutdown -h 18:30</span><br></pre></td></tr></table></figure>
+
 <p>在未来某天某时关机</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;shutdown -h +5&quot;</span> | at 10:05am 2022-01-19</span><br></pre></td></tr></table></figure>
+
 <p>关机时广播指定信息</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo shutdown -h +20 <span class="string">&quot;System Upgrade&quot;</span></span><br></pre></td></tr></table></figure>
+
 <p>立刻关机</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">halt</span><br><span class="line">init 0</span><br><span class="line">poweroff</span><br><span class="line">sudo shutdown -h +0</span><br></pre></td></tr></table></figure>
+
 <p>取消定时关机</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo shutdown -c <span class="string">&quot;Canceling System Upgrade&quot;</span></span><br></pre></td></tr></table></figure>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://phoenixnap.com/kb/linux-shutdown-command">How to use Linux Shutdown Command with Examples</a></li>
 </ol>
 
@@ -467,14 +470,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

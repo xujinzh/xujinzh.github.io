@@ -145,7 +145,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ssh-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">SSH 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="nav-number">2.</span> <span class="nav-text">本地端口转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="nav-number">3.</span> <span class="nav-text">远程端口转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="nav-number">4.</span> <span class="nav-text">动态端口转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7%E7%9A%84ssh%E7%99%BB%E5%BD%95"><span class="nav-number">5.</span> <span class="nav-text">退出其他用户的SSH登录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">端口占用的解决方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%88%96%E7%A6%81%E6%AD%A2%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="nav-number">7.</span> <span class="nav-text">运行或禁止端口转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">8.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SSH-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">SSH 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="nav-number">2.</span> <span class="nav-text">本地端口转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="nav-number">3.</span> <span class="nav-text">远程端口转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="nav-number">4.</span> <span class="nav-text">动态端口转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7%E7%9A%84SSH%E7%99%BB%E5%BD%95"><span class="nav-number">5.</span> <span class="nav-text">退出其他用户的SSH登录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">端口占用的解决方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%88%96%E7%A6%81%E6%AD%A2%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="nav-number">7.</span> <span class="nav-text">运行或禁止端口转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">8.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -312,99 +312,113 @@
     <div class="post-body" itemprop="articleBody">
         <p>我这里有个需求，就是如何将公司局域网内的服务器A开发的网站开放到互联网上。公司局域网的服务器A能够通过主路由器访问互联网，但却没有公网 IP，因此，无法在互联网上直接访问A上的网页。通过 SSH 远程端口转发可以实现这一目的。借此，本篇汇总记录一下 SSH 转发的相关知识。本篇以 Ubuntu18.04 为例，所有端口均指 TCP 端口，建议防火墙开放相应的端口，并保证端口没有被占用。</p>
 <a id="more"></a>
-<h1 id="ssh-简介">SSH 简介</h1>
-<p>如今，SSH 在 Linux/MacOS/Windows 上是标配的软件工具。事实上，SSH 是一种网络协议，由芬兰学者 Tatu Ylonen 于 1995 年设计，用于主机之间的加密登录，将登录信息全部加密。现如今，针对该协议开发有各种实现，有商业的，也有开源的，如 OpenSSH 等。</p>
+
+<h1 id="SSH-简介"><a href="#SSH-简介" class="headerlink" title="SSH 简介"></a>SSH 简介</h1><p>如今，SSH 在 Linux&#x2F;MacOS&#x2F;Windows 上是标配的软件工具。事实上，SSH 是一种网络协议，由芬兰学者 Tatu Ylonen 于 1995 年设计，用于主机之间的加密登录，将登录信息全部加密。现如今，针对该协议开发有各种实现，有商业的，也有开源的，如 OpenSSH 等。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 SSH 以用户 username 登录到主机 host_ip 上</span></span><br><span class="line">ssh username@host_ip</span><br><span class="line"><span class="comment"># 指定端口登录</span></span><br><span class="line">ssh -p 2222 uername@host_ip</span><br></pre></td></tr></table></figure>
+
 <p><strong>端口可以在 host_ip 上进行修改，方法如下：</strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在配置文件中修改</span></span><br><span class="line">sudo vim /etc/ssh/sshd_config</span><br><span class="line"><span class="comment"># 添加如下内容</span></span><br><span class="line">Port 2222</span><br><span class="line"><span class="comment"># 重启SSHD</span></span><br><span class="line">sudo systemctl restart sshd.service</span><br></pre></td></tr></table></figure>
+
 <p>常用的 SSH 登录方式有两种，一种是口令密码登录，一种是密钥认证登录。</p>
 <p>口令密码登录：常常第一次登录主机时，为了防止中间人攻击，都会有系统警告提示，包含有 128 位的公钥指纹（原指纹是RSA算法生成的 1024 位的，经过 MD5 加密后得到 128 位）。当确认无误后，输入 <code>yes</code>，然后输入密码，即可登录，此时，本地电脑会将带访问主机的公钥记录在 <code>~/.ssh/known_hosts</code> 之中，下次连接时，就不会有警告提示了。</p>
 <p>密钥认证登录：密钥登录首先需要本机的 <code>~/.ssh/</code> 目录下生成密钥文件（可不对私钥设置口令 passphrase ），包含公钥 <code>id_rsa.pub</code> 和 私钥 <code>id_rsa</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+
 <p>将公钥拷贝到待访问主机上即可，方法如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 id_rsa.pub 拷贝到 host_ip 的用户 username 下的 .ssh/authorized_keys 文件中</span></span><br><span class="line"><span class="comment"># .ssh/authorized_keys 的权限一般是 600</span></span><br><span class="line">ssh-copy-id username@host_ip</span><br></pre></td></tr></table></figure>
+
 <p>这样下次登录就不用输入口令密码。</p>
 <p>使用如下命令，可以查看 ssh 命令的各参数含义：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man ssh</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li>-p: 表示指定端口（注意在 scp 中指定端口是使用大写的 -P），port</li>
 <li>-L: 表示本地端口转发，local</li>
 <li>-R: 表示远程端口转发，remote</li>
 <li>-D: 表示动态端口转发，dynamic</li>
-<li>-N: 表示只进行数据转发，不进行命令输入（Do not execute a remote command. This is useful for just forwarding ports.）</li>
+<li>-N: 表示只进行数据转发，不进行命令输入（Do not execute a remote command.  This is useful for just forwarding ports.）</li>
 <li>-T: 表示不分配伪终端 tty（Disable pseudo-terminal allocation.）</li>
 <li>-g: 表示允许远端主机连接本地主机的转发端口（Allows remote hosts to connect to local forwarded ports.）</li>
 <li>-f: 表示在后台运行（Requests ssh to go to background just before command execution. ）用 kill 进程 ID 关闭</li>
-<li>-q: 表示静默模式，不显示警告和诊断信息（Quiet mode. Causes most warning and diagnostic messages to be suppressed.）</li>
+<li>-q: 表示静默模式，不显示警告和诊断信息（Quiet mode.  Causes most warning and diagnostic messages to be suppressed.）</li>
 </ul>
-<h1 id="本地端口转发">本地端口转发</h1>
-<p>当远端主机（IP 地址是 1. 2. 3. X，有用户 jinzhongxu）上有个服务运行在 8000 端口（比如 jupyterhub），但是，我想要在本地（127.0.0.1）的端口（8008）访问，可以使用如下方法：</p>
+<h1 id="本地端口转发"><a href="#本地端口转发" class="headerlink" title="本地端口转发"></a>本地端口转发</h1><p>当远端主机（IP 地址是 1. 2. 3. X，有用户 jinzhongxu）上有个服务运行在 8000 端口（比如 jupyterhub），但是，我想要在本地（127.0.0.1）的端口（8008）访问，可以使用如下方法：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L 8008:127.0.0.1:8000 -NT jinzhongxu@1.2.3.X</span><br></pre></td></tr></table></figure>
-<p>此时，在本地浏览器打开地址：http://127.0.0.1:8008 就可以直接访问。这就是一种简单的本地端口转发。它将远端主机的某个端口转发到本地主机的某个端口上，访问本地端口就相当于访问远端主机的端口。</p>
+
+<p>此时，在本地浏览器打开地址：<a target="_blank" rel="noopener" href="http://127.0.0.1:8008/">http://127.0.0.1:8008</a> 就可以直接访问。这就是一种简单的本地端口转发。它将远端主机的某个端口转发到本地主机的某个端口上，访问本地端口就相当于访问远端主机的端口。</p>
 <p>类似的，可以将远端主机的 22 端口绑定到本机的 2222 端口，</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L 2222:127.0.0.1:22 -NT jinzhongxu@1.2.3.X</span><br></pre></td></tr></table></figure>
+
 <p>这样，就可以直接 SSH 到本地的 2222 端口连接到远端主机的终端</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -p 2222 localhost</span><br></pre></td></tr></table></figure>
+
 <p>其实，本地端口转发的功能远不止这样，它的完整形式是下面样子：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L local_port:remote_target_ip:remote_target_port -NT username@remote_ip</span><br></pre></td></tr></table></figure>
+
 <p>以本地主机运行上面的命令，可以将远端目标主机 remote_target_ip 的指定端口 remote_target_port 经过另一个远端主机 remote_ip （俗称跳板机）绑定到本地主机的指定端口 local_port 上。这样，在本地访问端口 local_port，就相当于访问远端目标主机 remote_target_ip 的端口 remote_target_port。</p>
 <p>本地端口转发的使用场景就是：</p>
-<ol type="1">
+<ol>
 <li>本地主机想直接访问本地端口来访问远端主机的端口；</li>
 <li>本地主机无法直接访问远端目标主机的端口，经过跳板机实现访问远端目标主机的端口。此时要求，本地主机能够访问跳板机，跳板机能够访问远端目标主机。</li>
 </ol>
 <p>其实场景 1 是场景 2 的特殊情况，此时，远端目标主机就是跳板机的 localhost 或 127.0.0.1，而 remote_ip 为公网 ip 或本地主机可访问的内网 ip，场景 1 常常使用在将远端主机的端口映射到本地主机上的情况。</p>
 <p>本地端口转发一般采用 HTTP 协议。</p>
-<h1 id="远程端口转发">远程端口转发</h1>
-<p>本地主机（127.0.0.1）上有个服务运行在 8000 端口（比如 jupyterhub），但是，我想要在远端主机（IP 地址是 1. 2. 3. X，有用户 jinzhongxu）的端口（8008）访问，可以使用如下方法：</p>
+<h1 id="远程端口转发"><a href="#远程端口转发" class="headerlink" title="远程端口转发"></a>远程端口转发</h1><p>本地主机（127.0.0.1）上有个服务运行在 8000 端口（比如 jupyterhub），但是，我想要在远端主机（IP 地址是 1. 2. 3. X，有用户 jinzhongxu）的端口（8008）访问，可以使用如下方法：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -R 8008:localhost:8000 -NT jinzhongxu@1.2.3.X</span><br></pre></td></tr></table></figure>
-<p>此时，就可以在浏览器打开地址： http://1.2.3.X:8008 访问本地主机的 jupyterhub 服务了。这就是一种简单的远程端口转发。它将本地主机的某个端口转发到远端主机的某个端口上，访问远端主机端口就相当于访问本地主机的端口。</p>
+
+<p>此时，就可以在浏览器打开地址： <a target="_blank" rel="noopener" href="http://1.2.3.x:8008/">http://1.2.3.X:8008</a> 访问本地主机的 jupyterhub 服务了。这就是一种简单的远程端口转发。它将本地主机的某个端口转发到远端主机的某个端口上，访问远端主机端口就相当于访问本地主机的端口。</p>
 <p>类似的，可以将本地的 80 端口远程转发到远端主机的 80 端口，这样，访问远端主机的 IP 地址，就可以直接访问本地的网站。这常常是基于对网站安全性考虑的，对远端主机（常常是 VPS ）安全性（如数据丢失等）不相信，但又想把网站开发给大家访问，或者因为地理原因，有些人无法直接访问本地的网站，只能通过互联网访问，此时，就需要进行远程端口转发，将本地端口绑定到远端端口，通过公网 IP 访问。此时，命令常常如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -R 80:localhost:80 -NT jinzhongxu@1.2.3.X</span><br></pre></td></tr></table></figure>
-<p>此时，直接访问地址：http://1.2.3.X 就可以打开网站。</p>
+
+<p>此时，直接访问地址：<a target="_blank" rel="noopener" href="http://1.2.3.x/">http://1.2.3.X</a> 就可以打开网站。</p>
 <p>有时候，因为家庭网络和公司网络都是局域网，没有公网 IP，但都能访问互联网，在阿里云上海开通了一个具有公网 IP：1.2.3.X 的 VPS，想要实现在家访问公司里的个人办公电脑或服务器 A，就可以首先在 A 上开启远程端口转发：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -R 2222:localhost:22 -NT -g -f jinzhongxu@1.2.3.X</span><br></pre></td></tr></table></figure>
+
 <p>回到家，通过 SSH 访问 VPS 的端口 2222 就可以访问公司服务器 A：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -p 2222 jinzhongxu@1.2.3.X</span><br></pre></td></tr></table></figure>
+
 <p>此示例的详细描述可参考我的另一篇文章：<a href="https://xujinzh.github.io/2022/01/19/ssh-forwarding-service/">SSH 转发的一些记录</a> 。事实上，通过在远端主机上运行如下命令，也可以使得远端主机访问本地主机，打破内网限制，实现内网穿透：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -p 2222 jinzhongxu@localhost</span><br></pre></td></tr></table></figure>
+
 <p>其实，远程端口转发的功能远不止这样，它的完整形式是下面样子：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不限连接者IP，需配置 /etc/ssh/sshd_config 中的 GatewayPorts yes；或者服务器部内进行本地端口转发，从127.0.0.1:remote_port 到 0.0.0.0:remote_port</span></span><br><span class="line"><span class="comment"># 当 GatewayPorts no 时，只能服务器本身自己能连接</span></span><br><span class="line">ssh -R remote_port:target_ip:target_port -NT username@remote_ip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 限制连接者IP，需配置 /etc/ssh/sshd_config 中的 GatewayPorts clientspecified</span></span><br><span class="line">ssh -R connector_ip:remote_port:target_ip:target_port -NT username@remote_ip</span><br></pre></td></tr></table></figure>
+
 <p>以本地主机运行上面的命令，可以将目标主机 target_ip 的指定端口 target_port 经过本地主机（俗称跳板机）绑定到远端主机的指定端口 remote_port 上。这样，在远端访问端口 remote_port，就相当于访问目标主机 target_ip 的端口 target_port。</p>
 <p>远程端口转发的使用场景就是：</p>
-<ol type="1">
+<ol>
 <li>直接访问远端主机的端口实现访问本地主机的端口；</li>
 <li>远端主机无法直接访问目标主机的端口，经过本地跳板机实现访问目标主机的端口。此时，要求本地跳板机能够访问目标主机机和远端主机。</li>
 </ol>
 <p>其实场景 1 是场景 2 的特殊情况，此时，目标主机就是跳板机的 localhost 或 127.0.0.1，而远端主机 remote_ip 为公网 ip 或本地主机可访问的内网 ip，场景 1 常常使用在将本地主机的端口映射到远端主机上的情况。</p>
 <p>远程端口转发一般采用 HTTP 协议。</p>
-<h1 id="动态端口转发">动态端口转发</h1>
-<p>动态端口转发常采用如下形式：</p>
+<h1 id="动态端口转发"><a href="#动态端口转发" class="headerlink" title="动态端口转发"></a>动态端口转发</h1><p>动态端口转发常采用如下形式：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -D 8000 jinzhongxu@remote_ip -NT</span><br></pre></td></tr></table></figure>
+
 <p>将本地的 8000 端口绑定到远端主机 remote_ip 上。</p>
 <p>动态端口转发一般采用 SOCKS(5) 协议。</p>
-<h1 id="退出其他用户的ssh登录">退出其他用户的SSH登录</h1>
-<p>查看在线登录用户</p>
+<h1 id="退出其他用户的SSH登录"><a href="#退出其他用户的SSH登录" class="headerlink" title="退出其他用户的SSH登录"></a>退出其他用户的SSH登录</h1><p>查看在线登录用户</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">w</span><br></pre></td></tr></table></figure>
+
 <p>查看自己使用的终端</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">who am i</span><br></pre></td></tr></table></figure>
+
 <p>退出非法登录</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pkill -<span class="built_in">kill</span> -t pts/x</span><br></pre></td></tr></table></figure>
+
 <p>强制退出</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pkill -o -t pts/x</span><br></pre></td></tr></table></figure>
-<h1 id="端口占用的解决方法">端口占用的解决方法</h1>
-<p>查看端口是否在占用</p>
+
+<h1 id="端口占用的解决方法"><a href="#端口占用的解决方法" class="headerlink" title="端口占用的解决方法"></a>端口占用的解决方法</h1><p>查看端口是否在占用</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看8000端口是否被占用</span></span><br><span class="line"></span><br><span class="line">sudo netstat -tunlp | grep 8000</span><br><span class="line">tcp6       0      0 :::8000                 :::*                    LISTEN      6288/node</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭端口，在后面的 p 指定了端口占用的进程 ID 信息，直接杀死该进程即可释放端口</span></span><br><span class="line"><span class="built_in">kill</span> 6288</span><br><span class="line"></span><br><span class="line"><span class="comment"># 强制杀死进程</span></span><br><span class="line"><span class="built_in">kill</span> -9 6288</span><br></pre></td></tr></table></figure>
-<h1 id="运行或禁止端口转发">运行或禁止端口转发</h1>
-<p>在服务器的 <code>/etc/ssh/sshd_config</code> 中可以进行配置：</p>
-<ol type="1">
+
+<h1 id="运行或禁止端口转发"><a href="#运行或禁止端口转发" class="headerlink" title="运行或禁止端口转发"></a>运行或禁止端口转发</h1><p>在服务器的 <code>/etc/ssh/sshd_config</code> 中可以进行配置：</p>
+<ol>
 <li>启用服务器配置文件中的 AllowTcpForwarding 选项才能允许端口转发。默认情况下，允许转发。此选项的可能值是 yes 或 all 允许所有 TCP 转发，no 阻止所有 TCP 转发，local 允许本地转发，remote 允许远程转发；</li>
 <li>GatewayPorts 配置选项也会影响远程端口转发。可能的值是 no（仅允许来自服务器主机的本地连接；默认值）、yes（Internet 上的任何人都可以连接到远程转发端口）和 clientspecified（客户端可以指定可以连接的 IP 地址，如果未指定，任何人都可以）。</li>
 <li>另一个有趣的选项是 AllowStreamLocalForwarding，它可用于转发 Unix 域套接字。它允许与 AllowTcpForwarding 相同的值。默认值为 yes。</li>
 </ol>
 <p><font color=red> 建议：端口转发会让外部服务器访问本地服务器，让服务器面临风险，因此，最好少用或不用时断开。</font></p>
-<h1 id="参考链接">参考链接</h1>
-<ol type="1">
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html">SSH原理与运用（一）：远程登录</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2011/12/ssh_port_forwarding.html">SSH原理与运用（二）：远程操作与端口转发</a></li>
 <li><a target="_blank" rel="noopener" href="https://jeremyxu2010.github.io/2018/12/ssh%E7%9A%84%E4%B8%89%E7%A7%8D%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/">SSH的三种端口转发</a></li>
@@ -503,14 +517,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

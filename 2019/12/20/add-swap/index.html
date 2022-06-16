@@ -313,11 +313,12 @@
     <div class="post-body" itemprop="articleBody">
         <p>有时候，购买的云服务器不会自动给创建交换分区，如何自己建立交换分区呢，使用下面命令创建交换分区，可以更改大小，比如 1G 更改为 2G，一般交换分区是内存的 2 倍足矣。本篇以 Debian 系统为例，以 root 身份运行本篇中的命令。</p>
 <a id="more"></a>
-<h1 id="添加交换分区">添加交换分区</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">swapon --show</span><br><span class="line">free -h</span><br><span class="line">df -h</span><br><span class="line">fallocate -l 1G /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">chmod 600 /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">mkswap /swapfile</span><br><span class="line">swapon /swapfile</span><br><span class="line">swapon --show</span><br><span class="line">free -h</span><br><span class="line">cp /etc/fstab /etc/fstab.bak</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/swapfile none swap sw 0 0&#x27;</span> | sudo tee -a /etc/fstab</span><br><span class="line">cat /proc/sys/vm/swappiness</span><br><span class="line">sysctl vm.swappiness=10</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.swappiness=10&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">cat /proc/sys/vm/vfs_cache_pressure</span><br><span class="line">sysctl vm.vfs_cache_pressure=50</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.vfs_cache_pressure=50&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
+
+<h1 id="添加交换分区"><a href="#添加交换分区" class="headerlink" title="添加交换分区"></a>添加交换分区</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">swapon --show</span><br><span class="line">free -h</span><br><span class="line">df -h</span><br><span class="line">fallocate -l 1G /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">chmod 600 /swapfile</span><br><span class="line">ls -lh /swapfile</span><br><span class="line">mkswap /swapfile</span><br><span class="line">swapon /swapfile</span><br><span class="line">swapon --show</span><br><span class="line">free -h</span><br><span class="line">cp /etc/fstab /etc/fstab.bak</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/swapfile none swap sw 0 0&#x27;</span> | sudo tee -a /etc/fstab</span><br><span class="line">cat /proc/sys/vm/swappiness</span><br><span class="line">sysctl vm.swappiness=10</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.swappiness=10&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">cat /proc/sys/vm/vfs_cache_pressure</span><br><span class="line">sysctl vm.vfs_cache_pressure=50</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.vfs_cache_pressure=50&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
+
 <p>使用 top 或 htop 命令，可以查看交换分区是否创建成功。</p>
-<h1 id="开启-bbr">开启 bbr</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.core.default_qdisc=fq&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv4.tcp_congestion_control=bbr&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl -p</span><br><span class="line">sysctl net.ipv4.tcp_available_congestion_control</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否开启成功</span></span><br><span class="line">lsmod | grep bbr</span><br></pre></td></tr></table></figure>
+<h1 id="开启-bbr"><a href="#开启-bbr" class="headerlink" title="开启 bbr"></a>开启 bbr</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.core.default_qdisc=fq&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv4.tcp_congestion_control=bbr&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl -p</span><br><span class="line">sysctl net.ipv4.tcp_available_congestion_control</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否开启成功</span></span><br><span class="line">lsmod | grep bbr</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -411,14 +412,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">

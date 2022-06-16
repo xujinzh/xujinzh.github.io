@@ -313,17 +313,18 @@
     <div class="post-body" itemprop="articleBody">
         <p>我这里有一个需求就是使用 Windows10 远程连接 Ubuntu 的桌面系统，但是，Ubuntu 服务器在机房且没有连接显示器，只能通过终端 SSH 远程连接。然而，处于一些需求，需要远程连接，而 Teamviewer 在远程服务器没有连接显示器的情况下会出现灰屏，无法使用。因此，使用如下方法来解决。</p>
 <a id="more"></a>
-<h1 id="安装-xrdp">安装 xrdp</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update &amp;&amp; sudo apt -y upgrade</span><br><span class="line">sudo apt install xrdp</span><br></pre></td></tr></table></figure>
-<h1 id="安装-xfce">安装 xfce</h1>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">sudo</span> apt install -y xfce<span class="number">4</span></span><br><span class="line"><span class="attribute">sudo</span> apt install -y xfce<span class="number">4</span>-goodies</span><br></pre></td></tr></table></figure>
-<h1 id="配置-xrdp">配置 xrdp</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini.bak</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/3389/3390/g&#x27;</span> /etc/xrdp/xrdp.ini</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/max_bpp=32/#max_bpp=32\nmax_bpp=128/g&#x27;</span> /etc/xrdp/xrdp.ini</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/xserverbpp=24/#xserverbpp=24\nxserverbpp=128/g&#x27;</span> /etc/xrdp/xrdp.ini</span><br><span class="line"><span class="built_in">echo</span> xfce4-session &gt; ~/.xsession</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编辑启动方式为 xfce4</span></span><br><span class="line">sudo vim /etc/xrdp/startwm.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># test -x /etc/X11/Xsession &amp;&amp; exec /etc/X11/Xsession</span></span><br><span class="line"><span class="comment"># exec /bin/sh /etc/X11/Xsession</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># xfce</span></span><br><span class="line">startxfce4</span><br></pre></td></tr></table></figure>
-<h1 id="启动-xrdp">启动 xrdp</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status xrdp.service</span><br><span class="line">sudo systemctl stop xrdp.service</span><br><span class="line">sudo systemctl start xrdp.service</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> xrdp.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">/etc/init.d/xrdp status</span><br><span class="line">/etc/init.d/xrdp stop</span><br><span class="line">/etc/init.d/xrdp start</span><br></pre></td></tr></table></figure>
-<h1 id="远程连接">远程连接</h1>
-<p>在 Windows 上打开远程桌面连接，输入 Ubuntu 服务器的 IP 和 端口，如下：</p>
+
+<h1 id="安装-xrdp"><a href="#安装-xrdp" class="headerlink" title="安装 xrdp"></a>安装 xrdp</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update &amp;&amp; sudo apt -y upgrade</span><br><span class="line">sudo apt install xrdp</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装-xfce"><a href="#安装-xfce" class="headerlink" title="安装 xfce"></a>安装 xfce</h1><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">sudo</span> apt install -y xfce<span class="number">4</span></span><br><span class="line"><span class="attribute">sudo</span> apt install -y xfce<span class="number">4</span>-goodies</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置-xrdp"><a href="#配置-xrdp" class="headerlink" title="配置 xrdp"></a>配置 xrdp</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini.bak</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/3389/3390/g&#x27;</span> /etc/xrdp/xrdp.ini</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/max_bpp=32/#max_bpp=32\nmax_bpp=128/g&#x27;</span> /etc/xrdp/xrdp.ini</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/xserverbpp=24/#xserverbpp=24\nxserverbpp=128/g&#x27;</span> /etc/xrdp/xrdp.ini</span><br><span class="line"><span class="built_in">echo</span> xfce4-session &gt; ~/.xsession</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编辑启动方式为 xfce4</span></span><br><span class="line">sudo vim /etc/xrdp/startwm.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># test -x /etc/X11/Xsession &amp;&amp; exec /etc/X11/Xsession</span></span><br><span class="line"><span class="comment"># exec /bin/sh /etc/X11/Xsession</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># xfce</span></span><br><span class="line">startxfce4</span><br></pre></td></tr></table></figure>
+
+<h1 id="启动-xrdp"><a href="#启动-xrdp" class="headerlink" title="启动 xrdp"></a>启动 xrdp</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status xrdp.service</span><br><span class="line">sudo systemctl stop xrdp.service</span><br><span class="line">sudo systemctl start xrdp.service</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> xrdp.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">/etc/init.d/xrdp status</span><br><span class="line">/etc/init.d/xrdp stop</span><br><span class="line">/etc/init.d/xrdp start</span><br></pre></td></tr></table></figure>
+
+<h1 id="远程连接"><a href="#远程连接" class="headerlink" title="远程连接"></a>远程连接</h1><p>在 Windows 上打开远程桌面连接，输入 Ubuntu 服务器的 IP 和 端口，如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IP:3390</span><br></pre></td></tr></table></figure>
+
 <p>然后，输入用户名和密码即可连接。</p>
 
     </div>
@@ -418,14 +419,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">605k</span>
+    <span title="站点总字数">611k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:10</span>
+    <span title="站点阅读时长">9:15</span>
   </span>
 </div>
 <div class="busuanzi-count">
