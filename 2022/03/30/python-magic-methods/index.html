@@ -147,7 +147,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#init-%E5%92%8C-del"><span class="nav-number">1.</span> <span class="nav-text">__init__ 和 __del__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#call"><span class="nav-number">2.</span> <span class="nav-text">__call__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#str-%E5%92%8C-repr"><span class="nav-number">3.</span> <span class="nav-text">__str__ 和 __repr__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#len"><span class="nav-number">4.</span> <span class="nav-text">__len__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#getitem-%E3%80%81-setitem-%E3%80%81-delitem"><span class="nav-number">5.</span> <span class="nav-text">__getitem__、__setitem__、__delitem__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#contains"><span class="nav-number">6.</span> <span class="nav-text">__contains__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iter-%E3%80%81-next"><span class="nav-number">7.</span> <span class="nav-text">__iter__、__next__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#enter-%E3%80%81-exit"><span class="nav-number">8.</span> <span class="nav-text">__enter__、__exit__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#getattr-%E3%80%81-setattr-%E3%80%81-getattribute"><span class="nav-number">9.</span> <span class="nav-text">__getattr__、__setattr__、__getattribute__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dict-%E3%80%81-dir-%E3%80%81dir"><span class="nav-number">10.</span> <span class="nav-text">__dict__、__dir__、dir()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AD%94%E6%B3%95%E5%87%BD%E6%95%B0%E4%B8%80%E8%A7%88"><span class="nav-number">11.</span> <span class="nav-text">魔法函数一览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">12.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#init__-%E5%92%8C-__del__"><span class="nav-number">1.</span> <span class="nav-text">__init__ 和 __del__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#call__"><span class="nav-number">2.</span> <span class="nav-text">__call__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#str__-%E5%92%8C-__repr__"><span class="nav-number">3.</span> <span class="nav-text">__str__ 和 __repr__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#len__"><span class="nav-number">4.</span> <span class="nav-text">__len__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#getitem____setitem____delitem__"><span class="nav-number">5.</span> <span class="nav-text">__getitem__、__setitem__、__delitem__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#contains__"><span class="nav-number">6.</span> <span class="nav-text">__contains__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iter____next__"><span class="nav-number">7.</span> <span class="nav-text">__iter__、__next__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#enter____exit__"><span class="nav-number">8.</span> <span class="nav-text">__enter__、__exit__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#getattr____setattr____getattribute__"><span class="nav-number">9.</span> <span class="nav-text">__getattr__、__setattr__、__getattribute__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dict____dir__dir"><span class="nav-number">10.</span> <span class="nav-text">__dict__、__dir__、dir()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AD%94%E6%B3%95%E5%87%BD%E6%95%B0%E4%B8%80%E8%A7%88"><span class="nav-number">11.</span> <span class="nav-text">魔法函数一览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">12.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -306,290 +306,144 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>python 中有许多魔法函数（Magic Methods），一般格式为 __func__，常见的有 __init__, __del__, __call__, __str__, __repr__, __len__, __enter__, __exit__, __iter__, __next__, __dict__, __dir__, __all__, __setattr__, __getattr__, __getattribute__,  __setitem__, __getitem__, __delitem__, __contains__等，魔法函数能够使类或函数获得特殊的功能。本篇介绍常用的魔法函数，所有代码以 JupyterLab 为平台运行。</p>
+        <p>python 中有许多魔法函数（Magic Methods），一般格式为 __func__，常见的有 __init__, __del__, __call__, __str__, __repr__, __len__, __enter__, __exit__, __iter__, __next__, __dict__, __dir__, __all__, __setattr__, __getattr__, __getattribute__, __setitem__, __getitem__, __delitem__, __contains__等，魔法函数能够使类或函数获得特殊的功能。本篇介绍常用的魔法函数，所有代码以 JupyterLab 为平台运行。</p>
 <a id="more"></a>
-
-<h1 id="init-和-del"><a href="#init-和-del" class="headerlink" title="__init__ 和 __del__"></a>__init__ 和 __del__</h1><p>像 C++ 等面向对象的语言中有类的构造函数（初始化类，实例化类对象）和析构函数（清理内存）。在 python 中也有类似的函数，__init__ 类似于构造函数，__del__类似于析构函数。</p>
+<h1 id="init__-和-__del__">__init__ 和 __del__</h1>
+<p>像 C++ 等面向对象的语言中有类的构造函数（初始化类，实例化类对象）和析构函数（清理内存）。在 python 中也有类似的函数，__init__ 类似于构造函数，__del__类似于析构函数。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        self.name = name</span><br><span class="line">        print(<span class="string">&quot;构造函数被调用&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__del__</span>(<span class="params">self</span>):</span></span><br><span class="line">        print(<span class="string">&quot;析构函数被调用&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">t = Test(<span class="string">&quot;Zhangsan&quot;</span>)</span><br></pre></td></tr></table></figure>
-
 <pre><code>构造函数被调用</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">del</span> t</span><br></pre></td></tr></table></figure>
-
 <pre><code>析构函数被调用</code></pre>
-<h1 id="call"><a href="#call" class="headerlink" title="__call__"></a>__call__</h1><p>__call__ 方法类似于”()”运算符。如类实例化”Company()”和函数调用”depart()”。说明类和函数中自带该方法。另外，如果想要类中的实例也能够像函数一样执行，可以在类中显示定义”__call__()”方法。如下面的例子。</p>
+<h1 id="call__">__call__</h1>
+<p>__call__ 方法类似于"()"运算符。如类实例化"Company()"和函数调用"depart()"。说明类和函数中自带该方法。另外，如果想要类中的实例也能够像函数一样执行，可以在类中显示定义"__call__()"方法。如下面的例子。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Company</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;类 Company 是否有 __call__ 方法: &quot;</span>, hasattr(Company, <span class="string">&quot;__call__&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>(&#39;类 Company 是否有 __call__ 方法: &#39;, True)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Country</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.name = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span>(<span class="params">self</span>):</span></span><br><span class="line">        print(<span class="string">&quot;yes&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">c = Country()</span><br><span class="line">c()</span><br></pre></td></tr></table></figure>
-
 <pre><code>yes</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;类 Country 的实例 c 是否有 __call__ 方法: &quot;</span>, hasattr(c, <span class="string">&quot;__call__&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>(&#39;类 Country 的实例 c 是否有 __call__ 方法: &#39;, True)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;类 Country 的属性 name 是否有 __call__ 方法: &quot;</span>, hasattr(c.name, <span class="string">&quot;__call__&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>(&#39;类 Country 的属性 name 是否有 __call__ 方法: &#39;, False)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">depart</span>():</span></span><br><span class="line">    print(<span class="string">&quot;yes&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;函数 depart 是否有 __call__ 方法:&quot;</span>, hasattr(depart, <span class="string">&quot;__call__&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>(&#39;函数 depart 是否有 __call__ 方法:&#39;, True)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">depart()</span><br></pre></td></tr></table></figure>
-
 <pre><code>yes</code></pre>
-<h1 id="str-和-repr"><a href="#str-和-repr" class="headerlink" title="__str__ 和 __repr__"></a>__str__ 和 __repr__</h1><p>__str__ 和 __repr__ 方法能够用来方便打印类的实例化对象。当使用 “print()” 函数打印时，应该在类中增加 “__str__()” 方法；当既想 “print()” 函数打印，又想在开发模式下直接输出实例化对象时，应该增加 “__repr__()” 方法。 </p>
+<h1 id="str__-和-__repr__">__str__ 和 __repr__</h1>
+<p>__str__ 和 __repr__ 方法能够用来方便打印类的实例化对象。当使用 "print()" 函数打印时，应该在类中增加 "__str__()" 方法；当既想 "print()" 函数打印，又想在开发模式下直接输出实例化对象时，应该增加 "__repr__()" 方法。</p>
 <p>当在类中没有定义魔法函数时</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test1</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        self.names = name</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">t1 = Test1(<span class="string">&quot;Zhangsan&quot;</span>)</span><br><span class="line">print(t1)</span><br></pre></td></tr></table></figure>
-
 <pre><code>&lt;__main__.Test1 object at 0x7fd380359670&gt;</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">t1</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>&lt;__main__.Test1 at 0x7fd380359670&gt;</code></pre>
-<p>当在类中定义魔法函数: “__str__()” 时</p>
+<p>当在类中定义魔法函数: "__str__()" 时</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test2</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> self.name</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">t2 = Test2(<span class="string">&quot;Zhangsan&quot;</span>)</span><br><span class="line">print(t2)</span><br></pre></td></tr></table></figure>
-
 <pre><code>Zhangsan</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">t2</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>&lt;__main__.Test2 at 0x7fd3802e6ac0&gt;</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过调用 str() 方法，实现类似效果。</span></span><br><span class="line"><span class="comment"># 一种说法是，__str__方法在对实例化对象是用print()函数输出时调用，其实时Python内部机制调用str()方法，</span></span><br><span class="line"><span class="comment"># 然后str()方法内部继续调用</span></span><br><span class="line">str(t2)</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>&#39;Zhangsan&#39;</code></pre>
-<p>当在类中定义魔法函数: “__repr__()” 时</p>
+<p>当在类中定义魔法函数: "__repr__()" 时</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test3</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> self.name</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">t3 = Test3(<span class="string">&quot;Zhangsan&quot;</span>)</span><br><span class="line">print(t3)</span><br></pre></td></tr></table></figure>
-
 <pre><code>Zhangsan</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">t3</span><br></pre></td></tr></table></figure>
-
-
 <pre><code>Zhangsan</code></pre>
-<h1 id="len"><a href="#len" class="headerlink" title="__len__"></a>__len__</h1><p>Python内置函数中有一个 “len()” 函数，这个函数适用于获取序列类型数据的长度，在对一个实例使用 “len()” 方法时，真实输出的其实是 __len__ 的返回值。所以，只要一个类内部实现了 __len__ 方法，就可以对其实例使用 __len__ 方法。</p>
+<h1 id="len__">__len__</h1>
+<p>Python内置函数中有一个 "len()" 函数，这个函数适用于获取序列类型数据的长度，在对一个实例使用 "len()" 方法时，真实输出的其实是 __len__ 的返回值。所以，只要一个类内部实现了 __len__ 方法，就可以对其实例使用 __len__ 方法。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Company1</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name, employees</span>):</span></span><br><span class="line">        self.name = name</span><br><span class="line">        self.employees = employees</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> len(self.employees)</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">c1 = Company1(name=<span class="string">&quot;Apple1&quot;</span>, employees=[<span class="string">&quot;Zhangsan&quot;</span>, <span class="string">&quot;Lisi&quot;</span>])</span><br><span class="line">len(c1)</span><br></pre></td></tr></table></figure>
-
-
 <pre><code>2</code></pre>
-<h1 id="getitem-、-setitem-、-delitem"><a href="#getitem-、-setitem-、-delitem" class="headerlink" title="__getitem__、__setitem__、__delitem__"></a>__getitem__、__setitem__、__delitem__</h1><p>在 python 中有内置的字典类型 dict，通过方括号 “[]” 可以对字典进行赋值、取值和删除值。其实在类中定义魔法函数同样可以达到类似字典的上述操作。</p>
+<h1 id="getitem____setitem____delitem__">__getitem__、__setitem__、__delitem__</h1>
+<p>在 python 中有内置的字典类型 dict，通过方括号 "[]" 可以对字典进行赋值、取值和删除值。其实在类中定义魔法函数同样可以达到类似字典的上述操作。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Company2</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.company_info = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__setitem__</span>(<span class="params">self, key, value</span>):</span></span><br><span class="line">        self.company_info[key] = value</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span>(<span class="params">self, key</span>):</span></span><br><span class="line">        <span class="keyword">return</span> self.company_info[key]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__delitem__</span>(<span class="params">self, key</span>):</span></span><br><span class="line">        <span class="keyword">del</span> self.company_info[key]</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">c2 = Company2()</span><br><span class="line">c2[<span class="string">&quot;name&quot;</span>] = <span class="string">&quot;Apple2&quot;</span></span><br><span class="line">c2[<span class="string">&quot;type&quot;</span>] = <span class="string">&quot;IT&quot;</span></span><br><span class="line">c2[<span class="string">&quot;name&quot;</span>], c2[<span class="string">&quot;type&quot;</span>]</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>(&#39;Apple2&#39;, &#39;IT&#39;)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">del</span> c2[<span class="string">&quot;type&quot;</span>]</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c2.company_info</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>&#123;&#39;name&#39;: &#39;Apple2&#39;&#125;</code></pre>
 <p>使用python的反射机制实现</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Company3</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__setitem__</span>(<span class="params">self, key, value</span>):</span></span><br><span class="line">        setattr(self, key, value)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span>(<span class="params">self, key</span>):</span></span><br><span class="line">        <span class="keyword">return</span> getattr(self, key)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__delitem__</span>(<span class="params">self, key</span>):</span></span><br><span class="line">        delattr(self, key)</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">c3 = Company3()</span><br><span class="line">c3[<span class="string">&quot;name&quot;</span>] = <span class="string">&quot;Apple3&quot;</span></span><br><span class="line">c3[<span class="string">&quot;type&quot;</span>] = <span class="string">&quot;IT&quot;</span></span><br><span class="line">c3[<span class="string">&quot;name&quot;</span>], c3[<span class="string">&quot;type&quot;</span>]</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>(&#39;Apple3&#39;, &#39;IT&#39;)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">del</span> c3[<span class="string">&quot;type&quot;</span>]</span><br></pre></td></tr></table></figure>
-
-<h1 id="contains"><a href="#contains" class="headerlink" title="__contains__"></a>__contains__</h1><p>在 python 的字典类型中，可以使用关键字 ‘in’ 来判断是否包含有 ‘key’，同样地，在类中定义方法 __contains__ 同样可以获得该种能力</p>
+<h1 id="contains__">__contains__</h1>
+<p>在 python 的字典类型中，可以使用关键字 'in' 来判断是否包含有 'key'，同样地，在类中定义方法 __contains__ 同样可以获得该种能力</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Company4</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.company_info = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__contains__</span>(<span class="params">self, key</span>):</span></span><br><span class="line">        <span class="keyword">return</span> key <span class="keyword">in</span> self.company_info</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">c4 = Company4()</span><br><span class="line">c4.company_info[<span class="string">&quot;name&quot;</span>] = <span class="string">&quot;Apple4&quot;</span></span><br><span class="line"><span class="string">&quot;name&quot;</span> <span class="keyword">in</span> c4</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>True</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;type&quot;</span> <span class="keyword">in</span> c4</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>False</code></pre>
 <p>使用反射机制实现</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Company5</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__setitem__</span>(<span class="params">self, key, value</span>):</span></span><br><span class="line">        setattr(self, key, value)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__contains__</span>(<span class="params">self, key</span>):</span></span><br><span class="line">        <span class="keyword">return</span> hasattr(self, key)</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">c5 = Company5()</span><br><span class="line">c5[<span class="string">&quot;name&quot;</span>] = <span class="string">&quot;Apple5&quot;</span></span><br><span class="line"><span class="string">&quot;name&quot;</span> <span class="keyword">in</span> c5</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>True</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;type&quot;</span> <span class="keyword">in</span> c5</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>False</code></pre>
-<h1 id="iter-、-next"><a href="#iter-、-next" class="headerlink" title="__iter__、__next__"></a>__iter__、__next__</h1><p>在我的另一篇博文： <a href="https://xujinzh.github.io/2022/01/21/python-iterable-iterator-generator/">Python 中的迭代器和生成器</a> 中，我介绍了 python 中的迭代、可迭代对象、迭代器和生成器，核心内容就是 __iter__ 和 __next__ 方法。任何类内部定义有 __iter__ 方法的实例化对象都是可迭代的（Iterable）；同时定义有 __iter__ 和 __next__ 的是迭代器（Iterator），生成器（Generator）是一类特殊的迭代器（yield 关键字）。可迭代对象通过函数 “iter()” 可以转化为迭代器。</p>
+<h1 id="iter____next__">__iter__、__next__</h1>
+<p>在我的另一篇博文： <a href="https://xujinzh.github.io/2022/01/21/python-iterable-iterator-generator/">Python 中的迭代器和生成器</a> 中，我介绍了 python 中的迭代、可迭代对象、迭代器和生成器，核心内容就是 __iter__ 和 __next__ 方法。任何类内部定义有 __iter__ 方法的实例化对象都是可迭代的（Iterable）；同时定义有 __iter__ 和 __next__ 的是迭代器（Iterator），生成器（Generator）是一类特殊的迭代器（yield 关键字）。可迭代对象通过函数 "iter()" 可以转化为迭代器。</p>
 <p>判断对象是否是可迭代对象、迭代器、生成器</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections.abc <span class="keyword">import</span> Generator, Iterable, Iterator</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__next__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">FibonacciGenerator</span>():</span></span><br><span class="line">    a, b = <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        a, b = b, a + b</span><br><span class="line">        <span class="keyword">yield</span> a</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = A()</span><br><span class="line">b = B()</span><br><span class="line">c = FibonacciGenerator()</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">isinstance(a, Iterable), isinstance(a, Iterator), isinstance(a, Generator)</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>(True, False, False)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">isinstance(b, Iterable), isinstance(b, Iterator), isinstance(b, Generator)</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>(True, True, False)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">isinstance(c, Iterable), isinstance(c, Iterator), isinstance(c, Generator)</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>(True, True, True)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">d = <span class="string">&quot;abc&quot;</span></span><br><span class="line">isinstance(d, Iterable), isinstance(d, Iterator), isinstance(d, Generator)</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>(True, False, False)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dr = iter(d)</span><br><span class="line">isinstance(dr, Iterable), isinstance(dr, Iterator), isinstance(dr, Generator)</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>(True, True, False)</code></pre>
-<h1 id="enter-、-exit"><a href="#enter-、-exit" class="headerlink" title="__enter__、__exit__"></a>__enter__、__exit__</h1><p>python 中常常使用 with 上下文管理器，如 <code>with open(file_path, &#39;r&#39;) as f</code> 打开文件获取句柄。这是非常有用的，即使是出现异常等，python 也能够关闭句柄，避免内存资源占用。其实，内部是由两个魔法函数来完成的。__enter__ 方法是在 with 语句开始执行的时候调用；__exit__ 方法是在 with 语句结束的时候调用，注意，无论 with 语句中的代码是否正常执行结束，都会执行 __exit__ 方法。除了读写文件外， python 中的数据库操作（特别注意关闭数据库连接）也可以用 with 上下文管理器。</p>
+<h1 id="enter____exit__">__enter__、__exit__</h1>
+<p>python 中常常使用 with 上下文管理器，如 <code>with open(file_path, 'r') as f</code> 打开文件获取句柄。这是非常有用的，即使是出现异常等，python 也能够关闭句柄，避免内存资源占用。其实，内部是由两个魔法函数来完成的。__enter__ 方法是在 with 语句开始执行的时候调用；__exit__ 方法是在 with 语句结束的时候调用，注意，无论 with 语句中的代码是否正常执行结束，都会执行 __exit__ 方法。除了读写文件外， python 中的数据库操作（特别注意关闭数据库连接）也可以用 with 上下文管理器。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"></span><br><span class="line">file = <span class="string">&quot;test.txt&quot;</span></span><br><span class="line">Path(file).touch()</span><br><span class="line"><span class="keyword">with</span> open(file, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(<span class="string">&quot;test&quot;</span>)</span><br><span class="line">os.remove(file)</span><br></pre></td></tr></table></figure>
-
-<h1 id="getattr-、-setattr-、-getattribute"><a href="#getattr-、-setattr-、-getattribute" class="headerlink" title="__getattr__、__setattr__、__getattribute__"></a>__getattr__、__setattr__、__getattribute__</h1><p>python 的类中会有一些属性，属性的获取和设置需要一些魔法函数来支持。__getattribute__ 方法是调用类的属性时首先调用的方法；__getattr__ 方法是当调用类的属性失败时，执行的函数；__setattr__ 方法可以为类设置属性。</p>
+<h1 id="getattr____setattr____getattribute__">__getattr__、__setattr__、__getattribute__</h1>
+<p>python 的类中会有一些属性，属性的获取和设置需要一些魔法函数来支持。__getattribute__ 方法是调用类的属性时首先调用的方法；__getattr__ 方法是当调用类的属性失败时，执行的函数；__setattr__ 方法可以为类设置属性。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GS</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        self.company = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        print(<span class="string">&quot;__getattr__ 方法被调用，您找的属性不存在&quot;</span>)</span><br></pre></td></tr></table></figure>
-
 <p>找到属性时，不会执行 __getattr__ 方法</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gs = GS(<span class="string">&quot;AppleG&quot;</span>)</span><br><span class="line">gs.company</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>&#39;AppleG&#39;</code></pre>
 <p>找不到属性时，会执行 __getattr__ 方法</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gs.name</span><br></pre></td></tr></table></figure>
-
 <pre><code>__getattr__ 方法被调用，您找的属性不存在</code></pre>
 <p>当属性找不到时，我们可以进行一些设置，如提醒、设置默认值等。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 自定义一个字典类，能够实现 &quot;字典.键&quot; 获取值</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyDict</span>(<span class="params">dict</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, *args, **kwargs</span>):</span></span><br><span class="line">        super(MyDict, self).__init__(*args, **kwargs)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span>(<span class="params">self, key</span>):</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> self[key]</span><br><span class="line">        <span class="keyword">except</span> KeyError:</span><br><span class="line">            <span class="keyword">raise</span> AttributeError(<span class="string">r&quot;&#x27;MyDict&#x27; object has no attribute &#x27;%s&#x27;&quot;</span> % key)</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">d = MyDict(&#123;<span class="string">&quot;a&quot;</span>: <span class="number">1</span>, <span class="string">&quot;b&quot;</span>: <span class="number">2</span>&#125;)</span><br><span class="line">d.a</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>1</code></pre>
 <p>在类中定义方法 __setattr__，使类的对象能够自定义属性</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GS2</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        self.company = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__setattr__</span>(<span class="params">self, name, value</span>):</span></span><br><span class="line">        print(<span class="string">&quot;__setattr__ 方法被调用&quot;</span>)</span><br><span class="line">        <span class="comment"># self.name = name   # 方法 1</span></span><br><span class="line">        <span class="comment"># object.__setattr__(self, name, value)  # 方法 2</span></span><br><span class="line">        self.__dict__[name] = value  <span class="comment"># 方法 3</span></span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gs2 = GS2(<span class="string">&quot;AppleGS&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;*&quot;</span> * <span class="number">3</span>)</span><br><span class="line">gs2.type = <span class="string">&quot;IT&quot;</span></span><br><span class="line">gs2.type</span><br></pre></td></tr></table></figure>
-
 <pre><code>__setattr__ 方法被调用
 ***
 __setattr__ 方法被调用
 &#39;IT&#39;</code></pre>
 <p>从上面的运行结果可以知道，__setattr__ 方法被调用了两次。这是因为在构造函数 __init__ 中也进行了一次属性赋值。所以，在定义 __setattr__ 的时候一定要注意，不能采用方法 1 编写代码，因为本身又会再次调用 __setattr__ 方法，这样会造成无限递归。可以采用方法 2 或方法 3.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 自定义一个字典类，能够实现 &quot;字典.键&quot; 获取值 和 &quot;字典.键=值&quot;</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyDict2</span>(<span class="params">dict</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, *args, **kwargs</span>):</span></span><br><span class="line">        super(MyDict2, self).__init__(*args, **kwargs)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span>(<span class="params">self, key</span>):</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> self[key]</span><br><span class="line">        <span class="keyword">except</span> KeyError:</span><br><span class="line">            <span class="keyword">raise</span> AttributeError(<span class="string">r&quot;&#x27;MyDict&#x27; object has no attribute &#x27;%s&#x27;&quot;</span> % key)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__setattr__</span>(<span class="params">self, key, name</span>):</span></span><br><span class="line">        self[key] = name</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">d = MyDict2()</span><br><span class="line">d.group = <span class="string">&quot;Python&quot;</span></span><br><span class="line">d.group</span><br></pre></td></tr></table></figure>
-
-
 <pre><code>&#39;Python&#39;</code></pre>
 <p>__getattribute__ 方法是获取类的属性时首先调用的方法，因此，必须注意陷入无限递归。在 __getattribute__ 方法的设计中不能执行属性的获取操作，这样会再次除法 __getattribute__ 方法的调用，使程序陷入无限递归。可以通过父类的 __getattribute__ 方法获取对应的属性。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GS3</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        self.company = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattribute__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        print(<span class="string">&quot;__getattribute__ 方法被调用&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> object.__getattribute__(self, name)</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gs3 = GS3(<span class="string">&quot;AppleGS3&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;*&quot;</span> * <span class="number">3</span>)</span><br><span class="line">gs3.company</span><br></pre></td></tr></table></figure>
-
 <pre><code>***
 __getattribute__ 方法被调用
 
 &#39;AppleGS3&#39;</code></pre>
-<h1 id="dict-、-dir-、dir"><a href="#dict-、-dir-、dir" class="headerlink" title="__dict__、__dir__、dir()"></a>__dict__、__dir__、dir()</h1><p>__dict__ 是对象的一个属性，并不是函数，它的作用是返回对象的所有属性名为 key，属性值为 value 的一个字典，注意，这里所说的所有属性是指数据对象本身的属性，例如类的 __dict__ 只包含类本身的属性和函数，而类实例也只包含类实例的属性。这一点与 dir() 函数不同，dir() 将会返回一个列表，列表中包含对象所有有关的属性名。也就是说，__dict__ 是 dir() 的子集。而 dir() 实际上调用的是 __dir__ 方法。</p>
+<h1 id="dict____dir__dir">__dict__、__dir__、dir()</h1>
+<p>__dict__ 是对象的一个属性，并不是函数，它的作用是返回对象的所有属性名为 key，属性值为 value 的一个字典，注意，这里所说的所有属性是指数据对象本身的属性，例如类的 __dict__ 只包含类本身的属性和函数，而类实例也只包含类实例的属性。这一点与 dir() 函数不同，dir() 将会返回一个列表，列表中包含对象所有有关的属性名。也就是说，__dict__ 是 dir() 的子集。而 dir() 实际上调用的是 __dir__ 方法。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DD</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        self.company = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">func</span>(<span class="params">self</span>):</span></span><br><span class="line">        print(<span class="string">&quot;func 方法被调用&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd = DD(<span class="string">&quot;AppleDD&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd.__dict__</span><br></pre></td></tr></table></figure>
-
-
 <pre><code>&#123;&#39;company&#39;: &#39;AppleDD&#39;&#125;</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DD.__dict__</span><br></pre></td></tr></table></figure>
-
-
 <pre><code>mappingproxy(&#123;&#39;__module__&#39;: &#39;__main__&#39;,
               &#39;__init__&#39;: &lt;function __main__.DD.__init__(self, name)&gt;,
               &#39;func&#39;: &lt;function __main__.DD.func(self)&gt;,
@@ -597,8 +451,6 @@ __getattribute__ 方法被调用
               &#39;__weakref__&#39;: &lt;attribute &#39;__weakref__&#39; of &#39;DD&#39; objects&gt;,
               &#39;__doc__&#39;: None&#125;)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dir(dd)</span><br></pre></td></tr></table></figure>
-
-
 <pre><code>[&#39;__class__&#39;,
  &#39;__delattr__&#39;,
  &#39;__dict__&#39;,
@@ -628,10 +480,6 @@ __getattribute__ 方法被调用
  &#39;company&#39;,
  &#39;func&#39;]</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c.__dir__()</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>[&#39;__repr__&#39;,
  &#39;__getattribute__&#39;,
  &#39;__iter__&#39;,
@@ -667,8 +515,10 @@ __getattribute__ 方法被调用
  &#39;__sizeof__&#39;,
  &#39;__dir__&#39;,
  &#39;__class__&#39;]</code></pre>
-<h1 id="魔法函数一览"><a href="#魔法函数一览" class="headerlink" title="魔法函数一览"></a>魔法函数一览</h1><p><img data-src="https://pic4.zhimg.com/80/v2-82a512ae404403ff00ed790d8f2569f7_720w.jpg"></p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<h1 id="魔法函数一览">魔法函数一览</h1>
+<p><img data-src="https://pic4.zhimg.com/80/v2-82a512ae404403ff00ed790d8f2569f7_720w.jpg" /></p>
+<h1 id="参考文献">参考文献</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bigberg/p/7181973.html">python析构函数</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/osyi8uidzioy2934uzce">关于使用 Python 析构函数的正确姿势</a></li>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/344951719">Python：实例讲解Python中的魔法函数（高级语法）</a></li>
@@ -766,14 +616,14 @@ __getattribute__ 方法被调用
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

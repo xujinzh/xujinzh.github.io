@@ -308,19 +308,13 @@
     <div class="post-body" itemprop="articleBody">
         <p>WSL 是 Windows10 Linux 子系统，它可以让Windows10用户无需安装虚拟机就可以使用Linux系统，非常的方便。但是，默认WSL不开启sshd服务，因此，会降低使用的便捷性，这里给出如何开启该服务，以及如何设置开机自启动其他服务，如 frp 等</p>
 <a id="more"></a>
-
-<ol>
-<li><p>在 Windows10 上，使用 <strong>windows + r</strong> 键，调出运行，输入 <strong>shell:startup</strong> 进入开机启动项文件夹</p>
-</li>
-<li><p>新建文件：<strong>wsl.vbs</strong>，名字自定义，但必须使用 vbs 作为扩展名</p>
-</li>
+<ol type="1">
+<li><p>在 Windows10 上，使用 <strong>windows + r</strong> 键，调出运行，输入 <strong>shell:startup</strong> 进入开机启动项文件夹</p></li>
+<li><p>新建文件：<strong>wsl.vbs</strong>，名字自定义，但必须使用 vbs 作为扩展名</p></li>
 <li><p>添加如下内容：（可以使用 notepad++ 打开）</p>
-<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Set</span> ws = <span class="built_in">CreateObject</span>(<span class="string">&quot;Wscript.Shell&quot;</span>)</span><br><span class="line">ws.run <span class="string">&quot;wsl -d Ubuntu-18.04 -u root /etc/init.d/ssh start&quot;</span>, vbhide</span><br><span class="line">ws.run <span class="string">&quot;wsl -d Ubuntu-18.04 -u root ~jinzhongxu/.frp.local/frpc -c ~jinzhongxu/.frp.local/frpc.ini&quot;</span>, vbhide</span><br><span class="line">ws.run <span class="string">&quot;wsl -d Ubuntu-18.04 -u root /etc/init.d/zabbix-agent start&quot;</span>, vbhide</span><br><span class="line">ws.run <span class="string">&quot;wsl -d Ubuntu-18.04 -u root cd ~jinzhongxu/.jan &amp;&amp; ./jan&quot;</span>, vbhide</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>其中的 “Ubuntu-18.04” 为默认的 WSL 名称，可以使用 cmd 命令: </p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wsl <span class="literal">-l</span></span><br><span class="line">// 结果如下：</span><br><span class="line">适用于 Linux 的 Windows 子系统:</span><br><span class="line">Ubuntu<span class="literal">-18</span>.<span class="number">04</span> (默认)</span><br></pre></td></tr></table></figure>
-
-</li>
+<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Set</span> ws = <span class="built_in">CreateObject</span>(<span class="string">&quot;Wscript.Shell&quot;</span>)</span><br><span class="line">ws.run <span class="string">&quot;wsl -d Ubuntu-18.04 -u root /etc/init.d/ssh start&quot;</span>, vbhide</span><br><span class="line">ws.run <span class="string">&quot;wsl -d Ubuntu-18.04 -u root ~jinzhongxu/.frp.local/frpc -c ~jinzhongxu/.frp.local/frpc.ini&quot;</span>, vbhide</span><br><span class="line">ws.run <span class="string">&quot;wsl -d Ubuntu-18.04 -u root /etc/init.d/zabbix-agent start&quot;</span>, vbhide</span><br><span class="line">ws.run <span class="string">&quot;wsl -d Ubuntu-18.04 -u root cd ~jinzhongxu/.jan &amp;&amp; ./jan&quot;</span>, vbhide</span><br></pre></td></tr></table></figure></li>
+<li><p>其中的 "Ubuntu-18.04" 为默认的 WSL 名称，可以使用 cmd 命令:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wsl <span class="literal">-l</span></span><br><span class="line">// 结果如下：</span><br><span class="line">适用于 Linux 的 Windows 子系统:</span><br><span class="line">Ubuntu<span class="literal">-18</span>.<span class="number">04</span> (默认)</span><br></pre></td></tr></table></figure></li>
 </ol>
 <p>扩展内容：可以在cmd中直接输入 <strong>wsl</strong> 进入Linux子系统shell</p>
 
@@ -416,14 +410,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

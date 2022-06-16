@@ -313,20 +313,18 @@
     <div class="post-body" itemprop="articleBody">
         <p>Python 代码能够以多种形式运行，如在 JupyterLab 中交互式方式、在 PyCharm 中以工程代码形式运行。有时，我们还需要在终端或CMD 以命令行的形式运行。这些运行方式都能够实现 Python 代码的运行。对于需要自定义参数的代码，在 JupyterLab 中我们可以把参数写入单元格内，在 PyCharm 中我们可以将参数写入配置文件内，那么在终端或CMD运行 Python 代码时，如何传入参数呢，下面介绍两种方法。</p>
 <a id="more"></a>
-
-<h1 id="利用-sys-包"><a href="#利用-sys-包" class="headerlink" title="利用 sys 包"></a>利用 sys 包</h1><p>编写名为 <code>shellSysArgv.py</code> 的模块</p>
+<h1 id="利用-sys-包">利用 sys 包</h1>
+<p>编写名为 <code>shellSysArgv.py</code> 的模块</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试命令行运行 python 代码时传参数</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>(<span class="params">x, y</span>):</span></span><br><span class="line">    print(<span class="string">f&quot;x=<span class="subst">&#123;x&#125;</span>, y=<span class="subst">&#123;y&#125;</span>&quot;</span>)</span><br><span class="line">    print(<span class="string">&quot;done!&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    x = sys.argv[<span class="number">1</span>]</span><br><span class="line">    y = sys.argv[<span class="number">2</span>]</span><br><span class="line">    main(x, y)</span><br></pre></td></tr></table></figure>
-
 <p>在 shell 中调用</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ python shellSysArgv.py 1 2        </span><br><span class="line">x=1, y=2</span><br><span class="line"><span class="keyword">done</span>!</span><br></pre></td></tr></table></figure>
-
-<h1 id="利用-argparse-包"><a href="#利用-argparse-包" class="headerlink" title="利用 argparse 包"></a>利用 argparse 包</h1><p>编写名为 <code>shellArgParse.py</code> 的模块</p>
+<h1 id="利用-argparse-包">利用 argparse 包</h1>
+<p>编写名为 <code>shellArgParse.py</code> 的模块</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试命令行运行 python 代码时传参数，同时对参数进行限制</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>(<span class="params">x_data, y_data</span>):</span></span><br><span class="line">    print(<span class="string">f&quot;x=<span class="subst">&#123;x_data&#125;</span>, y=<span class="subst">&#123;y_data&#125;</span>&quot;</span>)</span><br><span class="line">    print(<span class="string">&quot;done!&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    ap = argparse.ArgumentParser()</span><br><span class="line">    ap.add_argument(<span class="string">&#x27;-x&#x27;</span>, <span class="string">&#x27;--x_data&#x27;</span>, required=<span class="literal">True</span>, type=str, default=<span class="string">&#x27;1&#x27;</span>, help=<span class="string">&#x27;x axis&#x27;</span>)</span><br><span class="line">    ap.add_argument(<span class="string">&#x27;-y&#x27;</span>, <span class="string">&#x27;--y_data&#x27;</span>, required=<span class="literal">True</span>, type=str, default=<span class="string">&#x27;2&#x27;</span>, help=<span class="string">&#x27;y axis&#x27;</span>)</span><br><span class="line">    args = vars(ap.parse_args())</span><br><span class="line">    </span><br><span class="line">    x_data = args[<span class="string">&#x27;x_data&#x27;</span>]</span><br><span class="line">    y_data = args[<span class="string">&#x27;y_data&#x27;</span>]</span><br><span class="line">    main(x_data, y_data)</span><br></pre></td></tr></table></figure>
-
 <p>在 shell 中调用</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ python shellArgParse.py -x=1 -y=2</span><br><span class="line">x=1, y=2</span><br><span class="line"><span class="keyword">done</span>!</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<h1 id="参考链接">参考链接</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_35653315/article/details/72886718">命令行运行Python脚本时传入参数的三种方式</a></li>
 </ol>
 
@@ -422,14 +420,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

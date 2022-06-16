@@ -152,7 +152,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#nvidia-drivers"><span class="nav-number">1.</span> <span class="nav-text">nvidia drivers</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cuda-toolkit"><span class="nav-number">2.</span> <span class="nav-text">cuda toolkit</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cudnn"><span class="nav-number">3.</span> <span class="nav-text">cudnn</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8E%AB%E5%90%8D-nvidia-smi-%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">莫名 nvidia-smi 无法使用的解决方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BB%BA%E8%AE%AE%E5%8F%82%E8%80%83%E5%AE%98%E7%BD%91%E5%AE%89%E8%A3%85"><span class="nav-number">5.</span> <span class="nav-text">建议参考官网安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NVIDIA-CUDA-Installation-Guide-for-Linux"><span class="nav-number">5.1.</span> <span class="nav-text">NVIDIA CUDA Installation Guide for Linux</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#nvidia-drivers"><span class="nav-number">1.</span> <span class="nav-text">nvidia drivers</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cuda-toolkit"><span class="nav-number">2.</span> <span class="nav-text">cuda toolkit</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cudnn"><span class="nav-number">3.</span> <span class="nav-text">cudnn</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8E%AB%E5%90%8D-nvidia-smi-%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">莫名 nvidia-smi 无法使用的解决方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BB%BA%E8%AE%AE%E5%8F%82%E8%80%83%E5%AE%98%E7%BD%91%E5%AE%89%E8%A3%85"><span class="nav-number">5.</span> <span class="nav-text">建议参考官网安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#nvidia-cuda-installation-guide-for-linux"><span class="nav-number">5.1.</span> <span class="nav-text">NVIDIA CUDA Installation Guide for Linux</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -319,70 +319,55 @@
     <div class="post-body" itemprop="articleBody">
         <p>本篇介绍如何安装 nvidia drivers（GPU显卡驱动），cuda toolkit（GPU 通用并行计算架构） 和 cudnn（深度学习模型专用库），以 ubuntu18.04 为例，下载的软件选择 runfile(local) 版本。</p>
 <a id="more"></a>
-
-<h1 id="nvidia-drivers"><a href="#nvidia-drivers" class="headerlink" title="nvidia drivers"></a>nvidia drivers</h1><p>该模块就是安装显卡驱动。</p>
-<p><a target="_blank" rel="noopener" href="https://www.nvidia.com/content/DriverDownload-March2009/confirmation.php?url=/tesla/440.118.02/NVIDIA-Linux-x86_64-440.118.02.run&lang=us&type=Tesla">ubuntu18.04-nvidia drivers 10.2</a></p>
-<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/nvidia-driver.png"></p>
+<h1 id="nvidia-drivers">nvidia drivers</h1>
+<p>该模块就是安装显卡驱动。</p>
+<p><a target="_blank" rel="noopener" href="https://www.nvidia.com/content/DriverDownload-March2009/confirmation.php?url=/tesla/440.118.02/NVIDIA-Linux-x86_64-440.118.02.run&amp;lang=us&amp;type=Tesla">ubuntu18.04-nvidia drivers 10.2</a></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/nvidia-driver.png" /></p>
 <p><font size=3 color=red><strong>其实该步骤安装可以省略，在安装 CUDA-TOOLKIT 时可同时选择安装驱动 NVIDIA-DRIVERS</strong> </font></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装前需退出 X-SERVER</span></span><br><span class="line">sudo su</span><br><span class="line">sudo init 3</span><br><span class="line">sudo sh NVIDIA-Linux-x86_64-440.118.02.run</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当遇到安装失败时，可能是因为头文件缺少，运行下面代码即可</span></span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install linux-headers-$(uname -r)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看安装是否成功</span></span><br><span class="line">nvidia-smi</span><br><span class="line"><span class="comment"># nvidia-smi 全称是 NVIDIA System Management Interface，</span></span><br><span class="line"><span class="comment"># 基于 NVIDIA Management Library(NVML) 构建的命令行实用工具，</span></span><br><span class="line"><span class="comment"># 旨在帮助管理和监控 NVIDIA GPU 设备。</span></span><br></pre></td></tr></table></figure>
-
 <p>还有一种方法是直接使用系统命令检测合适的 GPU 显卡驱动版本，安装最适合的驱动版本</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更新系统</span></span><br><span class="line">sudo apt update </span><br><span class="line">sudo apt upgrade -y</span><br><span class="line"><span class="comment"># 检测</span></span><br><span class="line">nvidia-detector</span><br><span class="line"><span class="comment"># 图形界面安装</span></span><br><span class="line">打开 “Software and Updates”，安装相应驱动</span><br><span class="line"><span class="comment"># 或者命令行安装</span></span><br><span class="line">sudo apt install nvidia-driver-440</span><br><span class="line"><span class="comment"># 重启系统，使驱动生效</span></span><br><span class="line">sudo shutdown -r now</span><br></pre></td></tr></table></figure>
-
 <p>卸载驱动</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get remove --purge <span class="string">&#x27;^nvidia-.*&#x27;</span></span><br><span class="line">sudo apt autoremove</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="cuda-toolkit"><a href="#cuda-toolkit" class="headerlink" title="cuda toolkit"></a>cuda toolkit</h1><p>cuda (Compute Unified Device Architecture) 模块为并行计算的加速包。CUDA™是一种由NVIDIA推出的通用并行计算架构，该架构使GPU 能够解决复杂的计算问题。按照<a href="https://link.zhihu.com/?target=https://blogs.nvidia.com/blog/2012/09/10/what-is-cuda-2/">官方</a>的说法是，<strong>CUDA是一个并行计算平台和编程模型，能够使得使用GPU进行通用计算变得简单和优雅</strong>。</p>
+<h1 id="cuda-toolkit">cuda toolkit</h1>
+<p>cuda (Compute Unified Device Architecture) 模块为并行计算的加速包。CUDA™是一种由NVIDIA推出的通用并行计算架构，该架构使GPU 能够解决复杂的计算问题。按照<a href="https://link.zhihu.com/?target=https%3A//blogs.nvidia.com/blog/2012/09/10/what-is-cuda-2/">官方</a>的说法是，<strong>CUDA是一个并行计算平台和编程模型，能够使得使用GPU进行通用计算变得简单和优雅</strong>。</p>
 <p><a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-toolkit-archive">CUDA Toolkit Archive</a></p>
-<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/cuda-toolkit.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/cuda-toolkit.png" /></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget https://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run</span><br><span class="line"></span><br><span class="line"><span class="comment"># 常规安装</span></span><br><span class="line">sudo sh cuda_10.2.89_440.33.01_linux.run</span><br><span class="line"></span><br><span class="line"><span class="comment"># 建议覆盖 (override) 安装，以免出错</span></span><br><span class="line">sudo sh cuda_10.2.89_440.33.01_linux.run --toolkit --silent --override</span><br></pre></td></tr></table></figure>
-
 <p>在安装过程中截取其中比较重要的几个选择：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Do you accept the previously <span class="built_in">read</span> EULA?</span><br><span class="line">accept/decline/quit: accept</span><br><span class="line"></span><br><span class="line">Install NVIDIA Accelerated Graphics Driver <span class="keyword">for</span> Linux-x86_64 460.81?</span><br><span class="line">(y)es/(n)o/(q)uit: n <span class="comment"># 如果在这之前已经安装好更高版本的显卡驱动就不需要再重复安装，</span></span><br><span class="line"><span class="comment"># 如果需要重复安装就选择 yes,此外还需要关闭图形界面。</span></span><br><span class="line"></span><br><span class="line">Install the CUDA 10.2 Toolkit?</span><br><span class="line">(y)es/(n)o/(q)uit: y</span><br><span class="line"></span><br><span class="line">Enter Toolkit Location</span><br><span class="line"> [ default is /usr/<span class="built_in">local</span>/cuda-10.2 ]: <span class="comment"># 一般选择默认即可，也可以选择安装在其他目录，</span></span><br><span class="line"> <span class="comment"># 在需要用的时候指向该目录或者使用软连接 link 到 /usr/local/cuda。</span></span><br><span class="line"></span><br><span class="line">/usr/<span class="built_in">local</span>/cuda-10.2 is not writable.</span><br><span class="line">Do you wish to run the installation with <span class="string">&#x27;sudo&#x27;</span>?</span><br><span class="line">(y)es/(n)o: y</span><br><span class="line"></span><br><span class="line">Please enter your password: </span><br><span class="line">Do you want to install a symbolic link at /usr/<span class="built_in">local</span>/cuda? <span class="comment"># 是否将安装目录通过软连接的方式 link</span></span><br><span class="line"><span class="comment"># 到 /usr/local/cuda，yes or no 都可以，取决于你是否使用 /usr/local/cuda 为默认的 cuda 目录。</span></span><br><span class="line">(y)es/(n)o/(q)uit: n</span><br><span class="line"></span><br><span class="line">Install the CUDA 10.2 Samples?</span><br><span class="line">(y)es/(n)o/(q)uit: n</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看安装是否成功</span></span><br><span class="line">nvcc -V</span><br><span class="line"><span class="comment"># nvcc其实就是CUDA的编译器, 类似于gcc就是c语言的编译器</span></span><br></pre></td></tr></table></figure>
-
 <p>卸载</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 最简单的方法</span></span><br><span class="line">sudo rm -rf /usr/<span class="built_in">local</span>/cuda-10.2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 高级方法</span></span><br><span class="line"><span class="comment"># Uninstall just nvidia-cuda-toolkit</span></span><br><span class="line">sudo apt-get remove nvidia-cuda-toolkit</span><br><span class="line"></span><br><span class="line"><span class="comment"># Uninstall nvidia-cuda-toolkit and it&#x27;s dependencies</span></span><br><span class="line">sudo apt-get remove --auto-remove nvidia-cuda-toolkit</span><br><span class="line"></span><br><span class="line"><span class="comment"># Purging config/data</span></span><br><span class="line">sudo apt-get purge nvidia-cuda-toolkit </span><br><span class="line"><span class="comment"># or </span></span><br><span class="line">sudo apt-get purge --auto-remove nvidia-cuda-toolkit</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="cudnn"><a href="#cudnn" class="headerlink" title="cudnn"></a>cudnn</h1><p>cudnn 模块其实就是一个专门为深度学习计算设计的软件库，里面提供了很多专门的计算函数，如卷积等。</p>
+<h1 id="cudnn">cudnn</h1>
+<p>cudnn 模块其实就是一个专门为深度学习计算设计的软件库，里面提供了很多专门的计算函数，如卷积等。</p>
 <p>cudnn 下载时需要登录，下载对应的版本：<a target="_blank" rel="noopener" href="https://developer.nvidia.com/rdp/cudnn-download">cudnn</a></p>
-<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/cudnn.jpeg"></p>
+<p><img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ml/cudnn.jpeg" /></p>
 <p>然后，参考官网 <a target="_blank" rel="noopener" href="https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#installlinux">NVIDIA CUDNN DOCUMENTATION</a> 安装</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf cudnn-x.x-linux-x64-v8.x.x.x.tgz</span><br><span class="line">sudo cp cuda/include/cudnn*.h /usr/<span class="built_in">local</span>/cuda/include </span><br><span class="line">sudo cp -P cuda/lib64/libcudnn* /usr/<span class="built_in">local</span>/cuda/lib64 </span><br><span class="line">sudo chmod a+r /usr/<span class="built_in">local</span>/cuda/include/cudnn*.h /usr/<span class="built_in">local</span>/cuda/lib64/libcudnn*</span><br></pre></td></tr></table></figure>
-
 <p>注意：</p>
-<ol>
+<ol type="1">
 <li><p>需要把 CUDA_HOME 添加到环境变量，一般CUDA_HOME=/usr/locdal/cuda-*/bin，我的配置如下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> CUDA_HOME=/usr/<span class="built_in">local</span>/cuda</span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=<span class="variable">$&#123;CUDA_HOME&#125;</span>/lib64:<span class="variable">$&#123;LD_LIBRARY_PATH:+:$&#123;LD_LIBRARY_PATH&#125;</span>&#125;</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$CUDA_HOME</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
-
-
-
-</li>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> CUDA_HOME=/usr/<span class="built_in">local</span>/cuda</span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=<span class="variable">$&#123;CUDA_HOME&#125;</span>/lib64:<span class="variable">$&#123;LD_LIBRARY_PATH:+:$&#123;LD_LIBRARY_PATH&#125;</span>&#125;</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$CUDA_HOME</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure></li>
+<li><p>所有都安装成功后，可以运行 <code>nvidia-smi</code> 和 <code>nvcc --version</code> 来检验是否完美安装</p></li>
 </ol>
-<ol start="2">
-<li>所有都安装成功后，可以运行 <code>nvidia-smi</code> 和 <code>nvcc --version</code> 来检验是否完美安装</li>
-</ol>
-<h1 id="莫名-nvidia-smi-无法使用的解决方法"><a href="#莫名-nvidia-smi-无法使用的解决方法" class="headerlink" title="莫名 nvidia-smi 无法使用的解决方法"></a>莫名 nvidia-smi 无法使用的解决方法</h1><p>在平常使用时，偶尔会出现命令 nvidia-smi 无法使用的情况，这种一般是 Linux 内核更新导致的，一种解决方法如下：</p>
+<h1 id="莫名-nvidia-smi-无法使用的解决方法">莫名 nvidia-smi 无法使用的解决方法</h1>
+<p>在平常使用时，偶尔会出现命令 nvidia-smi 无法使用的情况，这种一般是 Linux 内核更新导致的，一种解决方法如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装头文件</span></span><br><span class="line">sudo apt install linux-headers-$(uname -r)</span><br><span class="line"><span class="comment"># 查看当前安装的 nvidia 版本</span></span><br><span class="line">whereis nvidia</span><br><span class="line"><span class="comment"># 再次安装，如版本 440.33.01，请改成自己对于的版本号</span></span><br><span class="line">sudo dkms install -m nvidia -v 440.33.01</span><br></pre></td></tr></table></figure>
-
 <p>问题分析：这是由于 Ubuntu 自动更新内核版本导致的，可以使用如下命令关闭自动更新</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-mark hold linux-image-generic linux-headers-generic</span><br><span class="line">linux-image-generic <span class="built_in">set</span> on hold.</span><br><span class="line">linux-headers-generic <span class="built_in">set</span> on hold.</span><br></pre></td></tr></table></figure>
-
 <p>如果要重新启用内核更新，可以用如下命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-mark unhold linux-image-generic linux-headers-generic</span><br><span class="line">linux-image-generic was already not hold.</span><br><span class="line">Canceled hold on linux-headers-generic.</span><br></pre></td></tr></table></figure>
-
-<h1 id="建议参考官网安装"><a href="#建议参考官网安装" class="headerlink" title="建议参考官网安装"></a>建议参考官网安装</h1><h2 id="NVIDIA-CUDA-Installation-Guide-for-Linux"><a href="#NVIDIA-CUDA-Installation-Guide-for-Linux" class="headerlink" title="NVIDIA CUDA Installation Guide for Linux"></a><a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#abstract">NVIDIA CUDA Installation Guide for Linux</a></h2><p><a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#post-installation-actions">https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#post-installation-actions</a></p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<h1 id="建议参考官网安装">建议参考官网安装</h1>
+<h2 id="nvidia-cuda-installation-guide-for-linux"><a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#abstract">NVIDIA CUDA Installation Guide for Linux</a></h2>
+<p>https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#post-installation-actions</p>
+<h1 id="参考链接">参考链接</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://benpaodewoniu.github.io/2019/12/07/nvidia0/">gpu 的驱动，cuda，cudnn的关系</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/whenyd/p/7787447.html">Ubuntu下安装CUDA</a></li>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/91334380">显卡，显卡驱动,nvcc, cuda driver,cudatoolkit,cudnn到底是什么？</a></li>
 <li><a target="_blank" rel="noopener" href="https://itectec.com/ubuntu/ubuntu-removing-nvidia-cuda-toolkit-and-installing-new-one/">Ubuntu – Removing Nvidia CUDA Toolkit and installing new one</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/carle-09/p/11363020.html">Ubuntu系统—系统驱动丢失、Kernel内核卸载、禁止更新</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/carle-09/p/11363020.html">Ubuntu系统---系统驱动丢失、Kernel内核卸载、禁止更新</a></li>
 <li><a target="_blank" rel="noopener" href="https://lossyou.com/post/Ubuntu-cancel-auto-update">Ubuntu内核(更新和卸载内核、取消自动更新)</a></li>
 </ol>
 
@@ -480,14 +465,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

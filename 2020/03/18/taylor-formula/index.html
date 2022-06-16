@@ -22,12 +22,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Taylor’s Formula (泰勒公式) 本节为参考华东师范大学《数学分析 上册》，学习本书的心得以及重点知识点总结。  泰勒公式源于多项式的简单性，多项式逼近函数用于近似计算和理论分析； 在$x &#x3D; 0$处展开的泰勒公式又称为 Maclaurin(麦克劳林) 公式； 本节讨论了两种余项的泰勒公式，分别是用于定性分析的佩亚诺余项和用于定量分析的拉格朗日余项； 带有佩亚诺余项的泰勒公式多用于求">
+    <meta name="description" content="Taylor&#39;s Formula (泰勒公式) 本节为参考华东师范大学《数学分析 上册》，学习本书的心得以及重点知识点总结。  泰勒公式源于多项式的简单性，多项式逼近函数用于近似计算和理论分析； 在\(x &#x3D; 0\)处展开的泰勒公式又称为 Maclaurin(麦克劳林) 公式； 本节讨论了两种余项的泰勒公式，分别是用于定性分析的佩亚诺余项和用于定量分析的拉格朗日余项； 带有佩亚诺余项的泰勒公式多用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="泰勒公式">
 <meta property="og:url" content="https://xujinzh.github.io/2020/03/18/taylor-formula/index.html">
 <meta property="og:site_name" content="J. Xu">
-<meta property="og:description" content="Taylor’s Formula (泰勒公式) 本节为参考华东师范大学《数学分析 上册》，学习本书的心得以及重点知识点总结。  泰勒公式源于多项式的简单性，多项式逼近函数用于近似计算和理论分析； 在$x &#x3D; 0$处展开的泰勒公式又称为 Maclaurin(麦克劳林) 公式； 本节讨论了两种余项的泰勒公式，分别是用于定性分析的佩亚诺余项和用于定量分析的拉格朗日余项； 带有佩亚诺余项的泰勒公式多用于求">
+<meta property="og:description" content="Taylor&#39;s Formula (泰勒公式) 本节为参考华东师范大学《数学分析 上册》，学习本书的心得以及重点知识点总结。  泰勒公式源于多项式的简单性，多项式逼近函数用于近似计算和理论分析； 在\(x &#x3D; 0\)处展开的泰勒公式又称为 Maclaurin(麦克劳林) 公式； 本节讨论了两种余项的泰勒公式，分别是用于定性分析的佩亚诺余项和用于定量分析的拉格朗日余项； 带有佩亚诺余项的泰勒公式多用">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-03-18T14:58:51.000Z">
 <meta property="article:modified_time" content="2021-11-09T10:42:04.906Z">
@@ -293,7 +293,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>3.2k</span>
+      <span>3.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -311,63 +311,91 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>Taylor’s Formula (泰勒公式) 本节为参考华东师范大学《数学分析 上册》，学习本书的心得以及重点知识点总结。</p>
-<ol>
+        <p>Taylor's Formula (泰勒公式) 本节为参考华东师范大学《数学分析 上册》，学习本书的心得以及重点知识点总结。</p>
+<ol type="1">
 <li>泰勒公式源于多项式的简单性，多项式逼近函数用于近似计算和理论分析；</li>
-<li>在$x = 0$处展开的泰勒公式又称为 Maclaurin(麦克劳林) 公式；</li>
+<li>在<span class="math inline">\(x = 0\)</span>处展开的泰勒公式又称为 Maclaurin(麦克劳林) 公式；</li>
 <li>本节讨论了两种余项的泰勒公式，分别是用于定性分析的佩亚诺余项和用于定量分析的拉格朗日余项；</li>
 <li>带有佩亚诺余项的泰勒公式多用于求函数极限，一般先考虑等价无穷小，然后对于复杂函数考虑泰勒公式；</li>
 <li>利用泰勒公式可以近似计算无理数等的近似值。</li>
 </ol>
 <a id="more"></a>
-
-<h1 id="带有佩亚诺型余项的泰勒公式"><a href="#带有佩亚诺型余项的泰勒公式" class="headerlink" title="带有佩亚诺型余项的泰勒公式"></a>带有佩亚诺型余项的泰勒公式</h1><p><strong>定理6.9</strong> 若函数$f$在点$x_0$存在直至$n$阶导数，则有$f(x) = T_n(x) + o((x - x_0)^n)$，这里<br>$$<br>T_n(x) = f(x_0) + f^{\prime}(x_0)(x - x_0) + \frac{f^{(2)}(x_0)}{2!}(x - x_0)^2 + \cdots + \frac{f^{(n)}(x_0)}{n!}(x - x_0)^n.<br>$$<br>称为函数$f$在点$x_0$处的泰勒多项式，$T_n(x)$的各项系数$\frac{f^{(k)}(x_0)}{k!}\ (k = 1, 2, \cdots, n)$称为泰勒系数。具有性质<br>$$<br>f^{(k)}(x_0) = T^{(k)}_n(x_0), \ k = 0, 1, 2, \cdots, n.<br>$$</p>
-<p><strong>注意，这里只要求在一点$x_0$处$n$阶可导，所以，$n - 1$阶导函数后不能使用柯西中值定理</strong> </p>
-<p>$R_n(x) = f(x) - T_n(x)$称为泰勒公式的余项，形如$o((x - x_0)^n)$的余项称为佩亚诺（Peano）型余项，所以上面公式又称为带有佩亚诺型余项的泰勒公式。  </p>
-<p>称如下<br>$$<br>f(x) = f(0) + f^{\prime}(0)x + \frac{f^{\prime\prime}(0)}{2!} x^2 + \cdots + \frac{f^{(n)}(0)}{n!} x^n + o(x^n).<br>$$</p>
+<h1 id="带有佩亚诺型余项的泰勒公式">带有佩亚诺型余项的泰勒公式</h1>
+<p><strong>定理6.9</strong> 若函数<span class="math inline">\(f\)</span>在点<span class="math inline">\(x_0\)</span>存在直至<span class="math inline">\(n\)</span>阶导数，则有<span class="math inline">\(f(x) = T_n(x) + o((x - x_0)^n)\)</span>，这里 <span class="math display">\[
+T_n(x) = f(x_0) + f^{\prime}(x_0)(x - x_0) + \frac{f^{(2)}(x_0)}{2!}(x - x_0)^2 + \cdots + \frac{f^{(n)}(x_0)}{n!}(x - x_0)^n.
+\]</span> 称为函数<span class="math inline">\(f\)</span>在点<span class="math inline">\(x_0\)</span>处的泰勒多项式，<span class="math inline">\(T_n(x)\)</span>的各项系数<span class="math inline">\(\frac{f^{(k)}(x_0)}{k!}\ (k = 1, 2, \cdots, n)\)</span>称为泰勒系数。具有性质 <span class="math display">\[
+f^{(k)}(x_0) = T^{(k)}_n(x_0), \ k = 0, 1, 2, \cdots, n.
+\]</span></p>
+<p><strong>注意，这里只要求在一点<span class="math inline">\(x_0\)</span>处<span class="math inline">\(n\)</span>阶可导，所以，<span class="math inline">\(n - 1\)</span>阶导函数后不能使用柯西中值定理</strong></p>
+<p><span class="math inline">\(R_n(x) = f(x) - T_n(x)\)</span>称为泰勒公式的余项，形如<span class="math inline">\(o((x - x_0)^n)\)</span>的余项称为佩亚诺（Peano）型余项，所以上面公式又称为带有佩亚诺型余项的泰勒公式。</p>
+<p>称如下 <span class="math display">\[
+f(x) = f(0) + f^{\prime}(0)x + \frac{f^{\prime\prime}(0)}{2!} x^2 + \cdots + \frac{f^{(n)}(0)}{n!} x^n + o(x^n). 
+\]</span></p>
 <p>为（带有佩亚诺型余项的）麦克劳林（Maclaurin）公式。</p>
 <p><strong>下面列出一些常用的带有佩亚诺型余项的麦克劳林公式</strong>：</p>
-<ol>
-<li><p>$$<br>e^x = 1 + x + \frac{x^2}{2!} + \cdots + \frac{x^n}{n!} + o(x^n);<br>$$</p>
-</li>
-<li><p>$$<br>\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} + \cdots + (-1)^{m-1}\frac{x^{2m - 1}}{(2m - 1)!} + o(x^{2m});<br>$$</p>
-</li>
-<li><p>$$<br>\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} + \cdots + (-1)^m \frac{x^{2m}}{(2m)!} + o(x^{2m + 1});<br>$$</p>
-</li>
-<li><p>$$<br>\ln(1 + x) = x - \frac{x^2}{2} + \frac{x^3}{3} + \cdots + (-1)^{n-1}\frac{x^n}{n} + o(x^n);<br>$$</p>
-</li>
-<li><p>$$<br>(1 + x)^{\alpha} = 1 + \alpha x + \frac{\alpha(\alpha - 1)}{2!} x^2 + \frac{\alpha(\alpha - 1)\cdots(\alpha - n + 1)}{n!} x^n + o(x^n);<br>$$</p>
-</li>
-<li><p>$$<br>\frac{1}{1 - x} = 1 + x + x^2 + \cdots + x^n + o(x^n).<br>$$</p>
-</li>
+<ol type="1">
+<li><p><span class="math display">\[
+e^x = 1 + x + \frac{x^2}{2!} + \cdots + \frac{x^n}{n!} + o(x^n);
+\]</span></p></li>
+<li><p><span class="math display">\[
+\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} + \cdots + (-1)^{m-1}\frac{x^{2m - 1}}{(2m - 1)!} + o(x^{2m});
+\]</span></p></li>
+<li><p><span class="math display">\[
+\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} + \cdots + (-1)^m \frac{x^{2m}}{(2m)!} + o(x^{2m + 1});
+\]</span></p></li>
+<li><p><span class="math display">\[
+\ln(1 + x) = x - \frac{x^2}{2} + \frac{x^3}{3} + \cdots + (-1)^{n-1}\frac{x^n}{n} + o(x^n);
+\]</span></p></li>
+<li><p><span class="math display">\[
+(1 + x)^{\alpha} = 1 + \alpha x + \frac{\alpha(\alpha - 1)}{2!} x^2 + \frac{\alpha(\alpha - 1)\cdots(\alpha - n + 1)}{n!} x^n + o(x^n);
+\]</span></p></li>
+<li><p><span class="math display">\[
+\frac{1}{1 - x} = 1 + x + x^2 + \cdots + x^n + o(x^n).
+\]</span></p></li>
 </ol>
 <p><strong>记忆方法：</strong></p>
-<ol>
-<li>$e^x$ 各阶导数相同，因此$f^{\prime}(0) = f^{\prime\prime}(0) = \cdots = f^{(n)}(0) = e^0 = 1$，形式上最解决泰勒公式。</li>
-<li>$\sin x \sim x, \ x \to 0$，且为基函数，只能取奇数幂项。</li>
-<li>$\cos x \sim 1, x \to 0$，且为偶函数，只能取偶次幂项。</li>
-<li>$\frac{1}{1 - x}$为等比数列极限$\frac{a_1}{1 - q}$的特殊形式。</li>
-<li>$\ln(1 + x)$的一次导数为$\frac{1}{1 - (-x)}$，因此是导数展开的一次积分。另外，$\ln(1 + x) \sim x,\ x \to 0.$</li>
-<li>$(1 + x)^{\alpha}$可以参考$(1 + x)^n$的二项式展开，即每项为$C^i_n x^{i}$.</li>
+<ol type="1">
+<li><span class="math inline">\(e^x\)</span> 各阶导数相同，因此<span class="math inline">\(f^{\prime}(0) = f^{\prime\prime}(0) = \cdots = f^{(n)}(0) = e^0 = 1\)</span>，形式上最解决泰勒公式。</li>
+<li><span class="math inline">\(\sin x \sim x, \ x \to 0\)</span>，且为基函数，只能取奇数幂项。</li>
+<li><span class="math inline">\(\cos x \sim 1, x \to 0\)</span>，且为偶函数，只能取偶次幂项。</li>
+<li><span class="math inline">\(\frac{1}{1 - x}\)</span>为等比数列极限<span class="math inline">\(\frac{a_1}{1 - q}\)</span>的特殊形式。</li>
+<li><span class="math inline">\(\ln(1 + x)\)</span>的一次导数为<span class="math inline">\(\frac{1}{1 - (-x)}\)</span>，因此是导数展开的一次积分。另外，<span class="math inline">\(\ln(1 + x) \sim x,\ x \to 0.\)</span></li>
+<li><span class="math inline">\((1 + x)^{\alpha}\)</span>可以参考<span class="math inline">\((1 + x)^n\)</span>的二项式展开，即每项为<span class="math inline">\(C^i_n x^{i}\)</span>.</li>
 </ol>
-<h1 id="带有拉格朗日型余项的泰勒公式"><a href="#带有拉格朗日型余项的泰勒公式" class="headerlink" title="带有拉格朗日型余项的泰勒公式"></a>带有拉格朗日型余项的泰勒公式</h1><p>拉格朗日型余项是一种定量形式的余项，便于对逼近误差进行具体的计算或估计。</p>
-<p><strong>定理 6.10</strong> &emsp; (泰勒定理) &emsp; 若函数$f$在$[a, b]$上存在直至$n$阶的连续导函数，在$(a, b)$上存在$(n + 1)$阶导函数，则对任意给定的$x, x_0 \in [a, b]$，至少存在一点$\xi \in (a, b)$，使得<br>$$<br>f(x) = f(x_0) + f^{\prime}(x_0)(x - x_0) + \frac{f^{\prime\prime}(x_0)}{2!}(x - x_0)^2 + \cdots + \frac{f^{(n)}(x_0)}{n!}(x - x_0)^n + \frac{f^{(n + 1)}(\xi)}{(n + 1)!}(x - x_0)^{n + 1}.<br>$$<br><font color='dd0000'>注意：这里是在区间上存在$n$阶连续导函数，可以使用柯西中值定理</font>。  </p>
-<p>上面公式称为带有拉格朗日型余项的泰勒公式，当取$x_0 = 0$时，称下式<br>$$<br>f(x) = f(0) + f^{\prime}(0)x + \frac{f^{\prime\prime}(0)}{2!}x^2 + \cdots + \frac{f^{(n)}(0)}{n!}x^n + \frac{f^{(n + 1)}(\theta x)}{(n + 1)!}x^{n + 1} \\<br>(0 &lt; \theta &lt; 1)<br>$$</p>
-<p>为带有拉格朗日型余项的麦克劳林公式。  </p>
+<h1 id="带有拉格朗日型余项的泰勒公式">带有拉格朗日型余项的泰勒公式</h1>
+<p>拉格朗日型余项是一种定量形式的余项，便于对逼近误差进行具体的计算或估计。</p>
+<p><strong>定理 6.10</strong>   (泰勒定理)   若函数<span class="math inline">\(f\)</span>在<span class="math inline">\([a, b]\)</span>上存在直至<span class="math inline">\(n\)</span>阶的连续导函数，在<span class="math inline">\((a, b)\)</span>上存在<span class="math inline">\((n + 1)\)</span>阶导函数，则对任意给定的<span class="math inline">\(x, x_0 \in [a, b]\)</span>，至少存在一点<span class="math inline">\(\xi \in (a, b)\)</span>，使得 <span class="math display">\[
+f(x) = f(x_0) + f^{\prime}(x_0)(x - x_0) + \frac{f^{\prime\prime}(x_0)}{2!}(x - x_0)^2 + \cdots + \frac{f^{(n)}(x_0)}{n!}(x - x_0)^n + \frac{f^{(n + 1)}(\xi)}{(n + 1)!}(x - x_0)^{n + 1}.
+\]</span> <font color='dd0000'>注意：这里是在区间上存在<span class="math inline">\(n\)</span>阶连续导函数，可以使用柯西中值定理</font>。</p>
+<p>上面公式称为带有拉格朗日型余项的泰勒公式，当取<span class="math inline">\(x_0 = 0\)</span>时，称下式 <span class="math display">\[
+f(x) = f(0) + f^{\prime}(0)x + \frac{f^{\prime\prime}(0)}{2!}x^2 + \cdots + \frac{f^{(n)}(0)}{n!}x^n + \frac{f^{(n + 1)}(\theta x)}{(n + 1)!}x^{n + 1} \\\\
+(0 &lt; \theta &lt; 1)
+\]</span></p>
+<p>为带有拉格朗日型余项的麦克劳林公式。</p>
 <p><strong>下面列出一些常用的带有拉格朗日型余项的麦克劳林公式：</strong></p>
-<ol>
-<li><p>$$<br>e^x = 1 + x + \frac{x^2}{2!} + \cdots + \frac{x^n}{n!} + \frac{e^{\theta x}}{(n + 1)!}x^{n + 1}, \ 0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).<br>$$</p>
-</li>
-<li><p>$$<br>\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} + \cdots + (-1)^{m - 1}\frac{x^{2m - 1}}{(2m - 1)!} + (-1)^m \frac{\cos \theta x}{(2m + 1)!}x^{2m + 1}, \\<br>0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).<br>$$</p>
-</li>
-<li><p>$$<br>\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} + \cdots + (-1)^m \frac{x^{2m}}{(2m)!} + (-1)^{m + 1}\frac{\cos \theta x}{(2m + 2)!}x^{2m + 2}, \\<br>0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).<br>$$</p>
-</li>
-<li><p>$$<br>\ln(1 + x) = x - \frac{x^2}{2} + \frac{x^3}{3} + \cdots + (-1)^{n - 1}\frac{x^n}{n} + (-1)^n \frac{x^{n + 1}}{(n + 1)(1 + \theta x)^{n + 1}}, \\<br>0 &lt; \theta &lt; 1, \ x &gt; -1.<br>$$</p>
-</li>
-<li><p>$$<br>(1 + x)^{\alpha} = 1 + \alpha x + \frac{\alpha(\alpha - 1)}{2!}x^2 + \cdots + \frac{\alpha(\alpha - 1) \cdots (\alpha - n + 1)}{n!}x^n + \\<br>\frac{\alpha(\alpha - 1)\cdots(\alpha - n)}{(n + 1)!}(1 + \theta x)^{\alpha - n - 1}x^{n + 1}, \  0 &lt; \theta &lt; 1, \ x &gt; -1.<br>$$</p>
-</li>
-<li><p>$$<br>\frac{1}{1 - x} = 1 + x + x^2 + \cdots + x^n + \frac{x^{n + 1}}{(1 - \theta x)^{n + 2}}, \ 0 &lt; \theta &lt; 1, \ |x| &lt; 1.<br>$$</p>
-</li>
+<ol type="1">
+<li><p><span class="math display">\[
+e^x = 1 + x + \frac{x^2}{2!} + \cdots + \frac{x^n}{n!} + \frac{e^{\theta x}}{(n + 1)!}x^{n + 1}, \ 0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).
+\]</span></p></li>
+<li><p><span class="math display">\[
+\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} + \cdots + (-1)^{m - 1}\frac{x^{2m - 1}}{(2m - 1)!} + (-1)^m \frac{\cos \theta x}{(2m + 1)!}x^{2m + 1}, \\\\
+0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).
+\]</span></p></li>
+<li><p><span class="math display">\[
+\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} + \cdots + (-1)^m \frac{x^{2m}}{(2m)!} + (-1)^{m + 1}\frac{\cos \theta x}{(2m + 2)!}x^{2m + 2}, \\\\
+0 &lt; \theta &lt; 1, \ x \in (-\infty, +\infty).
+\]</span></p></li>
+<li><p><span class="math display">\[
+\ln(1 + x) = x - \frac{x^2}{2} + \frac{x^3}{3} + \cdots + (-1)^{n - 1}\frac{x^n}{n} + (-1)^n \frac{x^{n + 1}}{(n + 1)(1 + \theta x)^{n + 1}}, \\\\
+0 &lt; \theta &lt; 1, \ x &gt; -1.
+\]</span></p></li>
+<li><p><span class="math display">\[
+(1 + x)^{\alpha} = 1 + \alpha x + \frac{\alpha(\alpha - 1)}{2!}x^2 + \cdots + \frac{\alpha(\alpha - 1) \cdots (\alpha - n + 1)}{n!}x^n + \\\\
+\frac{\alpha(\alpha - 1)\cdots(\alpha - n)}{(n + 1)!}(1 + \theta x)^{\alpha - n - 1}x^{n + 1}, \  0 &lt; \theta &lt; 1, \ x &gt; -1.
+\]</span></p></li>
+<li><p><span class="math display">\[
+\frac{1}{1 - x} = 1 + x + x^2 + \cdots + x^n + \frac{x^{n + 1}}{(1 - \theta x)^{n + 2}}, \ 0 &lt; \theta &lt; 1, \ |x| &lt; 1.
+\]</span></p></li>
 </ol>
 
     </div>
@@ -462,14 +490,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

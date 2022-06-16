@@ -306,232 +306,242 @@
     <div class="post-body" itemprop="articleBody">
         <p>在进行网站开发中，总会遇到状态码解读问题，本篇梳理各种状态码的意义。</p>
 <a id="more"></a>
-
-<h1 id="http-状态码分类"><a href="#http-状态码分类" class="headerlink" title="http 状态码分类"></a>http 状态码分类</h1><table>
+<h1 id="http-状态码分类">http 状态码分类</h1>
+<table>
 <thead>
-<tr>
+<tr class="header">
 <th><strong>分类</strong></th>
 <th><strong>分类描述</strong></th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr class="odd">
 <td>1**</td>
 <td>请求已被接受，需要继续处理</td>
 </tr>
-<tr>
+<tr class="even">
 <td>2**</td>
 <td>成功，操作被成功接收并处理</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>3**</td>
 <td>重定向，需要进一步的操作以完成请求</td>
 </tr>
-<tr>
+<tr class="even">
 <td>4**</td>
 <td>客户端错误，请求包含语法错误或无法完成请求</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>5**</td>
 <td>服务器错误，服务器在处理请求的过程中发生了错误</td>
 </tr>
-</tbody></table>
-<h1 id="http-状态码意义"><a href="#http-状态码意义" class="headerlink" title="http 状态码意义"></a>http 状态码意义</h1><table>
+</tbody>
+</table>
+<h1 id="http-状态码意义">http 状态码意义</h1>
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 85%" />
+</colgroup>
 <thead>
-<tr>
+<tr class="header">
 <th><strong>状态码</strong></th>
 <th>状态码意义</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr class="odd">
 <td>100</td>
 <td>这个临时响应是用来通知客户端它的部分请求已经被服务器接收，且仍未被拒绝。客户端应当继续发送请求的剩余部分，或者如果请求已经完成，忽略这个响应。</td>
 </tr>
-<tr>
+<tr class="even">
 <td>101</td>
 <td>服务器根据客户端的请求切换协议。只能切换到更高级的协议，例如，切换到HTTP的新版本协议。</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>102</td>
 <td>由WebDAV（RFC 2518）扩展的状态码，代表处理将被继续执行。</td>
 </tr>
-<tr>
+<tr class="even">
 <td>200</td>
 <td>请求成功。一般用于GET与POST请求，出现此状态码是表示正常状态。</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>201</td>
 <td>已创建。成功请求并创建了新的资源</td>
 </tr>
-<tr>
+<tr class="even">
 <td>202</td>
 <td>已接受。已经接受请求，但未处理完成</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>203</td>
 <td>服务器已成功处理了请求，但返回的实体头部元信息不是在原始服务器上有效的确定集合，而是来自本地或者第三方的拷贝。当前的信息可能是原始版本的子集或者超集。</td>
 </tr>
-<tr>
+<tr class="even">
 <td>204</td>
 <td>无内容。服务器成功处理，但未返回内容。在未更新网页的情况下，可确保浏览器继续显示当前文档</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>205</td>
 <td>重置内容。服务器处理成功，用户终端（例如：浏览器）应重置文档视图。可通过此返回码清除浏览器的表单域，以便用户能够轻松地开始另一次输入。</td>
 </tr>
-<tr>
+<tr class="even">
 <td>206</td>
 <td>部分内容。服务器成功处理了部分GET请求，类似于迅雷这类的 HTTP下载工具是使用此类响应实现断点续传或者将一个大文档分解为多个下载段同时下载。</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>300</td>
 <td>多种选择。请求的资源可包括多个位置，相应可返回一个资源特征与地址的列表用于用户终端（例如：浏览器）选择。</td>
 </tr>
-<tr>
+<tr class="even">
 <td>301</td>
 <td>永久移动。请求的资源已被永久的移动到新URI，返回信息会包括新的URI，浏览器会自动定向到新URI。今后任何新的请求都应使用新的URI代替。</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>302</td>
 <td>临时移动。与301类似。但资源只是临时被移动。客户端应继续使用原有URI。</td>
 </tr>
-<tr>
+<tr class="even">
 <td>303</td>
 <td>查看其它地址。对应当前请求的响应可以在另一个 URI 上被找到，而且客户端应当采用 GET 的方式访问那个资源。这个方法的存在主要是为了允许由脚本激活的POST请求输出重定向到一个新的资源。这个新的 URI 不是原始资源的替代引用。</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>304</td>
 <td>未修改。所请求的资源未修改，服务器返回此状态码时，不会返回任何资源。客户端通常会缓存访问过的资源，通过提供一个头信息指出客户端希望只返回在指定日期之后修改的资源。</td>
 </tr>
-<tr>
+<tr class="even">
 <td>305</td>
 <td>使用代理。所请求的资源必须通过代理访问。</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>306</td>
 <td>在最新版的规范中，306状态码已经不再被使用。</td>
 </tr>
-<tr>
+<tr class="even">
 <td>307</td>
 <td>临时重定向。与302类似。使用GET请求重定向。</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>400</td>
 <td>客户端请求的语法错误，服务器无法理解，请求参数有误。</td>
 </tr>
-<tr>
+<tr class="even">
 <td>401</td>
 <td>请求要求用户的身份认证</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>402</td>
 <td>该状态码是为了将来可能的需求而预留的。</td>
 </tr>
-<tr>
+<tr class="even">
 <td>403</td>
 <td>服务器理解请求客户端的请求，但是拒绝执行此请求</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>404</td>
-<td>服务器无法根据客户端的请求找到资源（网页）。通过此代码，网站设计人员可设置”您所请求的资源无法找到”的个性页面</td>
+<td>服务器无法根据客户端的请求找到资源（网页）。通过此代码，网站设计人员可设置"您所请求的资源无法找到"的个性页面</td>
 </tr>
-<tr>
+<tr class="even">
 <td>405</td>
 <td>客户端请求中的方法被禁止</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>406</td>
 <td>请求的资源的内容特性无法满足请求头中的条件，因而无法生成响应实体。</td>
 </tr>
-<tr>
+<tr class="even">
 <td>407</td>
 <td>请求要求代理的身份认证，与401类似，但请求者应当使用代理进行授权</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>408</td>
 <td>服务器等待客户端发送的请求时间过长，超时</td>
 </tr>
-<tr>
+<tr class="even">
 <td>409</td>
 <td>服务器完成客户端的PUT请求是可能返回此代码，服务器处理请求时发生了冲突</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>410</td>
 <td>客户端请求的资源已经不存在。410不同于404，如果资源以前有现在被永久删除了可使用410代码，网站设计人员可通过301代码指定资源的新位置</td>
 </tr>
-<tr>
+<tr class="even">
 <td>411</td>
 <td>服务器无法处理客户端发送的不带Content-Length的请求信息</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>412</td>
 <td>服务器在验证在请求的头字段中给出先决条件时，先决条件错误</td>
 </tr>
-<tr>
+<tr class="even">
 <td>413</td>
 <td>由于请求的实体过大，服务器无法处理，因此拒绝请求。为防止客户端的连续请求，服务器可能会关闭连接。如果只是服务器暂时无法处理，则会包含一个Retry-After的响应信息</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>414</td>
 <td>请求的URI过长（URI通常为网址），服务器无法处理</td>
 </tr>
-<tr>
+<tr class="even">
 <td>415</td>
 <td>服务器无法处理请求附带的媒体格式</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>416</td>
 <td>客户端请求的范围无效</td>
 </tr>
-<tr>
+<tr class="even">
 <td>417</td>
 <td>服务器无法满足Expect的请求头信息</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>421</td>
 <td>从当前客户端所在的IP地址到服务器的连接数超过了服务器许可的最大范围。</td>
 </tr>
-<tr>
+<tr class="even">
 <td>422</td>
 <td>请求格式正确，但是由于含有语义错误，无法响应。</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>423</td>
 <td>当前资源被锁定。</td>
 </tr>
-<tr>
+<tr class="even">
 <td>424</td>
 <td>由于之前的某个请求发生的错误，导致当前请求失败</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>500</td>
 <td>服务器内部错误，无法完成请求</td>
 </tr>
-<tr>
+<tr class="even">
 <td>501</td>
 <td>服务器不支持请求的功能，无法完成请求</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>502</td>
 <td>充当网关或代理的服务器，从远端服务器接收到了一个无效的请求</td>
 </tr>
-<tr>
+<tr class="even">
 <td>503</td>
 <td>由于超载或系统维护，服务器暂时的无法处理客户端的请求。延时的长度可包含在服务器的Retry-After头信息中</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>504</td>
 <td>充当网关或代理的服务器，未及时从远端服务器获取请求</td>
 </tr>
-<tr>
+<tr class="even">
 <td>505</td>
 <td>服务器不支持请求的HTTP协议的版本，无法完成处理。这暗示着服务器不能或不愿使用与客户端相同的版本。响应中应当包含一个描述了为何版本不被支持以及服务器支持哪些协议。</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>600</td>
 <td>源站没有返回响应头部，只返回实体内容</td>
 </tr>
-</tbody></table>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+</tbody>
+</table>
+<h1 id="参考文献">参考文献</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/mydistance/article/details/83386901">HTTP 状态码的分类，各状态码的意义（表格版）</a></li>
 </ol>
 
@@ -626,14 +636,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

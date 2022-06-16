@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDCassandra%E5%92%8CJDK"><span class="nav-number">1.</span> <span class="nav-text">下载Cassandra和JDK</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Cassandra-%E5%92%8CJDK"><span class="nav-number">2.</span> <span class="nav-text">安装Cassandra 和JDK</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Cassandra"><span class="nav-number">2.1.</span> <span class="nav-text">安装Cassandra</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85JDK"><span class="nav-number">2.2.</span> <span class="nav-text">安装JDK</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AECassandra%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%92%8CJava%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text">配置Cassandra环境变量和Java环境变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AECassandra%E8%BF%90%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">配置Cassandra运行参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8Cassandra%E9%9B%86%E7%BE%A4%E6%9C%8D%E5%8A%A1"><span class="nav-number">5.</span> <span class="nav-text">启动Cassandra集群服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E9%97%ADCassandra"><span class="nav-number">6.</span> <span class="nav-text">关闭Cassandra</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDcassandra%E5%92%8Cjdk"><span class="nav-number">1.</span> <span class="nav-text">下载Cassandra和JDK</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cassandra-%E5%92%8Cjdk"><span class="nav-number">2.</span> <span class="nav-text">安装Cassandra 和JDK</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cassandra"><span class="nav-number">2.1.</span> <span class="nav-text">安装Cassandra</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85jdk"><span class="nav-number">2.2.</span> <span class="nav-text">安装JDK</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEcassandra%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%92%8Cjava%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text">配置Cassandra环境变量和Java环境变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEcassandra%E8%BF%90%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">配置Cassandra运行参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8cassandra%E9%9B%86%E7%BE%A4%E6%9C%8D%E5%8A%A1"><span class="nav-number">5.</span> <span class="nav-text">启动Cassandra集群服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E9%97%ADcassandra"><span class="nav-number">6.</span> <span class="nav-text">关闭Cassandra</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -309,67 +309,58 @@
     <div class="post-body" itemprop="articleBody">
         <p>Facebook参照Amazon的NoSQL的Dynamo和Google Big Table开发了Cassandra，它是一种NoSQL数据库。其cqlsh的运行依赖于python 2.x，<strong>注意python3目前还不支持</strong>。下面记载一下自己在6台服务器上搭建Cassandra集群的过程以及需要注意的点。这里以Ubuntu18.04为例。</p>
 <a id="more"></a>
-
 <p>假设我们6个节点服务器的ip地址分别为1.1.1.0, 1.1.1.1, 1.1.1.2, 1.1.1.3, 1.1.1.4, 1.1.1.5，并希望把1.1.1.1， 1.1.1.2， 1.1.1.3 作为种子节点（一般不少于2个），其他为正常节点。下面操作默认在1.1.1.0机器上执行，并且默认各机器之间已经可以互相进行SSH免密连接。</p>
-<h1 id="下载Cassandra和JDK"><a href="#下载Cassandra和JDK" class="headerlink" title="下载Cassandra和JDK"></a>下载Cassandra和JDK</h1><p>Cassandra的下载地址是<a target="_blank" rel="noopener" href="http://cassandra.apache.org/">Apache Cassandra</a>.</p>
+<h1 id="下载cassandra和jdk">下载Cassandra和JDK</h1>
+<p>Cassandra的下载地址是<a target="_blank" rel="noopener" href="http://cassandra.apache.org/">Apache Cassandra</a>.</p>
 <p>JDK目前推荐jdk8，下载地址是<a target="_blank" rel="noopener" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">Java SE Development Kit 8 Downloads</a> .</p>
-<h1 id="安装Cassandra-和JDK"><a href="#安装Cassandra-和JDK" class="headerlink" title="安装Cassandra 和JDK"></a>安装Cassandra 和JDK</h1><h2 id="安装Cassandra"><a href="#安装Cassandra" class="headerlink" title="安装Cassandra"></a>安装Cassandra</h2><p>安装非常简单，将压缩包解压到你喜欢的目录即可</p>
+<h1 id="安装cassandra-和jdk">安装Cassandra 和JDK</h1>
+<h2 id="安装cassandra">安装Cassandra</h2>
+<p>安装非常简单，将压缩包解压到你喜欢的目录即可</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf apache-cassandra-3.11.6-bin.tar.gz</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h2><p>安装也非常简单，只需要解压缩到喜欢的目录</p>
+<h2 id="安装jdk">安装JDK</h2>
+<p>安装也非常简单，只需要解压缩到喜欢的目录</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf jdk-8u241-linux-x64.tar.gz</span><br></pre></td></tr></table></figure>
-
-<h1 id="配置Cassandra环境变量和Java环境变量"><a href="#配置Cassandra环境变量和Java环境变量" class="headerlink" title="配置Cassandra环境变量和Java环境变量"></a>配置Cassandra环境变量和Java环境变量</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~.bashrc</span><br></pre></td></tr></table></figure>
-
+<h1 id="配置cassandra环境变量和java环境变量">配置Cassandra环境变量和Java环境变量</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~.bashrc</span><br></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/home/jinzhongxu/jdk1.8.0_241</span><br><span class="line">export CASSANDRA_HOME=/home/jinzhongxu/apache-cassandra-3.11.6</span><br><span class="line">export PATH=$PATH:$JAVA_HOME/bin:$CASSANDRA_HOME/bin</span><br></pre></td></tr></table></figure>
-
 <p>然后，在主目录下，运行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sourc ~/.bashrc</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
-
 <p>没有报错，就说明配置成功。</p>
-<h1 id="配置Cassandra运行参数"><a href="#配置Cassandra运行参数" class="headerlink" title="配置Cassandra运行参数"></a>配置Cassandra运行参数</h1><p>进入配置文件目录</p>
+<h1 id="配置cassandra运行参数">配置Cassandra运行参数</h1>
+<p>进入配置文件目录</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> apache-cassandra-3.11.6/conf/</span><br><span class="line">vim cassandra.yaml</span><br></pre></td></tr></table></figure>
-
 <p>首先，在1.1.1.0机器上修改</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cluster_name: &#x27;Cassandra Cluster&#x27; # 修改为自己喜欢的名字，后面运行后再修改比较麻烦</span><br><span class="line">- seeds: &quot;1.1.1.1,1.1.1.2,1.1.1.3&quot;</span><br><span class="line">listen_address: 1.1.1.0</span><br><span class="line">rpc_address: 1.1.1.0</span><br><span class="line">data_file_directories:</span><br><span class="line">	- /var/lib/cassandra/data # 也可以添加多个用于存储数据</span><br><span class="line">commitlog_directory: /var/lib/cassandra/commitlog</span><br></pre></td></tr></table></figure>
-
 <p><strong>注意：</strong></p>
-<ol>
+<ol type="1">
 <li><strong>seeds处ip与逗号之间最好不要有空格；</strong></li>
 <li><strong>listen_address和rpc_address要使用IP地址，不要使用hostname;</strong></li>
 <li><strong>此处需要给用户jinzhongxu添加访问上面目录的权限，</strong>如下</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R jinzhongxu /var/lib/cassandra/data</span><br><span class="line">sudo chown -R jinzhongxu /var/lib/cassandra/commitlog</span><br></pre></td></tr></table></figure>
-
 <p>然后，将apache-cassandra-3.11.6拷贝到其他机器中</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r apache-cassandra-3.11.6 1.1.1.1:/home/jinzhongxu/.</span><br></pre></td></tr></table></figure>
-
 <p>并修改</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">listen_address: 1.1.1.1</span><br><span class="line">rpc_address: 1.1.1.1</span><br></pre></td></tr></table></figure>
-
 <p>创建目录/var/lib/cassandra/data和/var/lib/cassandra/commitlog，并分配访问权限</p>
 <p>其他机器1.1.1.2, 1.1.1.3, 1.1.1.4, 1.1.1.5, 同样执行，注意换成各自的ip</p>
-<h1 id="启动Cassandra集群服务"><a href="#启动Cassandra集群服务" class="headerlink" title="启动Cassandra集群服务"></a>启动Cassandra集群服务</h1><p>注意，需要先启动种子节点上的服务，然后才能启动正常节点上的服务。</p>
+<h1 id="启动cassandra集群服务">启动Cassandra集群服务</h1>
+<p>注意，需要先启动种子节点上的服务，然后才能启动正常节点上的服务。</p>
 <p>先在1.1.1.1上运行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cassandra -f <span class="comment"># 前台启动，在终端上打印日志</span></span><br></pre></td></tr></table></figure>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cassandra <span class="comment"># 后台启动，不在终端打印日志</span></span><br></pre></td></tr></table></figure>
-
 <p>选择运行一种，建议第一种。</p>
 <p>然后是1.1.1.2, 1.1.1.3</p>
-<p>最后是1.1.1.4，1.1.1.5,  1.1.1.0</p>
+<p>最后是1.1.1.4，1.1.1.5, 1.1.1.0</p>
 <p>在机器1.1.1.1上运行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nodetool status</span><br></pre></td></tr></table></figure>
-
 <p>可以查看各节点运行情况是否正常</p>
 <p>运行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cqlsh 1.1.1.0 9042</span><br></pre></td></tr></table></figure>
-
 <p>可以启动cql查询shell.</p>
 <p><strong>如果不想带参数启动cqlsh，而是直接启动cqlsh</strong>，可以通过如下方式设置：</p>
-<ol>
+<ol type="1">
 <li>把配置文件cqlshrc.sample拷贝到~/.cassandra目录下（如果没有该目录，说明没有运行过Cassandra命令，可以运行一次命令：nodetool status，之后就会自动产生该目录）</li>
 <li>修改cqlshrc.sample为cqlshrc</li>
 <li>修改配置，将hostname=127.0.0.1切换为1.1.1.0，其他服务器一样改成各自IP地址</li>
@@ -377,8 +368,8 @@
 <li>直接输入cqlsh，即启动本机cql shell</li>
 <li>输入cqlsh 1.1.1.1 9042 或 cqlsh 1.1.1.1，即远程连接服务器1.1.1.1的cql shell</li>
 </ol>
-<h1 id="关闭Cassandra"><a href="#关闭Cassandra" class="headerlink" title="关闭Cassandra"></a>关闭Cassandra</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -aux | grep cassandra</span><br></pre></td></tr></table></figure>
-
+<h1 id="关闭cassandra">关闭Cassandra</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -aux | grep cassandra</span><br></pre></td></tr></table></figure>
 <p>kill 掉其相应的pid</p>
 
     </div>
@@ -473,14 +464,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

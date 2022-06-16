@@ -147,7 +147,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-module-pth"><span class="nav-number">1.</span> <span class="nav-text">使用 module.pth</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-sys"><span class="nav-number">2.</span> <span class="nav-text">使用 sys</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%BF%9E%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考连接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-module.pth"><span class="nav-number">1.</span> <span class="nav-text">使用 module.pth</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-sys"><span class="nav-number">2.</span> <span class="nav-text">使用 sys</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%BF%9E%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考连接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -314,18 +314,18 @@
     <div class="post-body" itemprop="articleBody">
         <p>在 Python 中导入包可以直接使用 import，非常简便。但是，对于自己编写的 Python 模块不能简单的使用该方法导入，特别是想在任意目录下使用自己编写的模块时。如何实现向 Python 安装的第三方包一样直接使用 import 在任意目录下导入自己的模块呢？下面介绍几个方法。假设自己模块的目录为：/home/jinzhongxu/mymodule</p>
 <a id="more"></a>
-
-<h1 id="使用-module-pth"><a href="#使用-module-pth" class="headerlink" title="使用 module.pth"></a>使用 module.pth</h1><p>按照下面的顺序执行</p>
+<h1 id="使用-module.pth">使用 module.pth</h1>
+<p>按照下面的顺序执行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 Python 包目录</span></span><br><span class="line">ipython</span><br><span class="line">In [1]: import site</span><br><span class="line"></span><br><span class="line">In [2]: site.getsitepackages()</span><br><span class="line">Out[2]: [<span class="string">&#x27;/usr/local/miniconda/lib/python3.8/site-packages&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建 module.pth, 注意以 pth 结尾</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/home/jinzhongxu/mymodule&#x27;</span> &gt;&gt; module.pth </span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 module.pth 放入 Python 包目录</span></span><br><span class="line">mv module.pth /usr/<span class="built_in">local</span>/miniconda/lib/python3.8/site-packages/.</span><br></pre></td></tr></table></figure>
-
 <p>这样就可以使用了。</p>
-<h1 id="使用-sys"><a href="#使用-sys" class="headerlink" title="使用 sys"></a>使用 sys</h1><p>这种方法是在每次调用自己写的模块时，把模块的路径添加的代码运行环境中</p>
+<h1 id="使用-sys">使用 sys</h1>
+<p>这种方法是在每次调用自己写的模块时，把模块的路径添加的代码运行环境中</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.path.append(<span class="string">&quot;/home/jinzhongxu/mymodule&quot;</span>)  //设置自定义模块路径</span><br></pre></td></tr></table></figure>
-
 <p>这样就可以使用了。</p>
-<h1 id="参考连接"><a href="#参考连接" class="headerlink" title="参考连接"></a>参考连接</h1><ol>
+<h1 id="参考连接">参考连接</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6692b48c7295">python导入自定义模块方法</a></li>
-<li><a target="_blank" rel="noopener" href="https://python3-cookbook.readthedocs.io/zh_CN/latest/c10/p09_add_directories_to_sys_path.html">将文件夹加入到sys.path</a> </li>
+<li><a target="_blank" rel="noopener" href="https://python3-cookbook.readthedocs.io/zh_CN/latest/c10/p09_add_directories_to_sys_path.html">将文件夹加入到sys.path</a></li>
 </ol>
 
     </div>
@@ -421,14 +421,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

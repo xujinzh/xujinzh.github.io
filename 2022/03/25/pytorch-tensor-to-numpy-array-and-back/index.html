@@ -145,7 +145,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#numpy-to-pytorch"><span class="nav-number">1.</span> <span class="nav-text">numpy to pytorch</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%84%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.1.</span> <span class="nav-text">常规转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E6%97%B6%E6%94%B9%E5%8F%98%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">转换时改变数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E6%97%B6%E5%8F%91%E9%80%81%E5%88%B0%E4%B8%8D%E5%90%8C%E7%9A%84%E8%AE%BE%E5%A4%87%E4%B8%8A%EF%BC%8C%E5%A6%82-GPU"><span class="nav-number">1.3.</span> <span class="nav-text">转换时发送到不同的设备上，如 GPU</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pytorch-to-numpy"><span class="nav-number">2.</span> <span class="nav-text">pytorch to numpy</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%EF%BC%8C%E5%BD%93%E4%BD%A0%E5%9C%A8-CPU-%E4%B8%8A%E6%9C%89%E4%B8%80%E4%B8%AA%E6%B2%A1%E6%9C%89%E6%A2%AF%E5%BA%A6%E7%9A%84-PyTorch-%E5%BC%A0%E9%87%8F%E6%97%B6%EF%BC%8C%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%AE%80%E5%8D%95%E5%9C%B0%E8%B0%83%E7%94%A8-numpy-%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">在最简单的情况下，当你在 CPU 上有一个没有梯度的 PyTorch 张量时，你可以简单地调用 .numpy() 方法：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E5%BC%A0%E9%87%8F%E6%98%AF%E9%9C%80%E8%A6%81%E6%A2%AF%E5%BA%A6%E7%9A%84%E8%AE%A1%E7%AE%97%E5%9B%BE%E7%9A%84%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%88%E4%B9%9F%E5%B0%B1%E6%98%AF%E8%AF%B4%EF%BC%8C%E5%A6%82%E6%9E%9C-x-requires-grad-True%EF%BC%89%EF%BC%8C%E5%88%99%E9%9C%80%E8%A6%81%E8%B0%83%E7%94%A8-detach-%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">如果张量是需要梯度的计算图的一部分（也就是说，如果 x.requires_grad&#x3D;True），则需要调用 .detach() 方法：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C-Tensor-%E4%BD%8D%E4%BA%8E-%E2%80%9Ccpu%E2%80%9D-%E4%BB%A5%E5%A4%96%E7%9A%84%E8%AE%BE%E5%A4%87%E4%B8%8A%EF%BC%8C%E5%88%99%E9%9C%80%E8%A6%81%E5%85%88%E5%B0%86%E5%85%B6%E5%B8%A6%E5%9B%9E-CPU%EF%BC%8C%E7%84%B6%E5%90%8E%E6%89%8D%E8%83%BD%E8%B0%83%E7%94%A8-numpy-%E6%96%B9%E6%B3%95%E3%80%82%E6%88%91%E4%BB%AC%E5%9C%A8%E4%B8%8A%E9%9D%A2%E4%BD%BF%E7%94%A8-to-%E2%80%9Ccuda%E2%80%9D-%E5%90%91-GPU-%E5%8F%91%E9%80%81%E5%BC%A0%E9%87%8F%E6%97%B6%E7%9C%8B%E5%88%B0%E4%BA%86%E8%BF%99%E4%B8%80%E7%82%B9%E3%80%82%E7%8E%B0%E5%9C%A8%EF%BC%8C%E6%88%91%E4%BB%AC%E5%8F%AA%E6%98%AF%E5%8F%8D%E8%BF%87%E6%9D%A5%EF%BC%9A"><span class="nav-number">2.3.</span> <span class="nav-text">如果 Tensor 位于 “cpu” 以外的设备上，则需要先将其带回 CPU，然后才能调用 .numpy() 方法。我们在上面使用 .to(“cuda”) 向 GPU 发送张量时看到了这一点。现在，我们只是反过来：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%AE%8C%E5%85%A8%E6%9C%80%E5%B8%B8%E7%94%A8%E7%9A%84%E5%B0%86-Tensor-%E8%BD%AC%E6%88%90-numpy-array-%E7%9A%84%E6%96%B9%E6%B3%95%E5%A6%82%E4%B8%8B%EF%BC%9A"><span class="nav-number">2.4.</span> <span class="nav-text">最完全最常用的将 Tensor 转成 numpy array 的方法如下：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E5%90%8E%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98"><span class="nav-number">3.</span> <span class="nav-text">转换后共享内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#numpy-to-pytorch"><span class="nav-number">1.</span> <span class="nav-text">numpy to pytorch</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%84%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.1.</span> <span class="nav-text">常规转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E6%97%B6%E6%94%B9%E5%8F%98%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">转换时改变数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E6%97%B6%E5%8F%91%E9%80%81%E5%88%B0%E4%B8%8D%E5%90%8C%E7%9A%84%E8%AE%BE%E5%A4%87%E4%B8%8A%E5%A6%82-gpu"><span class="nav-number">1.3.</span> <span class="nav-text">转换时发送到不同的设备上，如 GPU</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pytorch-to-numpy"><span class="nav-number">2.</span> <span class="nav-text">pytorch to numpy</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%E5%BD%93%E4%BD%A0%E5%9C%A8-cpu-%E4%B8%8A%E6%9C%89%E4%B8%80%E4%B8%AA%E6%B2%A1%E6%9C%89%E6%A2%AF%E5%BA%A6%E7%9A%84-pytorch-%E5%BC%A0%E9%87%8F%E6%97%B6%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%AE%80%E5%8D%95%E5%9C%B0%E8%B0%83%E7%94%A8-.numpy-%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">在最简单的情况下，当你在 CPU 上有一个没有梯度的 PyTorch 张量时，你可以简单地调用 .numpy() 方法：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E5%BC%A0%E9%87%8F%E6%98%AF%E9%9C%80%E8%A6%81%E6%A2%AF%E5%BA%A6%E7%9A%84%E8%AE%A1%E7%AE%97%E5%9B%BE%E7%9A%84%E4%B8%80%E9%83%A8%E5%88%86%E4%B9%9F%E5%B0%B1%E6%98%AF%E8%AF%B4%E5%A6%82%E6%9E%9C-x.requires_gradtrue%E5%88%99%E9%9C%80%E8%A6%81%E8%B0%83%E7%94%A8-.detach-%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">如果张量是需要梯度的计算图的一部分（也就是说，如果 x.requires_grad&#x3D;True），则需要调用 .detach() 方法：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C-tensor-%E4%BD%8D%E4%BA%8E-cpu-%E4%BB%A5%E5%A4%96%E7%9A%84%E8%AE%BE%E5%A4%87%E4%B8%8A%E5%88%99%E9%9C%80%E8%A6%81%E5%85%88%E5%B0%86%E5%85%B6%E5%B8%A6%E5%9B%9E-cpu%E7%84%B6%E5%90%8E%E6%89%8D%E8%83%BD%E8%B0%83%E7%94%A8-.numpy-%E6%96%B9%E6%B3%95%E6%88%91%E4%BB%AC%E5%9C%A8%E4%B8%8A%E9%9D%A2%E4%BD%BF%E7%94%A8-.tocuda-%E5%90%91-gpu-%E5%8F%91%E9%80%81%E5%BC%A0%E9%87%8F%E6%97%B6%E7%9C%8B%E5%88%B0%E4%BA%86%E8%BF%99%E4%B8%80%E7%82%B9%E7%8E%B0%E5%9C%A8%E6%88%91%E4%BB%AC%E5%8F%AA%E6%98%AF%E5%8F%8D%E8%BF%87%E6%9D%A5"><span class="nav-number">2.3.</span> <span class="nav-text">如果 Tensor 位于 “cpu” 以外的设备上，则需要先将其带回 CPU，然后才能调用 .numpy() 方法。我们在上面使用 .to(&quot;cuda&quot;) 向 GPU 发送张量时看到了这一点。现在，我们只是反过来：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%AE%8C%E5%85%A8%E6%9C%80%E5%B8%B8%E7%94%A8%E7%9A%84%E5%B0%86-tensor-%E8%BD%AC%E6%88%90-numpy-array-%E7%9A%84%E6%96%B9%E6%B3%95%E5%A6%82%E4%B8%8B"><span class="nav-number">2.4.</span> <span class="nav-text">最完全最常用的将 Tensor 转成 numpy array 的方法如下：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E5%90%8E%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98"><span class="nav-number">3.</span> <span class="nav-text">转换后共享内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -312,265 +312,136 @@
     <div class="post-body" itemprop="articleBody">
         <p>PyTorch 旨在与 NumPy 非常兼容。因此，PyTorch 的 Tensor 与 Numpy 的 array 能够非常方便的进行互相转换。本篇以 Jupyterlab 为平台进行介绍。</p>
 <a id="more"></a>
-
-<h1 id="numpy-to-pytorch"><a href="#numpy-to-pytorch" class="headerlink" title="numpy to pytorch"></a>numpy to pytorch</h1><h2 id="常规转换"><a href="#常规转换" class="headerlink" title="常规转换"></a>常规转换</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> torch</span><br></pre></td></tr></table></figure>
-
-
+<h1 id="numpy-to-pytorch">numpy to pytorch</h1>
+<h2 id="常规转换">常规转换</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> torch</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = np.eye(<span class="number">3</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>array([[1., 0., 0.],
        [0., 1., 0.],
        [0., 0., 1.]])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.from_numpy(x)</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>tensor([[1., 0., 0.],
         [0., 1., 0.],
         [0., 0., 1.]], dtype=torch.float64)</code></pre>
-<h2 id="转换时改变数据类型"><a href="#转换时改变数据类型" class="headerlink" title="转换时改变数据类型"></a>转换时改变数据类型</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = np.eye(<span class="number">3</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
-
-
-
-
+<h2 id="转换时改变数据类型">转换时改变数据类型</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = np.eye(<span class="number">3</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
 <pre><code>array([[1., 0., 0.],
        [0., 1., 0.],
        [0., 0., 1.]])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.from_numpy(x).type(torch.float32)</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>tensor([[1., 0., 0.],
         [0., 1., 0.],
         [0., 0., 1.]])</code></pre>
-<h2 id="转换时发送到不同的设备上，如-GPU"><a href="#转换时发送到不同的设备上，如-GPU" class="headerlink" title="转换时发送到不同的设备上，如 GPU"></a>转换时发送到不同的设备上，如 GPU</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = np.eye(<span class="number">3</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
-
-
-
-
+<h2 id="转换时发送到不同的设备上如-gpu">转换时发送到不同的设备上，如 GPU</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = np.eye(<span class="number">3</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
 <pre><code>array([[1., 0., 0.],
        [0., 1., 0.],
        [0., 0., 1.]])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> torch.cuda.is_available():</span><br><span class="line">    y = torch.from_numpy(x).to(<span class="string">&quot;cuda&quot;</span>)</span><br><span class="line">y</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>tensor([[1., 0., 0.],
         [0., 1., 0.],
         [0., 0., 1.]], device=&#39;cuda:0&#39;, dtype=torch.float64)</code></pre>
 <p><font color=orange> 注意，当使用锁页内存（<a href="https://xujinzh.github.io/2022/04/01/pytorch-dataloader-pinned-memory/">pytorch 中数据加载器的锁页内存 pinned memory</a>）的方式加载数据时，数据放入 GPU 的时候，应该把 non_blocking=True，这样能够缩减访问时间，加快训练。</font></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法</span></span><br><span class="line"><span class="keyword">if</span> torch.cuda.is_available():</span><br><span class="line">    y = torch.from_numpy(x).to(<span class="string">&quot;cuda&quot;</span>, non_blocking=<span class="literal">True</span>)</span><br><span class="line">y</span><br></pre></td></tr></table></figure>
-
-<h1 id="pytorch-to-numpy"><a href="#pytorch-to-numpy" class="headerlink" title="pytorch to numpy"></a>pytorch to numpy</h1><p>转向另一个方向会稍微复杂一些，因为有时您必须处理 PyTorch 张量和 NumPy 数组之间的两个差异： </p>
-<ol>
+<h1 id="pytorch-to-numpy">pytorch to numpy</h1>
+<p>转向另一个方向会稍微复杂一些，因为有时您必须处理 PyTorch 张量和 NumPy 数组之间的两个差异：</p>
+<ol type="1">
 <li>PyTorch 可以针对不同的设备（如 GPU）；</li>
 <li>PyTorch 支持自动微分。</li>
 </ol>
-<h2 id="在最简单的情况下，当你在-CPU-上有一个没有梯度的-PyTorch-张量时，你可以简单地调用-numpy-方法："><a href="#在最简单的情况下，当你在-CPU-上有一个没有梯度的-PyTorch-张量时，你可以简单地调用-numpy-方法：" class="headerlink" title="在最简单的情况下，当你在 CPU 上有一个没有梯度的 PyTorch 张量时，你可以简单地调用 .numpy() 方法："></a>在最简单的情况下，当你在 CPU 上有一个没有梯度的 PyTorch 张量时，你可以简单地调用 .numpy() 方法：</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = torch.eye(<span class="number">3</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
-
-
-
-
+<h2 id="在最简单的情况下当你在-cpu-上有一个没有梯度的-pytorch-张量时你可以简单地调用-.numpy-方法">在最简单的情况下，当你在 CPU 上有一个没有梯度的 PyTorch 张量时，你可以简单地调用 .numpy() 方法：</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = torch.eye(<span class="number">3</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
 <pre><code>tensor([[1., 0., 0.],
         [0., 1., 0.],
         [0., 0., 1.]])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x.numpy()</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>array([[1., 0., 0.],
        [0., 1., 0.],
        [0., 0., 1.]], dtype=float32)</code></pre>
-<h2 id="如果张量是需要梯度的计算图的一部分（也就是说，如果-x-requires-grad-True），则需要调用-detach-方法："><a href="#如果张量是需要梯度的计算图的一部分（也就是说，如果-x-requires-grad-True），则需要调用-detach-方法：" class="headerlink" title="如果张量是需要梯度的计算图的一部分（也就是说，如果 x.requires_grad=True），则需要调用 .detach() 方法："></a>如果张量是需要梯度的计算图的一部分（也就是说，如果 x.requires_grad=True），则需要调用 .detach() 方法：</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = torch.eye(<span class="number">3</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
-
-
-
-
+<h2 id="如果张量是需要梯度的计算图的一部分也就是说如果-x.requires_gradtrue则需要调用-.detach-方法">如果张量是需要梯度的计算图的一部分（也就是说，如果 x.requires_grad=True），则需要调用 .detach() 方法：</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = torch.eye(<span class="number">3</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
 <pre><code>tensor([[1., 0., 0.],
         [0., 1., 0.],
         [0., 0., 1.]], requires_grad=True)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x = torch.eye(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>tensor([[1., 0., 0.],
         [0., 1., 0.],
         [0., 0., 1.]])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x.requires_grad = <span class="literal">True</span></span><br><span class="line">x</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>tensor([[1., 0., 0.],
         [0., 1., 0.],
         [0., 0., 1.]], requires_grad=True)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x.detach().numpy()</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>array([[1., 0., 0.],
        [0., 1., 0.],
        [0., 0., 1.]], dtype=float32)</code></pre>
-<h2 id="如果-Tensor-位于-“cpu”-以外的设备上，则需要先将其带回-CPU，然后才能调用-numpy-方法。我们在上面使用-to-“cuda”-向-GPU-发送张量时看到了这一点。现在，我们只是反过来："><a href="#如果-Tensor-位于-“cpu”-以外的设备上，则需要先将其带回-CPU，然后才能调用-numpy-方法。我们在上面使用-to-“cuda”-向-GPU-发送张量时看到了这一点。现在，我们只是反过来：" class="headerlink" title="如果 Tensor 位于 “cpu” 以外的设备上，则需要先将其带回 CPU，然后才能调用 .numpy() 方法。我们在上面使用 .to(“cuda”) 向 GPU 发送张量时看到了这一点。现在，我们只是反过来："></a>如果 Tensor 位于 “cpu” 以外的设备上，则需要先将其带回 CPU，然后才能调用 .numpy() 方法。我们在上面使用 .to(“cuda”) 向 GPU 发送张量时看到了这一点。现在，我们只是反过来：</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = torch.eye(<span class="number">3</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
-
-
-
-
+<h2 id="如果-tensor-位于-cpu-以外的设备上则需要先将其带回-cpu然后才能调用-.numpy-方法我们在上面使用-.tocuda-向-gpu-发送张量时看到了这一点现在我们只是反过来">如果 Tensor 位于 “cpu” 以外的设备上，则需要先将其带回 CPU，然后才能调用 .numpy() 方法。我们在上面使用 .to("cuda") 向 GPU 发送张量时看到了这一点。现在，我们只是反过来：</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = torch.eye(<span class="number">3</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
 <pre><code>tensor([[1., 0., 0.],
         [0., 1., 0.],
         [0., 0., 1.]])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = x.to(<span class="string">&quot;cuda&quot;</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>tensor([[1., 0., 0.],
         [0., 1., 0.],
         [0., 0., 1.]], device=&#39;cuda:0&#39;)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x.to(<span class="string">&#x27;cpu&#x27;</span>).numpy()</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>array([[1., 0., 0.],
        [0., 1., 0.],
        [0., 0., 1.]], dtype=float32)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>tensor([[1., 0., 0.],
         [0., 1., 0.],
         [0., 0., 1.]], device=&#39;cuda:0&#39;)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x.cpu().numpy()</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>array([[1., 0., 0.],
        [0., 1., 0.],
        [0., 0., 1.]], dtype=float32)</code></pre>
-<h2 id="最完全最常用的将-Tensor-转成-numpy-array-的方法如下："><a href="#最完全最常用的将-Tensor-转成-numpy-array-的方法如下：" class="headerlink" title="最完全最常用的将 Tensor 转成 numpy array 的方法如下："></a>最完全最常用的将 Tensor 转成 numpy array 的方法如下：</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = torch.eye(<span class="number">3</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
-
-
-
-
+<h2 id="最完全最常用的将-tensor-转成-numpy-array-的方法如下">最完全最常用的将 Tensor 转成 numpy array 的方法如下：</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = torch.eye(<span class="number">3</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
 <pre><code>tensor([[1., 0., 0.],
         [0., 1., 0.],
         [0., 0., 1.]])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x.detach().cpu().numpy()</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>array([[1., 0., 0.],
        [0., 1., 0.],
        [0., 0., 1.]], dtype=float32)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x.detach().to(<span class="string">&#x27;cpu&#x27;</span>).numpy()</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>array([[1., 0., 0.],
        [0., 1., 0.],
        [0., 0., 1.]], dtype=float32)</code></pre>
-<h1 id="转换后共享内存"><a href="#转换后共享内存" class="headerlink" title="转换后共享内存"></a>转换后共享内存</h1><p><font color=red>注意，转换后的 pytorch tensor 与 numpy array 指向同一地址，所以，对一方的值改变另一方也随之改变</font></p>
+<h1 id="转换后共享内存">转换后共享内存</h1>
+<p><font color=red>注意，转换后的 pytorch tensor 与 numpy array 指向同一地址，所以，对一方的值改变另一方也随之改变</font></p>
 <p>除 chartensor 外所有 tensor 都可以转换为 numpy</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = torch.ones(<span class="number">5</span>)</span><br><span class="line">a</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>tensor([1., 1., 1., 1., 1.])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b = a.numpy()</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>array([1., 1., 1., 1., 1.], dtype=float32)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a.add_(<span class="number">1</span>)</span><br><span class="line">a</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>tensor([2., 2., 2., 2., 2.])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>array([2., 2., 2., 2., 2.], dtype=float32)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b += <span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>array([3., 3., 3., 3., 3.], dtype=float32)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>tensor([3., 3., 3., 3., 3.])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">c = np.ones(<span class="number">5</span>)</span><br><span class="line">c</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>array([1., 1., 1., 1., 1.])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">d = torch.from_numpy(c)</span><br><span class="line">d</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>tensor([1., 1., 1., 1., 1.], dtype=torch.float64)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">np.add(c, <span class="number">1</span>, out=c)</span><br><span class="line">c</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>array([2., 2., 2., 2., 2.])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>tensor([2., 2., 2., 2., 2.], dtype=torch.float64)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">d.add_(<span class="number">1</span>)</span><br><span class="line">d</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>tensor([3., 3., 3., 3., 3.], dtype=torch.float64)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c</span><br></pre></td></tr></table></figure>
-
-
-
-
 <pre><code>array([3., 3., 3., 3., 3.])</code></pre>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<h1 id="参考文献">参考文献</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://sparrow.dev/pytorch-numpy-conversion/">PyTorch Tensor to NumPy Array and Back</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wzyuan/p/9733433.html">pytorch tensor与numpy转换</a></li>
 </ol>
@@ -666,14 +537,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

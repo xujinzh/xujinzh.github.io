@@ -313,27 +313,22 @@
     <div class="post-body" itemprop="articleBody">
         <p>Linux 上修改 /etc/sudoers 导致文件出错，此时只要能够修改该文件的错误即可，但是普通用户 jinzhongxu 无法使用 sudo 命令，且无法使用 root 用户登陆。因此，需要能够进行 /etc/sudoers 修改，并更正错误即可。以下给出一种解决方法。</p>
 <a id="more"></a>
-
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><ol>
-<li><p>使用 ssh 连接普通用户 jinzhongxu，并打开两个终端 shell：t1, t2</p>
-</li>
+<h1 id="解决方案">解决方案</h1>
+<ol type="1">
+<li><p>使用 ssh 连接普通用户 jinzhongxu，并打开两个终端 shell：t1, t2</p></li>
 <li><p>在 t1 输入命令：</p>
 <p><code>echo $$</code></p>
-<p>并把返回的数字拷贝下来</p>
-</li>
+<p>并把返回的数字拷贝下来</p></li>
 <li><p>在 t2 输入命令：</p>
-<p><code>pkttyagent --process 拷贝的数字 </code></p>
-</li>
+<p><code>pkttyagent --process 拷贝的数字</code></p></li>
 <li><p>再在 t1 中输入</p>
 <p><code>pkexec visudo</code></p>
-<p>此时 t1也会卡住</p>
-</li>
-<li><p>再切换到 t2，输入用户 jinzhongxu 的密码</p>
-</li>
-<li><p>再次切换到 t1，发现此时正在打开 /etc/sudoers 等到修改，修改 /etc/sudoers 中出错的内容并保存。</p>
-</li>
+<p>此时 t1也会卡住</p></li>
+<li><p>再切换到 t2，输入用户 jinzhongxu 的密码</p></li>
+<li><p>再次切换到 t1，发现此时正在打开 /etc/sudoers 等到修改，修改 /etc/sudoers 中出错的内容并保存。</p></li>
 </ol>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<h1 id="参考文献">参考文献</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904070545670158">Ubuntu改坏sudoers后无法使用sudo的解决办法</a></li>
 </ol>
 
@@ -429,14 +424,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

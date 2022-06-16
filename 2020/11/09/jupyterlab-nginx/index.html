@@ -34,8 +34,8 @@
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="linux">
-<meta property="article:tag" content="nginx">
 <meta property="article:tag" content="jupyter">
+<meta property="article:tag" content="nginx">
 <meta property="article:tag" content="jupyterlab">
 <meta name="twitter:card" content="summary">
 
@@ -149,7 +149,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-nginx"><span class="nav-number">1.</span> <span class="nav-text">安装 nginx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-Jupyterlab"><span class="nav-number">2.</span> <span class="nav-text">配置 Jupyterlab</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-nginx"><span class="nav-number">1.</span> <span class="nav-text">安装 nginx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-jupyterlab"><span class="nav-number">2.</span> <span class="nav-text">配置 Jupyterlab</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -316,20 +316,17 @@
     <div class="post-body" itemprop="articleBody">
         <p>当服务器配置好 Python, Jupyterlab 后，访问总是通过 8888 端口，出于某些原因，想要为其配置二级页面，这样当想要更改端口时只需要修改一下配置，而不需要再次记忆到底是打开了哪个端口，只需要记住二级页面 web 地址就可以。本篇不介绍如何配置 Jupyterlab，而是假设已经配置好了 Jupyterlab，且申请了域名，直接说如何通过 nginx 配置 Jupyterlab.</p>
 <a id="more"></a>
-
-<h1 id="安装-nginx"><a href="#安装-nginx" class="headerlink" title="安装 nginx"></a>安装 nginx</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install nginx</span><br><span class="line">sudo systemctl status nginx.service</span><br><span class="line">sudo systemctl start nginx.service</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> nginx.service</span><br></pre></td></tr></table></figure>
-
-<h1 id="配置-Jupyterlab"><a href="#配置-Jupyterlab" class="headerlink" title="配置 Jupyterlab"></a>配置 Jupyterlab</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成 jupyterlab 配置文件</span></span><br><span class="line">jupyter notebook --generate-config</span><br><span class="line"><span class="comment"># 修改配置</span></span><br><span class="line">vim .jupyter/jupyter_notebook_config.py</span><br><span class="line"><span class="comment"># 修改如下内容</span></span><br><span class="line">c.NotebookApp.base_project_url = <span class="string">&#x27;/jupyter&#x27;</span></span><br><span class="line">c.NotebookApp.ip = <span class="string">&#x27;0.0.0.0&#x27;</span></span><br><span class="line"><span class="comment"># 或者修改如下内容</span></span><br><span class="line">c.NotebookApp.base_url = <span class="string">&#x27;/jupyter&#x27;</span></span><br><span class="line">c.NotebookApp.ip = <span class="string">&#x27;0.0.0.0&#x27;</span></span><br></pre></td></tr></table></figure>
-
+<h1 id="安装-nginx">安装 nginx</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install nginx</span><br><span class="line">sudo systemctl status nginx.service</span><br><span class="line">sudo systemctl start nginx.service</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> nginx.service</span><br></pre></td></tr></table></figure>
+<h1 id="配置-jupyterlab">配置 Jupyterlab</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成 jupyterlab 配置文件</span></span><br><span class="line">jupyter notebook --generate-config</span><br><span class="line"><span class="comment"># 修改配置</span></span><br><span class="line">vim .jupyter/jupyter_notebook_config.py</span><br><span class="line"><span class="comment"># 修改如下内容</span></span><br><span class="line">c.NotebookApp.base_project_url = <span class="string">&#x27;/jupyter&#x27;</span></span><br><span class="line">c.NotebookApp.ip = <span class="string">&#x27;0.0.0.0&#x27;</span></span><br><span class="line"><span class="comment"># 或者修改如下内容</span></span><br><span class="line">c.NotebookApp.base_url = <span class="string">&#x27;/jupyter&#x27;</span></span><br><span class="line">c.NotebookApp.ip = <span class="string">&#x27;0.0.0.0&#x27;</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  配置 nginx</span></span><br><span class="line">cat /etc/nginx/nginx.conf</span><br><span class="line"><span class="comment"># 修改如下内容</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  www.googj.com;</span><br><span class="line">        location /jupyter &#123;</span><br><span class="line">            proxy_pass          http://127.0.0.1:8888;</span><br><span class="line">            proxy_set_header    Host <span class="variable">$host</span>;</span><br><span class="line">            proxy_set_header    X-Real-Scheme <span class="variable">$scheme</span>;</span><br><span class="line">            proxy_set_header    X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">            proxy_set_header    X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">            proxy_http_version  1.1;</span><br><span class="line">            proxy_set_header    Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">            proxy_set_header    Connection <span class="string">&quot;upgrade&quot;</span>;</span><br><span class="line">            proxy_read_timeout  120s;</span><br><span class="line">            proxy_next_upstream error;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>重启服务器后，在网页上访问地址：<a target="_blank" rel="noopener" href="http://www.googj.com/jupyter">http://www.googj.com/jupyter</a> (这里是样例地址)，就可以打开 Jupyterlab.</p>
+<p>重启服务器后，在网页上访问地址：http://www.googj.com/jupyter (这里是样例地址)，就可以打开 Jupyterlab.</p>
 <p>注意，上面假设已经配置了 Jupyterlab 自启，如果没有可以访问我的其他博文配置。并假设域名已经指向服务器IP地址。</p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><p><a target="_blank" rel="noopener" href="https://www.byincd.com/bobjiang/article-0161/">Jupyter Notebook在nginx中无法配置为二级页面的解决办法</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="http://blog.wangcaimeng.top/2020/01/31/nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86jupyterlab%E9%85%8D%E7%BD%AE/">nginx反向代理jupyterlab配置</a></p>
-</li>
+<h1 id="参考链接">参考链接</h1>
+<ol type="1">
+<li><p><a target="_blank" rel="noopener" href="https://www.byincd.com/bobjiang/article-0161/">Jupyter Notebook在nginx中无法配置为二级页面的解决办法</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="http://blog.wangcaimeng.top/2020/01/31/nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86jupyterlab%E9%85%8D%E7%BD%AE/">nginx反向代理jupyterlab配置</a></p></li>
 </ol>
 
     </div>
@@ -377,8 +374,8 @@
           <div class="post-tags">
               <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
               <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
-              <a href="/tags/nginx/" rel="tag"><i class="fa fa-tag"></i> nginx</a>
               <a href="/tags/jupyter/" rel="tag"><i class="fa fa-tag"></i> jupyter</a>
+              <a href="/tags/nginx/" rel="tag"><i class="fa fa-tag"></i> nginx</a>
               <a href="/tags/jupyterlab/" rel="tag"><i class="fa fa-tag"></i> jupyterlab</a>
           </div>
 
@@ -427,14 +424,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

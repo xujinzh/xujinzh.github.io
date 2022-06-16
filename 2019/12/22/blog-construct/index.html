@@ -22,12 +22,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="参照博文《Website for Students》或《How to Install WordPress with LAMP Stack on Ubuntu 18.04》进行搭建. 在Ubuntu18.04上，分别按照《Website for Students》和文章《How to Install WordPress with LAMP Stack on Ubuntu 18.04》搭建网站时，发现">
+    <meta name="description" content="参照博文《Website for Students》或《How to Install WordPress with LAMP Stack on Ubuntu 18.04》进行搭建.   在Ubuntu18.04上，分别按照《Website for Students》和文章《How to Install WordPress with LAMP Stack on Ubuntu 18.04》搭建网站时">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何使用服务器搭建博客">
 <meta property="og:url" content="https://xujinzh.github.io/2019/12/22/blog-construct/index.html">
 <meta property="og:site_name" content="J. Xu">
-<meta property="og:description" content="参照博文《Website for Students》或《How to Install WordPress with LAMP Stack on Ubuntu 18.04》进行搭建. 在Ubuntu18.04上，分别按照《Website for Students》和文章《How to Install WordPress with LAMP Stack on Ubuntu 18.04》搭建网站时，发现">
+<meta property="og:description" content="参照博文《Website for Students》或《How to Install WordPress with LAMP Stack on Ubuntu 18.04》进行搭建.   在Ubuntu18.04上，分别按照《Website for Students》和文章《How to Install WordPress with LAMP Stack on Ubuntu 18.04》搭建网站时">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-12-21T16:00:00.000Z">
 <meta property="article:modified_time" content="2021-11-09T10:42:04.843Z">
@@ -306,61 +306,107 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>参照博文《<a rel="noreferrer noopener" aria-label="（在新窗口打开）" href="https://websiteforstudents.com/install-wordpress-on-ubuntu-18-04-lts-beta-with-apache2-mariadb-and-php-7-1/" target="_blank"><em>Website for Students</em></a>》或《<a rel="noreferrer noopener" aria-label="How to Install WordPress with LAMP Stack on Ubuntu 18.04（在新窗口打开）" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/" target="_blank"><em><strong>How to Install WordPress with LAMP Stack on Ubuntu 18.04</strong></em></a>》进行搭建.</p>
-<p>在Ubuntu18.04上，分别按照《Website for Students》和文章《How to Install WordPress with LAMP Stack on Ubuntu 18.04》搭建网站时，发现第一篇文章能够成功进入WordPress，而第二篇文章无法配置WordPress，经分析后通过命令 </p>
+        <p>
+参照博文《<a rel="noreferrer noopener" aria-label="（在新窗口打开）" href="https://websiteforstudents.com/install-wordpress-on-ubuntu-18-04-lts-beta-with-apache2-mariadb-and-php-7-1/" target="_blank"><em>Website for Students</em></a>》或《<a rel="noreferrer noopener" aria-label="How to Install WordPress with LAMP Stack on Ubuntu 18.04（在新窗口打开）" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/" target="_blank"><em><strong>How to Install WordPress with LAMP Stack on Ubuntu 18.04</strong></em></a>》进行搭建.
+</p>
+<p>
+在Ubuntu18.04上，分别按照《Website for Students》和文章《How to Install WordPress with LAMP Stack on Ubuntu 18.04》搭建网站时，发现第一篇文章能够成功进入WordPress，而第二篇文章无法配置WordPress，经分析后通过命令
+</p>
 <a id="more"></a>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install php-mysql</span><br></pre></td></tr></table></figure>
-
-<p>进行修复，成功进入WordPress配置页面。</p>
-<p>下面根据前面两篇文章总结出一个搭建网站的方法，一共分为7步：</p>
-<ul><li><a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-1-Connect-to-your-Server">Step 1: Connect to your Server</a></li><li><a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-2-Apache-Web-Server-Installation">Step 2: Apache Web Server Installation</a></li><li><a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-3-Install-PHP">Step 3: Install PHP</a></li><li><a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-4-Install-the-MySQL-Database-server">Step 4: Install the MySQL Database server</a></li><li><a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-5-Create-a-Database-for-WordPress">Step 5: Create a Database for WordPress</a></li><li><a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-6-Install-WordPress">Step 6: Install WordPress</a></li><li><a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-6-Create-the-Virtual-Host-Files">Step 6: Create the Virtual Host Files</a></li><li><a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-7-Configure-WordPress">Step 7: Configure WordPress</a></li></ul>
-<p>具体地</p>
-<p><strong>Step 1: Connect to your Server</strong>，更新系统</p>
+<p>
+进行修复，成功进入WordPress配置页面。
+</p>
+<p>
+下面根据前面两篇文章总结出一个搭建网站的方法，一共分为7步：
+</p>
+<ul>
+<li>
+<a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-1-Connect-to-your-Server">Step 1: Connect to your Server</a>
+</li>
+<li>
+<a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-2-Apache-Web-Server-Installation">Step 2: Apache Web Server Installation</a>
+</li>
+<li>
+<a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-3-Install-PHP">Step 3: Install PHP</a>
+</li>
+<li>
+<a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-4-Install-the-MySQL-Database-server">Step 4: Install the MySQL Database server</a>
+</li>
+<li>
+<a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-5-Create-a-Database-for-WordPress">Step 5: Create a Database for WordPress</a>
+</li>
+<li>
+<a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-6-Install-WordPress">Step 6: Install WordPress</a>
+</li>
+<li>
+<a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-6-Create-the-Virtual-Host-Files">Step 6: Create the Virtual Host Files</a>
+</li>
+<li>
+<a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/#Step-7-Configure-WordPress">Step 7: Configure WordPress</a>
+</li>
+</ul>
+<p>
+具体地
+</p>
+<p>
+<strong>Step 1: Connect to your Server</strong>，更新系统
+</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get upgrade</span><br></pre></td></tr></table></figure>
-
-<p><strong>Step 2: Apache Web Server Installation</strong>，安装Web服务器</p>
+<p>
+<strong>Step 2: Apache Web Server Installation</strong>，安装Web服务器
+</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install apache2</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> apache2</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status apache2</span><br></pre></td></tr></table></figure>
-
-<p><strong>Step 3: Install PHP</strong>，安装PHP</p>
+<p>
+<strong>Step 3: Install PHP</strong>，安装PHP
+</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install php php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip&lt;strong&gt; php-mysql&lt;/strong&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Step 4: Install the MySQL Database server</strong>，安装数据库</p>
+<p>
+<strong>Step 4: Install the MySQL Database server</strong>，安装数据库
+</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install mysql-server</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql_secure_installation</span><br></pre></td></tr></table></figure>
-
-<p><strong>Step 5: Create a Database for WordPress</strong>，为网站创建一个数据库</p>
+<p>
+<strong>Step 5: Create a Database for WordPress</strong>，为网站创建一个数据库
+</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
-
 <pre class="wp-block-preformatted">CREATE DATABASE <strong>wp</strong>;
 GRANT ALL PRIVILEGES ON <strong>wp</strong>.* TO '<strong>jayzon</strong>'@'localhost' IDENTIFIED BY '<strong>StrongPassword</strong>';
 FLUSH PRIVILEGES;
 EXIT;</pre>
-<p><strong>Step 6: Install WordPress</strong>，安装WordPress</p>
+<p>
+<strong>Step 6: Install WordPress</strong>，安装WordPress
+</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/www/html</span><br><span class="line">wget -c http://wordpress.org/latest.zip</span><br><span class="line">unzip latest.zip</span><br><span class="line">chown -R www-data:www-data wordpress</span><br><span class="line">rm latest.zip</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/www/html/wordpress</span><br><span class="line">mv wp-config-sample.php wp-config.php</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim wp-config.php</span><br></pre></td></tr></table></figure>
-
-<p>插入一下代码</p>
+<p>
+插入一下代码
+</p>
 <pre class="wp-block-preformatted">// ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
 define('DB_NAME', '<strong>wp</strong>');
 
-<p>/** MySQL database username */<br>define(‘DB_USER’, ‘<strong>jayzon</strong>‘);</p>
-<p>/** MySQL database password */<br>define(‘DB_PASSWORD’, ‘<strong>StrongPassword</strong>‘);</p>
-<p>/** MySQL hostname */<br>define(‘DB_HOST’, ‘localhost’);</p>
-<p>/** Database Charset to use in creating database tables. */<br>define(‘DB_CHARSET’, ‘utf8’);</p>
-<p>/** The Database Collate type. Don’t change this if in doubt. */<br>define(‘DB_COLLATE’, ‘’);</pre></p>
-<p><strong>Step 6: Create the Virtual Host Files</strong>，打开80端口</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/apache2/sites-available/your_domain.com.conf</span><br></pre></td></tr></table></figure>
+/** MySQL database username */
+define('DB_USER', '<strong>jayzon</strong>');
 
+/** MySQL database password */
+define('DB_PASSWORD', '<strong>StrongPassword</strong>');
+
+/** MySQL hostname */
+define('DB_HOST', 'localhost');
+
+/** Database Charset to use in creating database tables. */
+define('DB_CHARSET', 'utf8');
+
+/** The Database Collate type. Don't change this if in doubt. */
+define('DB_COLLATE', '');</pre>
+<p>
+<strong>Step 6: Create the Virtual Host Files</strong>，打开80端口
+</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/apache2/sites-available/your_domain.com.conf</span><br></pre></td></tr></table></figure>
 <pre class="wp-block-preformatted">&lt;VirtualHost *:80>
 
 ServerAdmin admin@jayzonxu.com
@@ -377,14 +423,16 @@ DocumentRoot /var/www/html/wordpress
 ErrorLog ${APACHE_LOG_DIR}/jayzonxu.com_error.log 
 CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined 
 &lt;/VirtualHost></pre>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /etc/apache2/sites-available/jayzonxu.com.conf /etc/apache2/sites-enabled/jayzonxu.com.conf</span><br></pre></td></tr></table></figure>
-
-<p><strong>Step 7: Configure WordPress</strong>，配置网站</p>
-<p>在浏览器中输入以下网址，进行配置WordPress</p>
+<p>
+<strong>Step 7: Configure WordPress</strong>，配置网站
+</p>
+<p>
+在浏览器中输入以下网址，进行配置WordPress
+</p>
 <pre class="wp-block-preformatted">http://www.jayzonxu.com/</pre>
-更多请参考
-[embed]https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/[/embed]
+<p>更多请参考 [embed]https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/[/embed]</p>
+
     </div>
 
     
@@ -436,8 +484,8 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2019/12/21/3d-dl-intro/" rel="prev" title="三维深度学习简单介绍">
-                  <i class="fa fa-chevron-left"></i> 三维深度学习简单介绍
+                <a href="/2019/12/21/3d-reconstruction/" rel="prev" title="三维重建简单综述">
+                  <i class="fa fa-chevron-left"></i> 三维重建简单综述
                 </a>
             </div>
             <div class="post-nav-item">
@@ -477,14 +525,14 @@ CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

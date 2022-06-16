@@ -152,7 +152,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#FLOPs"><span class="nav-number">1.</span> <span class="nav-text">FLOPs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97-FLOPs"><span class="nav-number">2.</span> <span class="nav-text">计算 FLOPs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text">开源库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">4.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#flops"><span class="nav-number">1.</span> <span class="nav-text">FLOPs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97-flops"><span class="nav-number">2.</span> <span class="nav-text">计算 FLOPs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text">开源库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">4.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -299,7 +299,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>974</span>
+      <span>984</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -319,21 +319,22 @@
     <div class="post-body" itemprop="articleBody">
         <p>在撰写论文时，当进行模型比较时，常常会比较模型准确度，但模型计算力消耗、参数个数也是重要的指标，特别是模型落地时。</p>
 <a id="more"></a>
-
-<h1 id="FLOPs"><a href="#FLOPs" class="headerlink" title="FLOPs"></a>FLOPs</h1><p>FLOPS 与 FLOPs 不同:</p>
+<h1 id="flops">FLOPs</h1>
+<p>FLOPS 与 FLOPs 不同:</p>
 <ul>
 <li>FLOPS: FLoating point Operations Per Second，表示每秒浮点运算次数，衡量硬件（如 GPU ）的计算性能，可理解为计算速度；</li>
-<li>FLOPs: FLoating point Operations，表示浮点运算数，衡量模型（如深度学习模型 CNN ）的复杂程度，可理解为计算量。 </li>
+<li>FLOPs: FLoating point Operations，表示浮点运算数，衡量模型（如深度学习模型 CNN ）的复杂程度，可理解为计算量。</li>
 </ul>
-<h1 id="计算-FLOPs"><a href="#计算-FLOPs" class="headerlink" title="计算 FLOPs"></a>计算 FLOPs</h1><p>计算 FLOPs 常常指深度学习模型前向传播是的计算量，而 CNN 中计算量主要集中在卷积层，除此之外，也有池化层、批归一化层、激活层，上采样层等。下面主要介绍卷积层计算 FLOPs 的方法。</p>
-<p>假设卷积核的大小是 $k \times k$，通道数是 $c$，输出特征图的大小是 $H \times W$​​，通道数是 $C$​，则计算力消耗是</p>
-<p>$k \times k \times c \times H \times W \times C$</p>
-<h1 id="开源库"><a href="#开源库" class="headerlink" title="开源库"></a>开源库</h1><p>一种方便的开源库是 <a target="_blank" rel="noopener" href="https://github.com/sovrasov/flops-counter.pytorch">ptflops</a></p>
+<h1 id="计算-flops">计算 FLOPs</h1>
+<p>计算 FLOPs 常常指深度学习模型前向传播是的计算量，而 CNN 中计算量主要集中在卷积层，除此之外，也有池化层、批归一化层、激活层，上采样层等。下面主要介绍卷积层计算 FLOPs 的方法。</p>
+<p>假设卷积核的大小是 <span class="math inline">\(k \times k\)</span>，通道数是 <span class="math inline">\(c\)</span>，输出特征图的大小是 <span class="math inline">\(H \times W\)</span>​​，通道数是 <span class="math inline">\(C\)</span>​，则计算力消耗是</p>
+<p><span class="math inline">\(k \times k \times c \times H \times W \times C\)</span></p>
+<h1 id="开源库">开源库</h1>
+<p>一种方便的开源库是 <a target="_blank" rel="noopener" href="https://github.com/sovrasov/flops-counter.pytorch">ptflops</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install ptflops</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision.models <span class="keyword">as</span> models</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> ptflops <span class="keyword">import</span> get_model_complexity_info</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> torch.cuda.device(<span class="number">0</span>):</span><br><span class="line">  net = models.densenet161()</span><br><span class="line">  macs, params = get_model_complexity_info(net, (<span class="number">3</span>, <span class="number">224</span>, <span class="number">224</span>), as_strings=<span class="literal">True</span>,</span><br><span class="line">                                           print_per_layer_stat=<span class="literal">True</span>, verbose=<span class="literal">True</span>)</span><br><span class="line">  print(<span class="string">&#x27;&#123;:&lt;30&#125;  &#123;:&lt;8&#125;&#x27;</span>.format(<span class="string">&#x27;Computational complexity: &#x27;</span>, macs))</span><br><span class="line">  print(<span class="string">&#x27;&#123;:&lt;30&#125;  &#123;:&lt;8&#125;&#x27;</span>.format(<span class="string">&#x27;Number of parameters: &#x27;</span>, params))</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<h1 id="参考链接">参考链接</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/137719986">CNN 模型所需的计算力flops是什么？怎么计算？</a></li>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/364543528">FLOPS ？FLOPs！！ FLOPs ? MACs！！</a></li>
 </ol>
@@ -436,14 +437,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

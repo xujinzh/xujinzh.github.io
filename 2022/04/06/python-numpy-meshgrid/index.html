@@ -310,48 +310,67 @@
     <div class="post-body" itemprop="articleBody">
         <p>numpy 中的 meshgrid() 函数能够生成坐标网格点，作为后续操作的输入，如画二元函数等高线图等。但它的理解却有些困难，本篇以 Jupyterlab 为平台演示，帮助理解该函数。</p>
 <a id="more"></a>
-
-<h1 id="直观理解"><a href="#直观理解" class="headerlink" title="直观理解"></a>直观理解</h1><p>请看下图，矩阵 (1) 为输入，其中[1, 2, 3] 为 $x$ 轴坐标，[6, 5, 4] 为 $y$ 轴坐标，里面的点 $\cdot$ 为有待求得的网格点。矩阵 (2) 为网格点矩阵，每个元素为该坐标处的 $(x, y)$ 坐标。两个矩阵 ($xv$), ($yv$) 分别为 np.meshgrid() 函数返回的 $x$ 坐标点矩阵和 $y$ 坐标点矩阵。</p>
-<p>$$<br>\begin{matrix}<br>    6 &amp; . &amp; . &amp; .  \\<br>    5 &amp; . &amp; . &amp; .  \\<br>    4 &amp; . &amp; . &amp; .  \\<br>      &amp; 1 &amp; 2 &amp; 3<br>\end{matrix} \tag{1}<br>$$</p>
-<p>$$<br>\left[<br>\begin{matrix}<br>    (1, 6) &amp; (2, 6) &amp; (3, 6) \\<br>    (1, 5) &amp; (2, 5) &amp; (3, 5) \\<br>    (1, 4) &amp; (2, 4) &amp; (3, 4)<br>\end{matrix}<br>\right]\tag{2}<br>$$</p>
-<p>$$<br>\left[<br>\begin{matrix}<br>    1 &amp; 2 &amp; 3 \\<br>    1 &amp; 2 &amp; 3 \\<br>    1 &amp; 2 &amp; 3<br>\end{matrix}<br>\right]\tag{xv}<br>$$</p>
-<p>$$<br>\left[<br>\begin{matrix}<br>    6 &amp; 6 &amp; 6 \\<br>    5 &amp; 5 &amp; 5 \\<br>    4 &amp; 4 &amp; 4<br>\end{matrix}<br>\right]\tag{yv}<br>$$</p>
+<h1 id="直观理解">直观理解</h1>
+<p>请看下图，矩阵 (1) 为输入，其中[1, 2, 3] 为 <span class="math inline">\(x\)</span> 轴坐标，[6, 5, 4] 为 <span class="math inline">\(y\)</span> 轴坐标，里面的点 <span class="math inline">\(\cdot\)</span> 为有待求得的网格点。矩阵 (2) 为网格点矩阵，每个元素为该坐标处的 <span class="math inline">\((x, y)\)</span> 坐标。两个矩阵 (<span class="math inline">\(xv\)</span>), (<span class="math inline">\(yv\)</span>) 分别为 np.meshgrid() 函数返回的 <span class="math inline">\(x\)</span> 坐标点矩阵和 <span class="math inline">\(y\)</span> 坐标点矩阵。</p>
+<p><span class="math display">\[
+\begin{matrix}
+    6 &amp; . &amp; . &amp; .  \\\\
+    5 &amp; . &amp; . &amp; .  \\\\
+    4 &amp; . &amp; . &amp; .  \\\\
+      &amp; 1 &amp; 2 &amp; 3
+\end{matrix} \tag{1}
+\]</span></p>
+<p><span class="math display">\[
+\left[
+\begin{matrix}
+    (1, 6) &amp; (2, 6) &amp; (3, 6) \\\\
+    (1, 5) &amp; (2, 5) &amp; (3, 5) \\\\
+    (1, 4) &amp; (2, 4) &amp; (3, 4)
+\end{matrix}
+\right]\tag{2}
+\]</span></p>
+<p><span class="math display">\[
+\left[
+\begin{matrix}
+    1 &amp; 2 &amp; 3 \\\\
+    1 &amp; 2 &amp; 3 \\\\
+    1 &amp; 2 &amp; 3
+\end{matrix}
+\right]\tag{xv}
+\]</span></p>
+<p><span class="math display">\[
+\left[
+\begin{matrix}
+    6 &amp; 6 &amp; 6 \\\\
+    5 &amp; 5 &amp; 5 \\\\
+    4 &amp; 4 &amp; 4 
+\end{matrix}
+\right]\tag{yv}
+\]</span></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line">y = np.array([<span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>])</span><br><span class="line">xv, yv = np.meshgrid(x, y)</span><br><span class="line">xv</span><br></pre></td></tr></table></figure>
-
-
 <pre><code>array([[1, 2, 3],
        [1, 2, 3],
        [1, 2, 3]])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yv</span><br></pre></td></tr></table></figure>
-
-
 <pre><code>array([[6, 6, 6],
        [5, 5, 5],
        [4, 4, 4]])</code></pre>
-<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
-
-
+<h1 id="示例">示例</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">circ</span>(<span class="params">x, y</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    计算坐标点(x, y)距离圆心(0, 0)的距离平方</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> np.power(x, <span class="number">2</span>) + np.power(y, <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = np.linspace(-np.pi, np.pi, <span class="number">20</span>)</span><br><span class="line">y = np.linspace(-np.pi, np.pi, <span class="number">20</span>)</span><br><span class="line">xv, yv = np.meshgrid(x, y)</span><br><span class="line">z = circ(xv, yv)</span><br></pre></td></tr></table></figure>
-
 <p>画网格点</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(xv, yv, marker=<span class="string">&quot;.&quot;</span>, color=<span class="string">&quot;r&quot;</span>, linestyle=<span class="string">&quot;none&quot;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p>​    <img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/python-numpy-meshgrid-1.png" alt="网格点"><br>​    </p>
+<p>​ <img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/python-numpy-meshgrid-1.png" alt="网格点" /> ​</p>
 <p>画等高线</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">plt.contourf(x, y, z)</span><br><span class="line">plt.axis(<span class="string">&quot;scaled&quot;</span>)</span><br><span class="line">plt.colorbar()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p>​    <img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/python-numpy-meshgrid-2.png" alt="等高线"><br>​    </p>
+<p>​ <img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/python-numpy-meshgrid-2.png" alt="等高线" /> ​</p>
 <p>画近似等高线图</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plt.imshow(z, origin=<span class="string">&quot;lower&quot;</span>, interpolation=<span class="string">&quot;none&quot;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p>​    <img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/python-numpy-meshgrid-3.png" alt="近似等高线图"><br>​    </p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<p>​ <img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/python-numpy-meshgrid-3.png" alt="近似等高线图" /> ​</p>
+<h1 id="参考文献">参考文献</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://wangyeming.github.io/2018/11/12/numpy-meshgrid/">理解numpy中的meshgrid()方法</a></li>
 <li><a target="_blank" rel="noopener" href="https://numpy.org/doc/stable/reference/generated/numpy.meshgrid.html">numpy.meshgrid</a></li>
 </ol>
@@ -447,14 +466,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

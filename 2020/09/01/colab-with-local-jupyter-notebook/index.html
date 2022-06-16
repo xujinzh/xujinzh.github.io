@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9C%AC%E5%9C%B0-Kernel"><span class="nav-number">1.</span> <span class="nav-text">使用本地 Kernel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84-Kernel"><span class="nav-number">2.</span> <span class="nav-text">使用远程服务器的 Kernel</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9C%AC%E5%9C%B0-kernel"><span class="nav-number">1.</span> <span class="nav-text">使用本地 Kernel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84-kernel"><span class="nav-number">2.</span> <span class="nav-text">使用远程服务器的 Kernel</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -313,58 +313,35 @@
     <div class="post-body" itemprop="articleBody">
         <p>众所周知，Colab 是一个美观、工具齐全、编写 Python 代码方便的网页版 notebook，结合本地运行时能够提高代码开发效率。注意本篇使用的 Jupyterlab 版本小于3.</p>
 <a id="more"></a>
-
 <p>设置前注意事项：</p>
 <ul>
 <li>调用任意命令（例如“<code>rm -rf /</code>”）</li>
 <li>访问本地文件系统</li>
 <li>在计算机上运行恶意内容</li>
 </ul>
-<h1 id="使用本地-Kernel"><a href="#使用本地-Kernel" class="headerlink" title="使用本地 Kernel"></a>使用本地 Kernel</h1><p>如果想使用 colab + 本地运行时，请按照如下步骤设置：</p>
-<ol>
+<h1 id="使用本地-kernel">使用本地 Kernel</h1>
+<p>如果想使用 colab + 本地运行时，请按照如下步骤设置：</p>
+<ol type="1">
 <li><p>安装 Jupyter</p>
 <p>建议先安装 Miniconda</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pip install jupyterlab</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">conda install -c conda-forge jupyterlab</span><br><span class="line"><span class="comment"># or </span></span><br><span class="line">mamba install -c conda-forge jupyterlab</span><br></pre></td></tr></table></figure>
-
 <p>安装后，建议<a target="_blank" rel="noopener" href="https://jupyter-notebook.readthedocs.io/en/stable/config.html">生成配置文件</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter notebook --generate-config</span><br></pre></td></tr></table></figure>
-
 <p>对于 <a target="_blank" rel="noopener" href="https://jupyter-server.readthedocs.io/en/latest/other/full-config.html">JupyterLab 版本大于3 的</a>, 推荐使用</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter server --generate-config</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ol>
-<ol start="2">
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter server --generate-config</span><br></pre></td></tr></table></figure></li>
 <li><p>安装 jupyter_http_over_ws</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pip install jupyter_http_over_ws</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启用 jupyter_http_over_ws</span></span><br><span class="line">jupyter serverextension <span class="built_in">enable</span> --py jupyter_http_over_ws</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ol>
-<ol start="3">
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pip install jupyter_http_over_ws</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启用 jupyter_http_over_ws</span></span><br><span class="line">jupyter serverextension <span class="built_in">enable</span> --py jupyter_http_over_ws</span><br></pre></td></tr></table></figure></li>
 <li><p>启动服务器并进行身份验证</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">jupyter notebook \</span><br><span class="line">  --NotebookApp.allow_origin=<span class="string">&#x27;https://colab.research.google.com&#x27;</span> \</span><br><span class="line">  --port=8888 \</span><br><span class="line">  --NotebookApp.port_retries=0</span><br><span class="line">  </span><br><span class="line"><span class="comment"># 后面的三个配置都可以在 ～/.jupyter/jupyter_notebook_config.py 中进行设置</span></span><br><span class="line"><span class="comment"># 这样就不用每次启动 jupyter notebook 时手动配置，设置后启动方式如下</span></span><br><span class="line"><span class="comment"># 如果没有文件 jupyter_notebook_config.py，可以使用命令 jupyter notebook --generate-config 生成</span></span><br><span class="line">nohup jupyter notebook &gt; /dev/null 2&gt;&amp;1 &amp;</span><br><span class="line">  </span><br><span class="line"><span class="comment"># 查看 jupyter notebook 的 token 可使用如下代码</span></span><br><span class="line">jupyter notebook list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭运行的 jupyter notebook，使用如下命令</span></span><br><span class="line">jupyter notebook stop 8888</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ol>
-<ol start="4">
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">jupyter notebook \</span><br><span class="line">  --NotebookApp.allow_origin=<span class="string">&#x27;https://colab.research.google.com&#x27;</span> \</span><br><span class="line">  --port=8888 \</span><br><span class="line">  --NotebookApp.port_retries=0</span><br><span class="line">  </span><br><span class="line"><span class="comment"># 后面的三个配置都可以在 ～/.jupyter/jupyter_notebook_config.py 中进行设置</span></span><br><span class="line"><span class="comment"># 这样就不用每次启动 jupyter notebook 时手动配置，设置后启动方式如下</span></span><br><span class="line"><span class="comment"># 如果没有文件 jupyter_notebook_config.py，可以使用命令 jupyter notebook --generate-config 生成</span></span><br><span class="line">nohup jupyter notebook &gt; /dev/null 2&gt;&amp;1 &amp;</span><br><span class="line">  </span><br><span class="line"><span class="comment"># 查看 jupyter notebook 的 token 可使用如下代码</span></span><br><span class="line">jupyter notebook list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭运行的 jupyter notebook，使用如下命令</span></span><br><span class="line">jupyter notebook stop 8888</span><br></pre></td></tr></table></figure></li>
 <li><p>连接到本地运行时</p>
-<p>在 Colaboratory 中，点击“连接”按钮，然后选择“连接到本地代码执行程序…”。在随即显示的对话框中输入上一步中的网址，然后点击“连接”按钮。完成此操作后，您应该就已经连接到本地运行时了。</p>
-</li>
+<p>在 Colaboratory 中，点击“连接”按钮，然后选择“连接到本地代码执行程序…”。在随即显示的对话框中输入上一步中的网址，然后点击“连接”按钮。完成此操作后，您应该就已经连接到本地运行时了。</p></li>
 <li><p>卸载</p>
 <p>您可以通过运行以下命令停用和移除 jupyter_http_over_ws jupyter 扩展程序：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jupyter serverextension <span class="built_in">disable</span> --py jupyter_http_over_ws</span><br><span class="line">pip uninstall jupyter_http_over_ws</span><br></pre></td></tr></table></figure>
-
-</li>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jupyter serverextension <span class="built_in">disable</span> --py jupyter_http_over_ws</span><br><span class="line">pip uninstall jupyter_http_over_ws</span><br></pre></td></tr></table></figure></li>
 </ol>
-<h1 id="使用远程服务器的-Kernel"><a href="#使用远程服务器的-Kernel" class="headerlink" title="使用远程服务器的 Kernel"></a>使用远程服务器的 Kernel</h1><p>如果想要使用远程主机或 vps 的 jupyter notebook，可以先使用终端将远程主机的 jupyter notebook 的 8888 端口映射到本地 localhost 的 8888 端口，方法如下：</p>
+<h1 id="使用远程服务器的-kernel">使用远程服务器的 Kernel</h1>
+<p>如果想要使用远程主机或 vps 的 jupyter notebook，可以先使用终端将远程主机的 jupyter notebook 的 8888 端口映射到本地 localhost 的 8888 端口，方法如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh -L 8888:localhost:8888 jinzhongxu@3.2.1.0</span><br><span class="line"><span class="comment"># 也可以使用如下代码，不打开远程终端</span></span><br><span class="line">ssh -f -N -L 8888:localhost:8888 jinzhongxu@3.2.1.0</span><br></pre></td></tr></table></figure>
-
 
     </div>
 
@@ -458,14 +435,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

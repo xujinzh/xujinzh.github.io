@@ -306,20 +306,20 @@
     <div class="post-body" itemprop="articleBody">
         <p>Transmission 是一种流行的跨平台 BitTorrent 客户端，具有多种风格，包括原生 Mac 和 GTK+ 版本，以及任何使用过 uTorrent 的人都熟悉的桌面 GUI。它是许多 Linux 发行版中的默认 BitTorrent 客户端，transmission-cli 可以在大多数官方存储库中找到。本篇以 Ubuntu 为例。</p>
 <a id="more"></a>
-
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install transmission-cli</span><br></pre></td></tr></table></figure>
-
-<h1 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h1><h2 id="下载-torrent"><a href="#下载-torrent" class="headerlink" title="下载 torrent"></a>下载 torrent</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">transmission-cli http://releases.ubuntu.com/16.10/ubuntu-16.10-desktop-amd64.iso.torrent -w ~/Downloads</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以先把 torrent 文件下载到本地，然后再下载</span></span><br><span class="line">wget http://releases.ubuntu.com/16.10/ubuntu-16.10-desktop-amd64.iso.torrent</span><br><span class="line">transmission-cli ubuntu-16.10-desktop-amd64.iso.torrent -w ~/Downloads</span><br></pre></td></tr></table></figure>
-
-<h2 id="下载磁力链接"><a href="#下载磁力链接" class="headerlink" title="下载磁力链接"></a>下载磁力链接</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transmission-cli <span class="string">&quot;magnet:?xt=urn:btih:e249fe4dc957be4b4ce3ecaac280fdf1c71bc5bb&amp;dn=ubuntu-mate-16.10-desktop-amd64.iso&quot;</span> -w ~/Downloads</span><br></pre></td></tr></table></figure>
-
-<h2 id="加密下载"><a href="#加密下载" class="headerlink" title="加密下载"></a>加密下载</h2><p>-er 标志告诉传输 cli 要求对其连接的所有对等方进行加密。这可能会减慢传输速度，因此此选项可能并不适合所有人，尤其是传输速度较慢的人。</p>
+<h1 id="安装">安装</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install transmission-cli</span><br></pre></td></tr></table></figure>
+<h1 id="使用方法">使用方法</h1>
+<h2 id="下载-torrent">下载 torrent</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">transmission-cli http://releases.ubuntu.com/16.10/ubuntu-16.10-desktop-amd64.iso.torrent -w ~/Downloads</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以先把 torrent 文件下载到本地，然后再下载</span></span><br><span class="line">wget http://releases.ubuntu.com/16.10/ubuntu-16.10-desktop-amd64.iso.torrent</span><br><span class="line">transmission-cli ubuntu-16.10-desktop-amd64.iso.torrent -w ~/Downloads</span><br></pre></td></tr></table></figure>
+<h2 id="下载磁力链接">下载磁力链接</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transmission-cli <span class="string">&quot;magnet:?xt=urn:btih:e249fe4dc957be4b4ce3ecaac280fdf1c71bc5bb&amp;dn=ubuntu-mate-16.10-desktop-amd64.iso&quot;</span> -w ~/Downloads</span><br></pre></td></tr></table></figure>
+<h2 id="加密下载">加密下载</h2>
+<p>-er 标志告诉传输 cli 要求对其连接的所有对等方进行加密。这可能会减慢传输速度，因此此选项可能并不适合所有人，尤其是传输速度较慢的人。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transmission-cli http://releases.ubuntu.com/16.10/ubuntu-16.10-desktop-amd64.iso.torrent -w ~/Downloads -er</span><br></pre></td></tr></table></figure>
-
 <p>要使用加密流量下载，但要提高传输速度，请尝试使用首选加密开关。这将告诉对等方客户端更喜欢加密，但它不需要它。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transmission-cli http://releases.ubuntu.com/16.10/ubuntu-16.10-desktop-amd64.iso.torrent -w ~/Downloads -ep</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<h1 id="参考链接">参考链接</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="http://manpages.ubuntu.com/manpages/jammy/man1/transmission-cli.1.html">ubuntu manuals</a></li>
 <li><a target="_blank" rel="noopener" href="http://xdsnet.github.io/index.html?name=%E6%9D%82%E8%B0%88:transmission%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E9%9B%86%E4%B8%AD%E6%96%87%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E">transmission命令行工具集中文使用说明</a></li>
 <li><a target="_blank" rel="noopener" href="http://m.blog.chinaunix.net/uid-10062010-id-5758134.html">ChinaUnix: transmission命令行工具集中文使用说明</a></li>
@@ -416,14 +416,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

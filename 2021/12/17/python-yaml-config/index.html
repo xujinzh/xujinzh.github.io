@@ -22,12 +22,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="YAML (YAML Ain’t Markup Language™) 是一种直观的能够被电脑识别的数据序列化格式，容易被人类阅读，并且容易和脚本语言交互。YAML 类似于 XML，但是语法比 XML 简单得多，对于转化成数组或可以 hash 的数据时是很简单有效的。">
+    <meta name="description" content="YAML (YAML Ain&#39;t Markup Language™) 是一种直观的能够被电脑识别的数据序列化格式，容易被人类阅读，并且容易和脚本语言交互。YAML 类似于 XML，但是语法比 XML 简单得多，对于转化成数组或可以 hash 的数据时是很简单有效的。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在 Python 中使用 yaml 做配置文件">
 <meta property="og:url" content="https://xujinzh.github.io/2021/12/17/python-yaml-config/index.html">
 <meta property="og:site_name" content="J. Xu">
-<meta property="og:description" content="YAML (YAML Ain’t Markup Language™) 是一种直观的能够被电脑识别的数据序列化格式，容易被人类阅读，并且容易和脚本语言交互。YAML 类似于 XML，但是语法比 XML 简单得多，对于转化成数组或可以 hash 的数据时是很简单有效的。">
+<meta property="og:description" content="YAML (YAML Ain&#39;t Markup Language™) 是一种直观的能够被电脑识别的数据序列化格式，容易被人类阅读，并且容易和脚本语言交互。YAML 类似于 XML，但是语法比 XML 简单得多，对于转化成数组或可以 hash 的数据时是很简单有效的。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-12-17T07:43:39.000Z">
 <meta property="article:modified_time" content="2021-12-17T08:08:14.005Z">
@@ -304,24 +304,20 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>YAML (YAML Ain’t Markup Language™) 是一种直观的能够被电脑识别的数据序列化格式，容易被人类阅读，并且容易和脚本语言交互。YAML 类似于 XML，但是语法比 XML 简单得多，对于转化成数组或可以 hash 的数据时是很简单有效的。</p>
+        <p>YAML (YAML Ain't Markup Language™) 是一种直观的能够被电脑识别的数据序列化格式，容易被人类阅读，并且容易和脚本语言交互。YAML 类似于 XML，但是语法比 XML 简单得多，对于转化成数组或可以 hash 的数据时是很简单有效的。</p>
 <a id="more"></a>
-
-<p>yaml 的官方网站是：<a target="_blank" rel="noopener" href="https://yaml.org/">https://yaml.org</a></p>
+<p>yaml 的官方网站是：https://yaml.org</p>
 <p>安装 yaml</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install PyYAML</span><br></pre></td></tr></table></figure>
-
-<h1 id="读取-yaml-文档"><a href="#读取-yaml-文档" class="headerlink" title="读取 yaml 文档"></a>读取 yaml 文档</h1><p>有文档 test.yaml，内容如下</p>
+<h1 id="读取-yaml-文档">读取 yaml 文档</h1>
+<p>有文档 test.yaml，内容如下</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">Tom</span> <span class="string">Smith</span></span><br><span class="line"><span class="attr">age:</span> <span class="number">37</span></span><br><span class="line"><span class="attr">spouse:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Jane</span> <span class="string">Smith</span></span><br><span class="line">    <span class="attr">age:</span> <span class="number">25</span></span><br><span class="line"><span class="attr">children:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Jimmy</span> <span class="string">Smith</span></span><br><span class="line">    <span class="attr">age:</span> <span class="number">15</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Jenny</span> <span class="string">Smith</span></span><br><span class="line">    <span class="attr">age:</span> <span class="number">12</span></span><br></pre></td></tr></table></figure>
-
 <p>在 python 中利用 yaml 读取</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"></span><br><span class="line">filepath = <span class="string">&quot;data/test.yaml&quot;</span></span><br><span class="line">file = open(file=filepath)</span><br><span class="line">file_str = yaml.load(file, yaml.Loader)</span><br><span class="line">print(file_str)</span><br></pre></td></tr></table></figure>
-
 <p>结果如下</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">&#x27;name&#x27;:</span> <span class="string">&#x27;Tom Smith&#x27;</span>,</span><br><span class="line"> <span class="attr">&#x27;age&#x27;:</span> <span class="number">37</span>,</span><br><span class="line"> <span class="attr">&#x27;spouse&#x27;:</span> &#123;<span class="attr">&#x27;name&#x27;:</span> <span class="string">&#x27;Jane Smith&#x27;</span>, <span class="attr">&#x27;age&#x27;:</span> <span class="number">25</span>&#125;,</span><br><span class="line"> <span class="attr">&#x27;children&#x27;:</span> [&#123;<span class="attr">&#x27;name&#x27;:</span> <span class="string">&#x27;Jimmy Smith&#x27;</span>, <span class="attr">&#x27;age&#x27;:</span> <span class="number">15</span>&#125;,</span><br><span class="line">  &#123;<span class="attr">&#x27;name&#x27;:</span> <span class="string">&#x27;Jenny Smith&#x27;</span>, <span class="attr">&#x27;age&#x27;:</span> <span class="number">12</span>&#125;]&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="把字典写入-yaml-文档"><a href="#把字典写入-yaml-文档" class="headerlink" title="把字典写入 yaml 文档"></a>把字典写入 yaml 文档</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f = open(<span class="string">&#x27;data/test2.yaml&#x27;</span>, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line">yaml.dump(file_str, f)</span><br></pre></td></tr></table></figure>
-
+<h1 id="把字典写入-yaml-文档">把字典写入 yaml 文档</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f = open(<span class="string">&#x27;data/test2.yaml&#x27;</span>, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line">yaml.dump(file_str, f)</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -414,14 +410,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

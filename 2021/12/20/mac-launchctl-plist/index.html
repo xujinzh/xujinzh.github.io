@@ -313,29 +313,27 @@
     <div class="post-body" itemprop="articleBody">
         <p>Linux 系统（如 Debian 10）上可以方便的使用 systemctl 开启守护进程，关闭守护进程，那么在 Mac 上如何设置自定义守护进程并开启、关闭它呢？本篇以 JupyterHub 为例，演示在 Mac 上开启 JupyterHub 守护进程. 本篇假设已经完成了 Miniconda，JupyterHub 和 configurable-http-proxy 的安装。</p>
 <a id="more"></a>
-
-<h1 id="创建-plist-文件"><a href="#创建-plist-文件" class="headerlink" title="创建 plist 文件"></a>创建 plist 文件</h1><p>创建以 <code>com.jupyterhub.app.plist</code> 命名的文件，放在 <code>/Users/jinzhongxu/Library/LaunchAgents</code> 目录下，文件内容如下</p>
+<h1 id="创建-plist-文件">创建 plist 文件</h1>
+<p>创建以 <code>com.jupyterhub.app.plist</code> 命名的文件，放在 <code>/Users/jinzhongxu/Library/LaunchAgents</code> 目录下，文件内容如下</p>
 <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="line">&lt;!DOCTYPE plist PUBLIC <span class="string">&quot;-//Apple//DTD PLIST 1.0//EN&quot;</span> <span class="string">&quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;</span>&gt;</span><br><span class="line">&lt;plist version=<span class="string">&quot;1.0&quot;</span>&gt;</span><br><span class="line">    &lt;dict&gt;</span><br><span class="line">        &lt;key&gt;Label&lt;/key&gt;</span><br><span class="line">        &lt;string&gt;com.jupyterhub.app&lt;/string&gt;</span><br><span class="line">        &lt;key&gt;ProgramArguments&lt;/key&gt;</span><br><span class="line">        &lt;array&gt;</span><br><span class="line">            &lt;string&gt;/usr/local/miniconda/bin/jupyterhub&lt;/string&gt;</span><br><span class="line">            &lt;string&gt;-f&lt;/string&gt;</span><br><span class="line">            &lt;string&gt;/etc/jupyterhub/config.py&lt;/string&gt;</span><br><span class="line">        &lt;/array&gt;</span><br><span class="line">        &lt;key&gt;KeepAlive&lt;/key&gt;</span><br><span class="line">        &lt;true/&gt;</span><br><span class="line">        &lt;key&gt;StandardErrorPath&lt;/key&gt;</span><br><span class="line">        &lt;string&gt;/tmp/jupyterhuberr.log&lt;/string&gt;</span><br><span class="line">        &lt;key&gt;StandardOutPath&lt;/key&gt;</span><br><span class="line">        &lt;string&gt;/tmp/jupyterhubout.log&lt;/string&gt;</span><br><span class="line">        &lt;key&gt;EnvironmentVariables&lt;/key&gt;</span><br><span class="line">        &lt;dict&gt;</span><br><span class="line">          &lt;key&gt;PATH&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;&lt;![CDATA[/usr/local/bin:/usr/bin:/bin:/usr/local/miniconda/bin:/usr/local/node/bin]]&gt;&lt;/string&gt;</span><br><span class="line">        &lt;/dict&gt;</span><br><span class="line">		&lt;key&gt;WorkingDirectory&lt;/key&gt;</span><br><span class="line">    &lt;string&gt;/Users/jinzhongxu&lt;/string&gt;</span><br><span class="line">    &lt;/dict&gt;</span><br><span class="line">&lt;/plist&gt;</span><br></pre></td></tr></table></figure>
-
 <p>各条目解释：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Label：对应的需要保证全局唯一性;</span><br><span class="line">Program：要运行的程序;</span><br><span class="line">ProgramArguments：命令语句;</span><br><span class="line">StartCalendarInterval：运行的时间，单个时间点使用dict，多个时间点使用 array &lt;dict&gt;;</span><br><span class="line">StartInterval：时间间隔，与StartCalendarInterval使用其一，单位为秒;</span><br><span class="line">StandardInPath、StandardOutPath、StandardErrorPath：标准的输入输出错误文件，这里建议不要使用 .<span class="built_in">log</span> 作为后缀，会打不开里面的信息;</span><br><span class="line">定时启动任务时，如果涉及到网络，但是电脑处于睡眠状态，是执行不了的，这个时候，可以定时的启动屏幕就好了。</span><br></pre></td></tr></table></figure>
-
 <p>注意：</p>
-<ol>
+<ol type="1">
 <li>configurable-http-proxy 的路径需添加到 PATH 里面；</li>
 <li>WorkingDirectory 需指定用户能够创建 jupyterhub_cookie_secret 的地方；</li>
 <li>如果启动不成功，可通过 jupyterhuberr.log 查看原因。</li>
 </ol>
 <p>plist 可以放的目录包括</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">~/Library/LaunchAgents 由用户自己定义的任务项</span><br><span class="line">/Library/LaunchAgents 由管理员为用户定义的任务项</span><br><span class="line">/Library/LaunchDaemons 由管理员定义的守护进程任务项</span><br><span class="line">/System/Library/LaunchAgents 由 Mac 为用户定义的任务项</span><br><span class="line">/System/Library/LaunchDaemons 由 Mac 定义的守护进程任务项</span><br><span class="line"></span><br><span class="line">/System/Library 与 /Library 以及 ~/Library 目录的区别？</span><br><span class="line">/System/Library 目录是存放 Apple 自己开发的软件。</span><br><span class="line">/Library 目录是系统管理员存放的第三方软件。</span><br><span class="line">~/Library 是用户自己存放的第三方软件。</span><br><span class="line"></span><br><span class="line">LaunchDaemons 和 LaunchAgents 的区别？</span><br><span class="line">LaunchDaemons 是用户未登陆前就启动的服务（守护进程）。</span><br><span class="line">LaunchAgents 是用户登陆后启动的服务（守护进程）。</span><br></pre></td></tr></table></figure>
-
-<h1 id="开启守护进程"><a href="#开启守护进程" class="headerlink" title="开启守护进程"></a>开启守护进程</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span></span><br><span class="line">launchctl load Library/LaunchAgents/com.jupyterhub.app.plist</span><br></pre></td></tr></table></figure>
-
-<h1 id="关闭守护进程"><a href="#关闭守护进程" class="headerlink" title="关闭守护进程"></a>关闭守护进程</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果运行 load 再次运行 load 将会出错，类似下面的错误</span></span><br><span class="line"><span class="comment"># Load failed: 5: Input/output error</span></span><br><span class="line"><span class="comment"># Try running `launchctl bootstrap` as root for richer errors.</span></span><br><span class="line"><span class="comment"># 此时，需要先退出，方法如下：</span></span><br><span class="line"><span class="built_in">cd</span></span><br><span class="line">launchctl unload Library/LaunchAgents/com.jupyterhub.app.plist</span><br></pre></td></tr></table></figure>
-
-<h1 id="查看守护进程是否启动成功"><a href="#查看守护进程是否启动成功" class="headerlink" title="查看守护进程是否启动成功"></a>查看守护进程是否启动成功</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当返回的结果第一个位置有数字而不是“-”时，说明程序正常运行</span></span><br><span class="line">launchctl list | grep jupyterhub</span><br><span class="line"></span><br><span class="line"><span class="comment"># or 当列出程序进程信息时，说明程序正常运行</span></span><br><span class="line">pstree | grep jupyterhub ｜ grep -v grep</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<h1 id="开启守护进程">开启守护进程</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span></span><br><span class="line">launchctl load Library/LaunchAgents/com.jupyterhub.app.plist</span><br></pre></td></tr></table></figure>
+<h1 id="关闭守护进程">关闭守护进程</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果运行 load 再次运行 load 将会出错，类似下面的错误</span></span><br><span class="line"><span class="comment"># Load failed: 5: Input/output error</span></span><br><span class="line"><span class="comment"># Try running `launchctl bootstrap` as root for richer errors.</span></span><br><span class="line"><span class="comment"># 此时，需要先退出，方法如下：</span></span><br><span class="line"><span class="built_in">cd</span></span><br><span class="line">launchctl unload Library/LaunchAgents/com.jupyterhub.app.plist</span><br></pre></td></tr></table></figure>
+<h1 id="查看守护进程是否启动成功">查看守护进程是否启动成功</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当返回的结果第一个位置有数字而不是“-”时，说明程序正常运行</span></span><br><span class="line">launchctl list | grep jupyterhub</span><br><span class="line"></span><br><span class="line"><span class="comment"># or 当列出程序进程信息时，说明程序正常运行</span></span><br><span class="line">pstree | grep jupyterhub ｜ grep -v grep</span><br></pre></td></tr></table></figure>
+<h1 id="参考链接">参考链接</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b65c1d339eec">Mac执行定时任务之Launchctl</a></li>
 </ol>
 
@@ -431,14 +429,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

@@ -33,9 +33,9 @@
 <meta property="article:modified_time" content="2021-11-09T10:42:04.879Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="debian">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="centos">
-<meta property="article:tag" content="debian">
 <meta property="article:tag" content="locale">
 <meta name="twitter:card" content="summary">
 
@@ -149,7 +149,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Debian-%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">Debian 类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CentOS"><span class="nav-number">2.</span> <span class="nav-text">CentOS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#debian-%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">Debian 类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#centos"><span class="nav-number">2.</span> <span class="nav-text">CentOS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -316,22 +316,16 @@
     <div class="post-body" itemprop="articleBody">
         <p>Linux 系统语言的设置至关重要，当设置不匹配的语言时，严重影响使用的效率。如在系统上没有设置中文时，大多出现乱码、数字等情况，使得使用的体验感大幅下降。下面介绍在 Debian, CentOS 等系统上设置中文或其他语言的方法。本篇命令以 root 身份运行。</p>
 <a id="more"></a>
-
-<h1 id="Debian-类"><a href="#Debian-类" class="headerlink" title="Debian 类"></a>Debian 类</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt install locale</span><br><span class="line">dpkg-reconfigure locales</span><br><span class="line"><span class="comment"># 使用空格选择相应的语言，使用上下键移动光标</span></span><br><span class="line"><span class="comment"># 选择好需要安装的语言后，使用 TAB 键切换到 ok</span></span><br><span class="line"><span class="comment"># 使用上下键选择默认的使用的语言</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装成功后，需重启系统</span></span><br><span class="line">shutdown -r now</span><br><span class="line"><span class="comment"># 使用下面命令查看是否生效</span></span><br><span class="line">locale</span><br><span class="line"><span class="comment"># 使用下面命令查看安装的语言</span></span><br><span class="line">locale -a</span><br></pre></td></tr></table></figure>
-
+<h1 id="debian-类">Debian 类</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt install locale</span><br><span class="line">dpkg-reconfigure locales</span><br><span class="line"><span class="comment"># 使用空格选择相应的语言，使用上下键移动光标</span></span><br><span class="line"><span class="comment"># 选择好需要安装的语言后，使用 TAB 键切换到 ok</span></span><br><span class="line"><span class="comment"># 使用上下键选择默认的使用的语言</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装成功后，需重启系统</span></span><br><span class="line">shutdown -r now</span><br><span class="line"><span class="comment"># 使用下面命令查看是否生效</span></span><br><span class="line">locale</span><br><span class="line"><span class="comment"># 使用下面命令查看安装的语言</span></span><br><span class="line">locale -a</span><br></pre></td></tr></table></figure>
 <p>设置时区</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg-reconfigure tzdata</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="CentOS"><a href="#CentOS" class="headerlink" title="CentOS"></a>CentOS</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">yum update</span><br><span class="line"><span class="comment"># 查看目前系统语言</span></span><br><span class="line">localectl status</span><br><span class="line"><span class="comment"># 或者通过如下命令也可以查看</span></span><br><span class="line">cat /etc/locale.conf</span><br><span class="line"><span class="comment"># 查看系统中安装了哪些语言</span></span><br><span class="line">localectl list-locales</span><br><span class="line"><span class="comment"># 查看系统中安装了哪些英文语言</span></span><br><span class="line">localectl list-locales | grep en_</span><br><span class="line"><span class="comment"># 设置默认语言为 en_GB.utf8</span></span><br><span class="line">localectl <span class="built_in">set</span>-locale LANG=en_GB.utf8</span><br><span class="line"><span class="comment"># 查看修改默认语言是否成功</span></span><br><span class="line">localectl status</span><br><span class="line"><span class="comment"># 更过使用帮助</span></span><br><span class="line">localectl --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
-
+<h1 id="centos">CentOS</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">yum update</span><br><span class="line"><span class="comment"># 查看目前系统语言</span></span><br><span class="line">localectl status</span><br><span class="line"><span class="comment"># 或者通过如下命令也可以查看</span></span><br><span class="line">cat /etc/locale.conf</span><br><span class="line"><span class="comment"># 查看系统中安装了哪些语言</span></span><br><span class="line">localectl list-locales</span><br><span class="line"><span class="comment"># 查看系统中安装了哪些英文语言</span></span><br><span class="line">localectl list-locales | grep en_</span><br><span class="line"><span class="comment"># 设置默认语言为 en_GB.utf8</span></span><br><span class="line">localectl <span class="built_in">set</span>-locale LANG=en_GB.utf8</span><br><span class="line"><span class="comment"># 查看修改默认语言是否成功</span></span><br><span class="line">localectl status</span><br><span class="line"><span class="comment"># 更过使用帮助</span></span><br><span class="line">localectl --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
 <p>设置时区</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">timedatectl <span class="built_in">set</span>-timezone Asia/Shanghai</span><br><span class="line"><span class="comment"># 如何知道有那些时区可以设置，可以使用如下命令查看</span></span><br><span class="line">ls /usr/share/zoneinfo</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-set-up-system-locale-on-centos-7/">How to Set Up System Locale on CentOS 7</a></p>
+<h1 id="参考链接">参考链接</h1>
+<p><a target="_blank" rel="noopener" href="https://www.rosehosting.com/blog/how-to-set-up-system-locale-on-centos-7/">How to Set Up System Locale on CentOS 7</a></p>
 
     </div>
 
@@ -377,9 +371,9 @@
 
           <div class="post-tags">
               <a href="/tags/ubuntu/" rel="tag"><i class="fa fa-tag"></i> ubuntu</a>
+              <a href="/tags/debian/" rel="tag"><i class="fa fa-tag"></i> debian</a>
               <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
               <a href="/tags/centos/" rel="tag"><i class="fa fa-tag"></i> centos</a>
-              <a href="/tags/debian/" rel="tag"><i class="fa fa-tag"></i> debian</a>
               <a href="/tags/locale/" rel="tag"><i class="fa fa-tag"></i> locale</a>
           </div>
 
@@ -428,14 +422,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

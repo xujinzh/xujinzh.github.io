@@ -293,7 +293,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>3k</span>
+      <span>3.2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -314,44 +314,67 @@
         <p>凸函数（Convex function）和拐点（Inflection point）。 此部分为参考 华东师范大学《数学分析上册》。以下内容为学习中的重点总结。</p>
 <p>凸函数一般用来证明不等式；注意左右导数和凸函数定义公式的联系；凸函数的性质比较好，在机器学习中是理想的代价函数，因为好求最小值点；注意拐点中的鞍点（是一阶导数等于0的点，即拐点中的驻点或稳定点）。</p>
 <a id="more"></a>
-
-<h1 id="凸函数"><a href="#凸函数" class="headerlink" title="凸函数"></a>凸函数</h1><p><strong>定义1</strong> 设$f$为定义在区间$I$上的函数，若对$I$上的任意两点$x_1, x_2$和任意实数$\lambda\in(0,1)$总有<br>$$<br>f(\lambda x_1 + (1-\lambda) x_2)\leq \lambda f(x_1) + (1 - \lambda)f(x_2),<br>$$<br>则称$f$为$I$上的凸函数。反之，如果总有<br>$$<br>f(\lambda x_1 + (1 - \lambda) x_2)\geq \lambda f(x_1) + (1 - \lambda) f(x_2),<br>$$<br>则称$f$为$I$上的凹函数。</p>
+<h1 id="凸函数">凸函数</h1>
+<p><strong>定义1</strong> 设<span class="math inline">\(f\)</span>为定义在区间<span class="math inline">\(I\)</span>上的函数，若对<span class="math inline">\(I\)</span>上的任意两点<span class="math inline">\(x_1, x_2\)</span>和任意实数<span class="math inline">\(\lambda\in(0,1)\)</span>总有 <span class="math display">\[
+f(\lambda x_1 + (1-\lambda) x_2)\leq \lambda f(x_1) + (1 - \lambda)f(x_2),
+\]</span> 则称<span class="math inline">\(f\)</span>为<span class="math inline">\(I\)</span>上的凸函数。反之，如果总有 <span class="math display">\[
+f(\lambda x_1 + (1 - \lambda) x_2)\geq \lambda f(x_1) + (1 - \lambda) f(x_2),
+\]</span> 则称<span class="math inline">\(f\)</span>为<span class="math inline">\(I\)</span>上的凹函数。</p>
 <p>另外，</p>
-<ol>
+<ol type="1">
 <li>如果上面的不等式为严格不等式，那么称严格凸函数和严格凹函数。</li>
-<li>如果$-f$为区间$I$上的凹函数，那么$f$为区间$I$上的凸函数。</li>
+<li>如果<span class="math inline">\(-f\)</span>为区间<span class="math inline">\(I\)</span>上的凹函数，那么<span class="math inline">\(f\)</span>为区间<span class="math inline">\(I\)</span>上的凸函数。</li>
 </ol>
-<p><strong>引理</strong> $f$为$I$上的凸函数的充要条件是对于$I$上的任意三点$x_1 &lt; x_2 &lt; x_3$，总有<br>$$<br>\frac{f(x_2) - f(x_1)}{x_2 - x_1} \leq \frac{f(x_3) - f(x_2)}{x_3 - x_2}.<br>$$<br>同样地，$f$为$I$上的凸函数的充要条件是对于$I$上的任意三点$x_1 &lt; x_2 &lt; x_3$，有<br>$$<br>\frac{f(x_2) - f(x_1)}{x_2 - x_1} \leq \frac{f(x_3) - f(x_1)}{x_3 - x_1} \leq \frac{f(x_3) - f(x_2)}{x_3 - x_2}.<br>$$<br><strong>注意，这里把$x_2, x_3$看着一个变量时，函数$\frac{f(x_3) - f(x_1)}{x_3 - x_1}$是一个增函数，可以利用单调有界定理，取极限</strong></p>
-<p><strong>定理6.14</strong> 设$f$为区间$I$上的可导函数，则下述论断互相等价：</p>
-<ol>
-<li><p>$f$为$I$上的增函数；</p>
-</li>
-<li><p>$f^{\prime}$为$I$上的增函数；</p>
-</li>
-<li><p>对$I$上的任意两点$x_1, x_2$有<br>$$<br>f(x_2) \geq f(x_1) + f^{\prime}(x_1)(x_2 - x_1).<br>$$<br>论断3的几何意义就是说曲线$y=f(x)$总是在它的任一切线上方。</p>
-</li>
+<p><strong>引理</strong> <span class="math inline">\(f\)</span>为<span class="math inline">\(I\)</span>上的凸函数的充要条件是对于<span class="math inline">\(I\)</span>上的任意三点<span class="math inline">\(x_1 &lt; x_2 &lt; x_3\)</span>，总有 <span class="math display">\[
+\frac{f(x_2) - f(x_1)}{x_2 - x_1} \leq \frac{f(x_3) - f(x_2)}{x_3 - x_2}.
+\]</span> 同样地，<span class="math inline">\(f\)</span>为<span class="math inline">\(I\)</span>上的凸函数的充要条件是对于<span class="math inline">\(I\)</span>上的任意三点<span class="math inline">\(x_1 &lt; x_2 &lt; x_3\)</span>，有 <span class="math display">\[
+\frac{f(x_2) - f(x_1)}{x_2 - x_1} \leq \frac{f(x_3) - f(x_1)}{x_3 - x_1} \leq \frac{f(x_3) - f(x_2)}{x_3 - x_2}.
+\]</span> <strong>注意，这里把<span class="math inline">\(x_2, x_3\)</span>看着一个变量时，函数<span class="math inline">\(\frac{f(x_3) - f(x_1)}{x_3 - x_1}\)</span>是一个增函数，可以利用单调有界定理，取极限</strong></p>
+<p><strong>定理6.14</strong> 设<span class="math inline">\(f\)</span>为区间<span class="math inline">\(I\)</span>上的可导函数，则下述论断互相等价：</p>
+<ol type="1">
+<li><p><span class="math inline">\(f\)</span>为<span class="math inline">\(I\)</span>上的增函数；</p></li>
+<li><p><span class="math inline">\(f^{\prime}\)</span>为<span class="math inline">\(I\)</span>上的增函数；</p></li>
+<li><p>对<span class="math inline">\(I\)</span>上的任意两点<span class="math inline">\(x_1, x_2\)</span>有 <span class="math display">\[
+f(x_2) \geq f(x_1) + f^{\prime}(x_1)(x_2 - x_1).
+\]</span> 论断3的几何意义就是说曲线<span class="math inline">\(y=f(x)\)</span>总是在它的任一切线上方。</p></li>
 </ol>
-<p><strong>定理 6.15</strong> 设$f$为区间$I$上的二阶可导函数，则在$I$上$f$为凸函数（凹函数）的充要条件是<br>$$<br>f^{(2)}(x) \geq 0 \ (f^{(2)}(x) \leq 0), \ x \in I.<br>$$<br><strong>定理</strong> 若函数$f$为定义在开区间$(a, b)$上的可导的凸函数（凹函数），则$x_0 \in (a, b)$为$f$的极小值点（极大值点）的充要条件是$x_0$为$f$的稳定点，即$f^{\prime}(x_0) = 0$.</p>
-<p><strong>定理</strong> 设函数$f(x)$为<strong>开区间</strong>$(a, b)$上的凸函数，不恒为常数，则$f(x)$不取最大值。</p>
-<p>​        凸函数的最大值只能在端点处取得。即，若函数$f(x)$是闭区间$[a, b]$上的凸的连续函数，那么<br>$$<br>f(x) \leq \max{f(a), f(b)}.<br>$$<br><strong>詹森（Jensen）不等式</strong> 若$f$为$[a, b]$上的凸函数，则对任意$x_i \in [a, b], \lambda_i &gt; 0 \ (i = 1, 2, \cdots, n), \ \sum^n_{i = 1} \lambda_i = 1$，有<br>$$<br>f(\sum^n_{i=1} \lambda_i x_i) \leq \sum^n_{i=1} \lambda_i f(x_i).<br>$$<br><strong>引理</strong> 设$f$为开区间$I$内的凸函数（凹函数），则$f$在$I$内任一点$x_0$都存在左、右导数。从而$f$在$x_0$连续。</p>
-<h1 id="拐点"><a href="#拐点" class="headerlink" title="拐点"></a>拐点</h1><p><strong>定义2</strong> 设曲线$y = f(x)$在点$(x_0, f(x_0))$处有穿过曲线的切线，且在切点近旁，曲线在切线的两侧分别是严格凸和严格凹的，这时称点$(x_0, f(x_0))$为曲线$y = f(x)$的拐点。</p>
+<p><strong>定理 6.15</strong> 设<span class="math inline">\(f\)</span>为区间<span class="math inline">\(I\)</span>上的二阶可导函数，则在<span class="math inline">\(I\)</span>上<span class="math inline">\(f\)</span>为凸函数（凹函数）的充要条件是 <span class="math display">\[
+f^{(2)}(x) \geq 0 \ (f^{(2)}(x) \leq 0), \ x \in I.
+\]</span> <strong>定理</strong> 若函数<span class="math inline">\(f\)</span>为定义在开区间<span class="math inline">\((a, b)\)</span>上的可导的凸函数（凹函数），则<span class="math inline">\(x_0 \in (a, b)\)</span>为<span class="math inline">\(f\)</span>的极小值点（极大值点）的充要条件是<span class="math inline">\(x_0\)</span>为<span class="math inline">\(f\)</span>的稳定点，即<span class="math inline">\(f^{\prime}(x_0) = 0\)</span>.</p>
+<p><strong>定理</strong> 设函数<span class="math inline">\(f(x)\)</span>为<strong>开区间</strong><span class="math inline">\((a, b)\)</span>上的凸函数，不恒为常数，则<span class="math inline">\(f(x)\)</span>不取最大值。</p>
+<p>​ 凸函数的最大值只能在端点处取得。即，若函数<span class="math inline">\(f(x)\)</span>是闭区间<span class="math inline">\([a, b]\)</span>上的凸的连续函数，那么 <span class="math display">\[
+f(x) \leq \max\{f(a), f(b)\}.
+\]</span> <strong>詹森（Jensen）不等式</strong> 若<span class="math inline">\(f\)</span>为<span class="math inline">\([a, b]\)</span>上的凸函数，则对任意<span class="math inline">\(x_i \in [a, b], \lambda_i &gt; 0 \ (i = 1, 2, \cdots, n), \ \sum^n_{i = 1} \lambda_i = 1\)</span>，有 <span class="math display">\[
+f(\sum^n_{i=1} \lambda_i x_i) \leq \sum^n_{i=1} \lambda_i f(x_i).
+\]</span> <strong>引理</strong> 设<span class="math inline">\(f\)</span>为开区间<span class="math inline">\(I\)</span>内的凸函数（凹函数），则<span class="math inline">\(f\)</span>在<span class="math inline">\(I\)</span>内任一点<span class="math inline">\(x_0\)</span>都存在左、右导数。从而<span class="math inline">\(f\)</span>在<span class="math inline">\(x_0\)</span>连续。</p>
+<h1 id="拐点">拐点</h1>
+<p><strong>定义2</strong> 设曲线<span class="math inline">\(y = f(x)\)</span>在点<span class="math inline">\((x_0, f(x_0))\)</span>处有穿过曲线的切线，且在切点近旁，曲线在切线的两侧分别是严格凸和严格凹的，这时称点<span class="math inline">\((x_0, f(x_0))\)</span>为曲线<span class="math inline">\(y = f(x)\)</span>的拐点。</p>
 <p>拐点是凹和凸曲线的分界点。</p>
-<p><strong>定理6.16</strong> 若$f$在$x_0$二阶可导，则$(x_0, f(x_0))$为曲线$y = f(x)$的拐点的必要条件是$f^{(2)} = 0$.</p>
-<p><strong>定理6.17</strong> 设$f$在$x_0$可导，在某领域$U^o(x_0)$上二阶可导。若在$U^o_{+}(x_0)$和$U^o_{-}(x_0)$上$f^{(2)}$的符号相反，则$(x_0, f(x_0))$为曲线$y = f(x)$的拐点。</p>
-<p><strong>注意：若$(x_0, f(x_0))$是曲线$y = f(x)$的一个拐点，$y = f(x)$在$x_0$的导数不一定存在，如$y = \sqrt[3]{x}$在$x = 0$。</strong></p>
+<p><strong>定理6.16</strong> 若<span class="math inline">\(f\)</span>在<span class="math inline">\(x_0\)</span>二阶可导，则<span class="math inline">\((x_0, f(x_0))\)</span>为曲线<span class="math inline">\(y = f(x)\)</span>的拐点的必要条件是<span class="math inline">\(f^{(2)} = 0\)</span>.</p>
+<p><strong>定理6.17</strong> 设<span class="math inline">\(f\)</span>在<span class="math inline">\(x_0\)</span>可导，在某领域<span class="math inline">\(U^o(x_0)\)</span>上二阶可导。若在<span class="math inline">\(U^o_{+}(x_0)\)</span>和<span class="math inline">\(U^o_{-}(x_0)\)</span>上<span class="math inline">\(f^{(2)}\)</span>的符号相反，则<span class="math inline">\((x_0, f(x_0))\)</span>为曲线<span class="math inline">\(y = f(x)\)</span>的拐点。</p>
+<p><strong>注意：若<span class="math inline">\((x_0, f(x_0))\)</span>是曲线<span class="math inline">\(y = f(x)\)</span>的一个拐点，<span class="math inline">\(y = f(x)\)</span>在<span class="math inline">\(x_0\)</span>的导数不一定存在，如<span class="math inline">\(y = \sqrt[3]{x}\)</span>在<span class="math inline">\(x = 0\)</span>。</strong></p>
 <p><strong>定理</strong> 如下三个陈述成立。</p>
-<ol>
-<li>若$f$为凸函数，$\lambda$为非负实数，则$\lambda f$为凸函数；</li>
-<li>若$f, g$均为凸函数，则$f + g$为凸函数；</li>
-<li>若$f$为区间$I$上凸函数，$g$为$J \supset f(I)$上凸增函数，则$g \circ f$为$I$上凸函数。</li>
+<ol type="1">
+<li>若<span class="math inline">\(f\)</span>为凸函数，<span class="math inline">\(\lambda\)</span>为非负实数，则<span class="math inline">\(\lambda f\)</span>为凸函数；</li>
+<li>若<span class="math inline">\(f, g\)</span>均为凸函数，则<span class="math inline">\(f + g\)</span>为凸函数；</li>
+<li>若<span class="math inline">\(f\)</span>为区间<span class="math inline">\(I\)</span>上凸函数，<span class="math inline">\(g\)</span>为<span class="math inline">\(J \supset f(I)\)</span>上凸增函数，则<span class="math inline">\(g \circ f\)</span>为<span class="math inline">\(I\)</span>上凸函数。</li>
 </ol>
-<p><strong>定理</strong> 设$f$为区间$I$上严格凸函数，$x_0 \in I$为$f$的极小值点，则$x_0$为$f$在$I$上唯一的极小值点。</p>
-<p><strong>定理</strong> 若$f, g$均为区间$I$上凸函数，则$F(x) = \max {f(x), g(x)}$也是$I$上凸函数。</p>
-<h1 id="几个重要不等式"><a href="#几个重要不等式" class="headerlink" title="几个重要不等式"></a><strong>几个重要不等式</strong></h1><p><strong>均值不等式</strong> 设$a_i &gt; 0 \ (i = 1, 2, \cdots, n)$，有<br>$$<br>\frac{n}{\frac{1}{a_1} + \frac{1}{a_2} + \cdots + \frac{1}{a_n}} \leq \sqrt[n]{a_1 a_2 \cdots a_n} \leq \frac{a_1 + a_2 + \cdots + a_n}{n}<br>$$<br>证明，构造函数$f(x) = \ln(x)$可证明第二个不等号，然后用变化$x = \frac{1}{t}$和第二个不等号证明第一个不等号。</p>
-<p><strong>Young 不等式</strong> 设$a, b, p, q$均是正实数，且$\frac{1}{p} + \frac{1}{q} = 1$，则<br>$$<br>ab \leq \frac{a^p}{p} + \frac{b^q}{q}<br>$$<br>等号成立当且仅当 $a^p = b^q$. </p>
-<p>证明，利用函数$y = e^x$的凸性<br>$$<br>ab = e^{\ln(a)} e^{\ln(b)} = e^{\frac{1}{p} \ln(a^p) + \frac{1}{q} \ln(b^q)} \leq \frac{1}{p} e^{\ln(a^p)} + \frac{1}{q} e^{\ln(b^q)} = \frac{a^p}{p} + \frac{b^q}{q}.<br>$$<br>可以用该不等式证明如下的Holder不等式。</p>
-<p><strong>Holder 不等式</strong> 设$a_i, b_i &gt; 0 \ (i = 1, 2, \cdots, n)$，有<br>$$<br>\sum^n_{i = 1} a_i b_i \leq (\sum^n_{i = 1} a^p_i)^{\frac{1}{p}}(\sum^n_{i = 1} b^q_i)^{\frac{1}{q}}<br>$$<br>其中$p &gt; 1, q &gt; 1, \frac{1}{p} + \frac{1}{q} = 1$.</p>
-<p>证明，取$a = \frac{a_k}{(\sum^n_{i = 1}a^p_i)^{\frac{1}{p}}}$, $b = \frac{b_k}{(\sum^n_{i = 1}b^q_i)^{\frac{1}{q}}}$ ，并带入Young不等式。</p>
+<p><strong>定理</strong> 设<span class="math inline">\(f\)</span>为区间<span class="math inline">\(I\)</span>上严格凸函数，<span class="math inline">\(x_0 \in I\)</span>为<span class="math inline">\(f\)</span>的极小值点，则<span class="math inline">\(x_0\)</span>为<span class="math inline">\(f\)</span>在<span class="math inline">\(I\)</span>上唯一的极小值点。</p>
+<p><strong>定理</strong> 若<span class="math inline">\(f, g\)</span>均为区间<span class="math inline">\(I\)</span>上凸函数，则<span class="math inline">\(F(x) = \max \{f(x), g(x)\}\)</span>也是<span class="math inline">\(I\)</span>上凸函数。</p>
+<h1 id="几个重要不等式"><strong>几个重要不等式</strong></h1>
+<p><strong>均值不等式</strong> 设<span class="math inline">\(a_i &gt; 0 \ (i = 1, 2, \cdots, n)\)</span>，有 <span class="math display">\[
+\frac{n}{\frac{1}{a_1} + \frac{1}{a_2} + \cdots + \frac{1}{a_n}} \leq \sqrt[n]{a_1 a_2 \cdots a_n} \leq \frac{a_1 + a_2 + \cdots + a_n}{n}
+\]</span> 证明，构造函数<span class="math inline">\(f(x) = \ln(x)\)</span>可证明第二个不等号，然后用变化<span class="math inline">\(x = \frac{1}{t}\)</span>和第二个不等号证明第一个不等号。</p>
+<p><strong>Young 不等式</strong> 设<span class="math inline">\(a, b, p, q\)</span>均是正实数，且<span class="math inline">\(\frac{1}{p} + \frac{1}{q} = 1\)</span>，则 <span class="math display">\[
+ab \leq \frac{a^p}{p} + \frac{b^q}{q}
+\]</span> 等号成立当且仅当 <span class="math inline">\(a^p = b^q\)</span>.</p>
+<p>证明，利用函数<span class="math inline">\(y = e^x\)</span>的凸性 <span class="math display">\[
+ab = e^{\ln(a)} e^{\ln(b)} = e^{\frac{1}{p} \ln(a^p) + \frac{1}{q} \ln(b^q)} \leq \frac{1}{p} e^{\ln(a^p)} + \frac{1}{q} e^{\ln(b^q)} = \frac{a^p}{p} + \frac{b^q}{q}.
+\]</span> 可以用该不等式证明如下的Holder不等式。</p>
+<p><strong>Holder 不等式</strong> 设<span class="math inline">\(a_i, b_i &gt; 0 \ (i = 1, 2, \cdots, n)\)</span>，有 <span class="math display">\[
+\sum^n_{i = 1} a_i b_i \leq (\sum^n_{i = 1} a^p_i)^{\frac{1}{p}}(\sum^n_{i = 1} b^q_i)^{\frac{1}{q}}
+\]</span> 其中<span class="math inline">\(p &gt; 1, q &gt; 1, \frac{1}{p} + \frac{1}{q} = 1\)</span>.</p>
+<p>证明，取<span class="math inline">\(a = \frac{a_k}{(\sum^n_{i = 1}a^p_i)^{\frac{1}{p}}}\)</span>, <span class="math inline">\(b = \frac{b_k}{(\sum^n_{i = 1}b^q_i)^{\frac{1}{q}}}\)</span> ，并带入Young不等式。</p>
 
     </div>
 
@@ -445,14 +468,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

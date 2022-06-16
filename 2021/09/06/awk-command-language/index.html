@@ -32,8 +32,8 @@
 <meta property="article:published_time" content="2021-09-06T01:40:36.000Z">
 <meta property="article:modified_time" content="2021-11-09T10:42:04.842Z">
 <meta property="article:author" content="Jinzhong Xu">
-<meta property="article:tag" content="linux">
 <meta property="article:tag" content="awk">
+<meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
 
 
@@ -313,29 +313,28 @@
     <div class="post-body" itemprop="articleBody">
         <p>awk 是一个处理文本的应用程序，也是一门语言。基本上所有的 Linux 发行版都自带该程序。它依次处理文件的每一行，并读取里面的每一个字段，尤其是日志文件、CSV文件等。本篇介绍 awk 如何在命令行上使用，以 Debian 10.8 为例。</p>
 <a id="more"></a>
-
-<h1 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 模式或条件可省略</span></span><br><span class="line">awk <span class="string">&#x27;模式 &#123;动作&#125;&#x27;</span> 文件名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子 1</span></span><br><span class="line">awk <span class="string">&#x27;NR &lt; 3 &#123;print $0&#125;&#x27;</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子 2</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;21 25 26&#x27;</span> | awk <span class="string">&#x27;&#123;print sin($1), cos($NF)&#125;&#x27;</span></span><br><span class="line">0.836656 0.646919</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子 3</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;21:25:26&#x27;</span> | awk -F <span class="string">&#x27;:&#x27;</span> <span class="string">&#x27;&#123;print sin($1), cos($NF)&#125;&#x27;</span></span><br><span class="line">0.836656 0.646919</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子 4</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;21:25:26&#x27;</span> | awk -F <span class="string">&#x27;:&#x27;</span> <span class="string">&#x27;&#123;print $1 * $NF&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
-
+<h1 id="基本用法">基本用法</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 模式或条件可省略</span></span><br><span class="line">awk <span class="string">&#x27;模式 &#123;动作&#125;&#x27;</span> 文件名</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子 1</span></span><br><span class="line">awk <span class="string">&#x27;NR &lt; 3 &#123;print $0&#125;&#x27;</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子 2</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;21 25 26&#x27;</span> | awk <span class="string">&#x27;&#123;print sin($1), cos($NF)&#125;&#x27;</span></span><br><span class="line">0.836656 0.646919</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子 3</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;21:25:26&#x27;</span> | awk -F <span class="string">&#x27;:&#x27;</span> <span class="string">&#x27;&#123;print sin($1), cos($NF)&#125;&#x27;</span></span><br><span class="line">0.836656 0.646919</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子 4</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;21:25:26&#x27;</span> | awk -F <span class="string">&#x27;:&#x27;</span> <span class="string">&#x27;&#123;print $1 * $NF&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
 <p>上例 1 中，<code>NR</code> 是一个变量表示行号，<code>NR &lt; 3</code> 表示只取前 2 行，为模式或条件；大括号中的为动作，<code>print $0</code> 表示打印所有列；<code>~/.bashrc</code> 表示文件名。因此，命令是将文件 <code>~/.bashrc</code> 中前 2 行所有列打印出来。</p>
 <p>上例 2 中，通过管道符 <code>|</code>将 <code>echo</code> 的结果传给 <code>awk</code>，字符串 <code>21 25 26</code>以空格为分隔符，<code>awk</code>中默认的列分隔符就是空格，<code>$1</code> 表示第1列 <code>21</code>，依次类推，<code>NF</code>是变量表示最后一列，这里是 <code>26</code>，函数 <code>sin</code>, <code>cos</code> 是 awk 中自带的函数。两个函数之间的<code>,</code>表示打印时以空格为分隔符。</p>
 <p>上例 3 中，与例 2 不同的是，字符串<code>21:25:26</code>的分隔符是 <code>:</code>，在 awk 中以参数 <code>-F</code> 指定分隔符。</p>
 <p>上例 4 中，给出了自定义运算输出结果。</p>
-<h1 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h1><p>除了上面例子中介绍的内置变量<code>NR, NF</code> 外，还有很多变量，这里列出常用的几个变量。</p>
+<h1 id="变量">变量</h1>
+<p>除了上面例子中介绍的内置变量<code>NR, NF</code> 外，还有很多变量，这里列出常用的几个变量。</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FILENAME：当前文件名</span><br><span class="line">FS：字段分隔符，默认是空格和制表符。</span><br><span class="line">RS：行分隔符，用于分割每一行，默认是换行符。</span><br><span class="line">OFS：输出字段的分隔符，用于打印时分隔字段，默认为空格。</span><br><span class="line">ORS：输出记录的分隔符，用于打印时分隔记录，默认为换行符。</span><br><span class="line">OFMT：数字输出的格式，默认为％.6g。</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如打印时添加行号</span></span><br><span class="line">awk <span class="string">&#x27;NR &lt; 3 &#123;print NR &quot;)&quot;, FILENAME&#125;&#x27;</span> ~/.bashrc</span><br><span class="line">1) /home/jinzhongxu/.bashrc</span><br><span class="line">2) /home/jinzhongxu/.bashrc</span><br></pre></td></tr></table></figure>
-
-<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><p>除了第一节例子中介绍的内置函数<code>sin, cos</code>外，还有很多函数，这里列出常用的几个函数。</p>
+<h1 id="函数">函数</h1>
+<p>除了第一节例子中介绍的内置函数<code>sin, cos</code>外，还有很多函数，这里列出常用的几个函数。</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">toupper(x): 字符串大写</span><br><span class="line">tolower(x)：字符串小写。</span><br><span class="line">length(x)：返回字符串长度。</span><br><span class="line">substr(x)：返回子字符串。</span><br><span class="line">atan2(y,x)：Arctan of y/x between -pi and pi.</span><br><span class="line">exp(x)：Exponential function.</span><br><span class="line">int(x)：Returns x truncated towards zero.</span><br><span class="line">log(x)：Natural logarithm.</span><br><span class="line">sqrt()：平方根。</span><br><span class="line">rand()：随机数。</span><br></pre></td></tr></table></figure>
-
 <p>更多请使用命令 <code>man awk</code>查看。</p>
-<h1 id="条件"><a href="#条件" class="headerlink" title="条件"></a>条件</h1><p>条件就是第一节中介绍的模式，可处理更加特定的输出，如</p>
+<h1 id="条件">条件</h1>
+<p>条件就是第一节中介绍的模式，可处理更加特定的输出，如</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只打印偶数行</span></span><br><span class="line">awk <span class="string">&#x27;NR % 2 == 0 &#123;print $0&#125;&#x27;</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只打印行号大于 3 的行</span></span><br><span class="line">awk <span class="string">&#x27;NR &gt; 3 &#123;print $0&#125;&#x27;</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只打印第一个字符串是 export 的行</span></span><br><span class="line">awk <span class="string">&#x27;$1 == &quot;export&quot; &#123;print $0&#125;&#x27;</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只打印第一个字符串是 export 或 alias 的行</span></span><br><span class="line">awk <span class="string">&#x27;$1 == &quot;export&quot; || $1 == &quot;alias&quot; &#123;print $0&#125;&#x27;</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
-
-<h1 id="if-语句"><a href="#if-语句" class="headerlink" title="if 语句"></a>if 语句</h1><p>if 语句能够处理更复杂的逻辑，如</p>
+<h1 id="if-语句">if 语句</h1>
+<p>if 语句能够处理更复杂的逻辑，如</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只打印第一个字符串是 export 的行</span></span><br><span class="line">awk <span class="string">&#x27;&#123;if ($1 == &quot;export&quot;) print $0&#125;&#x27;</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对于以字符串 export 开头的行直接打印，其他行打印成 &quot;*&quot; 号</span></span><br><span class="line">awk <span class="string">&#x27;&#123;if ($1 == &quot;export&quot;) print $0; else print &quot;*&quot;&#125;&#x27;</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<h1 id="参考链接">参考链接</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2018/11/awk.html">awk 入门教程</a></li>
 <li><a target="_blank" rel="noopener" href="https://gregable.com/2010/09/why-you-should-know-just-little-awk.html">Why you should learn just a little Awk</a></li>
 <li><a target="_blank" rel="noopener" href="https://likegeeks.com/awk-command/">30 Examples for Awk Command in Text Processing</a></li>
@@ -384,8 +383,8 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
               <a href="/tags/awk/" rel="tag"><i class="fa fa-tag"></i> awk</a>
+              <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
           </div>
 
         
@@ -433,14 +432,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

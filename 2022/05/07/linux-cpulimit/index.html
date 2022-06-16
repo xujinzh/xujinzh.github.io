@@ -307,48 +307,36 @@
     <div class="post-body" itemprop="articleBody">
         <p>CPU 的使用率过高会影响 Linux 系统的使用体验，如导致 CPU 温度过高，影响使用寿命等。本篇介绍如何限制 CPU 使用率，保持 Linux 系统的正常、稳定运行。以 Ubuntu 18.04 为例，所有命令以普通用户运行。</p>
 <a id="more"></a>
-
-<h1 id="安装-cpulimit"><a href="#安装-cpulimit" class="headerlink" title="安装 cpulimit"></a>安装 cpulimit</h1><p>Ubuntu/Debian 系统安装方法如下：</p>
+<h1 id="安装-cpulimit">安装 cpulimit</h1>
+<p>Ubuntu/Debian 系统安装方法如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install cpulimit</span><br></pre></td></tr></table></figure>
-
 <p>Centos/RedHat 系统安装方法如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install cpulimit</span><br></pre></td></tr></table></figure>
-
-<h1 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># NUM 为整数值，默认为对 1 个 CPU的限制，多个 CPU 时可以累计，如 NUM * CPU_NUM</span></span><br><span class="line"><span class="comment"># PID 为进程 ID，限制该进程的 CPU 使用率为 NUM%</span></span><br><span class="line">cpulimit -l NUM -p PID</span><br></pre></td></tr></table></figure>
-
+<h1 id="使用方法">使用方法</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># NUM 为整数值，默认为对 1 个 CPU的限制，多个 CPU 时可以累计，如 NUM * CPU_NUM</span></span><br><span class="line"><span class="comment"># PID 为进程 ID，限制该进程的 CPU 使用率为 NUM%</span></span><br><span class="line">cpulimit -l NUM -p PID</span><br></pre></td></tr></table></figure>
 <p>常用参数：</p>
-<ol>
-<li><p><code>-e</code>    按照程序名限制；</p>
-</li>
-<li><p><code>-P</code>    按照程序绝对路径限制；</p>
-</li>
-<li><p><code>-b</code>     后台运行 cpulimit；</p>
-</li>
-<li><p><code>-f</code>      前台运行；</p>
-</li>
-<li><p><code>-l</code>      允许的CPU百分比，最低为1%.</p>
-</li>
+<ol type="1">
+<li><p><code>-e</code> 按照程序名限制；</p></li>
+<li><p><code>-P</code> 按照程序绝对路径限制；</p></li>
+<li><p><code>-b</code> 后台运行 cpulimit；</p></li>
+<li><p><code>-f</code> 前台运行；</p></li>
+<li><p><code>-l</code> 允许的CPU百分比，最低为1%.</p></li>
 </ol>
 <p>注意：</p>
-<ol>
+<ol type="1">
 <li>更多参数可通过 <code>man cpulimit</code> 查看；</li>
 <li>限制 CPU 的百分比按照实际的 CPU 数量而定，比如单核最高为 100%，双核最高为 200%，三核最高为 300%，以此类推即可；</li>
 <li>root 用户可以限制所有的进程，普通用户只能限制用户有权限管理的进程。</li>
 </ol>
-<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><p>限制 CPU 使用率最高的进程的 CPU 使用率为 50%. (<code>top</code> 命令的使用参考：<a href="https://xujinzh.github.io/2022/04/16/linux-top-monitor/">linux 利用 top 命令进行动态监控</a>)</p>
+<h1 id="示例">示例</h1>
+<p>限制 CPU 使用率最高的进程的 CPU 使用率为 50%. (<code>top</code> 命令的使用参考：<a href="https://xujinzh.github.io/2022/04/16/linux-top-monitor/">linux 利用 top 命令进行动态监控</a>)</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取 CPU 使用率最高的进程 ID，输入下面的 top 命令后，按 P 以CPU使用率排序进程</span></span><br><span class="line">top</span><br><span class="line"><span class="comment"># 限制该进程的 CPU 使用率为 50%</span></span><br><span class="line">cpulimit -p PID -l 50</span><br></pre></td></tr></table></figure>
-
-
-
 <p>根据软件的绝对路径限制</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cpulimit -e /usr/<span class="built_in">local</span>/nginx/sbin/nginx -l 60</span><br></pre></td></tr></table></figure>
-
-
-
 <p>根据程序名限制</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cpulimit -e xmrig -l 60</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<h1 id="参考文献">参考文献</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://sunpma.com/1111.html">Linux使用cpulimit对CPU使用率进行限制</a></li>
 </ol>
 
@@ -444,14 +432,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

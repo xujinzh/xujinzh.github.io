@@ -311,23 +311,23 @@
 <p>cpu配置和内存配置决定了电脑的主要性能</p>
 <p>电脑cpu配置和内存配置决定了电脑的主要性能。Windows系统非常简单的通过任务管理器查看，而Linux系统更偏向于利用命令行，下面介绍如何通过命令行有效的查看Linux系统的cpu和内存的情况。</p>
 <a id="more"></a>
-
-<h1 id="查看cpu情况"><a href="#查看cpu情况" class="headerlink" title="查看cpu情况"></a>查看cpu情况</h1><h2 id="物理cpu个数"><a href="#物理cpu个数" class="headerlink" title="物理cpu个数"></a>物理cpu个数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat &#x2F;proc&#x2F;cpuinfo | grep &quot;physical id&quot; | sort | uniq | wc -l</span><br></pre></td></tr></table></figure>
-
-<h2 id="每个物理cpu的核心数"><a href="#每个物理cpu的核心数" class="headerlink" title="每个物理cpu的核心数"></a>每个物理cpu的核心数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat &#x2F;proc&#x2F;cpuinfo | grep &quot;cpu cores&quot; | uniq</span><br></pre></td></tr></table></figure>
-
-<h2 id="总的逻辑cpu个数"><a href="#总的逻辑cpu个数" class="headerlink" title="总的逻辑cpu个数"></a>总的逻辑cpu个数</h2><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat <span class="regexp">/proc/</span>cpuinfo | <span class="keyword">grep</span> <span class="string">&quot;processor&quot;</span> | wc -l</span><br></pre></td></tr></table></figure>
-
-<h2 id="查看cpu型号"><a href="#查看cpu型号" class="headerlink" title="查看cpu型号"></a>查看cpu型号</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat &#x2F;proc&#x2F;cpuinfo | grep name | cut -f2 -d: | uniq -c</span><br></pre></td></tr></table></figure>
-
-<h1 id="查看内存信息"><a href="#查看内存信息" class="headerlink" title="查看内存信息"></a>查看内存信息</h1><h2 id="查看内存运行情况"><a href="#查看内存运行情况" class="headerlink" title="查看内存运行情况"></a>查看内存运行情况</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">free -h</span><br></pre></td></tr></table></figure>
-
+<h1 id="查看cpu情况">查看cpu情况</h1>
+<h2 id="物理cpu个数">物理cpu个数</h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat &#x2F;proc&#x2F;cpuinfo | grep &quot;physical id&quot; | sort | uniq | wc -l</span><br></pre></td></tr></table></figure>
+<h2 id="每个物理cpu的核心数">每个物理cpu的核心数</h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat &#x2F;proc&#x2F;cpuinfo | grep &quot;cpu cores&quot; | uniq</span><br></pre></td></tr></table></figure>
+<h2 id="总的逻辑cpu个数">总的逻辑cpu个数</h2>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat <span class="regexp">/proc/</span>cpuinfo | <span class="keyword">grep</span> <span class="string">&quot;processor&quot;</span> | wc -l</span><br></pre></td></tr></table></figure>
+<h2 id="查看cpu型号">查看cpu型号</h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat &#x2F;proc&#x2F;cpuinfo | grep name | cut -f2 -d: | uniq -c</span><br></pre></td></tr></table></figure>
+<h1 id="查看内存信息">查看内存信息</h1>
+<h2 id="查看内存运行情况">查看内存运行情况</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">free -h</span><br></pre></td></tr></table></figure>
 <p>或者使用如下命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/meminfo</span><br></pre></td></tr></table></figure>
-
-<h1 id="使用htop查看"><a href="#使用htop查看" class="headerlink" title="使用htop查看"></a>使用htop查看</h1><p>命令htop不仅能够显示的给出cpu和内存的多少信息，而且可以给出它们的消耗情况，给出系统的运行压力情况，运行时间情况等信息。所以，htop是一个非常有用的命令。如何使用该命令，直接在终端输入</p>
+<h1 id="使用htop查看">使用htop查看</h1>
+<p>命令htop不仅能够显示的给出cpu和内存的多少信息，而且可以给出它们的消耗情况，给出系统的运行压力情况，运行时间情况等信息。所以，htop是一个非常有用的命令。如何使用该命令，直接在终端输入</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htop</span><br></pre></td></tr></table></figure>
-
 <p>就会显示上述信息。想要退出，可以按一下键盘上的q</p>
 
     </div>
@@ -422,14 +422,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

@@ -32,8 +32,8 @@
 <meta property="article:published_time" content="2021-11-07T03:06:14.000Z">
 <meta property="article:modified_time" content="2021-11-10T06:20:20.672Z">
 <meta property="article:author" content="Jinzhong Xu">
-<meta property="article:tag" content="maths">
 <meta property="article:tag" content="definite integral">
+<meta property="article:tag" content="maths">
 <meta name="twitter:card" content="summary">
 
 
@@ -293,7 +293,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.4k</span>
+      <span>2.5k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -312,23 +312,56 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>定积分的所有应用一般总可以安装“分割, 近似求和, 去极限”三个步骤导出所求量的积分形式. 但为简便实用起见, 也常采用本篇介绍的“微元法”. 其实在求旋转体的体积时我们采用微小区间上柱体近似旋转体体积, 但是在求旋转曲面的面积时却不能用旋转体的侧面积近似旋转曲面的侧面积. 就像求弧长时需要用微小区间的弦长近似弧长, 不能用弦长直角边近似一样, 求旋转曲面的表面积不能用圆柱侧面积需要用圆台侧面积近似.</p>
- <a id="more"></a>
-
-<h1 id="微元法"><a href="#微元法" class="headerlink" title="微元法"></a>微元法</h1><p>在上一篇中我们知道, 若令 $\Phi(x) = \int^x_a f(t) \mathrm{d}t$, 则当 $f$ 为连续函数时, $\Phi^{\prime}(x) = f(x)$, 或 $\mathrm{d}\Phi = f(x)\mathrm{d}x$, 且<br>$$<br>\Phi(a) = 0, \Phi(b) = \int^b_a f(x) \mathrm{d}x.<br>$$<br>现在问题恰好反过来: 如果所求量 $\Phi$ 是某区间 $[a, x]$ 上的,或者说它是该区间端点 $x$ 的函数, 即 $\Phi = \Phi(x), x\in [a, b]$, 而且当 $x = b$ 时, $\Phi(b)$ 适为最终所求的值.</p>
-<p>在任意小区间 $[x, x + \Delta x] \subset [a, b]$ 上, 恰当选取 $\Phi$ 的微小增量 $\Delta \Phi$ 的近似可求量 $\Delta^{\prime} \Phi$ (所谓近似可求量是指用来近似代替 $\Delta \Phi$ 的有确定意义且可以计算的量). 若能把 $\Delta^{\prime} \Phi$ 近似表示为 $\Delta x$ 的线性形式<br>$$<br>\Delta^{\prime} \Phi \approx f(x) \Delta x,<br>$$<br>其中 $f$ 为某一连续函数,而且当 $\Delta x \to 0$ 时, $\Delta^{\prime} \Phi - f(x)\Delta x = o(\Delta x)$, 则记<br>$$<br>\mathrm{d} \Phi = f(x) \mathrm{d}x,<br>$$<br>那么只有定积分 $\int^b_a f(x) \mathrm{d}x$ 计算出来,就是该问题所求的结果.</p>
+<p><a id="more"></a></p>
+<h1 id="微元法">微元法</h1>
+<p>在上一篇中我们知道, 若令 <span class="math inline">\(\Phi(x) = \int^x_a f(t) \mathrm{d}t\)</span>, 则当 <span class="math inline">\(f\)</span> 为连续函数时, <span class="math inline">\(\Phi^{\prime}(x) = f(x)\)</span>, 或 <span class="math inline">\(\mathrm{d}\Phi = f(x)\mathrm{d}x\)</span>, 且 <span class="math display">\[
+\Phi(a) = 0, \Phi(b) = \int^b_a f(x) \mathrm{d}x.
+\]</span> 现在问题恰好反过来: 如果所求量 <span class="math inline">\(\Phi\)</span> 是某区间 <span class="math inline">\([a, x]\)</span> 上的,或者说它是该区间端点 <span class="math inline">\(x\)</span> 的函数, 即 <span class="math inline">\(\Phi = \Phi(x), x\in [a, b]\)</span>, 而且当 <span class="math inline">\(x = b\)</span> 时, <span class="math inline">\(\Phi(b)\)</span> 适为最终所求的值.</p>
+<p>在任意小区间 <span class="math inline">\([x, x + \Delta x] \subset [a, b]\)</span> 上, 恰当选取 <span class="math inline">\(\Phi\)</span> 的微小增量 <span class="math inline">\(\Delta \Phi\)</span> 的近似可求量 <span class="math inline">\(\Delta^{\prime} \Phi\)</span> (所谓近似可求量是指用来近似代替 <span class="math inline">\(\Delta \Phi\)</span> 的有确定意义且可以计算的量). 若能把 <span class="math inline">\(\Delta^{\prime} \Phi\)</span> 近似表示为 <span class="math inline">\(\Delta x\)</span> 的线性形式 <span class="math display">\[
+\Delta^{\prime} \Phi \approx f(x) \Delta x,
+\]</span> 其中 <span class="math inline">\(f\)</span> 为某一连续函数,而且当 <span class="math inline">\(\Delta x \to 0\)</span> 时, <span class="math inline">\(\Delta^{\prime} \Phi - f(x)\Delta x = o(\Delta x)\)</span>, 则记 <span class="math display">\[
+\mathrm{d} \Phi = f(x) \mathrm{d}x,
+\]</span> 那么只有定积分 <span class="math inline">\(\int^b_a f(x) \mathrm{d}x\)</span> 计算出来,就是该问题所求的结果.</p>
 <p>上述方法通常称为 <strong>微元法</strong>. 在采用微元法时, 必须注意如下三点:</p>
 <ul>
-<li>所求量 $\Phi$ 关于分布区间必须代数可加;</li>
-<li>微元法的关键是正确给出 $\Delta \Phi$ 的近似可求量 $\Delta^{\prime} \Phi$. 一般来说, 近似可求量的选取不唯一;</li>
-<li>当我们将 $\Delta^{\prime}\Phi$ 用线性形式 $f(x) \Delta x$ 代替时, 要严格检验 $\Delta^{\prime} \Phi - f(x) \Delta x$ 是否为 $\Delta x$ 的高阶无穷小量, 以保证其对应的积分和的极限是相等的.</li>
+<li>所求量 <span class="math inline">\(\Phi\)</span> 关于分布区间必须代数可加;</li>
+<li>微元法的关键是正确给出 <span class="math inline">\(\Delta \Phi\)</span> 的近似可求量 <span class="math inline">\(\Delta^{\prime} \Phi\)</span>. 一般来说, 近似可求量的选取不唯一;</li>
+<li>当我们将 <span class="math inline">\(\Delta^{\prime}\Phi\)</span> 用线性形式 <span class="math inline">\(f(x) \Delta x\)</span> 代替时, 要严格检验 <span class="math inline">\(\Delta^{\prime} \Phi - f(x) \Delta x\)</span> 是否为 <span class="math inline">\(\Delta x\)</span> 的高阶无穷小量, 以保证其对应的积分和的极限是相等的.</li>
 </ul>
-<h1 id="旋转曲面的面积"><a href="#旋转曲面的面积" class="headerlink" title="旋转曲面的面积"></a>旋转曲面的面积</h1><p>设平面光滑曲线 $C$ 的方程为<br>$$<br>y = f(x), x \in [a, b] \ (\text{不妨设} f(x) \geq 0).<br>$$<br>这段曲线绕 $x$ 轴旋转一周得到旋转曲面.</p>
-<p>通过 $x$ 轴上点 $x$ 与 $x + \Delta x$ 分别作垂直于 $x$ 轴的平面,它们在旋转曲面上截下一条夹在两个圆形截线间的狭带. 当 $\Delta x$ 很小时,此狭带的面积 $\Delta S$ 近似于由这两个圆所确定的圆台的侧面积 $\Delta^{\prime} S$, 即<br>$$<br>\Delta^{\prime} S = \pi [f(x) + f(x + \Delta x)] \sqrt{\Delta x^2 + \Delta y^2} \\<br>= \pi [2f(x) + \Delta y] \sqrt{1 + (\frac{\Delta y}{\Delta x})^2} \Delta x,<br>$$<br>(假设圆柱高$h$, 上下圆面半径$r$, 则圆柱侧面积$S = 2 \pi r h$; 圆台斜边长 $s$, 上圆面半径 $r_1$, 下圆面半径 $r_2$, 则圆台侧面积 $S = 2 \pi \frac{r_1 + r_2}{2} s = \pi (r_1 + r_2) s$)</p>
-<p>其中 $\Delta y = f(x + \Delta x) - f(x)$. 由于<br>$$<br>\lim_{\Delta x \to 0} \Delta y = 0, \\<br>\lim_{\Delta x \to 0} \sqrt{1 + (\frac{\Delta y}{\Delta x})^2} = \sqrt{1 + {f^{ \prime } }^2(x)},<br>$$<br>因此,由 $f^{\prime}(x)$ 的连续性可以保证<br>$$<br>\pi [2f(x) + \Delta y]\sqrt{1 + (\frac{\Delta y}{\Delta x})^2} \Delta x - 2 \pi f(x) \sqrt{1 + {f^{ \prime } }^2(x)} \Delta x = o(\Delta x).<br>$$<br>所以得到<br>$$<br>\Delta^{\prime} S \approx 2 \pi f(x) \sqrt{1 + {f^{ \prime } }^2 (x)} \Delta x,<br>$$</p>
-<p>$$<br>\mathrm{d} S = 2 \pi f(x) \sqrt{1 + {f^{\prime } }^2} \mathrm{d}x,<br>$$</p>
-<p>$$<br>S = 2 \pi \int^b_a f(x) \sqrt{1 + {f^{\prime} }^2} \mathrm{d}x.<br>$$</p>
-<h2 id="参数方程"><a href="#参数方程" class="headerlink" title="参数方程"></a>参数方程</h2><p>如果光滑曲线 $C$​​ 由参数方程<br>$$<br>x = x(t), y = y(t), t \in [\alpha, \beta]<br>$$<br>给出, 且 $y(t) \geq 0$, 那么由弧微分知识知道曲线 $C$ 绕 $x$ 轴旋转所得旋转曲面的面积为<br>$$<br>S = 2 \pi \int^{\beta}_{\alpha} y(t) \sqrt{ {x^{\prime} }^2(t) + {y^{\prime} }^2(t)} \mathrm{d}t.<br>$$</p>
-<h2 id="极坐标方程"><a href="#极坐标方程" class="headerlink" title="极坐标方程"></a>极坐标方程</h2><p>如果光滑曲线 $C$​ 由极坐标方程<br>$$<br>r = r(\theta), a \leq \theta \leq \alpha ([\alpha, \beta] \subset [0, \pi], r(\theta) \geq 0)<br>$$<br>给出, 则由曲线 $C$ 绕极轴旋转所得旋转曲面的面积为<br>$$<br>S = 2 \pi \int^{\beta}_{\alpha} r \sin{\theta} \sqrt{r^2 + {r^{\prime} }^2} \mathrm{d} \theta.<br>$$</p>
+<h1 id="旋转曲面的面积">旋转曲面的面积</h1>
+<p>设平面光滑曲线 <span class="math inline">\(C\)</span> 的方程为 <span class="math display">\[
+y = f(x), x \in [a, b] \ (\text{不妨设} f(x) \geq 0).
+\]</span> 这段曲线绕 <span class="math inline">\(x\)</span> 轴旋转一周得到旋转曲面.</p>
+<p>通过 <span class="math inline">\(x\)</span> 轴上点 <span class="math inline">\(x\)</span> 与 <span class="math inline">\(x + \Delta x\)</span> 分别作垂直于 <span class="math inline">\(x\)</span> 轴的平面,它们在旋转曲面上截下一条夹在两个圆形截线间的狭带. 当 <span class="math inline">\(\Delta x\)</span> 很小时,此狭带的面积 <span class="math inline">\(\Delta S\)</span> 近似于由这两个圆所确定的圆台的侧面积 <span class="math inline">\(\Delta^{\prime} S\)</span>, 即 <span class="math display">\[
+\Delta^{\prime} S = \pi [f(x) + f(x + \Delta x)] \sqrt{\Delta x^2 + \Delta y^2} \\\\
+= \pi [2f(x) + \Delta y] \sqrt{1 + (\frac{\Delta y}{\Delta x})^2} \Delta x,
+\]</span> (假设圆柱高<span class="math inline">\(h\)</span>, 上下圆面半径<span class="math inline">\(r\)</span>, 则圆柱侧面积<span class="math inline">\(S = 2 \pi r h\)</span>; 圆台斜边长 <span class="math inline">\(s\)</span>, 上圆面半径 <span class="math inline">\(r_1\)</span>, 下圆面半径 <span class="math inline">\(r_2\)</span>, 则圆台侧面积 <span class="math inline">\(S = 2 \pi \frac{r_1 + r_2}{2} s = \pi (r_1 + r_2) s\)</span>)</p>
+<p>其中 <span class="math inline">\(\Delta y = f(x + \Delta x) - f(x)\)</span>. 由于 <span class="math display">\[
+\lim_{\Delta x \to 0} \Delta y = 0, \\\\
+\lim_{\Delta x \to 0} \sqrt{1 + (\frac{\Delta y}{\Delta x})^2} = \sqrt{1 + {f^{ \prime } }^2(x)},
+\]</span> 因此,由 <span class="math inline">\(f^{\prime}(x)\)</span> 的连续性可以保证 <span class="math display">\[
+\pi [2f(x) + \Delta y]\sqrt{1 + (\frac{\Delta y}{\Delta x})^2} \Delta x - 2 \pi f(x) \sqrt{1 + {f^{ \prime } }^2(x)} \Delta x = o(\Delta x).
+\]</span> 所以得到 <span class="math display">\[
+\Delta^{\prime} S \approx 2 \pi f(x) \sqrt{1 + {f^{ \prime } }^2 (x)} \Delta x, 
+\]</span></p>
+<p><span class="math display">\[
+\mathrm{d} S = 2 \pi f(x) \sqrt{1 + {f^{\prime } }^2} \mathrm{d}x,
+\]</span></p>
+<p><span class="math display">\[
+S = 2 \pi \int^b_a f(x) \sqrt{1 + {f^{\prime} }^2} \mathrm{d}x.
+\]</span></p>
+<h2 id="参数方程">参数方程</h2>
+<p>如果光滑曲线 <span class="math inline">\(C\)</span>​​ 由参数方程 <span class="math display">\[
+x = x(t), y = y(t), t \in [\alpha, \beta]
+\]</span> 给出, 且 <span class="math inline">\(y(t) \geq 0\)</span>, 那么由弧微分知识知道曲线 <span class="math inline">\(C\)</span> 绕 <span class="math inline">\(x\)</span> 轴旋转所得旋转曲面的面积为 <span class="math display">\[
+S = 2 \pi \int^{\beta}_{\alpha} y(t) \sqrt{ {x^{\prime} }^2(t) + {y^{\prime} }^2(t)} \mathrm{d}t.
+\]</span></p>
+<h2 id="极坐标方程">极坐标方程</h2>
+<p>如果光滑曲线 <span class="math inline">\(C\)</span>​ 由极坐标方程 <span class="math display">\[
+r = r(\theta), a \leq \theta \leq \alpha ([\alpha, \beta] \subset [0, \pi], r(\theta) \geq 0)
+\]</span> 给出, 则由曲线 <span class="math inline">\(C\)</span> 绕极轴旋转所得旋转曲面的面积为 <span class="math display">\[
+S = 2 \pi \int^{\beta}_{\alpha} r \sin{\theta} \sqrt{r^2 + {r^{\prime} }^2} \mathrm{d} \theta.
+\]</span></p>
 
     </div>
 
@@ -373,8 +406,8 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/maths/" rel="tag"><i class="fa fa-tag"></i> maths</a>
               <a href="/tags/definite-integral/" rel="tag"><i class="fa fa-tag"></i> definite integral</a>
+              <a href="/tags/maths/" rel="tag"><i class="fa fa-tag"></i> maths</a>
           </div>
 
         
@@ -422,14 +455,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

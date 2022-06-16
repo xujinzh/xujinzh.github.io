@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Windows%E5%90%AF%E5%8A%A8%E7%9B%98"><span class="nav-number">1.</span> <span class="nav-text">使用Windows启动盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E7%A1%AC%E7%9B%98%E7%9A%84%E5%BC%95%E5%AF%BC%E5%88%86%E5%8C%BA"><span class="nav-number">2.</span> <span class="nav-text">转换硬盘的引导分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEboot%E5%90%AF%E5%8A%A8%E6%A0%BC%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">设置boot启动格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A3%85Ubuntu%E7%B3%BB%E7%BB%9F"><span class="nav-number">4.</span> <span class="nav-text">重装Ubuntu系统</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8windows%E5%90%AF%E5%8A%A8%E7%9B%98"><span class="nav-number">1.</span> <span class="nav-text">使用Windows启动盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E7%A1%AC%E7%9B%98%E7%9A%84%E5%BC%95%E5%AF%BC%E5%88%86%E5%8C%BA"><span class="nav-number">2.</span> <span class="nav-text">转换硬盘的引导分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEboot%E5%90%AF%E5%8A%A8%E6%A0%BC%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">设置boot启动格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A3%85ubuntu%E7%B3%BB%E7%BB%9F"><span class="nav-number">4.</span> <span class="nav-text">重装Ubuntu系统</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -309,13 +309,15 @@
     <div class="post-body" itemprop="articleBody">
         <p>今天一个师弟安装 Ubuntu 时重启发现无法正常进入刚安装好的 Ubuntu 系统，从系统盘启动时出现 no boot file found。他也很疑惑，明明已经正确把 ubuntu 系统安装到固态硬盘上了，为什么不能正常进入呢？他就来问我怎么解决。我第一想法就是 boot 启动设置引导项的问题，把之前的 UEFI 设置成 legacy ，仍然遇到同样的问题。我就在想，是不是系统盘的引导分区不正确。经过一系列的操作终于完成了Ubuntu系统的安装和正常启动。我的方法如下：</p>
 <a id="more"></a>
-
-<h2 id="使用Windows启动盘"><a href="#使用Windows启动盘" class="headerlink" title="使用Windows启动盘"></a>使用Windows启动盘</h2><p>首先将Windows10 启动盘插入光驱，进入安装Windows10程序，然后在安装系统之前，按住 SHIFT + F10 进入cmd</p>
-<h2 id="转换硬盘的引导分区"><a href="#转换硬盘的引导分区" class="headerlink" title="转换硬盘的引导分区"></a>转换硬盘的引导分区</h2><p>在cmd中输入下列命令，把GPT（GUID Partition Table）引导分区转化为MBR（Master Boot Record）引导分区。</p>
+<h2 id="使用windows启动盘">使用Windows启动盘</h2>
+<p>首先将Windows10 启动盘插入光驱，进入安装Windows10程序，然后在安装系统之前，按住 SHIFT + F10 进入cmd</p>
+<h2 id="转换硬盘的引导分区">转换硬盘的引导分区</h2>
+<p>在cmd中输入下列命令，把GPT（GUID Partition Table）引导分区转化为MBR（Master Boot Record）引导分区。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">diskpart</span><br><span class="line">list disk</span><br><span class="line">select disk 0</span><br><span class="line">clean</span><br><span class="line">convert mbr</span><br></pre></td></tr></table></figure>
-
-<h2 id="设置boot启动格式"><a href="#设置boot启动格式" class="headerlink" title="设置boot启动格式"></a>设置boot启动格式</h2><p>重启系统，拿出光盘，进入boot系统，设置光盘启动为第一启动项，设置成legacy格式</p>
-<h2 id="重装Ubuntu系统"><a href="#重装Ubuntu系统" class="headerlink" title="重装Ubuntu系统"></a>重装Ubuntu系统</h2><p>插入Ubuntu系统盘到光驱，进行正常安装Ubuntu流程</p>
+<h2 id="设置boot启动格式">设置boot启动格式</h2>
+<p>重启系统，拿出光盘，进入boot系统，设置光盘启动为第一启动项，设置成legacy格式</p>
+<h2 id="重装ubuntu系统">重装Ubuntu系统</h2>
+<p>插入Ubuntu系统盘到光驱，进行正常安装Ubuntu流程</p>
 
     </div>
 
@@ -409,14 +411,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

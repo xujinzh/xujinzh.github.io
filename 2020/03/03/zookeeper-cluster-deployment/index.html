@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDZookeeper"><span class="nav-number">1.</span> <span class="nav-text">下载Zookeeper</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Zookeeper"><span class="nav-number">2.</span> <span class="nav-text">安装Zookeeper</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEZookeeper"><span class="nav-number">3.</span> <span class="nav-text">配置Zookeeper</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8zookeeper"><span class="nav-number">4.</span> <span class="nav-text">启动zookeeper</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Zookeeper%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="nav-number">5.</span> <span class="nav-text">Zookeeper相关知识</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A1%A5%E5%85%85"><span class="nav-number">6.</span> <span class="nav-text">补充</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDzookeeper"><span class="nav-number">1.</span> <span class="nav-text">下载Zookeeper</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85zookeeper"><span class="nav-number">2.</span> <span class="nav-text">安装Zookeeper</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEzookeeper"><span class="nav-number">3.</span> <span class="nav-text">配置Zookeeper</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8zookeeper"><span class="nav-number">4.</span> <span class="nav-text">启动zookeeper</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zookeeper%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="nav-number">5.</span> <span class="nav-text">Zookeeper相关知识</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A1%A5%E5%85%85"><span class="nav-number">6.</span> <span class="nav-text">补充</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -309,84 +309,66 @@
     <div class="post-body" itemprop="articleBody">
         <p>Zookeeper 来源于雅虎的一个研究小组，开发其用以提供分布式协调服务。<strong>分布式应用程序可以基于 Zookeeper 实现诸如数据发布/订阅、负载均衡、命名服务、分布式协调/通知、集群管理、Master 选举、分布式锁和分布式队列等功能。</strong></p>
 <a id="more"></a>
-
 <p>关于Zookeeper集群部署的一点建议：1、最好将Zookeeper部署在多于一台的集群上，即采用集群部署而不是单台服务器的standalone；2、最好部署在奇数(2N+1)台服务器上，因为Zookeeper通过多数大于少数来保证可用性，当N个节点不能访问时，整个Zookeeper集群仍然是可用的。</p>
 <p>下面以3台服务器为例，来部署Zookeeper集群，假设它们的IP地址分别是1.1.1.0， 1.1.1.1， 1.1.1.2. 各步骤以1.1.1.0为默认机器演示。</p>
-<h1 id="下载Zookeeper"><a href="#下载Zookeeper" class="headerlink" title="下载Zookeeper"></a>下载Zookeeper</h1><p>从官网下载<a target="_blank" rel="noopener" href="http://mirror.bit.edu.cn/apache/zookeeper/">Zookeeper</a> ，这里下载3.4.14版本</p>
+<h1 id="下载zookeeper">下载Zookeeper</h1>
+<p>从官网下载<a target="_blank" rel="noopener" href="http://mirror.bit.edu.cn/apache/zookeeper/">Zookeeper</a> ，这里下载3.4.14版本</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://mirror.bit.edu.cn/apache/zookeeper/zookeeper-3.4.14/zookeeper-3.4.14.tar.gz</span><br></pre></td></tr></table></figure>
-
-<h1 id="安装Zookeeper"><a href="#安装Zookeeper" class="headerlink" title="安装Zookeeper"></a>安装Zookeeper</h1><p>直接解压缩</p>
+<h1 id="安装zookeeper">安装Zookeeper</h1>
+<p>直接解压缩</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf zookeeper-3.4.14.tar.gz</span><br></pre></td></tr></table></figure>
-
 <p>也可以选择解压缩到指定的目录，比如Documents</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf zookeeper-3.4.14.tar.gz -C ~/Documents/.</span><br></pre></td></tr></table></figure>
-
-<h1 id="配置Zookeeper"><a href="#配置Zookeeper" class="headerlink" title="配置Zookeeper"></a>配置Zookeeper</h1><p>配置zookeeper很关键，首先进入zookeeper配置文件夹</p>
+<h1 id="配置zookeeper">配置Zookeeper</h1>
+<p>配置zookeeper很关键，首先进入zookeeper配置文件夹</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> zookeeper-3.4.14/conf/</span><br></pre></td></tr></table></figure>
-
 <p>然后，利用模板创建配置文件</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp zoo_sample.cfg zoo.cfg</span><br></pre></td></tr></table></figure>
-
 <p>最好，修改配置参数，在此之前，我们需要创建文件夹用于存储数据和日志</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> zookeeper-3.4.14</span><br><span class="line">mkdir data</span><br><span class="line">mkdir <span class="built_in">log</span></span><br><span class="line"><span class="built_in">echo</span> 1 &gt; /data/myid</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim zoo.cfg</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dataDir=/home/jinzhongxu/zookeeper-3.4.14/data</span><br><span class="line">dataLogDir=/home/jinzhongxu/zookeeper-3.4.14/log</span><br><span class="line"></span><br><span class="line">server.1=0.0.0.0:2888:3888</span><br><span class="line">server.2=1.1.1.1:2888:3888</span><br><span class="line">server.3=1.1.1.2:2888:3888</span><br></pre></td></tr></table></figure>
-
 <p>将zookeeper文件夹拷贝到其他机器1.1.1.1和1.1.1.2上</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -r zookeeper-3.4.14 1.1.1.1:/home/jinzhongxu/.</span><br><span class="line">scp -r zookeeper-3.4.14 1.1.1.2:/home/jinzhongxu/.</span><br></pre></td></tr></table></figure>
-
 <p>并分别进入机器1.1.1.1中</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 2 &gt; zookeeper-3.4.14/data/myid</span><br></pre></td></tr></table></figure>
-
 <p>并修改配置</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /conf/zoo.cfg</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">server.1=1.1.1.0:2888:3888</span><br><span class="line">server.2=0.0.0.0:2888:3888</span><br><span class="line">server.3=1.1.1.2:2888:3888</span><br></pre></td></tr></table></figure>
-
 <p>机器1.1.1.2中</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 3 &gt; zookeeper-3.4.14/data/myid</span><br></pre></td></tr></table></figure>
-
 <p>并修改配置</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /conf/zoo.cfg</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">server.1=1.1.1.0:2888:3888</span><br><span class="line">server.2=1.1.1.1:2888:3888</span><br><span class="line">server.3=0.0.0.0:2888:3888</span><br></pre></td></tr></table></figure>
-
 <p>在上面的配置中，也可以将IP地址换成 /etc/hosts 映射的 hostname上，但是，当/etc/hosts中出现</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.1.1       box0</span><br><span class="line"></span><br><span class="line">1.1.1.255     host</span><br><span class="line">1.1.1.0     box0</span><br><span class="line">1.1.1.1     box1</span><br><span class="line">1.1.1.2     box2</span><br></pre></td></tr></table></figure>
-
 <p>此时，在 boxi 上必须使用</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server.i=<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">2888</span>:<span class="number">3888</span></span><br></pre></td></tr></table></figure>
-
-<p>或者，注销掉 127.0.1.1，建议使用上面方法，不改变 /etc/hosts 里的 127.0.1.1       box0</p>
+<p>或者，注销掉 127.0.1.1，建议使用上面方法，不改变 /etc/hosts 里的 127.0.1.1 box0</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">127.0.1.1       box0</span></span><br><span class="line"></span><br><span class="line">1.1.1.255     host</span><br><span class="line">1.1.1.0     box0</span><br><span class="line">1.1.1.1     box1</span><br><span class="line">1.1.1.2     box2</span><br></pre></td></tr></table></figure>
-
-<h1 id="启动zookeeper"><a href="#启动zookeeper" class="headerlink" title="启动zookeeper"></a>启动zookeeper</h1><p><strong>分别在每个机器上</strong>运行如下命令，<strong>注意，分别启动完每个机器上的zkServer.sh后，再查看状态，因为zookeeper是选举机制，只启动1个就查看状态，一般是不成功的。</strong></p>
+<h1 id="启动zookeeper">启动zookeeper</h1>
+<p><strong>分别在每个机器上</strong>运行如下命令，<strong>注意，分别启动完每个机器上的zkServer.sh后，再查看状态，因为zookeeper是选举机制，只启动1个就查看状态，一般是不成功的。</strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> zookeeper-3.4.14</span><br><span class="line">/bin/zkServer.sh start</span><br></pre></td></tr></table></figure>
-
 <p>启动<strong>所有机器上</strong>的Zookeeper，查看zookeeper启动情况，运行如下命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/zkServer.sh status</span><br></pre></td></tr></table></figure>
-
 <p>运行成功结果显示这样：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /home/jinzhongxu/zookeeper/bin/../conf/zoo.cfg</span><br><span class="line">Mode: leader</span><br></pre></td></tr></table></figure>
-
 <p>关闭Zookeeper，运行如下命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/zkServer.sh stop</span><br></pre></td></tr></table></figure>
-
-<h1 id="Zookeeper相关知识"><a href="#Zookeeper相关知识" class="headerlink" title="Zookeeper相关知识"></a>Zookeeper相关知识</h1><ul>
+<h1 id="zookeeper相关知识">Zookeeper相关知识</h1>
+<ul>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wxisme/p/5178211.html">Zookeeper集群部署</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.w3cschool.cn/zookeeper/">Zookeeper教程</a></li>
 </ul>
-<h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><ul>
+<h1 id="补充">补充</h1>
+<ul>
 <li><p>从版本3.4.0开始，Zookeeper提供了自动清理快照和事务日志的功能，该配置在zoo.cfg里：</p>
-<ol>
+<ol type="1">
 <li>autopurge.purgeInterval=1</li>
 <li>autopurge.snapRetainCount=3</li>
 </ol>
 <p>autopurge.purgeInterval：这个参数指定了持久化日志清理频率，单位是小时，默认是0，即不开启自动清理功能。</p>
-<p>autopurge.snapRetainCount：这个参数和上面的参数搭配，用于指定需要保留的持久化日志文件数目，默认是3个。</p>
-</li>
+<p>autopurge.snapRetainCount：这个参数和上面的参数搭配，用于指定需要保留的持久化日志文件数目，默认是3个。</p></li>
 </ul>
 
     </div>
@@ -481,14 +463,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

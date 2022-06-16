@@ -313,19 +313,16 @@
     <div class="post-body" itemprop="articleBody">
         <p>Linux 系统上终端的使用非常频繁，当需要使用终端进行快速下载软件时（如 conda, pip 命令），对终端进行代理显得非常重要。本篇以 Debian 类系统和 Mac 为例。</p>
 <a id="more"></a>
-
-<h1 id="proxychains"><a href="#proxychains" class="headerlink" title="proxychains"></a>proxychains</h1><p>安装和配置如下</p>
+<h1 id="proxychains">proxychains</h1>
+<p>安装和配置如下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt-get install proxychains</span><br><span class="line">sudo vim /etc/proxychains.conf</span><br><span class="line"><span class="comment"># 在最后的 ProxyList 下面设置：（根据个人的参数进行）</span></span><br><span class="line"></span><br><span class="line">socks5    127.0.0.1    1080</span><br></pre></td></tr></table></figure>
-
 <p>使用方法如下（在需要的命令前加上 <code>proxychains</code> 即可）</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychains curl cip.cc</span><br></pre></td></tr></table></figure>
-
-<h1 id="privoxy"><a href="#privoxy" class="headerlink" title="privoxy"></a><strong>privoxy</strong></h1><p>安装和配置如下</p>
+<h1 id="privoxy"><strong>privoxy</strong></h1>
+<p>安装和配置如下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Debian 安装方法</span></span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install privoxy</span><br><span class="line">sudo vim /etc/privoxy/config</span><br><span class="line"></span><br><span class="line"><span class="comment"># Mac 安装方法</span></span><br><span class="line">brew search privoxy</span><br><span class="line">brew install privoxy</span><br><span class="line">sudo vim /usr/<span class="built_in">local</span>/etc/privoxy/config</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改如下，注意最后面的点号</span></span><br><span class="line"><span class="comment"># 如果想让其他电脑（同网段）也能使用该代理，可以将 127.0.0.1 改为 0.0.0.0</span></span><br><span class="line"><span class="comment"># listen-address  0.0.0.0:8118</span></span><br><span class="line">listen-address  127.0.0.1:8118</span><br><span class="line">listen-address  [::1]:8118</span><br><span class="line"></span><br><span class="line">forward-socks5t   /               127.0.0.1:1080 .</span><br><span class="line"></span><br><span class="line">vim ~/.bashrc</span><br><span class="line"><span class="built_in">alias</span> setproxy=<span class="string">&quot;export ALL_PROXY=127.0.0.1:8118&quot;</span></span><br><span class="line"><span class="built_in">alias</span> unsetproxy=<span class="string">&quot;unset ALL_PROXY&quot;</span></span><br></pre></td></tr></table></figure>
-
 <p>使用方法如下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Debian 启动</span></span><br><span class="line">sudo /etc/init.d/privoxy start</span><br><span class="line"></span><br><span class="line"><span class="comment"># Mac 启动</span></span><br><span class="line">brew services start privoxy</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使环境变量生效</span></span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 开启</span></span><br><span class="line">setproxy</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检测</span></span><br><span class="line">curl cip.cc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">unsetproxy</span><br></pre></td></tr></table></figure>
-
 <p>对终端进行代理设置后，就可以使用 conda 或 pip 从官方源下载最新的包了，而不用使用更新较迟的国内源。</p>
 
     </div>
@@ -420,14 +417,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

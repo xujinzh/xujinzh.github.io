@@ -306,35 +306,32 @@
     <div class="post-body" itemprop="articleBody">
         <p>通过 SSH 连接到远端主机，一般会打开一个伪终端（pts）。Linux 系统是可进行多用户访问，当你访问远端主机时，别人也可能正在进行访问，当我们需要进行远端主机重启等一些影响别人使用远端主机的行为时，我们需要把重启的消失广播给其他用户。</p>
 <a id="more"></a>
-
-<h1 id="write-消息聊天"><a href="#write-消息聊天" class="headerlink" title="write 消息聊天"></a>write 消息聊天</h1><p>使用 write 能够在终端上互相聊天，方法如下：</p>
+<h1 id="write-消息聊天">write 消息聊天</h1>
+<p>使用 write 能够在终端上互相聊天，方法如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前登录用户</span></span><br><span class="line">who</span><br><span class="line"></span><br><span class="line">jinzhongxu pts/2        2022-01-20 19:08 (127.0.0.1)</span><br><span class="line">jinzhongxu pts/3        2022-01-20 15:37 (10.2.28.40)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 我当前登录使用的是伪终端 pts/3，想发给 pts/2 实时消息</span></span><br><span class="line"><span class="comment"># 发送消息，类似于写信，先写发送对象，回车后写内容，一行回车将直接发送信息给对方</span></span><br><span class="line">write jinzhongxu pts/2</span><br><span class="line">hello, I will reboot this computer!!!</span><br></pre></td></tr></table></figure>
-
 <p>此时，登录在伪终端 pts/3 的用户终端上就会显示我发生的信息。</p>
 <p>查看伪终端的方法还有</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tty</span><br><span class="line"><span class="comment"># 显示伪终端</span></span><br><span class="line">/dev/pts/2</span><br></pre></td></tr></table></figure>
-
 <p><strong>注意</strong>：</p>
-<ol>
+<ol type="1">
 <li>write 消息不支持中文；</li>
 <li><code>ctrl + c</code> 结束消息发送；</li>
 <li>当看到 EOF 说明对方停止发送，退出 write。</li>
 </ol>
-<h1 id="wall-广播"><a href="#wall-广播" class="headerlink" title="wall 广播"></a>wall 广播</h1><p>wall (write all) 就是给所有人发生消息，包括自己。常用的方式如下：</p>
+<h1 id="wall-广播">wall 广播</h1>
+<p>wall (write all) 就是给所有人发生消息，包括自己。常用的方式如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法1</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello everyone, I will reboot this computer!!!&quot;</span> | wall</span><br><span class="line"><span class="comment"># 方法2</span></span><br><span class="line">wall &lt;&lt;&lt; <span class="string">&quot;hello everyone, I will reboot this computer!!!&quot;</span></span><br><span class="line"><span class="comment"># 方法3</span></span><br><span class="line">wall hello everyone, I will reboot this computer!!!</span><br></pre></td></tr></table></figure>
-
-<h1 id="禁止和开启消息"><a href="#禁止和开启消息" class="headerlink" title="禁止和开启消息"></a>禁止和开启消息</h1><p>当一个用户正在编辑文档时，你给他发送消息，则消息会自动插入其文档中（只是显示到文档上，保持文档不会保持消息内容），因此，不要随便发送消息。</p>
+<h1 id="禁止和开启消息">禁止和开启消息</h1>
+<p>当一个用户正在编辑文档时，你给他发送消息，则消息会自动插入其文档中（只是显示到文档上，保持文档不会保持消息内容），因此，不要随便发送消息。</p>
 <p><strong>禁止别人把信息显示在我的终端</strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mesg n</span><br></pre></td></tr></table></figure>
-
 <p>当别人给你发送消息时，将显示如下信息：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">write: jinzhongxu has messages disabled on pts/2</span><br></pre></td></tr></table></figure>
-
 <p>但不能组织广播信息，即 wall 发送的广播信息。</p>
 <p><strong>允许别人把信息显示在我的终端</strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mesg y</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<h1 id="参考链接">参考链接</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/cloudeagle_bupt/article/details/28933281">linux下 write/wall 给其它用户/终端 发送即时文本消息</a></li>
 </ol>
 
@@ -429,14 +426,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

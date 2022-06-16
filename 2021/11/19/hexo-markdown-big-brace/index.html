@@ -22,12 +22,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Hexo 生成 markdown 撰写的博文中含有公式大括号 $\lbrace$ 和 $\rbrace$ 时，发布网站上大括号消失。本篇给出可能的原因，和解决方法。">
+    <meta name="description" content="Hexo 生成 markdown 撰写的博文中含有公式大括号 \(\lbrace\) 和 \(\rbrace\) 时，发布网站上大括号消失。本篇给出可能的原因，和解决方法。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo 大括号渲染">
 <meta property="og:url" content="https://xujinzh.github.io/2021/11/19/hexo-markdown-big-brace/index.html">
 <meta property="og:site_name" content="J. Xu">
-<meta property="og:description" content="Hexo 生成 markdown 撰写的博文中含有公式大括号 $\lbrace$ 和 $\rbrace$ 时，发布网站上大括号消失。本篇给出可能的原因，和解决方法。">
+<meta property="og:description" content="Hexo 生成 markdown 撰写的博文中含有公式大括号 \(\lbrace\) 和 \(\rbrace\) 时，发布网站上大括号消失。本篇给出可能的原因，和解决方法。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-11-19T11:28:39.000Z">
 <meta property="article:modified_time" content="2021-11-19T11:39:24.924Z">
@@ -282,7 +282,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>371</span>
+      <span>377</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -300,24 +300,26 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>Hexo 生成 markdown 撰写的博文中含有公式大括号 $\lbrace$ 和 $\rbrace$ 时，发布网站上大括号消失。本篇给出可能的原因，和解决方法。</p>
+        <p>Hexo 生成 markdown 撰写的博文中含有公式大括号 <span class="math inline">\(\lbrace\)</span> 和 <span class="math inline">\(\rbrace\)</span> 时，发布网站上大括号消失。本篇给出可能的原因，和解决方法。</p>
 <a id="more"></a>
-
-<h1 id="可能原因"><a href="#可能原因" class="headerlink" title="可能原因"></a>可能原因</h1><p>在使用公式编辑大括号时，采用了如下的形式</p>
+<h1 id="可能原因">可能原因</h1>
+<p>在使用公式编辑大括号时，采用了如下的形式</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ E = \min<span class="emphasis">_&#123;v \in V&#125; \&#123;u \in V | w(u,v) &gt; 0\&#125; $</span></span><br></pre></td></tr></table></figure>
-
-<p>$$<br>E = \min_{v \in V} {u \in V | w(u,v) &gt; 0}<br>$$</p>
-<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><p>把</p>
+<p><span class="math display">\[
+E = \min_{v \in V} \{u \in V | w(u,v) &gt; 0\}
+\]</span></p>
+<h1 id="解决方法">解决方法</h1>
+<p>把</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\&#123; \&#125;</span><br></pre></td></tr></table></figure>
-
 <p>替换为</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\lbrace \rbrace</span><br></pre></td></tr></table></figure>
-
 <p>结果示例</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ E = \min<span class="emphasis">_&#123;v \in V&#125; \lbrace u \in V | w(u,v) &gt; 0\rbrace $</span></span><br></pre></td></tr></table></figure>
-
-<p>$$<br>E = \min_{v \in V} \lbrace u \in V | w(u,v) &gt; 0\rbrace<br>$$</p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<p><span class="math display">\[
+E = \min_{v \in V} \lbrace u \in V | w(u,v) &gt; 0\rbrace
+\]</span></p>
+<h1 id="参考链接">参考链接</h1>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://lanlan2017.github.io/blog/14ee6880/">Hexo Next主题Mathjax 大括号渲染错误</a></li>
 </ol>
 
@@ -412,14 +414,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

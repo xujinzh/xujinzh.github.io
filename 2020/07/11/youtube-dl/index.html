@@ -309,26 +309,25 @@
     <div class="post-body" itemprop="articleBody">
         <p>youtube-dl 能够方便的下载网页视频，虽然不是所有网站视频都可以下载，但已经能够覆盖很多网站。这里介绍一下如何使用youtube-dl有效下载视频。</p>
 <a id="more"></a>
-
-<h2 id="安装youtube-dl"><a href="#安装youtube-dl" class="headerlink" title="安装youtube-dl"></a>安装youtube-dl</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install youtube-dl --upgrade</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置代理"><a href="#配置代理" class="headerlink" title="配置代理"></a>配置代理</h2><p>如果使用了代理，可以使用如下配置</p>
+<h2 id="安装youtube-dl">安装youtube-dl</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install youtube-dl --upgrade</span><br></pre></td></tr></table></figure>
+<h2 id="配置代理">配置代理</h2>
+<p>如果使用了代理，可以使用如下配置</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 打开本地配置文件</span></span><br><span class="line">vim .bashrc</span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加如下内容</span></span><br><span class="line">alias youtube = &quot;youtube-dl --no-check-certificate --proxy socks5://127.0.0.1:1080&quot;</span><br></pre></td></tr></table></figure>
-
-<h2 id="列出有哪些格式视频"><a href="#列出有哪些格式视频" class="headerlink" title="列出有哪些格式视频"></a>列出有哪些格式视频</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">youtube-dl --list-formats https://www.yyy.com/video/BV1TW411g7Tf/</span><br><span class="line"><span class="meta">#</span><span class="bash"> 或者</span></span><br><span class="line">youtube-dl -F https://www.yyy.com/video/BV1TW411g7Tf/</span><br></pre></td></tr></table></figure>
-
-<h2 id="下载指定格式视频和音频"><a href="#下载指定格式视频和音频" class="headerlink" title="下载指定格式视频和音频"></a>下载指定格式视频和音频</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">youtube-dl -f22+140 https://www.yyy.com/video/BV1TW411g7Tf/</span><br></pre></td></tr></table></figure>
-
-<h2 id="下载所有格式视频"><a href="#下载所有格式视频" class="headerlink" title="下载所有格式视频"></a>下载所有格式视频</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">youtube-dl --all-formats https://www.yyy.com/video/BV1TW411g7Tf/</span><br></pre></td></tr></table></figure>
-
-<h2 id="下载视频和字幕"><a href="#下载视频和字幕" class="headerlink" title="下载视频和字幕"></a>下载视频和字幕</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">youtube-dl --write-sub --all-subs https://www.yyy.com/video/BV1TW411g7Tf/</span><br></pre></td></tr></table></figure>
-
-<h2 id="下载最高清的视频"><a href="#下载最高清的视频" class="headerlink" title="下载最高清的视频"></a>下载最高清的视频</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">youtube-dl -f bestvideo+bestaudio https://www.yyy.com/video/BV1TW411g7Tf/</span><br></pre></td></tr></table></figure>
-
-<h2 id="下载多个视频"><a href="#下载多个视频" class="headerlink" title="下载多个视频"></a>下载多个视频</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 首先将视频地址写入文件中，注意，如果是一个视频集合，这里只需要输入第一个视频的链接，就可以下载整部视频</span></span><br><span class="line">cat https://www.yyy.com/video/BV1TW411g7Tf/ &gt;&gt; video.txt</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 然后，从文件中获取链接下载视频</span></span><br><span class="line">youtube-dl -a video.txt</span><br></pre></td></tr></table></figure>
-
-<h2 id="下载多个最高清带有字幕的视频"><a href="#下载多个最高清带有字幕的视频" class="headerlink" title="下载多个最高清带有字幕的视频"></a>下载多个最高清带有字幕的视频</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">youtube-dl -f bestvideo+bestaudio --write-sub --all-subs -a video.txt</span><br></pre></td></tr></table></figure>
-
+<h2 id="列出有哪些格式视频">列出有哪些格式视频</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">youtube-dl --list-formats https://www.yyy.com/video/BV1TW411g7Tf/</span><br><span class="line"><span class="meta">#</span><span class="bash"> 或者</span></span><br><span class="line">youtube-dl -F https://www.yyy.com/video/BV1TW411g7Tf/</span><br></pre></td></tr></table></figure>
+<h2 id="下载指定格式视频和音频">下载指定格式视频和音频</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">youtube-dl -f22+140 https://www.yyy.com/video/BV1TW411g7Tf/</span><br></pre></td></tr></table></figure>
+<h2 id="下载所有格式视频">下载所有格式视频</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">youtube-dl --all-formats https://www.yyy.com/video/BV1TW411g7Tf/</span><br></pre></td></tr></table></figure>
+<h2 id="下载视频和字幕">下载视频和字幕</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">youtube-dl --write-sub --all-subs https://www.yyy.com/video/BV1TW411g7Tf/</span><br></pre></td></tr></table></figure>
+<h2 id="下载最高清的视频">下载最高清的视频</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">youtube-dl -f bestvideo+bestaudio https://www.yyy.com/video/BV1TW411g7Tf/</span><br></pre></td></tr></table></figure>
+<h2 id="下载多个视频">下载多个视频</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 首先将视频地址写入文件中，注意，如果是一个视频集合，这里只需要输入第一个视频的链接，就可以下载整部视频</span></span><br><span class="line">cat https://www.yyy.com/video/BV1TW411g7Tf/ &gt;&gt; video.txt</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 然后，从文件中获取链接下载视频</span></span><br><span class="line">youtube-dl -a video.txt</span><br></pre></td></tr></table></figure>
+<h2 id="下载多个最高清带有字幕的视频">下载多个最高清带有字幕的视频</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">youtube-dl -f bestvideo+bestaudio --write-sub --all-subs -a video.txt</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -422,14 +421,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

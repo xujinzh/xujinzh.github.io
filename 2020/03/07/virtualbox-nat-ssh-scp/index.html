@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84"><span class="nav-number">1.</span> <span class="nav-text">设置端口映射</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SSH%E8%BF%9E%E6%8E%A5"><span class="nav-number">2.</span> <span class="nav-text">SSH连接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SCP-%E4%BC%A0%E8%BE%93%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">SCP 传输文件</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84"><span class="nav-number">1.</span> <span class="nav-text">设置端口映射</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ssh%E8%BF%9E%E6%8E%A5"><span class="nav-number">2.</span> <span class="nav-text">SSH连接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#scp-%E4%BC%A0%E8%BE%93%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">SCP 传输文件</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -289,7 +289,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>422</span>
+      <span>430</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -307,13 +307,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>Virtualbox 创建虚拟机时，如果按照 NAT 方式进行创建，则各虚拟机之间可以进行 SSH 连接，虚拟机也可以 SSH 连接宿主机，但是，宿主机想要连接虚拟机却需要一些设置才可以连接。想知道虚拟机桥接、NAT、host-only之间的区别，可查看我之前的文章：<a href="https://xujinzh.github.io/2019/12/20/virtual-machine-network-nat-bridge-hostonly/">虚拟机网络模式 NAT 桥接 Host-Only</a>    </p>
+        <p>Virtualbox 创建虚拟机时，如果按照 NAT 方式进行创建，则各虚拟机之间可以进行 SSH 连接，虚拟机也可以 SSH 连接宿主机，但是，宿主机想要连接虚拟机却需要一些设置才可以连接。想知道虚拟机桥接、NAT、host-only之间的区别，可查看我之前的文章：<a href="https://xujinzh.github.io/2019/12/20/virtual-machine-network-nat-bridge-hostonly/">虚拟机网络模式 NAT 桥接 Host-Only</a></p>
 <a id="more"></a>
-
-<h1 id="设置端口映射"><a href="#设置端口映射" class="headerlink" title="设置端口映射"></a>设置端口映射</h1><p>打开设置 — Network — NAT — 高级 — 端口映射，添加如下内容</p>
+<h1 id="设置端口映射">设置端口映射</h1>
+<p>打开设置 --- Network --- NAT --- 高级 --- 端口映射，添加如下内容</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Protocol</th>
 <th>Host IP</th>
 <th>Host Port</th>
@@ -321,21 +321,23 @@
 <th>Guest Port</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr class="odd">
 <td>TCP</td>
 <td>127.0.0.1</td>
 <td>10002</td>
 <td>10.0.2.15</td>
 <td>22</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>这里假设虚拟机的 ip 地址是 10.0.2.15，可以通过在虚拟机运行命令 ifconfig 查看</p>
-<h1 id="SSH连接"><a href="#SSH连接" class="headerlink" title="SSH连接"></a>SSH连接</h1><p>在宿主机运行命令SSH连接虚拟机</p>
+<h1 id="ssh连接">SSH连接</h1>
+<p>在宿主机运行命令SSH连接虚拟机</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh jinzhongxu@127.0.0.1 -p 10000</span><br></pre></td></tr></table></figure>
-
-<h1 id="SCP-传输文件"><a href="#SCP-传输文件" class="headerlink" title="SCP 传输文件"></a>SCP 传输文件</h1><p>如果想从宿主机向虚拟机传送文件，可以使用如下命令</p>
+<h1 id="scp-传输文件">SCP 传输文件</h1>
+<p>如果想从宿主机向虚拟机传送文件，可以使用如下命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -P 10000 jdk* 127.0.0.1:/home/jinzhongxu/.</span><br></pre></td></tr></table></figure>
-
 
     </div>
 
@@ -429,14 +431,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

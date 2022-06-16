@@ -22,12 +22,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="查询特定端口占用情况： 1root@ip-172-26-1-96:&#x2F;# netstat -ntulp | grep 8080  1tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN      5759&#x2F;filebrowser  结果最后一位分别是进程id&#x2F;进程名，使用如下方法杀死进程：">
+    <meta name="description" content="查询特定端口占用情况： 1root@ip-172-26-1-96:&#x2F;# netstat -ntulp | grep 8080 1tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN      5759&#x2F;filebrowser 结果最后一位分别是进程id&#x2F;进程名，使用如下方法杀死进程：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux端口占用情况查询与释放端口">
 <meta property="og:url" content="https://xujinzh.github.io/2019/12/21/linux-port/index.html">
 <meta property="og:site_name" content="J. Xu">
-<meta property="og:description" content="查询特定端口占用情况： 1root@ip-172-26-1-96:&#x2F;# netstat -ntulp | grep 8080  1tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN      5759&#x2F;filebrowser  结果最后一位分别是进程id&#x2F;进程名，使用如下方法杀死进程：">
+<meta property="og:description" content="查询特定端口占用情况： 1root@ip-172-26-1-96:&#x2F;# netstat -ntulp | grep 8080 1tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN      5759&#x2F;filebrowser 结果最后一位分别是进程id&#x2F;进程名，使用如下方法杀死进程：">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-12-20T16:00:00.000Z">
 <meta property="article:modified_time" content="2022-03-06T02:04:53.672Z">
@@ -308,31 +308,21 @@
     <div class="post-body" itemprop="articleBody">
         <p>查询特定端口占用情况：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@ip-172-26-1-96:/<span class="comment"># netstat -ntulp | grep 8080</span></span><br></pre></td></tr></table></figure>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN      5759/filebrowser</span><br></pre></td></tr></table></figure>
-
 <p>结果最后一位分别是进程id/进程名，使用如下方法杀死进程：</p>
 <a id="more"></a>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@ip-172-26-1-96:/<span class="comment"># kill 5759</span></span><br></pre></td></tr></table></figure>
-
 <p>再次查看端口得到释放</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@ip-172-26-1-96:/<span class="comment"># netstat -ntulp | grep 8080</span></span><br></pre></td></tr></table></figure>
-
 <p>更多方法，请参考：[Linux 端口占用与释放](</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">title: Linux端口占用情况查询与释放端口</span><br><span class="line">date: 2019.12.21</span><br><span class="line">tags:</span><br><span class="line">- linux</span><br><span class="line">- port</span><br><span class="line">categories: technology</span><br></pre></td></tr></table></figure>
-
 <p>查询特定端口占用情况：</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">root@</span>ip<span class="number">-172</span><span class="number">-26</span><span class="number">-1</span><span class="number">-96</span>:/# netstat -ntulp | grep <span class="number">8080</span></span><br><span class="line">tcp        <span class="number">0</span>      <span class="number">0</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">8080</span>          <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:*               LISTEN      <span class="number">5759</span>/filebrowser</span><br></pre></td></tr></table></figure>
-
 <p>结果最后一位分别是进程id/进程名，使用如下方法杀死进程：</p>
 <!--more-->
-
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">root@</span>ip<span class="number">-172</span><span class="number">-26</span><span class="number">-1</span><span class="number">-96</span>:/# kill <span class="number">5759</span></span><br></pre></td></tr></table></figure>
-
 <p>再次查看端口得到释放</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">root@</span>ip<span class="number">-172</span><span class="number">-26</span><span class="number">-1</span><span class="number">-96</span>:/# netstat -ntulp | grep <span class="number">8080</span></span><br></pre></td></tr></table></figure>
-
 <p>更多方法，请参考：<a href="https://xujinzh.github.io/2020/07/21/linux-port-occupation/">Linux 端口占用与释放</a></p>
 
     </div>
@@ -386,13 +376,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2019/12/21/mbp-bash-to-zsh/" rel="prev" title="Mac Book Pro 更改 bash 为 zsh">
-                  <i class="fa fa-chevron-left"></i> Mac Book Pro 更改 bash 为 zsh
+                <a href="/2019/12/21/linux-memory/" rel="prev" title="查看内存消耗排序情况">
+                  <i class="fa fa-chevron-left"></i> 查看内存消耗排序情况
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2019/12/21/linux-memory/" rel="next" title="查看内存消耗排序情况">
-                  查看内存消耗排序情况 <i class="fa fa-chevron-right"></i>
+                <a href="/2019/12/21/latex-chinese/" rel="next" title="LaTeX中文模版代码">
+                  LaTeX中文模版代码 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -427,14 +417,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

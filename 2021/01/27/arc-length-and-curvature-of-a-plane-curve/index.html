@@ -292,7 +292,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.5k</span>
+      <span>1.6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -312,12 +312,42 @@
     <div class="post-body" itemprop="articleBody">
         <p>通过定积分我们能够计算平面曲线的弧长和曲率。对于平面曲线的画出，通过利用参数方程和对曲线划分以直代曲的定积分思想来计算弧长。</p>
 <a id="more"></a>
-
-<h1 id="平面曲线的弧长"><a href="#平面曲线的弧长" class="headerlink" title="平面曲线的弧长"></a>平面曲线的弧长</h1><p>设$C = \stackrel\frown{AB}$ 是一条没有<strong>自交点</strong>的非闭的平面曲线。在$C$上从$A$到$B$依次取分点：<br>$$<br>A=P_0, P_1, P_2, \cdots, P_{n-1}, P_n = B,<br>$$<br>它们成为对曲线$C$的一个分割，记为$T$。然后用线段联结$T$中每个相邻的两点，得到$C$的$n$条弦$\overline{P_{i-1}P_i} (i=1,2,\cdots,n)$，这$n$条弦又成为$C$的一条内接折线。记<br>$$<br>|T| = \max_{1\leq i \leq n} |P_{i-1}P_i|, s_T = \sum^n_{i=1}|P_{i-1}P_i|,<br>$$<br>分别表示最长弦的长度和折线的总长度。</p>
-<p><strong>定义 1</strong>    如果存在有限极限<br>$$<br>\lim_{|T|\to 0}s_T = s,<br>$$<br>即任给$\varepsilon &gt; 0$，恒存在$\delta &gt; 0$，使得$C$的任何分割$T$，只要$|T| &lt; \delta$，就有<br>$$<br>|s_T - s| &lt; \varepsilon,<br>$$<br>则称曲线$C$是可求长的，并把极限$s$定义为曲线$C$的弧长。</p>
-<p><strong>定理 1</strong>    设曲线$C$是一条没有自交点的非闭的平面曲线，由参数方程<br>$$<br>x=x(t), y=y(t), t\in [\alpha, \beta]<br>$$<br>给出。若$x(t)$与$y(t)$在$[\alpha, \beta]$上连续可微，则$C$是可求长的，且弧长为<br>$$<br>s = \int^{\beta}_{\alpha} \sqrt{[x^{\prime}(t)]^2 + [y^{\prime}(t)]^2} \mathrm{d}t.<br>$$<br>对于光滑曲线，上面公式仍然成立。</p>
-<h2 id="直角坐标方程定义的曲线"><a href="#直角坐标方程定义的曲线" class="headerlink" title="直角坐标方程定义的曲线"></a>直角坐标方程定义的曲线</h2><p>假设曲线$C$由直角坐标方程<br>$$<br>y=f(x), x\in [a, b]<br>$$<br>表示，把它看作参数方程时，即为<br>$$<br>x=x, y=f(x),x\in[a,b].<br>$$<br>当$f(x)$在$[a,b]$上连续可微时，此曲线即为一光滑曲线。弧长公式为<br>$$<br>s = \int^b_a \sqrt{1 + {f^{\prime}}^2(x)} \mathrm{d}x.<br>$$</p>
-<h2 id="极坐标方程定义的曲线"><a href="#极坐标方程定义的曲线" class="headerlink" title="极坐标方程定义的曲线"></a>极坐标方程定义的曲线</h2><p>若曲线$C$由极坐标方程<br>$$<br>r = r(\theta), \theta \in [\alpha, \beta]<br>$$<br>表示，把它化为参数方程，则为<br>$$<br>x = r(\theta)\cos \theta, y= r(\theta)\sin\theta, \theta\in[\alpha, \beta].<br>$$<br>由于<br>$$<br>x^{\prime}(\theta)=r^{\prime}(\theta)\cos\theta - r(\theta)\sin\theta, \\<br>y^{\prime}(\theta)=r^{\prime}(\theta)\sin\theta + r(\theta)\cos\theta, \\<br>{x^{\prime}}^2(\theta) + {y^{\prime}}^2(\theta)=r^2(\theta)+{r^{\prime}}^2(\theta),<br>$$<br>因此当$r^{\prime}(\theta)$在$[\alpha,\beta]$上连续，且$r(\theta)$与$r^{\prime}(\theta)$不同时为零时，此极坐标曲线为一光滑曲线。这时弧长公式为<br>$$<br>s = \int^{\beta}_{\alpha}\sqrt{r^2(\theta) + {r^{\prime}}^2(\theta)}\mathrm{d}\theta.<br>$$</p>
+<h1 id="平面曲线的弧长">平面曲线的弧长</h1>
+<p>设<span class="math inline">\(C = \stackrel\frown{AB}\)</span> 是一条没有<strong>自交点</strong>的非闭的平面曲线。在<span class="math inline">\(C\)</span>上从<span class="math inline">\(A\)</span>到<span class="math inline">\(B\)</span>依次取分点： <span class="math display">\[
+A=P_0, P_1, P_2, \cdots, P_{n-1}, P_n = B,
+\]</span> 它们成为对曲线<span class="math inline">\(C\)</span>的一个分割，记为<span class="math inline">\(T\)</span>。然后用线段联结<span class="math inline">\(T\)</span>中每个相邻的两点，得到<span class="math inline">\(C\)</span>的<span class="math inline">\(n\)</span>条弦<span class="math inline">\(\overline{P_{i-1}P_i} (i=1,2,\cdots,n)\)</span>，这<span class="math inline">\(n\)</span>条弦又成为<span class="math inline">\(C\)</span>的一条内接折线。记 <span class="math display">\[
+\|T\| = \max_{1\leq i \leq n} |P_{i-1}P_i|, s_T = \sum^n_{i=1}|P_{i-1}P_i|,
+\]</span> 分别表示最长弦的长度和折线的总长度。</p>
+<p><strong>定义 1</strong> 如果存在有限极限 <span class="math display">\[
+\lim_{\|T\|\to 0}s_T = s,
+\]</span> 即任给<span class="math inline">\(\varepsilon &gt; 0\)</span>，恒存在<span class="math inline">\(\delta &gt; 0\)</span>，使得<span class="math inline">\(C\)</span>的任何分割<span class="math inline">\(T\)</span>，只要<span class="math inline">\(\|T\| &lt; \delta\)</span>，就有 <span class="math display">\[
+|s_T - s| &lt; \varepsilon,
+\]</span> 则称曲线<span class="math inline">\(C\)</span>是可求长的，并把极限<span class="math inline">\(s\)</span>定义为曲线<span class="math inline">\(C\)</span>的弧长。</p>
+<p><strong>定理 1</strong> 设曲线<span class="math inline">\(C\)</span>是一条没有自交点的非闭的平面曲线，由参数方程 <span class="math display">\[
+x=x(t), y=y(t), t\in [\alpha, \beta]
+\]</span> 给出。若<span class="math inline">\(x(t)\)</span>与<span class="math inline">\(y(t)\)</span>在<span class="math inline">\([\alpha, \beta]\)</span>上连续可微，则<span class="math inline">\(C\)</span>是可求长的，且弧长为 <span class="math display">\[
+s = \int^{\beta}_{\alpha} \sqrt{[x^{\prime}(t)]^2 + [y^{\prime}(t)]^2} \mathrm{d}t.
+\]</span> 对于光滑曲线，上面公式仍然成立。</p>
+<h2 id="直角坐标方程定义的曲线">直角坐标方程定义的曲线</h2>
+<p>假设曲线<span class="math inline">\(C\)</span>由直角坐标方程 <span class="math display">\[
+y=f(x), x\in [a, b]
+\]</span> 表示，把它看作参数方程时，即为 <span class="math display">\[
+x=x, y=f(x),x\in[a,b].
+\]</span> 当<span class="math inline">\(f(x)\)</span>在<span class="math inline">\([a,b]\)</span>上连续可微时，此曲线即为一光滑曲线。弧长公式为 <span class="math display">\[
+s = \int^b_a \sqrt{1 + {f^{\prime}}^2(x)} \mathrm{d}x.
+\]</span></p>
+<h2 id="极坐标方程定义的曲线">极坐标方程定义的曲线</h2>
+<p>若曲线<span class="math inline">\(C\)</span>由极坐标方程 <span class="math display">\[
+r = r(\theta), \theta \in [\alpha, \beta]
+\]</span> 表示，把它化为参数方程，则为 <span class="math display">\[
+x = r(\theta)\cos \theta, y= r(\theta)\sin\theta, \theta\in[\alpha, \beta].
+\]</span> 由于 <span class="math display">\[
+x^{\prime}(\theta)=r^{\prime}(\theta)\cos\theta - r(\theta)\sin\theta, \\\\
+y^{\prime}(\theta)=r^{\prime}(\theta)\sin\theta + r(\theta)\cos\theta, \\\\
+{x^{\prime}}^2(\theta) + {y^{\prime}}^2(\theta)=r^2(\theta)+{r^{\prime}}^2(\theta),
+\]</span> 因此当<span class="math inline">\(r^{\prime}(\theta)\)</span>在<span class="math inline">\([\alpha,\beta]\)</span>上连续，且<span class="math inline">\(r(\theta)\)</span>与<span class="math inline">\(r^{\prime}(\theta)\)</span>不同时为零时，此极坐标曲线为一光滑曲线。这时弧长公式为 <span class="math display">\[
+s = \int^{\beta}_{\alpha}\sqrt{r^2(\theta) + {r^{\prime}}^2(\theta)}\mathrm{d}\theta.
+\]</span></p>
 
     </div>
 
@@ -410,14 +440,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

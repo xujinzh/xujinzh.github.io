@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E9%A1%B9"><span class="nav-number">1.</span> <span class="nav-text">修改配置项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E5%90%AFSSH%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.</span> <span class="nav-text">重启SSH服务</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E9%A1%B9"><span class="nav-number">1.</span> <span class="nav-text">修改配置项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E5%90%AFssh%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.</span> <span class="nav-text">重启SSH服务</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -289,7 +289,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>584</span>
+      <span>572</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -309,28 +309,24 @@
     <div class="post-body" itemprop="articleBody">
         <p>Centos 安全可靠，但是远程通过SSH连接Centos服务器时，总是会出现过一段时间不用或隔夜第二天断开的情况，这是由于Centos的SSH服务配置项设置导致的，可以修改相应的配置项来保证Centos通过SSH连接时不自动断开。</p>
 <a id="more"></a>
-
-<h1 id="修改配置项"><a href="#修改配置项" class="headerlink" title="修改配置项"></a>修改配置项</h1><p>打开配置文件</p>
+<h1 id="修改配置项">修改配置项</h1>
+<p>打开配置文件</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
-
 <p>修改如下两项</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">ClientAliveInterval 0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">ClientAliveCountMax 3</span></span><br></pre></td></tr></table></figure>
-
 <p>为如下</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ClientAliveInterval 60</span><br><span class="line">ClientAliveCountMax 3</span><br></pre></td></tr></table></figure>
-
 <p>参数说明：</p>
-<p>&emsp; ClientAliveInterval 指定了服务器端向客户端请求消息的时间间隔，默认值为0，表示不发送。设置ClientAliveInterval = 60 表示每分钟发送一次，客户端进行相应，保持在线不断开。</p>
-<p>&emsp; ClientAliveCountMax  表服务器发出请求后客户端没有响应的次数达到一定值就会自动断开。使用默认值3即可，因为正常情况下，不会不响应。</p>
-<h1 id="重启SSH服务"><a href="#重启SSH服务" class="headerlink" title="重启SSH服务"></a>重启SSH服务</h1><p>重启SSH服务</p>
+<p>  ClientAliveInterval 指定了服务器端向客户端请求消息的时间间隔，默认值为0，表示不发送。设置ClientAliveInterval = 60 表示每分钟发送一次，客户端进行相应，保持在线不断开。</p>
+<p>  ClientAliveCountMax 表服务器发出请求后客户端没有响应的次数达到一定值就会自动断开。使用默认值3即可，因为正常情况下，不会不响应。</p>
+<h1 id="重启ssh服务">重启SSH服务</h1>
+<p>重启SSH服务</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart sshd</span><br></pre></td></tr></table></figure>
-
 <p>或者如下命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service sshd restart</span><br></pre></td></tr></table></figure>
-
 <p>重启后，就使设置生效了。即正常情况下，远程SSH连接不会断开。</p>
 <p>参考博文：</p>
-<ol>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/libaineu2004/article/details/83857779">CentOS 7 SSH连接超时自动断开解决方案</a>.</li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/moliyiran/article/details/54809090">CentOS下解决SSH自动断开办法</a>.</li>
 </ol>
@@ -427,14 +423,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

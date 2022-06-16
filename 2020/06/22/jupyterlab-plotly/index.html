@@ -289,7 +289,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.2k</span>
+      <span>1.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -309,26 +309,22 @@
     <div class="post-body" itemprop="articleBody">
         <p>Plotly是一家技术计算公司，总部位于魁北克省的蒙特利尔市，致力于开发在线数据分析和可视化工具。Plotly为个人和协作提供了在线图形，分析和统计工具，以及用于Python，R，MATLAB，Perl，Julia，Arduino和REST的科学图形库。本篇介绍的就是其 Python 画图库plotly，常常在jupyterlab使用plotly进行离线画图时总是出现图形不显示的问题。因为plotly画出的图形比matplotlib更加好看且有交互性，同时，matplotlib画的图形也可以使用plotly转化为同态交互图。所以，希望能够使用plotly画图，并能够在常用软件jupyterlab中使用。</p>
 <a id="more"></a>
-
-<h1 id="安装plotly"><a href="#安装plotly" class="headerlink" title="安装plotly"></a>安装plotly</h1><p>推荐使用pip安装最新的plotly，</p>
+<h1 id="安装plotly">安装plotly</h1>
+<p>推荐使用pip安装最新的plotly，</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install plotly</span><br></pre></td></tr></table></figure>
-
-<h1 id="jupyterlab使用plotly"><a href="#jupyterlab使用plotly" class="headerlink" title="jupyterlab使用plotly"></a>jupyterlab使用plotly</h1><p>在jupyterlab中使用plotly需要安装一些支持扩展，其中 jupyterlab-plotly@ 需要根据最新的plotly版本对应，参考网址<a target="_blank" rel="noopener" href="https://plotly.com/python/getting-started/?utm_source=mailchimp-jan-2015&utm_medium=email&utm_campaign=generalemail-jan2015&utm_term=bubble-chart">Python\Getting Started with Plotly</a></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install ipywidgets</span><br></pre></td></tr></table></figure>
-
+<h1 id="jupyterlab使用plotly">jupyterlab使用plotly</h1>
+<p>在jupyterlab中使用plotly需要安装一些支持扩展，其中 jupyterlab-plotly@ 需要根据最新的plotly版本对应，参考网址<a target="_blank" rel="noopener" href="https://plotly.com/python/getting-started/?utm_source=mailchimp-jan-2015&amp;utm_medium=email&amp;utm_campaign=generalemail-jan2015&amp;utm_term=bubble-chart">PythonStarted with Plotly</a> <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install ipywidgets</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conda install nodejs</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> JupyterLab renderer support</span></span><br><span class="line">jupyter labextension install jupyterlab-plotly@4.8.1</span><br></pre></td></tr></table></figure>
-
-<p>在  <a href="mailto:&#x6a;&#117;&#112;&#121;&#116;&#x65;&#114;&#x6c;&#x61;&#x62;&#45;&#x70;&#x6c;&#x6f;&#116;&#x6c;&#x79;&#64;&#x34;&#x2e;&#56;&#x2e;&#49;">&#x6a;&#117;&#112;&#121;&#116;&#x65;&#114;&#x6c;&#x61;&#x62;&#45;&#x70;&#x6c;&#x6f;&#116;&#x6c;&#x79;&#64;&#x34;&#x2e;&#56;&#x2e;&#49;</a>中，需要编译一会，可能会消耗2G多内存，建议内存小的用户创建交换分区。</p>
+<p>在 jupyterlab-plotly@4.8.1中，需要编译一会，可能会消耗2G多内存，建议内存小的用户创建交换分区。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看安装的jupyterlab扩展</span></span><br><span class="line">jupyter labextension list</span><br></pre></td></tr></table></figure>
-
-<h1 id="使用plotly画图"><a href="#使用plotly画图" class="headerlink" title="使用plotly画图"></a>使用plotly画图</h1><p>按照上面方法按照后，需要先 log out jupyterlab，然后，在登录进去使用plotly才能正常显示图形。</p>
+<h1 id="使用plotly画图">使用plotly画图</h1>
+<p>按照上面方法按照后，需要先 log out jupyterlab，然后，在登录进去使用plotly才能正常显示图形。</p>
 <p>更多jupyterlab使用plotly画图，请参考<a target="_blank" rel="noopener" href="https://plotly.com/python/getting-started/">官网</a></p>
-<h1 id="无法安装扩展解决办法"><a href="#无法安装扩展解决办法" class="headerlink" title="无法安装扩展解决办法"></a>无法安装扩展解决办法</h1><p>因为 build jupyterlab 扩展时，需要使用 npm 安装一些插件，所以 npm 按照插件成功与否会直接影响 jupyterlab 扩展 build 的成败。下面介绍如何安装 npm 和配置国内源</p>
+<h1 id="无法安装扩展解决办法">无法安装扩展解决办法</h1>
+<p>因为 build jupyterlab 扩展时，需要使用 npm 安装一些插件，所以 npm 按照插件成功与否会直接影响 jupyterlab 扩展 build 的成败。下面介绍如何安装 npm 和配置国内源</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt install nodejs</span><br><span class="line"><span class="comment"># 配置淘宝源</span></span><br><span class="line">npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br><span class="line"><span class="comment"># 或者使用工具 nrm 管理源，首先安装 nrm</span></span><br><span class="line">npm install -g nrm</span><br><span class="line"><span class="comment"># 查看可用源</span></span><br><span class="line">nrm ls</span><br><span class="line"><span class="comment"># 切换国内源</span></span><br><span class="line">nrm use taobao</span><br></pre></td></tr></table></figure>
-
 <p>这样，再次使用</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter lab build</span><br></pre></td></tr></table></figure>
-
 <p>时，就能够 build 成功了。</p>
 
     </div>
@@ -423,14 +419,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

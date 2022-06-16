@@ -289,7 +289,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.6k</span>
+      <span>4.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -308,65 +308,53 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>Hexo结合GitHub进行博客系统搭建，能够免费的畅享GitHub给我们带来的无限量服务。下面假设</p>
-<ol>
+<ol type="1">
 <li>hexo博客已经搭建好了</li>
-<li>主页地址是：<a href="https://xujinzh.github.io/">https://xujinzh.github.io/</a></li>
-<li>并且在GitHub上创建了gitalk仓库：<a target="_blank" rel="noopener" href="https://github.com/xujinzh/gitalk-comments.git">https://github.com/xujinzh/gitalk-comments.git</a> </li>
+<li>主页地址是：https://xujinzh.github.io/</li>
+<li>并且在GitHub上创建了gitalk仓库：https://github.com/xujinzh/gitalk-comments.git</li>
 </ol>
 <a id="more"></a>
-
-<h1 id="注册新应用"><a href="#注册新应用" class="headerlink" title="注册新应用"></a>注册新应用</h1><p>打开网址：<a target="_blank" rel="noopener" href="https://github.com/settings/applications/new">https://github.com/settings/applications/new</a></p>
+<h1 id="注册新应用">注册新应用</h1>
+<p>打开网址：https://github.com/settings/applications/new</p>
 <ul>
 <li>在<strong>Application name</strong>一栏填写应用名称，可随意填写，但必须填写</li>
-<li><strong>Homepage URL</strong>一栏填写博客主页，必填，我这里是：<a href="https://xujinzh.github.io/">https://xujinzh.github.io/</a></li>
+<li><strong>Homepage URL</strong>一栏填写博客主页，必填，我这里是：https://xujinzh.github.io/</li>
 <li>Application description一栏是对该应用的描述信息，可以选填</li>
-<li><strong>Authorization callback URL</strong>一栏是应用程序的回调URL，也是博客主页，必填，我这里是：<a href="https://xujinzh.github.io/">https://xujinzh.github.io/</a></li>
+<li><strong>Authorization callback URL</strong>一栏是应用程序的回调URL，也是博客主页，必填，我这里是：https://xujinzh.github.io/</li>
 </ul>
 <p>点击注册后，会跳转到应用信息页，显示有该应用的用户<strong>Client ID</strong>和<strong>Client Secret</strong>，这两个参数在下面配置项中将用到，请保持打开该页面，方便进行一下的配置。</p>
-<h1 id="配置gitalk"><a href="#配置gitalk" class="headerlink" title="配置gitalk"></a>配置gitalk</h1><h2 id="新方法"><a href="#新方法" class="headerlink" title="新方法"></a>新方法</h2><p>推荐使用最新配置的方法，只需要配置主题里面的 <code>_config.xml</code> 或 主目录下的  <code>_config.next.yml</code></p>
+<h1 id="配置gitalk">配置gitalk</h1>
+<h2 id="新方法">新方法</h2>
+<p>推荐使用最新配置的方法，只需要配置主题里面的 <code>_config.xml</code> 或 主目录下的 <code>_config.next.yml</code></p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Gitalk</span></span><br><span class="line"><span class="comment"># For more information: https://gitalk.github.io</span></span><br><span class="line"><span class="attr">gitalk:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">github_id:</span> <span class="string">xujinzh</span> <span class="comment"># GitHub repo owner</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">xujinzh.github.io</span> <span class="comment"># Repository name to store issues</span></span><br><span class="line">  <span class="attr">client_id:</span> <span class="number">6</span><span class="string">**5</span> <span class="comment"># GitHub Application Client ID</span></span><br><span class="line">  <span class="attr">client_secret:</span> <span class="number">9</span><span class="string">**5</span> <span class="comment"># GitHub Application Client Secret</span></span><br><span class="line">  <span class="attr">admin_user:</span> <span class="string">xujinzh</span> <span class="comment"># GitHub repo owner and collaborators, only these guys can initialize gitHub issues</span></span><br><span class="line">  <span class="attr">distraction_free_mode:</span> <span class="literal">true</span> <span class="comment"># Facebook-like distraction free mode</span></span><br><span class="line">  <span class="comment"># When the official proxy is not available, you can change it to your own proxy address</span></span><br><span class="line">  <span class="attr">proxy:</span> <span class="string">https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token</span> <span class="comment"># This is official proxy address</span></span><br><span class="line">  <span class="comment"># Gitalk&#x27;s display language depends on user&#x27;s browser or system environment</span></span><br><span class="line">  <span class="comment"># If you want everyone visiting your site to see a uniform language, you can set a force language value</span></span><br><span class="line">  <span class="comment"># Available values: en | es-ES | fr | ru | zh-CN | zh-TW</span></span><br><span class="line">  <span class="attr">language:</span> <span class="string">en</span></span><br></pre></td></tr></table></figure>
-
 <p>参考：</p>
-<ol>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/02fc71f3633f">Hexo 集成 Gitalk 评论系统</a></li>
 </ol>
-<h2 id="旧方法"><a href="#旧方法" class="headerlink" title="旧方法"></a>旧方法</h2><p>这里<strong>“~”</strong>表示博客主目录</p>
-<ol>
-<li><p>在目录**~\themes\next\layout_third-party\comments**下创建<code>gitalk.swig</code> 文件，并插入如下内容</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;% <span class="keyword">if</span> page.comments &amp;&amp; theme.gitalk.enable %&#125;</span><br><span class="line">  &lt;link rel=<span class="string">&quot;stylesheet&quot;</span> href=<span class="string">&quot;https://unpkg.com/gitalk/dist/gitalk.css&quot;</span>&gt;</span><br><span class="line"></span><br><span class="line">  &lt;script src=<span class="string">&quot;https://unpkg.com/gitalk/dist/gitalk.min.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line">   &lt;script type=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><br><span class="line">        <span class="keyword">var</span> gitalk = new <span class="type">Gitalk</span>(&#123;</span><br><span class="line">          clientID: &#x27;&#123;&#123; theme.gitalk.<span class="type">ClientID</span> &#125;&#125;&#x27;,</span><br><span class="line">          clientSecret: &#x27;&#123;&#123; theme.gitalk.<span class="type">ClientSecret</span> &#125;&#125;&#x27;,</span><br><span class="line">          repo: &#x27;&#123;&#123; theme.gitalk.repo &#125;&#125;&#x27;,</span><br><span class="line">          owner: &#x27;&#123;&#123; theme.gitalk.githubID &#125;&#125;&#x27;,</span><br><span class="line">          admin: [&#x27;&#123;&#123; theme.gitalk.adminUser &#125;&#125;&#x27;],</span><br><span class="line">          id: location.pathname,</span><br><span class="line">          distractionFreeMode: &#x27;&#123;&#123; theme.gitalk.distractionFreeMode &#125;&#125;&#x27;</span><br><span class="line">        &#125;)</span><br><span class="line">        gitalk.render(&#x27;gitalk-container&#x27;)           </span><br><span class="line">       &lt;/script&gt;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改**~\themes\next\layout_partials<strong>下的<code>comments.swig</code> 文件，添加如下内容的</strong>第5、6行**。</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  &#123;% elseif theme.valine.appid and theme.valine.appkey %&#125;</span><br><span class="line">    &lt;div <span class="class"><span class="keyword">class</span>=&quot;<span class="title">comments</span>&quot; <span class="title">id</span>=&quot;<span class="title">comments</span>&quot;&gt;</span></span><br><span class="line"><span class="class">    &lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  </span>&#123;% elseif theme.gitalk.enable %&#125;</span><br><span class="line">	&lt;div id=<span class="string">&quot;gitalk-container&quot;</span>&gt;&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ol>
-<ol start="3">
-<li><p>修改**~\themes\next\layout_third-party\comments**下的<code>index.swig</code>文件，在最后一行添加如下内容</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% include &#x27;gitalk.swig&#x27; %&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>在目录**~\themes\next\source\css_common\components\third-party**下新建文件<code>gitalk.styl</code>，添加如下内容</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.gt-header a, .gt-comments a, .gt-popup a</span><br><span class="line">  border-bottom: <span class="keyword">none</span>;</span><br><span class="line">.gt-container .gt-popup .gt-action.<span class="keyword">is</span>--active:before</span><br><span class="line">  top: <span class="number">0</span>.7em;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改目录**~\themes\next\source\css_common\components\third-party**下的<code>third-party.styl</code>，再最后一行添加如下内容</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@<span class="keyword">import</span> &quot;gitalk&quot;;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改目录**~\themes\next**下的<code>_config.yml</code>文件，添加如下内容</p>
+<h2 id="旧方法">旧方法</h2>
+<p>这里<strong>“~”</strong>表示博客主目录</p>
+<ol type="1">
+<li><p>在目录**~_third-party*下创建<code>gitalk.swig</code> 文件，并插入如下内容</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;% <span class="keyword">if</span> page.comments &amp;&amp; theme.gitalk.enable %&#125;</span><br><span class="line">  &lt;link rel=<span class="string">&quot;stylesheet&quot;</span> href=<span class="string">&quot;https://unpkg.com/gitalk/dist/gitalk.css&quot;</span>&gt;</span><br><span class="line"></span><br><span class="line">  &lt;script src=<span class="string">&quot;https://unpkg.com/gitalk/dist/gitalk.min.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line">   &lt;script type=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><br><span class="line">        <span class="keyword">var</span> gitalk = new <span class="type">Gitalk</span>(&#123;</span><br><span class="line">          clientID: &#x27;&#123;&#123; theme.gitalk.<span class="type">ClientID</span> &#125;&#125;&#x27;,</span><br><span class="line">          clientSecret: &#x27;&#123;&#123; theme.gitalk.<span class="type">ClientSecret</span> &#125;&#125;&#x27;,</span><br><span class="line">          repo: &#x27;&#123;&#123; theme.gitalk.repo &#125;&#125;&#x27;,</span><br><span class="line">          owner: &#x27;&#123;&#123; theme.gitalk.githubID &#125;&#125;&#x27;,</span><br><span class="line">          admin: [&#x27;&#123;&#123; theme.gitalk.adminUser &#125;&#125;&#x27;],</span><br><span class="line">          id: location.pathname,</span><br><span class="line">          distractionFreeMode: &#x27;&#123;&#123; theme.gitalk.distractionFreeMode &#125;&#125;&#x27;</span><br><span class="line">        &#125;)</span><br><span class="line">        gitalk.render(&#x27;gitalk-container&#x27;)           </span><br><span class="line">       &lt;/script&gt;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>修改<strong>~_partials</strong>下的<code>comments.swig</code> 文件，添加如下内容的<strong>第5、6行</strong>。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  &#123;% elseif theme.valine.appid and theme.valine.appkey %&#125;</span><br><span class="line">    &lt;div <span class="class"><span class="keyword">class</span>=&quot;<span class="title">comments</span>&quot; <span class="title">id</span>=&quot;<span class="title">comments</span>&quot;&gt;</span></span><br><span class="line"><span class="class">    &lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  </span>&#123;% elseif theme.gitalk.enable %&#125;</span><br><span class="line">	&lt;div id=<span class="string">&quot;gitalk-container&quot;</span>&gt;&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>修改**~_third-party*下的<code>index.swig</code>文件，在最后一行添加如下内容</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% include &#x27;gitalk.swig&#x27; %&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>在目录<strong>~_common-party</strong>下新建文件<code>gitalk.styl</code>，添加如下内容</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.gt-header a, .gt-comments a, .gt-popup a</span><br><span class="line">  border-bottom: <span class="keyword">none</span>;</span><br><span class="line">.gt-container .gt-popup .gt-action.<span class="keyword">is</span>--active:before</span><br><span class="line">  top: <span class="number">0</span>.7em;</span><br></pre></td></tr></table></figure></li>
+<li><p>修改目录<strong>~_common-party</strong>下的<code>third-party.styl</code>，再最后一行添加如下内容</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@<span class="keyword">import</span> &quot;gitalk&quot;;</span><br></pre></td></tr></table></figure></li>
+<li><p>修改目录**~*下的<code>_config.yml</code>文件，添加如下内容</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">gitalk:</span><br><span class="line">  enable: <span class="literal">true</span></span><br><span class="line">  githubID: xujinzh</span><br><span class="line">  repo: gitalk-comments</span><br><span class="line">  <span class="type">ClientID</span>: <span class="type">Client</span> <span class="type">ID</span></span><br><span class="line">  <span class="type">ClientSecret</span>: <span class="type">Client</span> <span class="type">Secret</span></span><br><span class="line">  adminUser: xujinzh  #此项为初始化评论账号，每一篇文章都需要该用户初始化评论后其他人才可以评论</span><br><span class="line">  distractionFreeMode: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-
 <p>该部分可参考：<a target="_blank" rel="noopener" href="https://cjjkkk.github.io/gitalk/">使用gittalk实现hexo博客评论功能</a>.</p>
-<h1 id="busuanzi网站统计"><a href="#busuanzi网站统计" class="headerlink" title="busuanzi网站统计"></a>busuanzi网站统计</h1><p>不蒜子的官网：<a target="_blank" rel="noopener" href="http://busuanzi.ibruce.info/">http://busuanzi.ibruce.info/</a></p>
-<p>按照官网教程，需要把以下代码添加到文件**~\themes\next\layout_partials\footer.swig**最后一行，</p>
+<h1 id="busuanzi网站统计">busuanzi网站统计</h1>
+<p>不蒜子的官网：http://busuanzi.ibruce.info/</p>
+<p>按照官网教程，需要把以下代码添加到文件<strong>~_partials.swig</strong>最后一行，</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;script async src=<span class="string">&quot;//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;span id=<span class="string">&quot;busuanzi_container_site_pv&quot;</span>&gt;本站总访问量&lt;span id=<span class="string">&quot;busuanzi_value_site_pv&quot;</span>&gt;&lt;/span&gt;次&lt;/span&gt;</span><br><span class="line">&lt;span id=<span class="string">&quot;busuanzi_container_site_uv&quot;</span>&gt;本站访客数&lt;span id=<span class="string">&quot;busuanzi_value_site_uv&quot;</span>&gt;&lt;/span&gt;人次</span><br><span class="line">&lt;/span&gt;</span><br></pre></td></tr></table></figure>
-
-<p>修改文件：**~\themes\next_config.yml**的如下内容</p>
+<p>修改文件：<strong>~_config.yml</strong>的如下内容</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">busuanzi_count:</span><br><span class="line">  # <span class="built_in">count</span> values only <span class="keyword">if</span> the other configs are <span class="literal">false</span></span><br><span class="line">  enable: <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">  # custom uv span <span class="keyword">for</span> the whole site</span><br><span class="line">  site_uv: <span class="literal">true</span></span><br><span class="line">  site_uv_header: &lt;i <span class="class"><span class="keyword">class</span>=&quot;<span class="title">fa</span> <span class="title">fa</span>-<span class="title">user</span>&quot;&gt;&lt;/<span class="title">i</span>&gt;</span></span><br><span class="line"><span class="class">  <span class="title">site_uv_footer</span>:</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  # <span class="title">custom</span> <span class="title">pv</span> <span class="title">span</span> <span class="title">for</span> <span class="title">the</span> <span class="title">whole</span> <span class="title">site</span></span></span><br><span class="line"><span class="class">  <span class="title">site_pv</span>: <span class="title">true</span></span></span><br><span class="line"><span class="class">  <span class="title">site_pv_header</span>: &lt;<span class="title">i</span> <span class="title">class</span>=&quot;<span class="title">fa</span> <span class="title">fa</span>-<span class="title">eye</span>&quot;&gt;&lt;/<span class="title">i</span>&gt;</span></span><br><span class="line"><span class="class">  <span class="title">site_pv_footer</span>:</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  # <span class="title">custom</span> <span class="title">pv</span> <span class="title">span</span> <span class="title">for</span> <span class="title">one</span> <span class="title">page</span> <span class="title">only</span></span></span><br><span class="line"><span class="class">  <span class="title">page_pv</span>: <span class="title">true</span></span></span><br><span class="line"><span class="class">  <span class="title">page_pv_header</span>: &lt;<span class="title">i</span> <span class="title">class</span>=&quot;<span class="title">fa</span> <span class="title">fa</span>-<span class="title">file</span>-<span class="title">o</span>&quot;&gt;&lt;/<span class="title">i</span>&gt;</span></span><br><span class="line"><span class="class">  <span class="title">page_pv_footer</span>:</span></span><br></pre></td></tr></table></figure>
-
-<p>注意，这里<strong>site_pv</strong>和<strong>site_uv</strong> 设置为true时和上面的<strong>本站总访问量</strong>和<strong>本站访客数</strong> 重复，只需设置一处即可。我使用下着，所以，文件**~\themes\next\layout_partials\footer.swig**最后一行，我只添加了如下内容：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script async src=<span class="string">&quot;//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;</span>&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-</li>
+<p>注意，这里<strong>site_pv</strong>和<strong>site_uv</strong> 设置为true时和上面的<strong>本站总访问量</strong>和<strong>本站访客数</strong> 重复，只需设置一处即可。我使用下着，所以，文件<strong>~_partials.swig</strong>最后一行，我只添加了如下内容：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script async src=<span class="string">&quot;//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;</span>&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure></li>
 </ol>
 
     </div>
@@ -461,14 +449,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

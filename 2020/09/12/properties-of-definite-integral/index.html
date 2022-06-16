@@ -293,7 +293,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.4k</span>
+      <span>2.6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -313,28 +313,58 @@
     <div class="post-body" itemprop="articleBody">
         <p>了解定积分的性质可以帮助我们方便计算定积分，提高计算的速度。</p>
 <a id="more"></a>
-
-<h1 id="定积分的基本性质"><a href="#定积分的基本性质" class="headerlink" title="定积分的基本性质"></a>定积分的基本性质</h1><p><strong>性质1</strong>    若$f$在$[a,b]$上可积，$k$为常数，则$kf$在$[a,b]$上也可积，且<br>$$<br>\int^b_a k f(x) \mathrm{d}x = k \int^b_a f(x) \mathrm{d}x.<br>$$<br><strong>性质2</strong>    若$f,g$都在$[a,b]$上可积，则$f\pm g$在$[a,b]$上也可积，且<br>$$<br>\int^b_a [f(x) \pm g(x)] \mathrm{d}x = \int^b_a f(x) \mathrm{d}x \pm \int^b_a g(x) \mathrm{d}x.<br>$$<br><strong>线性性质</strong><br>$$<br>\int^b_a [\alpha f(x) + \beta g(x)] \mathrm{d}x = \alpha \int^b_a f(x) \mathrm{d}x + \beta \int^b_a g(x) \mathrm{d}x.<br>$$<br>其中$\alpha, \beta$为常数。</p>
-<p><strong>性质3</strong>    若$f,g$都在$[a,b]$上可积，则$f\cdot g$在$[a,b]$上也可积。但一般情形下<br>$$<br>\int^b_a f(x)g(x)\mathrm{d}x \neq \int^b_a f(x)\mathrm{d}x \cdot \int^b_a g(x)\mathrm{d}x.<br>$$<br><strong>性质4</strong>    $f$在$[a,b]$上可积的充要条件是任给$c\in (a,b)$，$f$在$[a,c]$与$[c,b]$上都可积。此时又有等式<br>$$<br>\int^b_a f(x) \mathrm{d}x = \int^c_a f(x) \mathrm{d}x + \int^b_c f(x) \mathrm{d}x.<br>$$<br>性质4称为关于积分区间的可加性。当$f(x)\geq 0$时，其几何意义就是曲边梯形面积的可加性。</p>
-<p><strong>注意</strong>：按定积分的定义，记号 $\int^b_a f(x) \mathrm{d}x$ 只有当 $a&lt;b$ 时才有意义，而当 $a=b$ 或 $a&gt;b$ 时本来是没有意义的。但为了运用上的方便，对它作如下规定：</p>
-<p><strong>规定1</strong>    当$a=b$时，令$\int^a_a f(x) \mathrm{d}x = 0$;</p>
-<p><strong>规定2</strong>    当$a&gt;b$时，令$\int^b_a f(x) \mathrm{d}x = -\int^a_b f(x) \mathrm{d}x$.</p>
-<p>有了这些规定以后，性质4对于$a,b,c$的任何大小顺序都能成立。</p>
-<p><strong>性质5</strong>    设$f$为$[a,b]$上的可积函数。若$f(x)\geq 0, x\in[a,b]$，则<br>$$<br>\int^b_a f(x) \mathrm{d}x \geq 0.<br>$$<br><strong>推理（积分不等式性）</strong>    若$f$与$g$为$[a,b]$上的两个可积函数，且$f(x)\leq g(x), x\in [a,b]$，则有<br>$$<br>\int^b_a f(x) \mathrm{d}x \leq \int^b_a g(x) \mathrm{d}x.<br>$$<br><strong>性质6</strong>    若$f$在$[a,b]$上可积，则$|f|$在$[a,b]$上也可积，且<br>$$<br>\left \vert \int^b_a f(x) \mathrm{d} x \right \vert \leq \int^b_a \left \vert f(x) \right \vert \mathrm{d} x.<br>$$<br><strong>注意：这个性质的逆命题一般不成立</strong>，例如<br>$$<br>f(x) =<br>\begin{cases}<br>1, x \in Q, \\<br>-1, x \in Q^C<br>\end{cases}<br>$$<br>在$[0,1]$上不可及（类似于狄利克雷函数）；但$|f(x)|\equiv 1$，它在$[0,1]$上可积。</p>
-<p><strong>命题</strong>    假设$f$为一非负可积函数，只要它在某一点$x_0$处连续，且$f(x_0) &gt; 0$，那么必有$\int^b_a f(x) \mathrm{d}x &gt; 0$.</p>
+<h1 id="定积分的基本性质">定积分的基本性质</h1>
+<p><strong>性质1</strong> 若<span class="math inline">\(f\)</span>在<span class="math inline">\([a,b]\)</span>上可积，<span class="math inline">\(k\)</span>为常数，则<span class="math inline">\(kf\)</span>在<span class="math inline">\([a,b]\)</span>上也可积，且 <span class="math display">\[
+\int^b_a k f(x) \mathrm{d}x = k \int^b_a f(x) \mathrm{d}x.
+\]</span> <strong>性质2</strong> 若<span class="math inline">\(f,g\)</span>都在<span class="math inline">\([a,b]\)</span>上可积，则<span class="math inline">\(f\pm g\)</span>在<span class="math inline">\([a,b]\)</span>上也可积，且 <span class="math display">\[
+\int^b_a [f(x) \pm g(x)] \mathrm{d}x = \int^b_a f(x) \mathrm{d}x \pm \int^b_a g(x) \mathrm{d}x.
+\]</span> <strong>线性性质</strong> <span class="math display">\[
+\int^b_a [\alpha f(x) + \beta g(x)] \mathrm{d}x = \alpha \int^b_a f(x) \mathrm{d}x + \beta \int^b_a g(x) \mathrm{d}x.
+\]</span> 其中<span class="math inline">\(\alpha, \beta\)</span>为常数。</p>
+<p><strong>性质3</strong> 若<span class="math inline">\(f,g\)</span>都在<span class="math inline">\([a,b]\)</span>上可积，则<span class="math inline">\(f\cdot g\)</span>在<span class="math inline">\([a,b]\)</span>上也可积。但一般情形下 <span class="math display">\[
+\int^b_a f(x)g(x)\mathrm{d}x \neq \int^b_a f(x)\mathrm{d}x \cdot \int^b_a g(x)\mathrm{d}x.
+\]</span> <strong>性质4</strong> <span class="math inline">\(f\)</span>在<span class="math inline">\([a,b]\)</span>上可积的充要条件是任给<span class="math inline">\(c\in (a,b)\)</span>，<span class="math inline">\(f\)</span>在<span class="math inline">\([a,c]\)</span>与<span class="math inline">\([c,b]\)</span>上都可积。此时又有等式 <span class="math display">\[
+\int^b_a f(x) \mathrm{d}x = \int^c_a f(x) \mathrm{d}x + \int^b_c f(x) \mathrm{d}x.
+\]</span> 性质4称为关于积分区间的可加性。当<span class="math inline">\(f(x)\geq 0\)</span>时，其几何意义就是曲边梯形面积的可加性。</p>
+<p><strong>注意</strong>：按定积分的定义，记号 <span class="math inline">\(\int^b_a f(x) \mathrm{d}x\)</span> 只有当 <span class="math inline">\(a&lt;b\)</span> 时才有意义，而当 <span class="math inline">\(a=b\)</span> 或 <span class="math inline">\(a&gt;b\)</span> 时本来是没有意义的。但为了运用上的方便，对它作如下规定：</p>
+<p><strong>规定1</strong> 当<span class="math inline">\(a=b\)</span>时，令<span class="math inline">\(\int^a_a f(x) \mathrm{d}x = 0\)</span>;</p>
+<p><strong>规定2</strong> 当<span class="math inline">\(a&gt;b\)</span>时，令<span class="math inline">\(\int^b_a f(x) \mathrm{d}x = -\int^a_b f(x) \mathrm{d}x\)</span>.</p>
+<p>有了这些规定以后，性质4对于<span class="math inline">\(a,b,c\)</span>的任何大小顺序都能成立。</p>
+<p><strong>性质5</strong> 设<span class="math inline">\(f\)</span>为<span class="math inline">\([a,b]\)</span>上的可积函数。若<span class="math inline">\(f(x)\geq 0, x\in[a,b]\)</span>，则 <span class="math display">\[
+\int^b_a f(x) \mathrm{d}x \geq 0.
+\]</span> <strong>推理（积分不等式性）</strong> 若<span class="math inline">\(f\)</span>与<span class="math inline">\(g\)</span>为<span class="math inline">\([a,b]\)</span>上的两个可积函数，且<span class="math inline">\(f(x)\leq g(x), x\in [a,b]\)</span>，则有 <span class="math display">\[
+\int^b_a f(x) \mathrm{d}x \leq \int^b_a g(x) \mathrm{d}x.
+\]</span> <strong>性质6</strong> 若<span class="math inline">\(f\)</span>在<span class="math inline">\([a,b]\)</span>上可积，则<span class="math inline">\(|f|\)</span>在<span class="math inline">\([a,b]\)</span>上也可积，且 <span class="math display">\[
+\left \vert \int^b_a f(x) \mathrm{d} x \right \vert \leq \int^b_a \left \vert f(x) \right \vert \mathrm{d} x.
+\]</span> <strong>注意：这个性质的逆命题一般不成立</strong>，例如 <span class="math display">\[
+f(x) = 
+\begin{cases}
+1, x \in Q, \\\\
+-1, x \in Q^C
+\end{cases}
+\]</span> 在<span class="math inline">\([0,1]\)</span>上不可及（类似于狄利克雷函数）；但<span class="math inline">\(|f(x)|\equiv 1\)</span>，它在<span class="math inline">\([0,1]\)</span>上可积。</p>
+<p><strong>命题</strong> 假设<span class="math inline">\(f\)</span>为一非负可积函数，只要它在某一点<span class="math inline">\(x_0\)</span>处连续，且<span class="math inline">\(f(x_0) &gt; 0\)</span>，那么必有<span class="math inline">\(\int^b_a f(x) \mathrm{d}x &gt; 0\)</span>.</p>
 <p><strong>注意：可积函数必有连续点。</strong></p>
 <p>可积等价于几乎处处连续。</p>
-<p>连续具有局部保号性：如果$f$在$[a,b]$上连续，在点$x_0 \in (a,b)$处，$f(x_0)&gt;0$，那么存在一个$\delta &gt; 0$，使得$f(x) &gt; 0, x \in [x_0 - \delta, x_0 + \delta]$.</p>
-<h1 id="积分中值定理"><a href="#积分中值定理" class="headerlink" title="积分中值定理"></a>积分中值定理</h1><p><strong>定理 9.7 （积分第一中值定理）</strong>    若$f$在$[a,b]$上连续，则至少存在一点$\xi \in [a,b]$，使得<br>$$<br>\int^b_a f(x) \mathrm{d} x = f(\xi) (b - a).<br>$$<br><strong>定理 9.8 （推广的积分第一中值定理）</strong>    若$f$与$g$都在$[a,b]$上连续，且$g(x)$在$[a,b]$上不变号，则至少存在一点$\xi \in [a,b]$，使得<br>$$<br>\int^b_a f(x)g(x) \mathrm{d}x = f(\xi) \int^b_a g(x) \mathrm{d}x.<br>$$</p>
-<h1 id="重要习题"><a href="#重要习题" class="headerlink" title="重要习题"></a>重要习题</h1><ul>
-<li><p>若$f$与$g$都在$[a,b]$上可积，则<br>$$<br>\lim_{| T | \to 0} \sum^n_{i=1} f(\xi_i)g(\eta_i) \Delta x_i = \int^b_a f(x)g(x) \mathrm{d}x.<br>$$<br>其中$\xi_i, \eta_i$是$T$所属小区间$\Delta_i$中的任意两点，$i=1,2,\cdots,n$.</p>
-</li>
-<li><p>设$f$与$g$都在$[a,b]$上可积，则<br>$$<br>M(x) = \max_{x\in[a,b]} {f(x), g(x)}, m(x) = \min_{x\in[a,b]}{f(x),g(x)}<br>$$<br>在$[a,b]$上都可积。</p>
-</li>
-<li><p>设$f$在$[a,b]$上可积，且在$[a,b]$上满足$|f(x)|\geq m &gt; 0$，则$\frac{1}{f}$在$[a,b]$上也可积。</p>
-</li>
-<li><p>若$f$与$g$都在$[a,b]$上可积，且$g(x)$在$[a,b]$上不变号，$M,m$分别为$f(x)$在$[a,b]$上的上、下确界，则比存在某实数$\mu(m\leq \mu \leq M)$，使得<br>$$<br>\int^b_a f(x)g(x)\mathrm{d}x = \mu \int^b_a g(x) \mathrm{d}x.<br>$$</p>
-</li>
+<p>连续具有局部保号性：如果<span class="math inline">\(f\)</span>在<span class="math inline">\([a,b]\)</span>上连续，在点<span class="math inline">\(x_0 \in (a,b)\)</span>处，<span class="math inline">\(f(x_0)&gt;0\)</span>，那么存在一个<span class="math inline">\(\delta &gt; 0\)</span>，使得<span class="math inline">\(f(x) &gt; 0, x \in [x_0 - \delta, x_0 + \delta]\)</span>.</p>
+<h1 id="积分中值定理">积分中值定理</h1>
+<p><strong>定理 9.7 （积分第一中值定理）</strong> 若<span class="math inline">\(f\)</span>在<span class="math inline">\([a,b]\)</span>上连续，则至少存在一点<span class="math inline">\(\xi \in [a,b]\)</span>，使得 <span class="math display">\[
+\int^b_a f(x) \mathrm{d} x = f(\xi) (b - a).
+\]</span> <strong>定理 9.8 （推广的积分第一中值定理）</strong> 若<span class="math inline">\(f\)</span>与<span class="math inline">\(g\)</span>都在<span class="math inline">\([a,b]\)</span>上连续，且<span class="math inline">\(g(x)\)</span>在<span class="math inline">\([a,b]\)</span>上不变号，则至少存在一点<span class="math inline">\(\xi \in [a,b]\)</span>，使得 <span class="math display">\[
+\int^b_a f(x)g(x) \mathrm{d}x = f(\xi) \int^b_a g(x) \mathrm{d}x.
+\]</span></p>
+<h1 id="重要习题">重要习题</h1>
+<ul>
+<li><p>若<span class="math inline">\(f\)</span>与<span class="math inline">\(g\)</span>都在<span class="math inline">\([a,b]\)</span>上可积，则 <span class="math display">\[
+\lim_{\| T \| \to 0} \sum^n_{i=1} f(\xi_i)g(\eta_i) \Delta x_i = \int^b_a f(x)g(x) \mathrm{d}x.
+\]</span> 其中<span class="math inline">\(\xi_i, \eta_i\)</span>是<span class="math inline">\(T\)</span>所属小区间<span class="math inline">\(\Delta_i\)</span>中的任意两点，<span class="math inline">\(i=1,2,\cdots,n\)</span>.</p></li>
+<li><p>设<span class="math inline">\(f\)</span>与<span class="math inline">\(g\)</span>都在<span class="math inline">\([a,b]\)</span>上可积，则 <span class="math display">\[
+M(x) = \max_{x\in[a,b]} \{f(x), g(x)\}, m(x) = \min_{x\in[a,b]}\{f(x),g(x)\}
+\]</span> 在<span class="math inline">\([a,b]\)</span>上都可积。</p></li>
+<li><p>设<span class="math inline">\(f\)</span>在<span class="math inline">\([a,b]\)</span>上可积，且在<span class="math inline">\([a,b]\)</span>上满足<span class="math inline">\(|f(x)|\geq m &gt; 0\)</span>，则<span class="math inline">\(\frac{1}{f}\)</span>在<span class="math inline">\([a,b]\)</span>上也可积。</p></li>
+<li><p>若<span class="math inline">\(f\)</span>与<span class="math inline">\(g\)</span>都在<span class="math inline">\([a,b]\)</span>上可积，且<span class="math inline">\(g(x)\)</span>在<span class="math inline">\([a,b]\)</span>上不变号，<span class="math inline">\(M,m\)</span>分别为<span class="math inline">\(f(x)\)</span>在<span class="math inline">\([a,b]\)</span>上的上、下确界，则比存在某实数<span class="math inline">\(\mu(m\leq \mu \leq M)\)</span>，使得 <span class="math display">\[
+\int^b_a f(x)g(x)\mathrm{d}x = \mu \int^b_a g(x) \mathrm{d}x.
+\]</span></p></li>
 </ul>
 
     </div>
@@ -429,14 +459,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

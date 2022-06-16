@@ -147,7 +147,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Centos-%E6%B7%BB%E5%8A%A0%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA"><span class="nav-number">1.</span> <span class="nav-text">Centos 添加交换分区</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu-%E6%B7%BB%E5%8A%A0%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA"><span class="nav-number">2.</span> <span class="nav-text">Ubuntu 添加交换分区</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA%E6%83%85%E5%86%B5"><span class="nav-number">3.</span> <span class="nav-text">查看交换分区情况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A2%9E%E5%87%8F-swap-%E5%88%86%E5%8C%BA%E7%9A%84%E5%A4%A7%E5%B0%8F"><span class="nav-number">4.</span> <span class="nav-text">增减 swap 分区的大小</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#centos-%E6%B7%BB%E5%8A%A0%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA"><span class="nav-number">1.</span> <span class="nav-text">Centos 添加交换分区</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ubuntu-%E6%B7%BB%E5%8A%A0%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA"><span class="nav-number">2.</span> <span class="nav-text">Ubuntu 添加交换分区</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA%E6%83%85%E5%86%B5"><span class="nav-number">3.</span> <span class="nav-text">查看交换分区情况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A2%9E%E5%87%8F-swap-%E5%88%86%E5%8C%BA%E7%9A%84%E5%A4%A7%E5%B0%8F"><span class="nav-number">4.</span> <span class="nav-text">增减 swap 分区的大小</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -314,42 +314,37 @@
     <div class="post-body" itemprop="articleBody">
         <p>Centos 或者 Ubuntu 的交换分区 swap，类似于 Windows 系统的虚拟内存，能够在系统内存不足时，利用一部分硬盘空间虚拟出内存空间，解决内存不足的问题。下面分别给出如何为 Centos 和 Ubuntu 增加交换分区。所有命令以 root 用户运行。</p>
 <a id="more"></a>
-
-<h1 id="Centos-添加交换分区"><a href="#Centos-添加交换分区" class="headerlink" title="Centos 添加交换分区"></a>Centos 添加交换分区</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="keyword">if</span>=/dev/zero of=/swapfile count=2048 bs=1MiB</span><br><span class="line">chmod 600 /swapfile</span><br><span class="line">mkswap /swapfile</span><br><span class="line">swapon /swapfile</span><br><span class="line">cp /etc/fstab /etc/fstab.bak</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/swapfile none swap sw 0 0&#x27;</span> | sudo tee -a /etc/fstab</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.swappiness=10&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.vfs_cache_pressure=50&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
-
+<h1 id="centos-添加交换分区">Centos 添加交换分区</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="keyword">if</span>=/dev/zero of=/swapfile count=2048 bs=1MiB</span><br><span class="line">chmod 600 /swapfile</span><br><span class="line">mkswap /swapfile</span><br><span class="line">swapon /swapfile</span><br><span class="line">cp /etc/fstab /etc/fstab.bak</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/swapfile none swap sw 0 0&#x27;</span> | sudo tee -a /etc/fstab</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.swappiness=10&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.vfs_cache_pressure=50&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
 <p>这里 count=2048，表示 2G 的交换分区。</p>
-<h1 id="Ubuntu-添加交换分区"><a href="#Ubuntu-添加交换分区" class="headerlink" title="Ubuntu 添加交换分区"></a>Ubuntu 添加交换分区</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fallocate -l 2G /swapfile</span><br><span class="line">chmod 600 /swapfile</span><br><span class="line">mkswap /swapfile</span><br><span class="line">swapon /swapfile</span><br><span class="line">cp /etc/fstab /etc/fstab.bak</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/swapfile none swap sw 0 0&#x27;</span> | sudo tee -a /etc/fstab</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.swappiness=10&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.vfs_cache_pressure=50&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
-
+<h1 id="ubuntu-添加交换分区">Ubuntu 添加交换分区</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fallocate -l 2G /swapfile</span><br><span class="line">chmod 600 /swapfile</span><br><span class="line">mkswap /swapfile</span><br><span class="line">swapon /swapfile</span><br><span class="line">cp /etc/fstab /etc/fstab.bak</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/swapfile none swap sw 0 0&#x27;</span> | sudo tee -a /etc/fstab</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.swappiness=10&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;vm.vfs_cache_pressure=50&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
 <p>这里的 2G 表示分配交换分区的硬盘大小为 2G。</p>
-<h1 id="查看交换分区情况"><a href="#查看交换分区情况" class="headerlink" title="查看交换分区情况"></a>查看交换分区情况</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">free -h</span><br><span class="line">htop</span><br></pre></td></tr></table></figure>
-
+<h1 id="查看交换分区情况">查看交换分区情况</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">free -h</span><br><span class="line">htop</span><br></pre></td></tr></table></figure>
 <p>以上两个命令都可以查看是否成功创建了交换分区。</p>
-<h1 id="增减-swap-分区的大小"><a href="#增减-swap-分区的大小" class="headerlink" title="增减 swap 分区的大小"></a>增减 swap 分区的大小</h1><p>以 Centos 为例，将 swap 分区从 2G 减小到 1G。一般 swap 分区的大小适合设置为内存 memory 的 2 倍。下面分步骤给出运行代码演示，以 root 用户操作。</p>
-<ol>
+<h1 id="增减-swap-分区的大小">增减 swap 分区的大小</h1>
+<p>以 Centos 为例，将 swap 分区从 2G 减小到 1G。一般 swap 分区的大小适合设置为内存 memory 的 2 倍。下面分步骤给出运行代码演示，以 root 用户操作。</p>
+<ol type="1">
 <li>停用 swap</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swapoff /swapfile</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
+<ol start="2" type="1">
 <li>删除旧 swapfile，并重新创建一个新的，这里 count 设置为你需要的大小，以 M 为单位</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -f /swapfile &amp;&amp; dd <span class="keyword">if</span>=/dev/zero of=/swapfile count=1024 bs=1MiB</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
+<ol start="3" type="1">
 <li>安装 swap</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkswap /swapfile</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
+<ol start="4" type="1">
 <li>激活swap</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swapon /swapfile</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
+<ol start="5" type="1">
 <li>最好将 swapfile 的访问权限设置为 root 私享</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 600 /swapfile</span><br></pre></td></tr></table></figure>
-
 <p>通过以上步骤设置完后，就可以使用命令 <code>free -h</code> 查看交换分区的大小了。</p>
 
     </div>
@@ -445,14 +440,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

@@ -309,26 +309,26 @@
     <div class="post-body" itemprop="articleBody">
         <p>Centos修改系统显示时间可以通过修改时区来做。常用的时区一般包含CST, UTC, GMT.</p>
 <a id="more"></a>
-
-<h1 id="时区介绍"><a href="#时区介绍" class="headerlink" title="时区介绍"></a>时区介绍</h1><p>CST：China Standard Time，即中国标准时间，又称北京时间。是我中国大陆的标准时间，比世界协调时快八小时（即UTC+8），与香港、澳门、台湾、马来西亚、新加坡等地的标准时间相同。</p>
+<h1 id="时区介绍">时区介绍</h1>
+<p>CST：China Standard Time，即中国标准时间，又称北京时间。是我中国大陆的标准时间，比世界协调时快八小时（即UTC+8），与香港、澳门、台湾、马来西亚、新加坡等地的标准时间相同。</p>
 <p>UTC：<strong>C</strong>oordinated <strong>U</strong>niversal <strong>T</strong>ime，即协调世界时。是最主要的世界时间标准，其以原子时秒长为基础，在时刻上尽量接近于格林威治标准时间，UTC + 8小时 = CST。协调世界时是最接近格林威治标准时间（GMT）的几个替代时间系统之一。对于大多数用途来说，UTC时间被认为能与GMT时间互换，但GMT时间已不再被科学界所确定。</p>
 <p>GMT：<strong>G</strong>reenwich <strong>M</strong>ean <strong>T</strong>ime，即格林威治平均时间。是指位于英国伦敦郊区的皇家格林威治天文台当地的平太阳时，因为本初子午线被定义为通过那里的经线。</p>
-<h1 id="查看时区"><a href="#查看时区" class="headerlink" title="查看时区"></a>查看时区</h1><p>下面介绍如何修改系统时间，假设Centos系统采用UTC时区，可以通过如下命令查看</p>
+<h1 id="查看时区">查看时区</h1>
+<p>下面介绍如何修改系统时间，假设Centos系统采用UTC时区，可以通过如下命令查看</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">date</span><br></pre></td></tr></table></figure>
-
-<h1 id="修改时区"><a href="#修改时区" class="headerlink" title="修改时区"></a>修改时区</h1><p>我们想要修改为北京时间，方法如下</p>
-<h2 id="使用timedatectl"><a href="#使用timedatectl" class="headerlink" title="使用timedatectl"></a>使用timedatectl</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">timedatectl <span class="built_in">set</span>-timezone Asia/Shanghai</span><br></pre></td></tr></table></figure>
-
-<h2 id="使用localtime"><a href="#使用localtime" class="headerlink" title="使用localtime"></a>使用localtime</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp  /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime</span><br></pre></td></tr></table></figure>
-
-<h2 id="使用tzselect"><a href="#使用tzselect" class="headerlink" title="使用tzselect"></a>使用tzselect</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tzselect</span><br></pre></td></tr></table></figure>
-
-<h1 id="修改时间"><a href="#修改时间" class="headerlink" title="修改时间"></a>修改时间</h1><p>如果，系统显示时间的分秒出现错误，可以使用如下命令修改</p>
+<h1 id="修改时区">修改时区</h1>
+<p>我们想要修改为北京时间，方法如下</p>
+<h2 id="使用timedatectl">使用timedatectl</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">timedatectl <span class="built_in">set</span>-timezone Asia/Shanghai</span><br></pre></td></tr></table></figure>
+<h2 id="使用localtime">使用localtime</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp  /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime</span><br></pre></td></tr></table></figure>
+<h2 id="使用tzselect">使用tzselect</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tzselect</span><br></pre></td></tr></table></figure>
+<h1 id="修改时间">修改时间</h1>
+<p>如果，系统显示时间的分秒出现错误，可以使用如下命令修改</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">date -s <span class="string">&#x27;2020-04-02 12:20:30&#x27;</span></span><br></pre></td></tr></table></figure>
-
 <p>也可以根据网络自动同步，如果可以联网，使用ntp同步标准时间，ntp：网络时间协议（network time protol）</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install ntp</span><br><span class="line">ntpdate pool.ntp.org</span><br></pre></td></tr></table></figure>
-
 
     </div>
 
@@ -422,14 +422,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

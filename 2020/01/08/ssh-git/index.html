@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0SSH%E5%85%AC%E9%92%A5%E5%88%B0GitHub%E8%B4%A6%E5%8F%B7%E4%B8%8B"><span class="nav-number">1.</span> <span class="nav-text">添加SSH公钥到GitHub账号下</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E8%83%BD%E5%90%A6%E6%AD%A3%E7%A1%AE%E9%80%9A%E8%BF%87SSH%E8%BF%9E%E6%8E%A5GitHub"><span class="nav-number">2.</span> <span class="nav-text">测试能否正确通过SSH连接GitHub</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text">添加本地仓库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#push-%E6%9C%AC%E5%9C%B0%E4%BB%A3%E7%A0%81%E5%88%B0%E4%BB%93%E5%BA%93"><span class="nav-number">4.</span> <span class="nav-text">push 本地代码到仓库</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0ssh%E5%85%AC%E9%92%A5%E5%88%B0github%E8%B4%A6%E5%8F%B7%E4%B8%8B"><span class="nav-number">1.</span> <span class="nav-text">添加SSH公钥到GitHub账号下</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E8%83%BD%E5%90%A6%E6%AD%A3%E7%A1%AE%E9%80%9A%E8%BF%87ssh%E8%BF%9E%E6%8E%A5github"><span class="nav-number">2.</span> <span class="nav-text">测试能否正确通过SSH连接GitHub</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text">添加本地仓库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#push-%E6%9C%AC%E5%9C%B0%E4%BB%A3%E7%A0%81%E5%88%B0%E4%BB%93%E5%BA%93"><span class="nav-number">4.</span> <span class="nav-text">push 本地代码到仓库</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -289,7 +289,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>670</span>
+      <span>682</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -309,23 +309,21 @@
     <div class="post-body" itemprop="articleBody">
         <p>在本地开发代码时，需要push本地代码到GitHub仓库时，总是需要输入用户名和秘密，这导致了开发的效率降低，也不安全。那有一种方式可以快速高效且安全的连接到GitHub仓库，并提交代码，那就是使用SSH连接GitHub仓库，下面给出如何从手动输入秘密切换到使用SSH连接GitHub仓库。</p>
 <a id="more"></a>
-
-<h1 id="添加SSH公钥到GitHub账号下"><a href="#添加SSH公钥到GitHub账号下" class="headerlink" title="添加SSH公钥到GitHub账号下"></a>添加SSH公钥到GitHub账号下</h1><p>假设使用的是Ubuntu系统，将用户下的公钥拷贝粘贴到GitHub账号下</p>
+<h1 id="添加ssh公钥到github账号下">添加SSH公钥到GitHub账号下</h1>
+<p>假设使用的是Ubuntu系统，将用户下的公钥拷贝粘贴到GitHub账号下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-
-<p>拷贝所有内容到GitHub主页—右上角Settings—左侧SSH and GPG keys—SSH keys—New SSH key—随便写个名字在title栏，并粘贴刚刚拷贝的内容到key栏中—Add SSH key</p>
-<h1 id="测试能否正确通过SSH连接GitHub"><a href="#测试能否正确通过SSH连接GitHub" class="headerlink" title="测试能否正确通过SSH连接GitHub"></a>测试能否正确通过SSH连接GitHub</h1><p>在终端中输入一下命令</p>
+<p>拷贝所有内容到GitHub主页---右上角Settings---左侧SSH and GPG keys---SSH keys---New SSH key---随便写个名字在title栏，并粘贴刚刚拷贝的内容到key栏中---Add SSH key</p>
+<h1 id="测试能否正确通过ssh连接github">测试能否正确通过SSH连接GitHub</h1>
+<p>在终端中输入一下命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-<p>如果出现 Hi your-user-name! You’ve successfully authenticated, but GitHub does not provide shell access. 证明正确通过SSH连接GitHub</p>
-<h1 id="添加本地仓库"><a href="#添加本地仓库" class="headerlink" title="添加本地仓库"></a>添加本地仓库</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git remote rm origin</span><br><span class="line"></span><br><span class="line">git remote add origin git@github.com:user-name/your-repo-name.git</span><br></pre></td></tr></table></figure>
-
-<h1 id="push-本地代码到仓库"><a href="#push-本地代码到仓库" class="headerlink" title="push 本地代码到仓库"></a>push 本地代码到仓库</h1><p>正确完成以上步骤后，第一次push本地代码，需要使用如下命令</p>
+<p>如果出现 Hi your-user-name! You've successfully authenticated, but GitHub does not provide shell access. 证明正确通过SSH连接GitHub</p>
+<h1 id="添加本地仓库">添加本地仓库</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git remote rm origin</span><br><span class="line"></span><br><span class="line">git remote add origin git@github.com:user-name/your-repo-name.git</span><br></pre></td></tr></table></figure>
+<h1 id="push-本地代码到仓库">push 本地代码到仓库</h1>
+<p>正确完成以上步骤后，第一次push本地代码，需要使用如下命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push --<span class="built_in">set</span>-upstream origin master</span><br></pre></td></tr></table></figure>
-
 <p>以后，就可以直接使用如下命令进行提交代码到远程仓库</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push</span><br></pre></td></tr></table></figure>
-
 
     </div>
 
@@ -419,14 +417,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

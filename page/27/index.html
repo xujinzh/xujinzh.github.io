@@ -296,10 +296,8 @@
     
     <div class="post-body" itemprop="articleBody">
           <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chsh -s /bin/zsh</span><br><span class="line"><span class="comment"># 有时 Centos 上没有自动安装工具 chsh，可使用如下方法安装</span></span><br><span class="line">sudo yum install util-linux-user</span><br></pre></td></tr></table></figure>
-
 <p>安装 oh-my-zsh</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh -c <span class="string">&quot;<span class="subst">$(wget -O- https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -511,8 +509,8 @@
     
     <div class="post-body" itemprop="articleBody">
           <head>
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-    <script type="text/x-mathjax-config">
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script type="text/x-mathjax-config">
         MathJax.Hub.Config({
             tex2jax: {
             skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
@@ -521,8 +519,9 @@
         });
     </script>
 </head>
-
-<p>如何求解方程<br>$$<br>\sin(x)=2<br>$$<br>该方程有多少个解?</p>
+<p>如何求解方程 <span class="math display">\[
+\sin(x)=2
+\]</span> 该方程有多少个解?</p>
 
       
     </div>
@@ -622,8 +621,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>在 Ubuntu 系统上，命令行利用 apt 作为包管理工具已经是非常不错的，但是，有些包，比如 youtube-dl 却不能很好的安装和更新，但是，通过 snap 我们可以非常完美的解决这类包的安装与管理。</p>
-<p>利用 apt 安装 snap，命令如下</p>
+          <p>
+在 Ubuntu 系统上，命令行利用 apt 作为包管理工具已经是非常不错的，但是，有些包，比如 youtube-dl 却不能很好的安装和更新，但是，通过 snap 我们可以非常完美的解决这类包的安装与管理。
+</p>
+<p>
+利用 apt 安装 snap，命令如下
+</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/12/20/ubuntu-snap/#more" rel="contents">
@@ -730,7 +733,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>首先，运行命令查看主机名</p>
+          <p>
+首先，运行命令查看主机名
+</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/12/20/ubuntu-change-hostname/#more" rel="contents">
@@ -944,8 +949,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>有些时候，基于某些特殊要求需要给 Ubuntu 安装杀毒软件，这里介绍一个非常有效的杀毒软件：clamav，它还有 GUI 界面 clamtk.</p>
-<p>命令行安装杀毒软件：</p>
+          <p>
+有些时候，基于某些特殊要求需要给 Ubuntu 安装杀毒软件，这里介绍一个非常有效的杀毒软件：clamav，它还有 GUI 界面 clamtk.
+</p>
+<p>
+命令行安装杀毒软件：
+</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/12/20/ubuntu-install-clamav/#more" rel="contents">
@@ -1052,15 +1061,39 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>为了某些目的，有时候我们需要知道 Ubuntu 系统的安装时间，那么如何通过terminal 查询系统安装时间呢，这里给出两种查询方法：</p>
-<p>第一种方法：运行如下命令直接查询日志文件获取系统安装时间：</p>
-<ul><li>ls -ld /var/log/installer</li></ul>
-<p>第二种方法：</p>
-<p>1、首先，运行如下命令查询系统有哪些分区</p>
-<ul><li>ls /dev | grep sd</li></ul>
-<p>2、然后，运行如下命令查询系统盘格式化时间，就是系统安装时间</p>
-<ul><li>sudo dumpe2fs /dev/sda | grep 'Filesystem created'</li></ul>
-<p>在第一步种，可能有些是 /dev/sdb，但大多数是 /dev/sda</p>
+          <p>
+为了某些目的，有时候我们需要知道 Ubuntu 系统的安装时间，那么如何通过terminal 查询系统安装时间呢，这里给出两种查询方法：
+</p>
+<p>
+第一种方法：运行如下命令直接查询日志文件获取系统安装时间：
+</p>
+<ul>
+<li>
+ls -ld /var/log/installer
+</li>
+</ul>
+<p>
+第二种方法：
+</p>
+<p>
+1、首先，运行如下命令查询系统有哪些分区
+</p>
+<ul>
+<li>
+ls /dev | grep sd
+</li>
+</ul>
+<p>
+2、然后，运行如下命令查询系统盘格式化时间，就是系统安装时间
+</p>
+<ul>
+<li>
+sudo dumpe2fs /dev/sda | grep 'Filesystem created'
+</li>
+</ul>
+<p>
+在第一步种，可能有些是 /dev/sdb，但大多数是 /dev/sda
+</p>
 
       
     </div>
@@ -1142,7 +1175,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>489</span>
+      <span>483</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -1320,14 +1353,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

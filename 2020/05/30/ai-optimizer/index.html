@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95-SGD"><span class="nav-number">1.</span> <span class="nav-text">随机梯度下降法 SGD</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AdaGrad"><span class="nav-number">2.</span> <span class="nav-text">AdaGrad</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RMSProp"><span class="nav-number">3.</span> <span class="nav-text">RMSProp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Adam"><span class="nav-number">4.</span> <span class="nav-text">Adam</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ALL-IN-ALL"><span class="nav-number">5.</span> <span class="nav-text">ALL IN ALL</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95-sgd"><span class="nav-number">1.</span> <span class="nav-text">随机梯度下降法 SGD</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#adagrad"><span class="nav-number">2.</span> <span class="nav-text">AdaGrad</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rmsprop"><span class="nav-number">3.</span> <span class="nav-text">RMSProp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#adam"><span class="nav-number">4.</span> <span class="nav-text">Adam</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#all-in-all"><span class="nav-number">5.</span> <span class="nav-text">ALL IN ALL</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -313,69 +313,82 @@
     <div class="post-body" itemprop="articleBody">
         <p>机器学习是实现人工智能的一种有效方法，当构建好模型后，需要使用优化器迭代学习模型参数，常用的有随机梯度下降法（SGD）和 Adam，下面总结一下各种的优缺点，并介绍一点优化器的演变过程。</p>
 <a id="more"></a>
-
-<h1 id="随机梯度下降法-SGD"><a href="#随机梯度下降法-SGD" class="headerlink" title="随机梯度下降法 SGD"></a>随机梯度下降法 SGD</h1><p>SGD 是一种梯度下降算法，为什么叫做随机梯度下降呢，因为每次迭代都是随机选择一个样本，计算损失函数沿着负梯度方向求极小值，而梯度下降算法是将所有样本计算损失函数的平均，然后再计算损失函数沿着负梯度方向求极小值，通过链式法则一层一层依据梯度下降方向来更新模型参数。</p>
-<p>SGD 的计算公式如下（与梯度下降算法相同）：<br>$$<br>\Delta \theta_t = - \alpha \times g_t.<br>$$<br>这里，$\alpha$ 是学习率或步长，$g_t$ 是梯度方向，$\Delta \theta_t$ 是损失函数优化量，包含了优化迭代的方向和步长。优化变量公式如下：<br>$$<br>x = x + \Delta \theta_t.<br>$$</p>
+<h1 id="随机梯度下降法-sgd">随机梯度下降法 SGD</h1>
+<p>SGD 是一种梯度下降算法，为什么叫做随机梯度下降呢，因为每次迭代都是随机选择一个样本，计算损失函数沿着负梯度方向求极小值，而梯度下降算法是将所有样本计算损失函数的平均，然后再计算损失函数沿着负梯度方向求极小值，通过链式法则一层一层依据梯度下降方向来更新模型参数。</p>
+<p>SGD 的计算公式如下（与梯度下降算法相同）： <span class="math display">\[
+\Delta \theta_t = - \alpha \times g_t.
+\]</span> 这里，<span class="math inline">\(\alpha\)</span> 是学习率或步长，<span class="math inline">\(g_t\)</span> 是梯度方向，<span class="math inline">\(\Delta \theta_t\)</span> 是损失函数优化量，包含了优化迭代的方向和步长。优化变量公式如下： <span class="math display">\[
+x = x + \Delta \theta_t.
+\]</span></p>
 <p>SGD 的缺点如下：</p>
-<ol>
+<ol type="1">
 <li>容易陷入局部极值（这是梯度下降算法的通病，因为复杂模型的损失函数一般都不是凸函数，具有多局部极值）</li>
 <li>遇到鞍点，模型无法更新参数</li>
 <li>受初始学习率（最优化理论中的步长）的影响很大</li>
 <li>每个维度上学习率都一样（特别是在稀疏数据下出现问题）</li>
 </ol>
 <p>如何解决这些问题，特别是随着迭代的增加，能够动态的调整学习率，遇到鞍点时能够不仅仅依靠当前点的梯度而是增加动量冲过鞍点，下面一些方法是对SGD的改进。</p>
-<h1 id="AdaGrad"><a href="#AdaGrad" class="headerlink" title="AdaGrad"></a>AdaGrad</h1><p>AdaGrad 算法的计算公式如下：<br>$$<br>n_t = n_{t-1} + g^2_t, \\<br>\Delta \theta_t = -\frac{\alpha}{\sqrt{n_t + \epsilon}} \times g_t.<br>$$<br>其中，$g_t$ 是当前梯度方向，$n_t$ 是梯度平方的积累值，$\frac{\alpha}{\sqrt{n_t + \epsilon}}$是学习率（可以看出随着优化迭代的进行，学习率递减，这里$\epsilon$ 是一个小正数，防止初始梯度$n_t=0$）。AdaGrad 算法没有改变SGD算法优化的方向，只是更改了每次迭代的学习率或步长，使得每次迭代都迈更小的步，特别是在极小点附近，这将是有益的。</p>
+<h1 id="adagrad">AdaGrad</h1>
+<p>AdaGrad 算法的计算公式如下： <span class="math display">\[
+n_t = n_{t-1} + g^2_t, \\\\
+\Delta \theta_t = -\frac{\alpha}{\sqrt{n_t + \epsilon}} \times g_t.
+\]</span> 其中，<span class="math inline">\(g_t\)</span> 是当前梯度方向，<span class="math inline">\(n_t\)</span> 是梯度平方的积累值，<span class="math inline">\(\frac{\alpha}{\sqrt{n_t + \epsilon}}\)</span>是学习率（可以看出随着优化迭代的进行，学习率递减，这里<span class="math inline">\(\epsilon\)</span> 是一个小正数，防止初始梯度<span class="math inline">\(n_t=0\)</span>）。AdaGrad 算法没有改变SGD算法优化的方向，只是更改了每次迭代的学习率或步长，使得每次迭代都迈更小的步，特别是在极小点附近，这将是有益的。</p>
 <p>伪代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">grad_squard = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">	dx = compute_gradient(x)</span><br><span class="line">    grad_squard += dx * dx</span><br><span class="line">    x -= learning_rate * dx / (np.sqrt(grad_squard + <span class="number">1e-7</span>))</span><br></pre></td></tr></table></figure>
-
 <p>AdaGrad 算法的优点：</p>
-<ol>
+<ol type="1">
 <li>前期放大学习率，因前期梯度累积值较小</li>
 <li>后期缩小学习率，因后期梯度累计值较小</li>
 <li>学习率随着训练次数降低</li>
 <li>每个分量有不同的学习率，这是因为每个分量的梯度方向不同导致，累积的梯度平方和不同</li>
 </ol>
 <p>AdaGrad 算法的缺点：</p>
-<ol>
+<ol type="1">
 <li>学习率设置太大时，会导致优化迭代比较敏感，不收敛</li>
 <li>后期因梯度评分累积值太大，使得学习率较小，即步长小，导致基本上不走不优化，提前结束训练</li>
 </ol>
-<h1 id="RMSProp"><a href="#RMSProp" class="headerlink" title="RMSProp"></a>RMSProp</h1><p>RMSProp 是解决AdaGrad的学习率后期太小而提出，主要是解决$\sqrt{n_t + \epsilon}$ 梯度平方和累积过大问题，考虑求当前梯度和累积梯度的加权平均。</p>
-<p>RMSProp 算法计算公式如下：<br>$$<br>n_t = \gamma n_{t-1} + (1-\gamma)g^2_t, \\<br>\Delta \theta_t = -\frac{\alpha}{\sqrt{n_t + \epsilon}}\times g_t<br>$$<br>伪代码如下：</p>
+<h1 id="rmsprop">RMSProp</h1>
+<p>RMSProp 是解决AdaGrad的学习率后期太小而提出，主要是解决<span class="math inline">\(\sqrt{n_t + \epsilon}\)</span> 梯度平方和累积过大问题，考虑求当前梯度和累积梯度的加权平均。</p>
+<p>RMSProp 算法计算公式如下： <span class="math display">\[
+n_t = \gamma n_{t-1} + (1-\gamma)g^2_t, \\\\
+\Delta \theta_t = -\frac{\alpha}{\sqrt{n_t + \epsilon}}\times g_t
+\]</span> 伪代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">grad_squard = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">	dx = compute_gradient(x)</span><br><span class="line">    grad_squard = decay_rate * grad_squard + (<span class="number">1</span> - decay_rate) * dx * dx</span><br><span class="line">    x -= learning_rate * dx / (np.sqrt(grad_squard + <span class="number">1e-7</span>))</span><br></pre></td></tr></table></figure>
-
 <p>RMSProp 算法的优点：</p>
-<ol>
+<ol type="1">
 <li>RMSProp 解决AdaGrad 训练后期提前结束的问题（学习率太小不更新）</li>
 </ol>
 <p>RMSProp 算法的缺点：</p>
-<ol>
+<ol type="1">
 <li>只解决了学习率更新问题，为解决梯度方向问题，遇到鞍点时无法更新</li>
 </ol>
-<h1 id="Adam"><a href="#Adam" class="headerlink" title="Adam"></a>Adam</h1><p>Adam 算法的计算公式如下：<br>$$<br>m_t = \beta \times m_{t-1} + (1-\beta) \times g_t, \\<br>n_t = \gamma \times n_{t-q} + (1-\gamma) \times g^2_t, \\<br>\Delta \theta_t = - \frac{\alpha}{\sqrt{n_t} + \epsilon} \times m_t.<br>$$</p>
-<p>这里，$m_t$ 是为梯度添加累积动量的加权平均梯度方向，$n_t$ 是为学习率的累积梯度平方缩放率。</p>
+<h1 id="adam">Adam</h1>
+<p>Adam 算法的计算公式如下： <span class="math display">\[
+m_t = \beta \times m_{t-1} + (1-\beta) \times g_t, \\\\
+n_t = \gamma \times n_{t-q} + (1-\gamma) \times g^2_t, \\\\
+\Delta \theta_t = - \frac{\alpha}{\sqrt{n_t} + \epsilon} \times m_t.
+\]</span></p>
+<p>这里，<span class="math inline">\(m_t\)</span> 是为梯度添加累积动量的加权平均梯度方向，<span class="math inline">\(n_t\)</span> 是为学习率的累积梯度平方缩放率。</p>
 <p>Adam 算法的伪代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">first_moment = <span class="number">0</span></span><br><span class="line">second_moment = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">	dx = compute_gradient(x)</span><br><span class="line">	first_moment = beta1 * first_moment + (<span class="number">1</span> - beta1) * dx</span><br><span class="line">	second_moment = beta2 * second_moment + (<span class="number">1</span> - beta2) * dx * dx</span><br><span class="line">	x -= first_moment * learning_rate / (np.sqrt(second_moment) + <span class="number">1e-7</span>)</span><br></pre></td></tr></table></figure>
-
 <p>Adam 算法的优点：</p>
-<ol>
+<ol type="1">
 <li>学习率按照RMSProp算法更新，能够保证每步迭代学习率都在减小，而且每个维度不一样，且不会像AdaGrad算法提前结束</li>
 <li>梯度方向提升为动量和梯度的加权平均，能够有效逃避鞍点问题</li>
 </ol>
 <p>更进一步的，Adam算法引入校准值，伪代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">first_moment = <span class="number">0</span></span><br><span class="line">second_moment = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">1</span>, num_iterations):</span><br><span class="line">	dx = compute_gradient(x)</span><br><span class="line">	first_moment = beta1 * first_moment + (<span class="number">1</span> - beta1) * dx</span><br><span class="line">	second_moment = beta2 * second_moment + (<span class="number">1</span> - beta2) * dx * dx</span><br><span class="line">	first_unbias = first_moment / (<span class="number">1</span> - beta1 ** t)</span><br><span class="line">	second_unbias = second_moment / (<span class="number">1</span> - beta2 ** t)</span><br><span class="line">	x -= first_unbias * learning_rate / (np.sqrt(second_unbias) + <span class="number">1e-7</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="ALL-IN-ALL"><a href="#ALL-IN-ALL" class="headerlink" title="ALL IN ALL"></a>ALL IN ALL</h1><p>无论是哪种优化算法，都需要初始化一个学习率，训练模型时，推荐使用SGD和Adam算法都尝试一下。SGD 通常训练时间会更长，但最终效果比较好，当然需要好的初始化和学习率。当需要训练较深较复杂的网络且需要快速收敛时，推荐使用Adam. 一般 Adam 算法的参数可选择：</p>
-<ol>
-<li><pre><code class="html">1. beta1 = 0.9
-2. beta2 = 0.999
-3. learning_rate = 1e-3 or 5e - 4</code></pre>
-</li>
+<h1 id="all-in-all">ALL IN ALL</h1>
+<p>无论是哪种优化算法，都需要初始化一个学习率，训练模型时，推荐使用SGD和Adam算法都尝试一下。SGD 通常训练时间会更长，但最终效果比较好，当然需要好的初始化和学习率。当需要训练较深较复杂的网络且需要快速收敛时，推荐使用Adam. 一般 Adam 算法的参数可选择：</p>
+<ol type="1">
+<li><div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb1-1" title="1">1. beta1 = 0.9</a>
+<a class="sourceLine" id="cb1-2" title="2">2. beta2 = 0.999</a>
+<a class="sourceLine" id="cb1-3" title="3">3. learning_rate = 1e-3 or 5e - 4</a></code></pre></div></li>
 </ol>
 <p>其他，学习率自适应方法，如</p>
-<ol>
-<li>指数衰减 $\alpha = \alpha_0 e^{-kt}$.</li>
-<li>倒数衰减 $\alpha = \alpha_p / (1 + kt)$.</li>
+<ol type="1">
+<li>指数衰减 <span class="math inline">\(\alpha = \alpha_0 e^{-kt}\)</span>.</li>
+<li>倒数衰减 <span class="math inline">\(\alpha = \alpha_p / (1 + kt)\)</span>.</li>
 </ol>
 
     </div>
@@ -470,14 +483,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

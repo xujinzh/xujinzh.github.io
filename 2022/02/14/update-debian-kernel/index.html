@@ -32,8 +32,8 @@
 <meta property="article:published_time" content="2022-02-14T05:07:27.000Z">
 <meta property="article:modified_time" content="2022-02-16T01:07:30.750Z">
 <meta property="article:author" content="Jinzhong Xu">
-<meta property="article:tag" content="kernel">
 <meta property="article:tag" content="debian">
+<meta property="article:tag" content="kernel">
 <meta name="twitter:card" content="summary">
 
 
@@ -293,7 +293,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>843</span>
+      <span>845</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -313,31 +313,27 @@
     <div class="post-body" itemprop="articleBody">
         <p>Debian 系统的内核升级的简单方法。本篇以 Debian 10 为例，所有命令均以 root 用户运行。</p>
 <a id="more"></a>
-
-<h1 id="添加源"><a href="#添加源" class="headerlink" title="添加源"></a>添加源</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;deb http://deb.debian.org/debian buster-backports main&quot;</span> &gt; /etc/apt/sources.list.d/backports.list</span><br></pre></td></tr></table></figure>
-
-<h1 id="安装最新内核和头文件"><a href="#安装最新内核和头文件" class="headerlink" title="安装最新内核和头文件"></a>安装最新内核和头文件</h1><p>查看可安装的内核版本</p>
+<h1 id="添加源">添加源</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;deb http://deb.debian.org/debian buster-backports main&quot;</span> &gt; /etc/apt/sources.list.d/backports.list</span><br></pre></td></tr></table></figure>
+<h1 id="安装最新内核和头文件">安装最新内核和头文件</h1>
+<p>查看可安装的内核版本</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt search linux-image</span><br></pre></td></tr></table></figure>
-
-<p><font color=orange>注意，有些人可能会安装云版本（如，linux-image-<em>.**.</em>-cloud-amd64）的内核，该种版本缺失一些必要的驱动程序，安装后可能导致无法直接使用，如 SSH 连接等。建议按如下方式安装完全版。</font></p>
+<p><font color=orange>注意，有些人可能会安装云版本（如，linux-image-*.**.*-cloud-amd64）的内核，该种版本缺失一些必要的驱动程序，安装后可能导致无法直接使用，如 SSH 连接等。建议按如下方式安装完全版。</font></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt -t buster-backports install linux-image-amd64</span><br><span class="line">apt -t buster-backports install linux-headers-amd64</span><br><span class="line">update-grub</span><br></pre></td></tr></table></figure>
-
 <p><font color=red>重新启动服务器</font></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutdown -r now</span><br></pre></td></tr></table></figure>
-
-<h1 id="查看内核版本"><a href="#查看内核版本" class="headerlink" title="查看内核版本"></a>查看内核版本</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
-
-<h1 id="卸载旧内核"><a href="#卸载旧内核" class="headerlink" title="卸载旧内核"></a>卸载旧内核</h1><p><font color=red>请确保使用中的内核不要卸载</font></p>
+<h1 id="查看内核版本">查看内核版本</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
+<h1 id="卸载旧内核">卸载旧内核</h1>
+<p><font color=red>请确保使用中的内核不要卸载</font></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dpkg --list | grep linux-image</span><br><span class="line"><span class="comment"># 卸载指定的旧内核</span></span><br><span class="line">apt purge linux-image-*.**.*-**-cloud-amd64</span><br></pre></td></tr></table></figure>
-
-<h1 id="删除旧头文件"><a href="#删除旧头文件" class="headerlink" title="删除旧头文件"></a>删除旧头文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dpkg --list | grep linux-headers</span><br><span class="line">apt purge linux-headers-*.**.*-**-cloud-amd64</span><br></pre></td></tr></table></figure>
-
+<h1 id="删除旧头文件">删除旧头文件</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dpkg --list | grep linux-headers</span><br><span class="line">apt purge linux-headers-*.**.*-**-cloud-amd64</span><br></pre></td></tr></table></figure>
 <p><strong>如果使用中的内核缺失头文件，可以使用如下命令安装</strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install linux-headers-$(uname -r)</span><br></pre></td></tr></table></figure>
-
-<h1 id="保持内核最新"><a href="#保持内核最新" class="headerlink" title="保持内核最新"></a>保持内核最新</h1><p>把下面命令添加到 <code>/etc/apt/preferences.d/pinning.pref</code> 文件中（如果没有，可创建）</p>
+<h1 id="保持内核最新">保持内核最新</h1>
+<p>把下面命令添加到 <code>/etc/apt/preferences.d/pinning.pref</code> 文件中（如果没有，可创建）</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Package: linux-image-amd64 linux-headers-amd64</span><br><span class="line">Pin: release n=buster-backports</span><br><span class="line">Pin-Priority: 900</span><br></pre></td></tr></table></figure>
-
 
     </div>
 
@@ -382,8 +378,8 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/kernel/" rel="tag"><i class="fa fa-tag"></i> kernel</a>
               <a href="/tags/debian/" rel="tag"><i class="fa fa-tag"></i> debian</a>
+              <a href="/tags/kernel/" rel="tag"><i class="fa fa-tag"></i> kernel</a>
           </div>
 
         
@@ -431,14 +427,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">

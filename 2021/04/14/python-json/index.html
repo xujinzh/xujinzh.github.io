@@ -147,7 +147,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%8A-JSON-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E5%8C%96%E4%B8%BA%E5%AD%97%E5%85%B8"><span class="nav-number">1.</span> <span class="nav-text">把 JSON 字符串转化为字典</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%8A%E5%AD%97%E5%85%B8%E4%BF%9D%E5%AD%98%E4%B8%BAJSON%E6%96%87%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">把字典保存为JSON文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8EJSON%E6%96%87%E4%BB%B6%E4%B8%AD%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%E6%88%90%E5%AD%97%E5%85%B8"><span class="nav-number">3.</span> <span class="nav-text">从JSON文件中读取数据成字典</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%8A%E5%AD%97%E5%85%B8%E8%BD%AC%E5%8C%96%E4%B8%BAJSON%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">4.</span> <span class="nav-text">把字典转化为JSON字符串</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%B0%E5%BF%86%E6%96%B9%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">记忆方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%8A-json-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E5%8C%96%E4%B8%BA%E5%AD%97%E5%85%B8"><span class="nav-number">1.</span> <span class="nav-text">把 JSON 字符串转化为字典</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%8A%E5%AD%97%E5%85%B8%E4%BF%9D%E5%AD%98%E4%B8%BAjson%E6%96%87%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">把字典保存为JSON文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8Ejson%E6%96%87%E4%BB%B6%E4%B8%AD%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%E6%88%90%E5%AD%97%E5%85%B8"><span class="nav-number">3.</span> <span class="nav-text">从JSON文件中读取数据成字典</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%8A%E5%AD%97%E5%85%B8%E8%BD%AC%E5%8C%96%E4%B8%BAjson%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">4.</span> <span class="nav-text">把字典转化为JSON字符串</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%B0%E5%BF%86%E6%96%B9%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">记忆方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -316,36 +316,34 @@
 <p>JSON（JavaScript Object Notation）是表示结构化数据的流行数据结构。通常服务器和网络应用之间以 JSON 格式发送和接受数据。</p>
 <p>在 Python 中，JSON 以字符串格式存在，如：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">para = <span class="string">&#x27;&#123;&quot;model&quot;: &quot;VGG&quot;, &quot;optim_kwargs&quot;: &#123;&quot;lr&quot;: 1e-2, &quot;momentum&quot;: 0.9&#125;&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
-
 <p>通常，JSON 对象保存在文件中。</p>
 <a id="more"></a>
-
-<h1 id="把-JSON-字符串转化为字典"><a href="#把-JSON-字符串转化为字典" class="headerlink" title="把 JSON 字符串转化为字典"></a>把 JSON 字符串转化为字典</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; <span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">&gt;&gt; para = <span class="string">&#x27;&#123;&quot;model&quot;: &quot;VGG&quot;, &quot;optim_kwargs&quot;: &#123;&quot;lr&quot;: 1e-2, &quot;momentum&quot;: 0.9&#125;&#125;&#x27;</span></span><br><span class="line">&gt;&gt; para_dict = json.loads(para)</span><br><span class="line">&gt;&gt; print(para_dict)</span><br><span class="line">&gt;&gt; print(para_dict[<span class="string">&quot;model&quot;</span>])</span><br><span class="line">&#123;<span class="string">&#x27;model&#x27;</span>: <span class="string">&#x27;VGG&#x27;</span>, <span class="string">&#x27;optim_kwargs&#x27;</span>: &#123;<span class="string">&#x27;lr&#x27;</span>: <span class="number">0.01</span>, <span class="string">&#x27;momentum&#x27;</span>: <span class="number">0.9</span>&#125;&#125;</span><br><span class="line">VGG</span><br></pre></td></tr></table></figure>
-
-<h1 id="把字典保存为JSON文件"><a href="#把字典保存为JSON文件" class="headerlink" title="把字典保存为JSON文件"></a>把字典保存为JSON文件</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; <span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">&gt;&gt; para_dict = &#123;<span class="string">&#x27;model&#x27;</span>: <span class="string">&#x27;VGG&#x27;</span>, <span class="string">&#x27;optim_kwargs&#x27;</span>: &#123;<span class="string">&#x27;lr&#x27;</span>: <span class="number">0.01</span>, <span class="string">&#x27;momentum&#x27;</span>: <span class="number">0.9</span>&#125;&#125;</span><br><span class="line">&gt;&gt; <span class="keyword">with</span> open(<span class="string">&#x27;./data/paras.json&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> jf:</span><br><span class="line"><span class="meta">... </span>   json.dump(para_dict, jf, indent=<span class="number">4</span>, sort_keys=<span class="literal">True</span>, ensure_ascii=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="从JSON文件中读取数据成字典"><a href="#从JSON文件中读取数据成字典" class="headerlink" title="从JSON文件中读取数据成字典"></a>从JSON文件中读取数据成字典</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; <span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">&gt;&gt; <span class="keyword">with</span> open(<span class="string">&quot;./data/paras.json&quot;</span>) <span class="keyword">as</span> jf:</span><br><span class="line">&gt;&gt;     para_dict = json.load(jf)</span><br><span class="line"></span><br><span class="line">&gt;&gt; print(para_dict[<span class="string">&quot;model&quot;</span>])</span><br><span class="line">VGG</span><br></pre></td></tr></table></figure>
-
-<h1 id="把字典转化为JSON字符串"><a href="#把字典转化为JSON字符串" class="headerlink" title="把字典转化为JSON字符串"></a>把字典转化为JSON字符串</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; <span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">&gt;&gt; para_dict = &#123;<span class="string">&quot;model&quot;</span>: <span class="string">&quot;VGG&quot;</span>, <span class="string">&quot;optim_kwargs&quot;</span>: &#123;<span class="string">&quot;lr&quot;</span>: <span class="number">0.01</span>, <span class="string">&quot;momentum&quot;</span>: <span class="number">0.9</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt; para = json.dumps(para_dict, ensure_ascii=<span class="literal">False</span>)</span><br><span class="line">&gt;&gt; print(para)</span><br><span class="line"><span class="comment"># 注意JSON字符串不同于字典，是不能够直接索引的</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="记忆方法"><a href="#记忆方法" class="headerlink" title="记忆方法"></a>记忆方法</h1><ol>
+<h1 id="把-json-字符串转化为字典">把 JSON 字符串转化为字典</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; <span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">&gt;&gt; para = <span class="string">&#x27;&#123;&quot;model&quot;: &quot;VGG&quot;, &quot;optim_kwargs&quot;: &#123;&quot;lr&quot;: 1e-2, &quot;momentum&quot;: 0.9&#125;&#125;&#x27;</span></span><br><span class="line">&gt;&gt; para_dict = json.loads(para)</span><br><span class="line">&gt;&gt; print(para_dict)</span><br><span class="line">&gt;&gt; print(para_dict[<span class="string">&quot;model&quot;</span>])</span><br><span class="line">&#123;<span class="string">&#x27;model&#x27;</span>: <span class="string">&#x27;VGG&#x27;</span>, <span class="string">&#x27;optim_kwargs&#x27;</span>: &#123;<span class="string">&#x27;lr&#x27;</span>: <span class="number">0.01</span>, <span class="string">&#x27;momentum&#x27;</span>: <span class="number">0.9</span>&#125;&#125;</span><br><span class="line">VGG</span><br></pre></td></tr></table></figure>
+<h1 id="把字典保存为json文件">把字典保存为JSON文件</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; <span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">&gt;&gt; para_dict = &#123;<span class="string">&#x27;model&#x27;</span>: <span class="string">&#x27;VGG&#x27;</span>, <span class="string">&#x27;optim_kwargs&#x27;</span>: &#123;<span class="string">&#x27;lr&#x27;</span>: <span class="number">0.01</span>, <span class="string">&#x27;momentum&#x27;</span>: <span class="number">0.9</span>&#125;&#125;</span><br><span class="line">&gt;&gt; <span class="keyword">with</span> open(<span class="string">&#x27;./data/paras.json&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> jf:</span><br><span class="line"><span class="meta">... </span>   json.dump(para_dict, jf, indent=<span class="number">4</span>, sort_keys=<span class="literal">True</span>, ensure_ascii=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="从json文件中读取数据成字典">从JSON文件中读取数据成字典</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; <span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">&gt;&gt; <span class="keyword">with</span> open(<span class="string">&quot;./data/paras.json&quot;</span>) <span class="keyword">as</span> jf:</span><br><span class="line">&gt;&gt;     para_dict = json.load(jf)</span><br><span class="line"></span><br><span class="line">&gt;&gt; print(para_dict[<span class="string">&quot;model&quot;</span>])</span><br><span class="line">VGG</span><br></pre></td></tr></table></figure>
+<h1 id="把字典转化为json字符串">把字典转化为JSON字符串</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; <span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">&gt;&gt; para_dict = &#123;<span class="string">&quot;model&quot;</span>: <span class="string">&quot;VGG&quot;</span>, <span class="string">&quot;optim_kwargs&quot;</span>: &#123;<span class="string">&quot;lr&quot;</span>: <span class="number">0.01</span>, <span class="string">&quot;momentum&quot;</span>: <span class="number">0.9</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt; para = json.dumps(para_dict, ensure_ascii=<span class="literal">False</span>)</span><br><span class="line">&gt;&gt; print(para)</span><br><span class="line"><span class="comment"># 注意JSON字符串不同于字典，是不能够直接索引的</span></span><br></pre></td></tr></table></figure>
+<h1 id="记忆方法">记忆方法</h1>
+<ol type="1">
 <li>字典是 JSON 字符串和 JSON 文件的桥梁；</li>
-<li>JSON 字符串和字典之间的转化用带 ‘s’ 的方法；</li>
-<li>JSON 文件和字典之间的转化用不带 ‘s’ 的方法；</li>
-<li>JSON 到字典用 ‘load’;</li>
-<li>字典到 JSON 用 ‘dump’；</li>
+<li>JSON 字符串和字典之间的转化用带 's' 的方法；</li>
+<li>JSON 文件和字典之间的转化用不带 's' 的方法；</li>
+<li>JSON 到字典用 'load';</li>
+<li>字典到 JSON 用 'dump'；</li>
 </ol>
 <p>表示为如下：</p>
-<p>$JSON 字符串 \overset{dumps}{\longleftarrow} 字典 \overset{dump}{\longrightarrow} JSON 文件$</p>
-<p>$JSON 字符串 \overset{loads}{\longrightarrow} 字典 \overset{load}{\longleftarrow} JSON 文件$</p>
+<p><span class="math inline">\(JSON 字符串 \overset{dumps}{\longleftarrow} 字典 \overset{dump}{\longrightarrow} JSON 文件\)</span></p>
+<p><span class="math inline">\(JSON 字符串 \overset{loads}{\longrightarrow} 字典 \overset{load}{\longleftarrow} JSON 文件\)</span></p>
 <p>合并表示如下：</p>
-<p>$JSON 字符串 \underset{loads}{\overset{dumps}{\leftrightarrows}} 字典 \underset{load}{\overset{dump}{\rightleftarrows}} JSON 文件$</p>
+<p><span class="math inline">\(JSON 字符串 \underset{loads}{\overset{dumps}{\leftrightarrows}} 字典 \underset{load}{\overset{dump}{\rightleftarrows}} JSON 文件\)</span></p>
 <p>保存含有中文的字符，请注意参数 <strong>ensure_ascii=False</strong></p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><p><a target="_blank" rel="noopener" href="https://www.programiz.com/python-programming/json">Python JSON</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ys_073/article/details/9403039">Python下json中文乱码解决办法</a></p>
-</li>
+<h1 id="参考链接">参考链接</h1>
+<ol type="1">
+<li><p><a target="_blank" rel="noopener" href="https://www.programiz.com/python-programming/json">Python JSON</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ys_073/article/details/9403039">Python下json中文乱码解决办法</a></p></li>
 </ol>
 
     </div>
@@ -441,14 +439,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">604k</span>
+    <span title="站点总字数">605k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:09</span>
+    <span title="站点阅读时长">9:10</span>
   </span>
 </div>
 <div class="busuanzi-count">
