@@ -30,7 +30,7 @@
 <meta property="og:description" content="Storm 是一个分布式计算框架，主要由Clojure编程语言编写，其主要编程语言是Java 和Clojure。最初是由Nathan Marz及其团队创建于BackType，该项目在被Twitter取得后开源。Storm集群部署需要Zookeeper和python的支持，假设这两个软件已经安装，并成功部署了Zookeeper集群。获取如何Standalone集群部署Zookeeper请参考我的文章">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-03-08T05:19:08.000Z">
-<meta property="article:modified_time" content="2021-11-09T10:42:04.902Z">
+<meta property="article:modified_time" content="2022-06-17T03:26:40.282Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="big data">
 <meta property="article:tag" content="storm">
@@ -89,7 +89,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">229</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">22</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">283</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">231</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">24</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">284</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -161,18 +161,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">283</span>
+          <span class="site-state-item-count">284</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">24</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">229</span>
+        <span class="site-state-item-count">231</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -263,7 +263,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2021-11-09 18:42:04" itemprop="dateModified" datetime="2021-11-09T18:42:04+08:00">2021-11-09</time>
+      <time title="修改时间：2022-06-17 11:26:40" itemprop="dateModified" datetime="2022-06-17T11:26:40+08:00">2022-06-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -317,7 +317,7 @@
 
 <h1 id="配置storm"><a href="#配置storm" class="headerlink" title="配置storm"></a>配置storm</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> storm/</span><br><span class="line">mkdir data</span><br><span class="line">vim ./conf/storm.yaml </span><br></pre></td></tr></table></figure>
 
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">storm.zookeeper.servers:</span><br><span class="line">   - &quot;1.1.10.0&quot;</span><br><span class="line">   - &quot;1.1.10.1&quot;</span><br><span class="line">   - &quot;1.1.10.2&quot;</span><br><span class="line">nimbus.seeds: [&quot;1.1.1.0&quot;]</span><br><span class="line">storm.local.dir=&quot;/home/jinzhongxu/storm/data&quot;</span><br><span class="line">supervisor.slots.ports:</span><br><span class="line"> 	- 6701</span><br><span class="line"> 	- 6702</span><br><span class="line"> 	- 6703</span><br><span class="line"> 	- 6704</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">storm.zookeeper.servers:</span><br><span class="line">   - &quot;1.1.10.0&quot;</span><br><span class="line">   - &quot;1.1.10.1&quot;</span><br><span class="line">   - &quot;1.1.10.2&quot;</span><br><span class="line">nimbus.seeds: [&quot;1.1.1.0&quot;]</span><br><span class="line">storm.local.dir=&quot;/home/jinzhongxu/storm/data&quot;</span><br><span class="line">supervisor.slots.ports:</span><br><span class="line">     - 6701</span><br><span class="line">     - 6702</span><br><span class="line">     - 6703</span><br><span class="line">     - 6704</span><br></pre></td></tr></table></figure>
 
 <p><strong>注意，这里需要严格保证空格，配置各项需要与侧边栏空一格，“-” 与配置参数空一格等</strong>。</p>
 <p>配置好后，将storm文件夹传到其他机器上。</p>
@@ -372,7 +372,7 @@
 <li><p>open files：当前用户可以打开的文件描述符数；</p>
 </li>
 <li><p>max user processes：当前用户可以运行的进程数，此参数太小将引起storm的一个错误，如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">java.lang.OutOfMemoryError: unable to create new native thread</span><br><span class="line">       	at java.lang.Thread.start0 (Native Method) [na:xxx]</span><br><span class="line">	at java.lang.Thread.start (Thread.java: 640) [na:xxx]</span><br><span class="line">       	at java.lang.UNIXProcess$1.run (UNIXProcess.java:141) ~ [na:xxx]</span><br><span class="line">	at java.security.AccessController.doPrivileged (Native Method) ~ [na:xxx]</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">java.lang.OutOfMemoryError: unable to create new native thread</span><br><span class="line">    at java.lang.Thread.start0 (Native Method) [na:xxx]</span><br><span class="line">at java.lang.Thread.start (Thread.java: 640) [na:xxx]</span><br><span class="line">    at java.lang.UNIXProcess$1.run (UNIXProcess.java:141) ~ [na:xxx]</span><br><span class="line">at java.security.AccessController.doPrivileged (Native Method) ~ [na:xxx]</span><br></pre></td></tr></table></figure></li>
 </ol>
 </li>
 </ol>
@@ -469,14 +469,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">613k</span>
+    <span title="站点总字数">618k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">9:17</span>
+    <span title="站点阅读时长">9:22</span>
   </span>
 </div>
 <div class="busuanzi-count">
