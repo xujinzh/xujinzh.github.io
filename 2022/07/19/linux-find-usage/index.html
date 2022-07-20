@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.1.0">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" integrity="sha256-jTIdiMuX/e3DGJUGwl3pKSxuc6YOuqtJYkM0bGQESA4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在 Linux 系统上使用终端操作文件的过程中，总会遇到在某个文件夹下查找文件的情况，如查找文件名为 add.py的文件、查找文件30分钟前生成的文件、批量删除文件夹下（包含子文件）文件名中没有符号 ‘G’ 的文件，等等。这些都需要我们通过一个搜索命令来完成。本篇介绍 Linux 中的 find 命令，它能够帮我们完成上面的类似任务。本篇以 Ubuntu 18.04 为例进行演示。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 中的 find 命令简单介绍">
+<meta property="og:url" content="https://xujinzh.github.io/2022/07/19/linux-find-usage/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="在 Linux 系统上使用终端操作文件的过程中，总会遇到在某个文件夹下查找文件的情况，如查找文件名为 add.py的文件、查找文件30分钟前生成的文件、批量删除文件夹下（包含子文件）文件名中没有符号 ‘G’ 的文件，等等。这些都需要我们通过一个搜索命令来完成。本篇介绍 Linux 中的 find 命令，它能够帮我们完成上面的类似任务。本篇以 Ubuntu 18.04 为例进行演示。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-19T08:02:46.000Z">
+<meta property="article:modified_time" content="2022-07-20T05:59:28.105Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="debian">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="centos">
+<meta property="article:tag" content="find">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2022/07/19/linux-find-usage/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xujinzh.github.io/2022/07/19/linux-find-usage/","path":"2022/07/19/linux-find-usage/","title":"Linux 中的 find 命令简单介绍"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux 中的 find 命令简单介绍 | J. Xu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">J. Xu</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">236</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">23</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">291</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#find-%E5%91%BD%E4%BB%A4%E8%AF%AD%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">find 命令语法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#find-%E5%8F%82%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">find 参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">众妙之门</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">291</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">236</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xujinzhong027@outlook.com" title="Mail → mailto:xujinzhong027@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.mathscv.com/" title="Blog-MathsCV → https:&#x2F;&#x2F;www.mathscv.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>Blog-MathsCV</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://xujinzh.github.io/" title="Blog-GitHub → https:&#x2F;&#x2F;xujinzh.github.io&#x2F;"><i class="fab fa-instagram fa-fw"></i>Blog-GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.mathscv.com/power/" title="MathsCVPower → https:&#x2F;&#x2F;www.mathscv.com&#x2F;power&#x2F;" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>MathsCVPower</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2022/07/19/linux-find-usage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J. Xu">
+      <meta itemprop="description" content="众妙之门">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux 中的 find 命令简单介绍 | J. Xu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux 中的 find 命令简单介绍
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-07-19 16:02:46" itemprop="dateCreated datePublished" datetime="2022-07-19T16:02:46+08:00">2022-07-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-07-20 13:59:28" itemprop="dateModified" datetime="2022-07-20T13:59:28+08:00">2022-07-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>在 Linux 系统上使用终端操作文件的过程中，总会遇到在某个文件夹下查找文件的情况，如查找文件名为 <code>add.py</code>的文件、查找文件30分钟前生成的文件、批量删除文件夹下（包含子文件）文件名中没有符号 ‘G’ 的文件，等等。这些都需要我们通过一个搜索命令来完成。本篇介绍 Linux 中的 <code>find</code> 命令，它能够帮我们完成上面的类似任务。本篇以 Ubuntu 18.04 为例进行演示。</p>
+<span id="more"></span>
+
+<h1 id="find-命令语法"><a href="#find-命令语法" class="headerlink" title="find 命令语法"></a>find 命令语法</h1><p>find 命令的基本语法如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find [路径] [参数] [命令]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>find 的对象是文件夹，且可以同时指定多个文件夹路径；当不指定文件夹路径时，默认为当前路径；</p>
+</li>
+<li><p>find 参数部分可以配置很多，下面重点介绍。当不指定参数时，默认时打印 <code>-print</code>；</p>
+</li>
+<li><p>命令是可选参数，当需要直接对找到的文件或文件夹进行操作时，可以带上命令参数，一般命令参数都以 <code>&#123;&#125; \;</code>结尾。</p>
+</li>
+</ul>
+<h1 id="find-参数"><a href="#find-参数" class="headerlink" title="find 参数"></a>find 参数</h1><p>find 参数是  find  强大功能的基础，通过配置不同的参数，可以使用 find 找到不同类型的文件或文件夹。</p>
+<p>下面简单罗列一些常见的参数：</p>
+<ul>
+<li><p>-type     只显示指定类型的文件或文件夹；</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">f    普通文件</span><br><span class="line">d    目录</span><br><span class="line">l    符号链接</span><br><span class="line">c    字符设备</span><br><span class="line">b    块设备</span><br><span class="line">s    套接字 socket</span><br><span class="line">p    具名贮列 Fifo</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只查找当前目录（包含子目录，本篇默认都包含子目录）下的文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f</span><br><span class="line"><span class="comment"># 只查找当前目录下的子文件夹</span></span><br><span class="line">find . -<span class="built_in">type</span> d</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-name    文件名称符合 name 的文件；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查找当前目录中文件或文件夹名后面带 G 的</span></span><br><span class="line">find . -name <span class="string">&quot;*G&quot;</span></span><br><span class="line"><span class="comment"># 查找当前目录下文件或文件夹后面不带 G 的</span></span><br><span class="line">find . ! -name <span class="string">&quot;*G&quot;</span></span><br><span class="line">find . -not -name <span class="string">&quot;*G&quot;</span></span><br><span class="line"><span class="comment"># 统计代码行数， grep -v ^$ 表示排除空行</span></span><br><span class="line">find . -name <span class="string">&quot;topology.py&quot;</span> | xargs <span class="built_in">cat</span> | grep -v ^$ | <span class="built_in">wc</span> -l </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-iname    文件名称符合 name 的文件，但会忽略大小写；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查找当前目录中文件或文件夹名后面带 G 或 g 的</span></span><br><span class="line">find . -name <span class="string">&quot;*g&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-size    查找符合指定的文件大小的文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">c    字节</span><br><span class="line">w    字（2字节）</span><br><span class="line">b    块（512字节）</span><br><span class="line">k    千字节（1024字节）</span><br><span class="line">M    兆字节（1024k字节）</span><br><span class="line">G    吉字节（1024M字节） </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查找大于10k的文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f -size +10k</span><br><span class="line"><span class="comment"># 查找小于10M的文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f -size -10M</span><br><span class="line"><span class="comment"># 查找等于1G的文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f -size 1G</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-path    指定字符串作为寻找目录的范本样式；-ipath 忽略大小写；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查找 /usr/ 目录下所有文件或文件夹路径中包含 &#x27;python&#x27; 的</span></span><br><span class="line">find /usr/ -path <span class="string">&quot;*python&quot;</span></span><br><span class="line"><span class="comment"># 忽略大小写</span></span><br><span class="line">find /usr/ -ipath <span class="string">&quot;*python&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-prune    排除指定字符串作为文件或文件夹的范本样式；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 /usr 目录下查找以 &#x27;py&#x27; 结尾的文件或文件夹，但排除文件夹 &#x27;/usr/local&#x27;，即不在文件夹及其子文件夹下寻找 &#x27;py&#x27; 结尾的文件或文件夹</span></span><br><span class="line">find /usr -path <span class="string">&quot;/usr/local&quot;</span> -prune -o -name <span class="string">&quot;*py&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除文件夹结尾为 &#x27;G&#x27; 的</span></span><br><span class="line"><span class="comment">#  &#123;&#125; 用于与 -exec 选项结合使用来匹配所有文件夹，然后会被替换为相应的文件夹名</span></span><br><span class="line">find . -name <span class="string">&quot;*G&quot;</span> -<span class="built_in">type</span> d -prune -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \;</span><br><span class="line"><span class="comment"># 此处如果不带 &#x27;-prune&#x27;，则虽然能够删除成功，却会报如下错误，注意 106G 为当前目录下的一个符合条件的文件夹</span></span><br><span class="line"><span class="comment"># find: ‘./106G’: No such file or directory</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-atime    在过去 n 天内被读取过的文件或文件夹；-amin  在过去 n  分钟内被读取过的文件或文件夹；</p>
+</li>
+<li><p>-ctime    在过去 n 天内属性发生改变的文件或文件夹；-cmin 在过去 n 分钟内属性发生改变的文件或文件夹；</p>
+</li>
+<li><p>-mtime   在过去 n 天内内容发生改变的文件或文件夹；-mmin 在过去 n 分钟内内容发送改变的文件或文件夹；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 过去 1 天内修改过的文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f -mtime -1</span><br><span class="line"><span class="comment"># 在过去 10 分钟内修改过的文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f -mmin -10</span><br><span class="line"><span class="comment"># 在恰好 1 天前修改过的文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f -mtime 1</span><br><span class="line"><span class="comment"># 在过去 1 天前修改过的文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f -mtime +1</span><br><span class="line"><span class="comment"># 比文件 &#x27;test.log&#x27; 修改时间距离现在时刻更近的文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f -newer test.py</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-delete    删除文件；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除以 &#x27;.txt&#x27; 结尾的文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f -name <span class="string">&quot;*txt&quot;</span> -delete</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-perm   文件权限；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 文件权限是 600 的文件</span></span><br><span class="line">find ~/.ssh -<span class="built_in">type</span> f -perm 600</span><br><span class="line"><span class="comment"># 文件其他组权限为 &#x27;r&#x27; 的文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f -perm -o=r</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-user    文件所有者；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 文件所有者为 admin 的文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f -user admin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-group     文件所属组；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 文件所属组为 admin 的文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f -group admin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-exec   执行命令；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换文件所有者</span></span><br><span class="line">find . -<span class="built_in">type</span> f -user root -<span class="built_in">exec</span> <span class="built_in">chown</span> jinzhongxu &#123;&#125; \;</span><br><span class="line"><span class="comment"># 删除以 &#x27;.txt&#x27; 结尾的文件，并提示是否删除，输入 yes 后删除</span></span><br><span class="line">find . -name <span class="string">&quot;*.txt&quot;</span> -<span class="built_in">type</span> f -ok -<span class="built_in">exec</span> <span class="built_in">rm</span> &#123;&#125; \;</span><br><span class="line"><span class="comment"># 把一周前的 &#x27;.log&#x27; 文件移动到 bak 文件夹中</span></span><br><span class="line">find . -name <span class="string">&quot;*.log&quot;</span> -<span class="built_in">type</span> f -mtime +7 -<span class="built_in">exec</span> <span class="built_in">cp</span> &#123;&#125; bak \;</span><br><span class="line"><span class="comment"># 把所有 &#x27;.log&#x27; 结尾的文件以 “LOG：文件名” 的形式打印出来</span></span><br><span class="line">find . -name <span class="string">&quot;*.log&quot;</span> -<span class="built_in">type</span> f -<span class="built_in">exec</span> <span class="built_in">printf</span> <span class="string">&quot;LOG: %s\n&quot;</span> &#123;&#125; \;</span><br><span class="line"><span class="comment"># 如果需要执行的命令比较多，可以先把命令写入一个脚本中，然后像下面这样执行</span></span><br><span class="line">find . -name <span class="string">&quot;*.log&quot;</span> -<span class="built_in">type</span> f -<span class="built_in">exec</span> ./js.sh &#123;&#125; \;</span><br><span class="line"><span class="comment"># 删除 mac 下自动生成的文件</span></span><br><span class="line">find . -name <span class="string">&#x27;__MACOSX&#x27;</span> -prune -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-empty    文件内容为空的文件；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find . -empty</span><br><span class="line">find . -<span class="built_in">type</span> f -size 0 -<span class="built_in">exec</span> <span class="built_in">ls</span> -l &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-depth    从指定的文件夹下最深层的子文件夹开始查找；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从最深层子文件夹开始搜索</span></span><br><span class="line">find . -depth -mmin -300</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-maxdepth    设置搜索的最大目录层级；</p>
+</li>
+<li><p>-mindepth    设置搜索的最小目录层级；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只搜索当前文件夹第一层级的文件，即只搜索当前文件夹下的文件，而不搜索子文件夹</span></span><br><span class="line">find . -maxdepth 1 -mmin -300</span><br><span class="line"><span class="comment"># 只搜索当前文件夹第二层级及更深层级的文件，即只搜索当前文件夹下的子文件夹及其更深子文件夹下的文件</span></span><br><span class="line">find . -mindepth 2 -mmin -300</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复杂运算式；</p>
+<p>复杂运算式，可以使用 <code>()</code>开将运算式分隔，然后使用下面的逻辑运算：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="params">#</span> 与</span><br><span class="line">expr1 -and expr2</span><br><span class="line"></span><br><span class="line"><span class="params">#</span> 非</span><br><span class="line">! expr</span><br><span class="line">-not expr</span><br><span class="line"></span><br><span class="line"><span class="params">#</span> 或</span><br><span class="line">expr1 -or expr2</span><br><span class="line">expr1, expr2</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><p><a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-comm-find.html">Linux find 命令 | 菜鸟教程</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://wangchujiang.com/linux-command/c/find.html">find 命令，Linux find 命令详解：在指定目录下查找文件 - Linux 命令搜索引擎</a></p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>感谢支持！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://xujinzh.github.io/2022/07/19/linux-find-usage/" title="Linux 中的 find 命令简单介绍">https://xujinzh.github.io/2022/07/19/linux-find-usage/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ubuntu/" rel="tag"><i class="fa fa-tag"></i> ubuntu</a>
+              <a href="/tags/debian/" rel="tag"><i class="fa fa-tag"></i> debian</a>
+              <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
+              <a href="/tags/centos/" rel="tag"><i class="fa fa-tag"></i> centos</a>
+              <a href="/tags/find/" rel="tag"><i class="fa fa-tag"></i> find</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/19/diff-between-mtime-ctime-atime/" rel="prev" title="Linux 中 时间 mtime、ctime 和 atime 的区别">
+                  <i class="fa fa-chevron-left"></i> Linux 中 时间 mtime、ctime 和 atime 的区别
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">645k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">9:46</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js","integrity":"sha256-7wT34TI0pEBeEFoi4z+vhuSddGh6vUTMWdqJ2SDe2jg="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"xujinzh","repo":"xujinzh.github.io","client_id":"695ca5d39e2ba2f9feb5","client_secret":"9d4027af6364ff54595b7a8580977ec58c38a5ae","admin_user":"xujinzh","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"3ae685e7a2e5858255a00d26002bcb4c"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
