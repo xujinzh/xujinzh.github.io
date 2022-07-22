@@ -11332,24 +11332,22 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
     <title>使用 sshfs 挂载远程文件系统</title>
     <url>/2022/06/08/sshfs-mount-rfs-over-ssh/</url>
     <content><![CDATA[<p>在两台服务器间借助 SSH 连接使用 SFTP 或 SCP 可以互相传输文件，但这确不能共享整个文件系统。当我们想要像访问本地服务器的文件系统一样访问远程服务器的文件系统时，可以使用 sshfs 工具，它通过 SSH 文件传输协议 (SFTP) 挂载远程的文件系统。本篇以 ubuntu 系统为例，所有代码以普通用户运行，部分代码需要 sudo 权限。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install sshfs</span><br></pre></td></tr></table></figure>
 
 <h1 id="挂载远程服务器文件系统"><a href="#挂载远程服务器文件系统" class="headerlink" title="挂载远程服务器文件系统"></a>挂载远程服务器文件系统</h1><p>假设本地的用户 jinzhongxu 能够通过 SSH 连接到远程服务器 tencent.test.com</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 创建挂载点</span></span><br><span class="line">sudo mkdir /mnt/tencent</span><br><span class="line">sudo chown -R jinzhongxu:jinzhongxu /mnt/tencent</span><br><span class="line"></span><br><span class="line"><span class="comment"># 挂载远程文件系统到挂载点</span></span><br><span class="line">sshfs jinzhongxu@tencent.test.com:/home/jinzhongxu /mnt/tencent -o allow_other</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 创建挂载点</span></span><br><span class="line">sudo <span class="built_in">mkdir</span> /mnt/tencent</span><br><span class="line">sudo <span class="built_in">chown</span> -R jinzhongxu:jinzhongxu /mnt/tencent</span><br><span class="line"></span><br><span class="line"><span class="comment"># 挂载远程文件系统到挂载点</span></span><br><span class="line">sshfs jinzhongxu@tencent.test.com:/home/jinzhongxu /mnt/tencent -o allow_other -o reconnect</span><br></pre></td></tr></table></figure>
 
-<p>注意，挂载时因为指定了 allow_other，所以就像普通的磁盘挂载一样。sshfs 默认情况下会阻止这种情况，所以建议带上该参数，否则将导致除 root 用户外其他用户无法访问文件系统。同时，指定该参数，需要在配置文件中放开权限，方法如下：</p>
+<p>注意，挂载时因为指定了 reconnect 会断网自动重连；指定了 allow_other，就像普通的磁盘挂载一样。sshfs 默认情况下会阻止这种情况，所以建议带上该参数，否则将导致除 root 用户外其他用户无法访问文件系统。同时，指定该参数，需要在配置文件中放开权限，方法如下：</p>
 <figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">sudo vim <span class="regexp">/etc/</span>fuse.conf</span><br></pre></td></tr></table></figure>
 
 <p>修改为如下：</p>
-<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line"># /etc/fuse.conf - Configuration file for Filesystem in Userspace (FUSE)</span><br><span class="line"></span><br><span class="line"># Set the maximum number of FUSE mounts allowed to non-root users.</span><br><span class="line"># The default is 1000.</span><br><span class="line">#mount_max = 1000</span><br><span class="line"></span><br><span class="line"># Allow non-root users to specify the allow_other or allow_root mount options.</span><br><span class="line">user_allow_other</span><br></pre></td></tr></table></figure>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line"><span class="params">#</span> /etc/fuse.conf - Configuration file for Filesystem in Userspace (FUSE)</span><br><span class="line"></span><br><span class="line"><span class="params">#</span> Set the maximum number of FUSE mounts allowed to non-root users.</span><br><span class="line"><span class="params">#</span> The default is 1000.</span><br><span class="line"><span class="params">#</span>mount<span class="built_in">_</span>max = 1000</span><br><span class="line"></span><br><span class="line"><span class="params">#</span> Allow non-root users to specify the allow<span class="built_in">_</span>other or allow<span class="built_in">_</span>root mount options.</span><br><span class="line">user<span class="built_in">_</span>allow<span class="built_in">_</span>other</span><br></pre></td></tr></table></figure>
 
 <p>当挂载成功后，访问 &#x2F;mnt&#x2F;tencent 即可访问远程服务器 tencent.test.com 里的 &#x2F;home&#x2F;jinzhongxu 文件。</p>
 <p>查看挂载情况</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">df -hT</span><br></pre></td></tr></table></figure>
-
-
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">df</span> -hT</span><br></pre></td></tr></table></figure>
 
 <h1 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fusermount -u /mnt/tencent</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">sudo umount /mnt/tencent</span><br></pre></td></tr></table></figure>
 
@@ -11357,7 +11355,7 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/fstab</span><br></pre></td></tr></table></figure>
 
 <p>在最后一行添加如下内容</p>
-<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">sshfs#jinzhongxu@tencent.test.com:/home/jinzhongxu /mnt/tencent fuse.sshfs noauto,x-systemd.automount,_netdev,reconnect,identityfile=/home/jinzhongxu/.ssh/id_rsa,port=2222,allow_other 0 0</span><br></pre></td></tr></table></figure>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">sshfs<span class="params">#</span>jinzhongxu@tencent.test.com:/home/jinzhongxu /mnt/tencent fuse.sshfs noauto,x-systemd.automount,<span class="built_in">_</span>netdev,reconnect,identityfile=/home/jinzhongxu/.ssh/id<span class="built_in">_</span>rsa,port=2222,allow<span class="built_in">_</span>other 0 0</span><br></pre></td></tr></table></figure>
 
 <p>更新 fstab 文件使修改生效</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mount -a</span><br></pre></td></tr></table></figure>
@@ -11367,6 +11365,7 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 <li><a href="https://blog.csdn.net/xianglingchuan/article/details/54411754">linux sshfs挂载命令使用</a></li>
 <li><a href="https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh">How To Use SSHFS to Mount Remote File Systems Over SSH</a></li>
 <li><a href="https://www.codeleading.com/article/58206196183/">ubuntu 远程挂载另一台ubuntu上的目录</a></li>
+<li><a href="https://www.lixian.fun/4253.html">SSHFS远程目录自动挂载到本地目录 （纯干货 企业案例实操）【显哥出品，必为精品】 | 显哥博客</a></li>
 </ol>
 ]]></content>
       <categories>
