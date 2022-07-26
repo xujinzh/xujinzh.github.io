@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="Zookeeper 来源于雅虎的一个研究小组，开发其用以提供分布式协调服务。分布式应用程序可以基于 Zookeeper 实现诸如数据发布&#x2F;订阅、负载均衡、命名服务、分布式协调&#x2F;通知、集群管理、Master 选举、分布式锁和分布式队列等功能。">
 <meta property="og:type" content="article">
@@ -314,7 +314,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>Zookeeper 来源于雅虎的一个研究小组，开发其用以提供分布式协调服务。<strong>分布式应用程序可以基于 Zookeeper 实现诸如数据发布&#x2F;订阅、负载均衡、命名服务、分布式协调&#x2F;通知、集群管理、Master 选举、分布式锁和分布式队列等功能。</strong></p>
-<a id="more"></a>
+<span id="more"></span>
 
 <p>关于Zookeeper集群部署的一点建议：1、最好将Zookeeper部署在多于一台的集群上，即采用集群部署而不是单台服务器的standalone；2、最好部署在奇数(2N+1)台服务器上，因为Zookeeper通过多数大于少数来保证可用性，当N个节点不能访问时，整个Zookeeper集群仍然是可用的。</p>
 <p>下面以3台服务器为例，来部署Zookeeper集群，假设它们的IP地址分别是1.1.1.0， 1.1.1.1， 1.1.1.2. 各步骤以1.1.1.0为默认机器演示。</p>
@@ -331,10 +331,10 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> zookeeper-3.4.14/conf/</span><br></pre></td></tr></table></figure>
 
 <p>然后，利用模板创建配置文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp zoo_sample.cfg zoo.cfg</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> zoo_sample.cfg zoo.cfg</span><br></pre></td></tr></table></figure>
 
 <p>最好，修改配置参数，在此之前，我们需要创建文件夹用于存储数据和日志</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> zookeeper-3.4.14</span><br><span class="line">mkdir data</span><br><span class="line">mkdir <span class="built_in">log</span></span><br><span class="line"><span class="built_in">echo</span> 1 &gt; /data/myid</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> zookeeper-3.4.14</span><br><span class="line"><span class="built_in">mkdir</span> data</span><br><span class="line"><span class="built_in">mkdir</span> <span class="built_in">log</span></span><br><span class="line"><span class="built_in">echo</span> 1 &gt; /data/myid</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim zoo.cfg</span><br></pre></td></tr></table></figure>
 
@@ -363,10 +363,10 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.1.1       box0</span><br><span class="line"></span><br><span class="line">1.1.1.255     host</span><br><span class="line">1.1.1.0     box0</span><br><span class="line">1.1.1.1     box1</span><br><span class="line">1.1.1.2     box2</span><br></pre></td></tr></table></figure>
 
 <p>此时，在 boxi 上必须使用</p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server.i=<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">2888</span>:<span class="number">3888</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">server</span>.i=<span class="number">0.0.0.0:2888</span>:<span class="number">3888</span></span><br></pre></td></tr></table></figure>
 
 <p>或者，注销掉 127.0.1.1，建议使用上面方法，不改变 &#x2F;etc&#x2F;hosts 里的 127.0.1.1       box0</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">127.0.1.1       box0</span></span><br><span class="line"></span><br><span class="line">1.1.1.255     host</span><br><span class="line">1.1.1.0     box0</span><br><span class="line">1.1.1.1     box1</span><br><span class="line">1.1.1.2     box2</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">127.0.1.1       box0</span></span><br><span class="line"></span><br><span class="line">1.1.1.255     host</span><br><span class="line">1.1.1.0     box0</span><br><span class="line">1.1.1.1     box1</span><br><span class="line">1.1.1.2     box2</span><br></pre></td></tr></table></figure>
 
 <h1 id="启动zookeeper"><a href="#启动zookeeper" class="headerlink" title="启动zookeeper"></a>启动zookeeper</h1><p><strong>分别在每个机器上</strong>运行如下命令，<strong>注意，分别启动完每个机器上的zkServer.sh后，再查看状态，因为zookeeper是选举机制，只启动1个就查看状态，一般是不成功的。</strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> zookeeper-3.4.14</span><br><span class="line">/bin/zkServer.sh start</span><br></pre></td></tr></table></figure>

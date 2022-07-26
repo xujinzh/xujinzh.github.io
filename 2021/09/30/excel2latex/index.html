@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="使用 $\LaTeX$ 书写论文被越来越多的人采用，其主要的优势是让写作者不用在格式上花费太多的时间，把主要时间用在文章的内容写作上。我们平常处理的数据大多会以 EXCEL 表格的形式保存，那么如何将 EXCEL 表格中的数据快速复制到 $\LaTeX$ 源文件中呢，下面介绍一种工具，它能够非常快捷准确的将表格数据转化为  $\LaTeX$ 格式，并利用  $\LaTeX$ 中的包快速编译出表格信">
 <meta property="og:type" content="article">
@@ -318,14 +318,14 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>使用 $\LaTeX$ 书写论文被越来越多的人采用，其主要的优势是让写作者不用在格式上花费太多的时间，把主要时间用在文章的内容写作上。我们平常处理的数据大多会以 EXCEL 表格的形式保存，那么如何将 EXCEL 表格中的数据快速复制到 $\LaTeX$ 源文件中呢，下面介绍一种工具，它能够非常快捷准确的将表格数据转化为  $\LaTeX$ 格式，并利用  $\LaTeX$ 中的包快速编译出表格信息。本篇默认 EXCEL 和 $\LaTeX$ 编译器已经安装且可使用。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <h1 id="下载-Excel2LATEX"><a href="#下载-Excel2LATEX" class="headerlink" title="下载 Excel2LATEX"></a>下载 Excel2LATEX</h1><p>在 CTAN 官网上可以下载最新版的 Excel2LATEX: <a target="_blank" rel="noopener" href="https://ctan.org/pkg/excel2latex">https://ctan.org/pkg/excel2latex</a>.</p>
 <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>解压缩后，将文件夹放在一个自己喜欢的目录下，放好后该文件夹不应该移动或删除，点击文件：Excel2LaTeX.xla 并启用即可使用它。</p>
 <p>如果想让 EXCEL 默认加载该程序，可以在 EXCEL 程序中点击文件—选项—加载项—转到—浏览（选择文件 Excel2LaTeX.xla）—方框内打勾—确定。</p>
 <h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>利用 EXCEL 打开一个表格，选择表格内容，点击加载项，选择 convert table to latex，点击 copy to clipboard，将其粘贴到  $\LaTeX$ 源文件中。</p>
 <p>在  $\LaTeX$ 源文件中头部添加包：</p>
-<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">usepackage</span><span class="string">&#123;booktabs&#125;</span></span></span><br><span class="line"># 处理对齐问题：<span class="tag">\<span class="name">toprule</span></span>， <span class="tag">\<span class="name">midrule</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\usepackage</span>&#123;booktabs&#125;</span><br><span class="line"><span class="params">#</span> 处理对齐问题：<span class="keyword">\toprule</span>， <span class="keyword">\midrule</span></span><br></pre></td></tr></table></figure>
 
 <p>编译即可。</p>
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>

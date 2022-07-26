@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="在 Linux（或Unix） 系统下，存放二进制文件的目录一般用 bin 表示，如 &#x2F;bin, &#x2F;usr&#x2F;bin, &#x2F;usr&#x2F;local&#x2F;bin, &#x2F;opt&#x2F;bin 等等，它们有什么区别？">
 <meta property="og:type" content="article">
@@ -317,7 +317,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>在 Linux（或Unix） 系统下，存放二进制文件的目录一般用 bin 表示，如 &#x2F;bin, &#x2F;usr&#x2F;bin, &#x2F;usr&#x2F;local&#x2F;bin, &#x2F;opt&#x2F;bin 等等，它们有什么区别？</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <p>在文章: <a target="_blank" rel="noopener" href="http://lists.busybox.net/pipermail/busybox/2010-December/074114.html">Understanding the bin, sbin, usr&#x2F;bin , usr&#x2F;sbin split</a> 中可以知道，Linux 目录结构是历史造成的。</p>
 <p>1969年，Ken Thompson 和 Dennis Ritchie 在小型机 PDP-7上发明了 Unix。1971年，他们将主机升级到 PDP-11。当时使用的存储盘 RK05 容量大约是1.5MB，随着使用，根目录（&#x2F;）下的操作系统越来越大，无法装下。于是增加了第二张盘 RK05，专门储存用户（user）程序，取名挂载点为 &#x2F;usr，两张盘的结构完全一样，如在第一张盘或根目录下的 &#x2F;bin, &#x2F;sbin, &#x2F;lib, &#x2F;tmp… 在第二张盘 &#x2F;usr 目录下也有。但是，随着时间继续，储存的程序越来越多，就需要第三张盘，取名挂载点 &#x2F;home，用于储存 &#x2F;usr 里面用户的数据。</p>

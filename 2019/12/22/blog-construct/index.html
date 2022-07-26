@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="参照博文《Website for Students》或《How to Install WordPress with LAMP Stack on Ubuntu 18.04》进行搭建. 在Ubuntu18.04上，分别按照《Website for Students》和文章《How to Install WordPress with LAMP Stack on Ubuntu 18.04》搭建网站时，发现">
 <meta property="og:type" content="article">
@@ -314,7 +314,7 @@
     <div class="post-body" itemprop="articleBody">
         <p>参照博文《<a rel="noreferrer noopener" aria-label="（在新窗口打开）" href="https://websiteforstudents.com/install-wordpress-on-ubuntu-18-04-lts-beta-with-apache2-mariadb-and-php-7-1/" target="_blank"><em>Website for Students</em></a>》或《<a rel="noreferrer noopener" aria-label="How to Install WordPress with LAMP Stack on Ubuntu 18.04（在新窗口打开）" href="https://www.rosehosting.com/blog/how-to-install-wordpress-with-lamp-stack-on-ubuntu-18-04/" target="_blank"><em><strong>How to Install WordPress with LAMP Stack on Ubuntu 18.04</strong></em></a>》进行搭建.</p>
 <p>在Ubuntu18.04上，分别按照《Website for Students》和文章《How to Install WordPress with LAMP Stack on Ubuntu 18.04》搭建网站时，发现第一篇文章能够成功进入WordPress，而第二篇文章无法配置WordPress，经分析后通过命令 </p>
-<a id="more"></a>
+<span id="more"></span>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install php-mysql</span><br></pre></td></tr></table></figure>
 
@@ -348,9 +348,9 @@ GRANT ALL PRIVILEGES ON <strong>wp</strong>.* TO '<strong>jayzon</strong>'@'loca
 FLUSH PRIVILEGES;
 EXIT;</pre>
 <p><strong>Step 6: Install WordPress</strong>，安装WordPress</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/www/html</span><br><span class="line">wget -c http://wordpress.org/latest.zip</span><br><span class="line">unzip latest.zip</span><br><span class="line">chown -R www-data:www-data wordpress</span><br><span class="line">rm latest.zip</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/www/html</span><br><span class="line">wget -c http://wordpress.org/latest.zip</span><br><span class="line">unzip latest.zip</span><br><span class="line"><span class="built_in">chown</span> -R www-data:www-data wordpress</span><br><span class="line"><span class="built_in">rm</span> latest.zip</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/www/html/wordpress</span><br><span class="line">mv wp-config-sample.php wp-config.php</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/www/html/wordpress</span><br><span class="line"><span class="built_in">mv</span> wp-config-sample.php wp-config.php</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim wp-config.php</span><br></pre></td></tr></table></figure>
 
@@ -384,7 +384,7 @@ ErrorLog ${APACHE_LOG_DIR}/jayzonxu.com_error.log
 CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined 
 &lt;/VirtualHost></pre>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /etc/apache2/sites-available/jayzonxu.com.conf /etc/apache2/sites-enabled/jayzonxu.com.conf</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /etc/apache2/sites-available/jayzonxu.com.conf /etc/apache2/sites-enabled/jayzonxu.com.conf</span><br></pre></td></tr></table></figure>
 
 <p><strong>Step 7: Configure WordPress</strong>，配置网站</p>
 <p>在浏览器中输入以下网址，进行配置WordPress</p>

@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="Facebook参照Amazon的NoSQL的Dynamo和Google Big Table开发了Cassandra，它是一种NoSQL数据库。其cqlsh的运行依赖于python 2.x，注意python3目前还不支持。下面记载一下自己在6台服务器上搭建Cassandra集群的过程以及需要注意的点。这里以Ubuntu18.04为例。">
 <meta property="og:type" content="article">
@@ -314,7 +314,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>Facebook参照Amazon的NoSQL的Dynamo和Google Big Table开发了Cassandra，它是一种NoSQL数据库。其cqlsh的运行依赖于python 2.x，<strong>注意python3目前还不支持</strong>。下面记载一下自己在6台服务器上搭建Cassandra集群的过程以及需要注意的点。这里以Ubuntu18.04为例。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <p>假设我们6个节点服务器的ip地址分别为1.1.1.0, 1.1.1.1, 1.1.1.2, 1.1.1.3, 1.1.1.4, 1.1.1.5，并希望把1.1.1.1， 1.1.1.2， 1.1.1.3 作为种子节点（一般不少于2个），其他为正常节点。下面操作默认在1.1.1.0机器上执行，并且默认各机器之间已经可以互相进行SSH免密连接。</p>
 <h1 id="下载Cassandra和JDK"><a href="#下载Cassandra和JDK" class="headerlink" title="下载Cassandra和JDK"></a>下载Cassandra和JDK</h1><p>Cassandra的下载地址是<a target="_blank" rel="noopener" href="http://cassandra.apache.org/">Apache Cassandra</a>.</p>
@@ -347,7 +347,7 @@
 <li><strong>listen_address和rpc_address要使用IP地址，不要使用hostname;</strong></li>
 <li><strong>此处需要给用户jinzhongxu添加访问上面目录的权限，</strong>如下</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R jinzhongxu /var/lib/cassandra/data</span><br><span class="line">sudo chown -R jinzhongxu /var/lib/cassandra/commitlog</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">chown</span> -R jinzhongxu /var/lib/cassandra/data</span><br><span class="line">sudo <span class="built_in">chown</span> -R jinzhongxu /var/lib/cassandra/commitlog</span><br></pre></td></tr></table></figure>
 
 <p>然后，将apache-cassandra-3.11.6拷贝到其他机器中</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r apache-cassandra-3.11.6 1.1.1.1:/home/jinzhongxu/.</span><br></pre></td></tr></table></figure>

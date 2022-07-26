@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="MATLAB 是美国的 The MathWorks 公司出品的商业数学软件。其可用于数据可视化、数据分析、数值计算、算法开发（如计算机视觉中的目标跟踪）等。从 2006 年开始，发行编号以年份来命名，每年推出两个版本，上半年（3 月份）标识为 a 版，下半年（9 月份）标识为 b 版，如发行编号 R2017a 表示 2017 年上半年推出的 MATLAB 软件，其对应的版本号是 MATLAB 9.">
 <meta property="og:type" content="article">
@@ -313,7 +313,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>MATLAB 是美国的 The MathWorks 公司出品的商业数学软件。其可用于数据可视化、数据分析、数值计算、算法开发（如计算机视觉中的目标跟踪）等。从 2006 年开始，发行编号以年份来命名，每年推出两个版本，上半年（3 月份）标识为 a 版，下半年（9 月份）标识为 b 版，如发行编号 R2017a 表示 2017 年上半年推出的 MATLAB 软件，其对应的版本号是 MATLAB 9.2。本篇介绍如何在 Linux 系统（以 Ubuntu 为例）上安装 MATLAB，发行编号 R2017a. 所有命令以普通用户运行，但部分代码需要用户有 sudo 权限。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <h1 id="软件下载"><a href="#软件下载" class="headerlink" title="软件下载"></a>软件下载</h1><p>因为 MATLAB 是商业软件，所以使用其需要进行许可证购买，永久购买大概是 15500 元人民币，或者 6200元人民币&#x2F;年。本篇介绍的软件是破解版，如果能力允许建议购买正版软件。</p>
 <p>破解版软件下载地址：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1-i8IwmjDc6iADhi1LqIURA">MATLAB_R2017a_Linux</a></p>
@@ -325,7 +325,7 @@
 <li><strong>创建挂载点</strong></li>
 </ol>
 <p>因为 iso 文件在 Ubuntu 上需要我们先挂载才能打开，因此先创建一个目录作为挂载点</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /home/jinzhongxu/matlab</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /home/jinzhongxu/matlab</span><br></pre></td></tr></table></figure>
 
 <ol start="2">
 <li><strong>挂载 iso 文件 1</strong></li>
@@ -334,13 +334,13 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/jinzhongxu/MATLAB_R2017a_Linux</span><br><span class="line">sudo mount -o loop R2017a_glnxa64_dvd1.iso /home/jinzhongxu/matlab</span><br><span class="line"><span class="comment"># mount: /home/jinzhongxu/matlab: WARNING: device write-protected, mounted read-only.</span></span><br></pre></td></tr></table></figure>
 
 <p><strong>如果挂载不上，可把 iso 文件的权限放开，方法如下：</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 /home/jinzhongxu/MATLAB_R2017a_Linux/*.iso</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> 777 /home/jinzhongxu/MATLAB_R2017a_Linux/*.iso</span><br></pre></td></tr></table></figure>
 
 <ol start="3">
 <li><strong>安装</strong></li>
 </ol>
 <p>挂载好后，进入 <code>/home/jinzhongxu/matlab</code> 目录，可以看到类似如下文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ls /home/jinzhongxu/matlab</span><br><span class="line"><span class="comment"># activate.ini  bin  help     installer_input.txt  java                   patents.txt  sys             ui</span></span><br><span class="line"><span class="comment"># archives      etc  install  install_guide.pdf    license_agreement.txt  readme.txt   trademarks.txt  version.txt</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /home/jinzhongxu/matlab</span><br><span class="line"><span class="comment"># activate.ini  bin  help     installer_input.txt  java                   patents.txt  sys             ui</span></span><br><span class="line"><span class="comment"># archives      etc  install  install_guide.pdf    license_agreement.txt  readme.txt   trademarks.txt  version.txt</span></span><br></pre></td></tr></table></figure>
 
 <p>一切正常，则可进行软件安装，注意安装时不要在 <code>/home/jinzhongxu/matlab/</code> 目录下直接运行 <code>install</code>，这样行不通，建议使用如下方法：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /home/jinzhongxu/matlab/install</span><br></pre></td></tr></table></figure>
@@ -358,7 +358,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/jinzhongxu/MATLAB_R2017a_Linux</span><br><span class="line">sudo mount -o loop R2017a_glnxa64_dvd2.iso /home/jinzhongxu/matlab</span><br><span class="line"><span class="comment"># mount: /home/jinzhongxu/matlab: WARNING: device write-protected, mounted read-only.</span></span><br></pre></td></tr></table></figure>
 
 <p>挂载好后，查看挂载点下的文件，大概如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls /home/jinzhongxu/matlab</span><br><span class="line"><span class="comment"># archives</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /home/jinzhongxu/matlab</span><br><span class="line"><span class="comment"># archives</span></span><br></pre></td></tr></table></figure>
 
 <p>如果一切正常，则可以点击 <code>ok</code> 继续安装。直接完成安装为止。</p>
 <p>当安装完成后，挂载 iso 2 即可</p>
@@ -368,13 +368,13 @@
 <li><strong>激活软件</strong></li>
 </ol>
 <p>首先需要在安装目录创建如下目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /usr/<span class="built_in">local</span>/MATLAB/R2017a/bin/licenses</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">mkdir</span> -p /usr/local/MATLAB/R2017a/bin/licenses</span><br></pre></td></tr></table></figure>
 
 <p>然后把下面的两个文件拷贝到指定目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo cp license_standalone.lic /usr/<span class="built_in">local</span>/MATLAB/R2017a/bin/licenses</span><br><span class="line">sudo cp libmwservices.so /usr/<span class="built_in">local</span>/MATLAB/R2017a/bin/glnxa64</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> license_standalone.lic /usr/local/MATLAB/R2017a/bin/licenses</span><br><span class="line">sudo <span class="built_in">cp</span> libmwservices.so /usr/local/MATLAB/R2017a/bin/glnxa64</span><br></pre></td></tr></table></figure>
 
 <p>最后启动MATLAB</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /usr/<span class="built_in">local</span>/MATLAB/R2017a/bin/matlab</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /usr/local/MATLAB/R2017a/bin/matlab</span><br></pre></td></tr></table></figure>
 
 <p>第一次启动需要配置。选择 <code>Activate manually without the Internet</code> —&gt; 选择 <code>Enter the full path to your license file, including the file name:</code> 选择 <code>/home/jinzhongxu/MATLAB_R2017a_Linux</code> 里面的 <code>license_standalone.lic</code> 文件 —&gt; 选择下一步完成激活。</p>
 <p>激活后再次启动MATLAB，即可正常使用。</p>
@@ -384,7 +384,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export MATLAB_HOME=/usr/local/MATLAB/R2017a&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=$MATLAB_HOME/bin:$PATH&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
 
 <p>把 MATLAB 的所有者和所属组更改为普通用户</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R jinzhongxu:jinzhongxu /usr/<span class="built_in">local</span>/MATLAB</span><br><span class="line">sudo chown -R jinzhongxu:jinzhongxu /home/jinzhongxu/.matlab</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">chown</span> -R jinzhongxu:jinzhongxu /usr/local/MATLAB</span><br><span class="line">sudo <span class="built_in">chown</span> -R jinzhongxu:jinzhongxu /home/jinzhongxu/.matlab</span><br></pre></td></tr></table></figure>
 
 <p>此时，在命令行通过如下命令即可打开 MATLAB</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">matlab</span><br></pre></td></tr></table></figure>
@@ -393,7 +393,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /usr/share/applications/matlab.desktop</span><br></pre></td></tr></table></figure>
 
 <p>添加如下内容</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Type=Application</span><br><span class="line">Name=MATLAB</span><br><span class="line">GenericName=MATLAB2017a</span><br><span class="line">Comment=MATLAB2017a:The matlab IDE</span><br><span class="line">Exec=/usr/<span class="built_in">local</span>/MATLAB/R2017a/bin/matlab -desktop</span><br><span class="line">Icon=/usr/<span class="built_in">local</span>/MATLAB/R2017a/toolbox/nnet/nnresource/icons/matlab.png</span><br><span class="line">Terminal=matlab</span><br><span class="line">Categories=MATLAB;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Type=Application</span><br><span class="line">Name=MATLAB</span><br><span class="line">GenericName=MATLAB2017a</span><br><span class="line">Comment=MATLAB2017a:The matlab IDE</span><br><span class="line">Exec=/usr/local/MATLAB/R2017a/bin/matlab -desktop</span><br><span class="line">Icon=/usr/local/MATLAB/R2017a/toolbox/nnet/nnresource/icons/matlab.png</span><br><span class="line">Terminal=matlab</span><br><span class="line">Categories=MATLAB;</span><br></pre></td></tr></table></figure>
 
 <p>此时就可以通过所有应用程序打开 MATLAB 软件。</p>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>

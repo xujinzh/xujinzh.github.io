@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="在撰写论文时，当进行模型比较时，常常会比较模型准确度，但模型计算力消耗、参数个数也是重要的指标，特别是模型落地时。">
 <meta property="og:type" content="article">
@@ -35,8 +35,8 @@
 <meta property="article:tag" content="dl">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="ml">
-<meta property="article:tag" content="cnn">
 <meta property="article:tag" content="cv">
+<meta property="article:tag" content="cnn">
 <meta property="article:tag" content="neural network">
 <meta property="article:tag" content="machine learning">
 <meta property="article:tag" content="pytorch">
@@ -324,7 +324,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>在撰写论文时，当进行模型比较时，常常会比较模型准确度，但模型计算力消耗、参数个数也是重要的指标，特别是模型落地时。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <h1 id="FLOPs"><a href="#FLOPs" class="headerlink" title="FLOPs"></a>FLOPs</h1><p>FLOPS 与 FLOPs 不同:</p>
 <ul>
@@ -337,7 +337,7 @@
 <h1 id="开源库"><a href="#开源库" class="headerlink" title="开源库"></a>开源库</h1><p>一种方便的开源库是 <a target="_blank" rel="noopener" href="https://github.com/sovrasov/flops-counter.pytorch">ptflops</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install ptflops</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision.models <span class="keyword">as</span> models</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> ptflops <span class="keyword">import</span> get_model_complexity_info</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> torch.cuda.device(<span class="number">0</span>):</span><br><span class="line">  net = models.densenet161()</span><br><span class="line">  macs, params = get_model_complexity_info(net, (<span class="number">3</span>, <span class="number">224</span>, <span class="number">224</span>), as_strings=<span class="literal">True</span>,</span><br><span class="line">                                           print_per_layer_stat=<span class="literal">True</span>, verbose=<span class="literal">True</span>)</span><br><span class="line">  print(<span class="string">&#x27;&#123;:&lt;30&#125;  &#123;:&lt;8&#125;&#x27;</span>.format(<span class="string">&#x27;Computational complexity: &#x27;</span>, macs))</span><br><span class="line">  print(<span class="string">&#x27;&#123;:&lt;30&#125;  &#123;:&lt;8&#125;&#x27;</span>.format(<span class="string">&#x27;Number of parameters: &#x27;</span>, params))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision.models <span class="keyword">as</span> models</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> ptflops <span class="keyword">import</span> get_model_complexity_info</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> torch.cuda.device(<span class="number">0</span>):</span><br><span class="line">  net = models.densenet161()</span><br><span class="line">  macs, params = get_model_complexity_info(net, (<span class="number">3</span>, <span class="number">224</span>, <span class="number">224</span>), as_strings=<span class="literal">True</span>,</span><br><span class="line">                                           print_per_layer_stat=<span class="literal">True</span>, verbose=<span class="literal">True</span>)</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;&#123;:&lt;30&#125;  &#123;:&lt;8&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="string">&#x27;Computational complexity: &#x27;</span>, macs))</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;&#123;:&lt;30&#125;  &#123;:&lt;8&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="string">&#x27;Number of parameters: &#x27;</span>, params))</span><br></pre></td></tr></table></figure>
 
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/137719986">CNN 模型所需的计算力flops是什么？怎么计算？</a></li>
@@ -390,8 +390,8 @@
               <a href="/tags/dl/" rel="tag"><i class="fa fa-tag"></i> dl</a>
               <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
               <a href="/tags/ml/" rel="tag"><i class="fa fa-tag"></i> ml</a>
-              <a href="/tags/cnn/" rel="tag"><i class="fa fa-tag"></i> cnn</a>
               <a href="/tags/cv/" rel="tag"><i class="fa fa-tag"></i> cv</a>
+              <a href="/tags/cnn/" rel="tag"><i class="fa fa-tag"></i> cnn</a>
               <a href="/tags/neural-network/" rel="tag"><i class="fa fa-tag"></i> neural network</a>
               <a href="/tags/machine-learning/" rel="tag"><i class="fa fa-tag"></i> machine learning</a>
               <a href="/tags/pytorch/" rel="tag"><i class="fa fa-tag"></i> pytorch</a>

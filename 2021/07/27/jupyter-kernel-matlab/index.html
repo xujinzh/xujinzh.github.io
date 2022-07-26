@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="Jupyter 为创建交互式脚本提供了一个强大且广泛的平台，在这里介绍一种在 Jupyter 中调用 Matlab 的方法。假设已经安装了 Miniconda 或者 Anaconda， Matlab 版本是 2020a，安装在路径：&#x2F;usr&#x2F;local&#x2F;MATLAB 下。">
 <meta property="og:type" content="article">
@@ -318,7 +318,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>Jupyter 为创建交互式脚本提供了一个强大且广泛的平台，在这里介绍一种在 Jupyter 中调用 Matlab 的方法。假设已经安装了 Miniconda 或者 Anaconda， Matlab 版本是 2020a，安装在路径：<code>/usr/local/MATLAB</code> 下。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <h1 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h1><p>因为 Matlab 2020a 对应的 Python 版本最高为 3.7，所以这里安装对于版本，虚拟环境名字命名为 jmatlab</p>
 <p>各版本对应关系：<a target="_blank" rel="noopener" href="https://www.mathworks.com/content/dam/mathworks/mathworks-dot-com/support/sysreq/files/python-compatibility.pdf">matlab-python-compatibility</a></p>
@@ -331,7 +331,7 @@
 <h1 id="查看安装的内核"><a href="#查看安装的内核" class="headerlink" title="查看安装的内核"></a>查看安装的内核</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter kernelspec list</span><br></pre></td></tr></table></figure>
 
 <p>您应该在可用内核列表中看到 Matlab.</p>
-<h1 id="安装-Matlab-引擎"><a href="#安装-Matlab-引擎" class="headerlink" title="安装 Matlab 引擎"></a>安装 Matlab 引擎</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/MATLAB/extern/engines/python</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
+<h1 id="安装-Matlab-引擎"><a href="#安装-Matlab-引擎" class="headerlink" title="安装 Matlab 引擎"></a>安装 Matlab 引擎</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/MATLAB/extern/engines/python</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
 
 <p>这将允许从 Python 会话中调用 Matlab 引擎。</p>
 <h1 id="重启-jupyterlab"><a href="#重启-jupyterlab" class="headerlink" title="重启 jupyterlab"></a>重启 jupyterlab</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart jupyterhub.service</span><br></pre></td></tr></table></figure>

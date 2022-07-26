@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="Kafka最初是由领英(LinkedIn)开发，并随后于2011年初开源，并于2012年10月23日由Apache Incubator孵化出站。它是为处理实时数据提供一个统一、高吞吐、低延迟的分布式发布订阅消息系统。Kafka由Java和Scala编写。根据2014年Quora的帖子，Jay Kreps似乎已经将它以作家弗朗茨·卡夫卡命名。Kreps选择将该系统以一个作家命名是因为，它是“一个用于">
 <meta property="og:type" content="article">
@@ -314,7 +314,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>Kafka最初是由领英(LinkedIn)开发，并随后于2011年初开源，并于2012年10月23日由Apache Incubator孵化出站。它是为处理实时数据提供一个统一、高吞吐、低延迟的<a target="_blank" rel="noopener" href="http://baike.baidu.com/view/402382.htm">分布式</a>发布订阅消息系统。Kafka由Java和Scala编写。根据2014年Quora的帖子，Jay Kreps似乎已经将它以作家<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%BC%97%E6%9C%97%E8%8C%A8%C2%B7%E5%8D%A1%E5%A4%AB%E5%8D%A1">弗朗茨·卡夫卡</a>命名。Kreps选择将该系统以一个作家命名是因为，它是“一个用于优化写作的系统”，而且他很喜欢卡夫卡的作品。Kafka架构的主要术语包括Topic、Record和Broker。Topic由Record组成，Record持有不同的信息，而Broker则负责复制消息。Kafka有四个主要API：</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <ul>
 <li><strong>生产者API</strong>：支持应用程序发布Record流。</li>
@@ -336,10 +336,10 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> kafka_2.11-2.4.0/</span><br></pre></td></tr></table></figure>
 
 <p>创建日志文件夹，</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir <span class="built_in">log</span></span><br><span class="line">vim config/server.properties</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> <span class="built_in">log</span></span><br><span class="line">vim config/server.properties</span><br></pre></td></tr></table></figure>
 
 <p>修改如下信息</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">broker.id=0</span><br><span class="line">log.dirs=/home/jinzhongxu/kafka_2.11-2.4.0/<span class="built_in">log</span></span><br><span class="line">zookeeper.connect=1.1.1.0:2181, 1.1.1.1:2181, 1.1.1.2:2181</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">broker.id=0</span><br><span class="line">log.dirs=/home/jinzhongxu/kafka_2.11-2.4.0/log</span><br><span class="line">zookeeper.connect=1.1.1.0:2181, 1.1.1.1:2181, 1.1.1.2:2181</span><br></pre></td></tr></table></figure>
 
 <p>把文件夹kafka_2.11-2.4.0&#x2F; 拷贝到另外两台服务器上</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -r kafka_2.11-2.4.0/ 1.1.1.1:/home/jinzhongxu/.</span><br><span class="line">scp -r kafka_2.11-2.4.0/ 1.1.1.2:/home/jinzhongxu/.</span><br></pre></td></tr></table></figure>

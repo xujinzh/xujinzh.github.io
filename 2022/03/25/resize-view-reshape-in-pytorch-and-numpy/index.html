@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="在使用 PyTorch 进行深度学习模型构建时，经常需要改变矩阵的形状，常用的方法有 resize，view, reshape 等。这和 Numpy 中的 resize 和 reshape 之间的区别是什么。本篇以 JupyterLab 为平台演示两者转换矩阵形状的区别。">
 <meta property="og:type" content="article">
@@ -319,7 +319,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>在使用 PyTorch 进行深度学习模型构建时，经常需要改变矩阵的形状，常用的方法有 resize，view, reshape 等。这和 Numpy 中的 resize 和 reshape 之间的区别是什么。本篇以 JupyterLab 为平台演示两者转换矩阵形状的区别。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <h1 id="PyTorch-Tensor"><a href="#PyTorch-Tensor" class="headerlink" title="PyTorch Tensor"></a>PyTorch Tensor</h1><p>PyTorch 中改变 Tensor 形状的方法有 resize, view, reshape 等，</p>
 <h2 id="PyTorch-中-Tensor-的存储方式"><a href="#PyTorch-中-Tensor-的存储方式" class="headerlink" title="PyTorch 中 Tensor 的存储方式"></a>PyTorch 中 Tensor 的存储方式</h2><p>PyTorch 中张量 Tensor 存储分为头信息区(包括大小size, 步长stride, 维度等)和存储区(Storage)。如下图，Tensor B 是对 Tensor A 进行截取或转置或改变形状后得到的，此时，Tensor B 共享 Tensor A 的存储区（内存开销小），只不过头信息不同而已。类似于浅拷贝。</p>
@@ -369,7 +369,7 @@
 <p>对于 Tensor 的 stride 和 size，如果满足如下公式，则称该 Tensor 是连续的：<br>$$stride[i] &#x3D; stride[i + 1] \times size[i + 1]$$</p>
 <p>如上例子中，stride[0] &#x3D; 4, stride[1] &#x3D; 1, size[1] &#x3D; 4，满足上面的公式。因此 Tensor x 是连续的。当一个张量不是连续时，可以通过一些方法转化为连续的。请见 view 小结。</p>
 <h2 id="resize"><a href="#resize" class="headerlink" title="resize"></a>resize</h2><p>resize 是改变张量形状的一种方法，它不仅能够保持数据区不变改变形状，还能够截取部分数据区或则填充数据区。但，该方法不能处理带有 requires_grad&#x3D;True 的张量。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = torch.Tensor(range(<span class="number">9</span>))</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = torch.Tensor(<span class="built_in">range</span>(<span class="number">9</span>))</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
 
 
 <pre><code>tensor([0., 1., 2., 3., 4., 5., 6., 7., 8.])
@@ -450,7 +450,7 @@ RuntimeError                              Traceback (most recent call last)
 RuntimeError: cannot resize variables that require grad
 </code></pre>
 <h2 id="view"><a href="#view" class="headerlink" title="view"></a>view</h2><p>view 是另一种改变张量形状的方法，它也属于浅拷贝，但它不能截取或填补数据区，并且只能处理那些满足连续性的张量。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = torch.arange(<span class="number">8</span>).reshape(<span class="number">2</span>, <span class="number">4</span>).type(torch.float32)</span><br><span class="line">x.requires_grad = <span class="literal">True</span></span><br><span class="line">x</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = torch.arange(<span class="number">8</span>).reshape(<span class="number">2</span>, <span class="number">4</span>).<span class="built_in">type</span>(torch.float32)</span><br><span class="line">x.requires_grad = <span class="literal">True</span></span><br><span class="line">x</span><br></pre></td></tr></table></figure>
 
 
 <pre><code>tensor([[0., 1., 2., 3.],
@@ -471,7 +471,7 @@ RuntimeError: cannot resize variables that require grad
 
 <pre><code>94208510273472
 </code></pre>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y = x.view(<span class="number">4</span>, <span class="number">-1</span>)</span><br><span class="line">y</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y = x.view(<span class="number">4</span>, -<span class="number">1</span>)</span><br><span class="line">y</span><br></pre></td></tr></table></figure>
 
 
 <pre><code>tensor([[0., 1.],
@@ -535,7 +535,7 @@ RuntimeError: shape &#39;[6, 6]&#39; is invalid for input of size 8
 <pre><code>94208510273472
 </code></pre>
 <p>通过上面的连续性公式判断，张量 y 不满足连续性。因此不是连续的。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 非连续的张量，不能使用view</span></span><br><span class="line">y.view(<span class="number">2</span>, <span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 非连续的张量，不能使用view</span></span><br><span class="line">y.view(<span class="number">2</span>, -<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 
 
 <pre><code>---------------------------------------------------------------------------
@@ -573,14 +573,14 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 
 <pre><code>94208510995136
 </code></pre>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">z.view(<span class="number">2</span>, <span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">z.view(<span class="number">2</span>, -<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 
 
 <pre><code>tensor([[0., 4., 1., 5.],
         [2., 6., 3., 7.]], grad_fn=&lt;ViewBackward0&gt;)
 </code></pre>
 <h2 id="reshape"><a href="#reshape" class="headerlink" title="reshape"></a>reshape</h2><p>reshape 是比 view 引入稍晚，但比 view 更健壮的一种方法。当张量满足连续性条件时，它等于 view，属于浅拷贝；当张量不满足连续性条件时，它先将张量连续化，然后再使用 view 改变形状，属于深拷贝。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = torch.arange(<span class="number">8</span>).reshape(<span class="number">2</span>, <span class="number">4</span>).type(torch.float32)</span><br><span class="line">x.requires_grad = <span class="literal">True</span></span><br><span class="line">x</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = torch.arange(<span class="number">8</span>).reshape(<span class="number">2</span>, <span class="number">4</span>).<span class="built_in">type</span>(torch.float32)</span><br><span class="line">x.requires_grad = <span class="literal">True</span></span><br><span class="line">x</span><br></pre></td></tr></table></figure>
 
 
 <pre><code>tensor([[0., 1., 2., 3.],
@@ -646,7 +646,7 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
 
 <pre><code>94208509045056
 </code></pre>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不连续的张量也可以使用 reshape 改变形状</span></span><br><span class="line">z = y.reshape(<span class="number">2</span>, <span class="number">-1</span>)</span><br><span class="line">z</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不连续的张量也可以使用 reshape 改变形状</span></span><br><span class="line">z = y.reshape(<span class="number">2</span>, -<span class="number">1</span>)</span><br><span class="line">z</span><br></pre></td></tr></table></figure>
 
 
 <pre><code>tensor([[0., 4., 1., 5.],

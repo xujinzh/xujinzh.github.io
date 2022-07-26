@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="图像边缘检测（Edge Detection）作为图像处理和计算机数据的基本问题，其目的是识别数字图像中亮度变化明显的点。图像中这些显著变化的部分反映了重要事件或其他变化，包括深度上的不连续，表面方向的不连续，物质属性的改变和场景照明的变化等。图像边缘检测能够剔除认为不相关的信息，大幅度地减少数据量，同时保留图像重要的结构属性。有两类边缘检测方法，一类是基于查找（一阶），一类是基于零穿越（二阶）。（">
 <meta property="og:type" content="article">
@@ -321,7 +321,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>图像边缘检测（Edge Detection）作为图像处理和计算机数据的基本问题，其<strong>目的</strong>是识别数字图像中亮度变化明显的点。图像中这些显著变化的部分反映了重要事件或其他变化，包括深度上的不连续，表面方向的不连续，物质属性的改变和场景照明的变化等。<strong>图像边缘检测能够剔除认为不相关的信息，大幅度地减少数据量，同时保留图像重要的结构属性。</strong>有两类边缘检测方法，一类是基于查找（一阶），一类是基于零穿越（二阶）。（根本上基于数学分析中方法，查找方法是寻求梯度最大的点，零穿越是寻求拐点，即二阶导数为 0 的点）基于查找的方法通过寻找图像一阶导数中的最大和最小值来检测边界，通常是将边界定位在梯度最大的方向。基于零穿越的方法通过寻找图像二阶导数零穿越来寻找边界，通常是 Laplacian 过零点或者非线性差分表示的过零点。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <p>常用的边缘检测算子有：</p>
 <ul>
