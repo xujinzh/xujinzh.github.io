@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.1.0">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" integrity="sha256-jTIdiMuX/e3DGJUGwl3pKSxuc6YOuqtJYkM0bGQESA4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在两台服务器之前进行大文件传输时，要保证支持断点续传，避免传输过程中因网络异常中断导致前功尽弃、传输能够支持压缩，降低传输的数据大小，加快传输速度。常见的文件传输工具，如 scp 基于 ssh 的方式传输，虽然进行数据加密，保证了数据安全，但不支持断点续传。本篇介绍一种保留 scp 所有有点，并能够进行断点续传和数据压缩的大文件传输（复制）工具。以 Ubuntu 18.04 为例演示所有代码。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rsync 快速、多功能、远程（和本地）文件复制工具">
+<meta property="og:url" content="https://xujinzh.github.io/2022/07/28/rsync-file-transfer/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="在两台服务器之前进行大文件传输时，要保证支持断点续传，避免传输过程中因网络异常中断导致前功尽弃、传输能够支持压缩，降低传输的数据大小，加快传输速度。常见的文件传输工具，如 scp 基于 ssh 的方式传输，虽然进行数据加密，保证了数据安全，但不支持断点续传。本篇介绍一种保留 scp 所有有点，并能够进行断点续传和数据压缩的大文件传输（复制）工具。以 Ubuntu 18.04 为例演示所有代码。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-28T11:08:34.000Z">
+<meta property="article:modified_time" content="2022-07-28T11:49:45.949Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="rsync">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2022/07/28/rsync-file-transfer/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xujinzh.github.io/2022/07/28/rsync-file-transfer/","path":"2022/07/28/rsync-file-transfer/","title":"rsync 快速、多功能、远程（和本地）文件复制工具"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>rsync 快速、多功能、远程（和本地）文件复制工具 | J. Xu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">J. Xu</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">237</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">23</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">293</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%A7%E6%96%87%E4%BB%B6%E5%88%87%E5%88%86%E4%B8%8E%E5%B0%8F%E6%96%87%E4%BB%B6%E5%90%88%E5%B9%B6"><span class="nav-number">1.</span> <span class="nav-text">大文件切分与小文件合并</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E6%96%87%E4%BB%B6%E5%88%87%E5%88%86"><span class="nav-number">1.1.</span> <span class="nav-text">大文件切分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E6%96%87%E4%BB%B6%E5%90%88%E5%B9%B6"><span class="nav-number">1.2.</span> <span class="nav-text">小文件合并</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rsync"><span class="nav-number">2.</span> <span class="nav-text">rsync</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">众妙之门</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">293</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">237</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xujinzhong027@outlook.com" title="Mail → mailto:xujinzhong027@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.mathscv.com/" title="Blog-MathsCV → https:&#x2F;&#x2F;www.mathscv.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>Blog-MathsCV</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://xujinzh.github.io/" title="Blog-GitHub → https:&#x2F;&#x2F;xujinzh.github.io&#x2F;"><i class="fab fa-instagram fa-fw"></i>Blog-GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.mathscv.com/power/" title="MathsCVPower → https:&#x2F;&#x2F;www.mathscv.com&#x2F;power&#x2F;" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>MathsCVPower</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2022/07/28/rsync-file-transfer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J. Xu">
+      <meta itemprop="description" content="众妙之门">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="rsync 快速、多功能、远程（和本地）文件复制工具 | J. Xu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          rsync 快速、多功能、远程（和本地）文件复制工具
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-07-28 19:08:34 / 修改时间：19:49:45" itemprop="dateCreated datePublished" datetime="2022-07-28T19:08:34+08:00">2022-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>在两台服务器之前进行大文件传输时，要保证支持断点续传，避免传输过程中因网络异常中断导致前功尽弃、传输能够支持压缩，降低传输的数据大小，加快传输速度。常见的文件传输工具，如 <code>scp</code> 基于 <code>ssh</code> 的方式传输，虽然进行数据加密，保证了数据安全，但不支持断点续传。本篇介绍一种保留 <code>scp</code> 所有有点，并能够进行断点续传和数据压缩的大文件传输（复制）工具。以 Ubuntu 18.04 为例演示所有代码。</p>
+<span id="more"></span>
+
+<h1 id="大文件切分与小文件合并"><a href="#大文件切分与小文件合并" class="headerlink" title="大文件切分与小文件合并"></a>大文件切分与小文件合并</h1><p>在传输大文件时，通常的思维是先将大文件切分成多个小文件，把小文件传输后，再合并这些小文件，得到大文件。</p>
+<h2 id="大文件切分"><a href="#大文件切分" class="headerlink" title="大文件切分"></a>大文件切分</h2><p>在本地将大文件切分，最好切分前先对文件进行压缩，缩小文件大小，便于传输</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># M 表示兆字节，G表示吉字节，本例切分为100兆字节，也可以切分为吉字节</span></span><br><span class="line"><span class="built_in">split</span> -b 100M -d test.zip test_part</span><br></pre></td></tr></table></figure>
+
+<p>然后通过 scp 等命令传输这些小文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp test_part* jinzhongxu@1.1.1.1:./.</span><br></pre></td></tr></table></figure>
+
+<h2 id="小文件合并"><a href="#小文件合并" class="headerlink" title="小文件合并"></a>小文件合并</h2><p>然后在远程服务器上合并这些小文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> test_part* &gt; nes_test.zip</span><br></pre></td></tr></table></figure>
+
+<h1 id="rsync"><a href="#rsync" class="headerlink" title="rsync"></a>rsync</h1><p><code>rsync</code> 是一个快速、多功能、远程（和本地）的文件复制工具。在本地也可以直接替换 <code>cp</code>、<code>mv</code> 等命令。字母 “r” 是 remote 的意思，即 <code>rsync</code> 表示远程同步。其最大特点是会在传输中检查发送方和接收方已有的文件，仅传输有变动的部分，默认的检查规则是文件大小或修改时间等。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>需要注意的是 <code>rsync</code> 需要在本地和远程服务器都安装，才可以使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Ubuntu or Debian</span></span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install rsync</span><br><span class="line"><span class="comment"># CentOS</span></span><br><span class="line">sudo yum install rsync</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Local:  rsync [OPTION...] SRC... [DEST]</span><br><span class="line"></span><br><span class="line">Access via remote shell:</span><br><span class="line">    Pull: rsync [OPTION...] [USER@]HOST:SRC... [DEST]</span><br><span class="line">    Push: rsync [OPTION...] SRC... [USER@]HOST:DEST</span><br><span class="line"></span><br><span class="line">Access via rsync daemon:</span><br><span class="line">    Pull: rsync [OPTION...] [USER@]HOST::SRC... [DEST]</span><br><span class="line">          rsync [OPTION...] rsync://[USER@]HOST[:PORT]/SRC... [DEST]</span><br><span class="line">    Push: rsync [OPTION...] SRC... [USER@]HOST::DEST</span><br><span class="line">          rsync [OPTION...] SRC... rsync://[USER@]HOST[:PORT]/DEST</span><br></pre></td></tr></table></figure>
+
+<p>常用的命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过 ssh 的方式进行断点续传和压缩，并打印进度，把本地 test.tar 文件传输到远程服务器上</span></span><br><span class="line">rsync -P -e <span class="string">&#x27;ssh -p 2222&#x27;</span> -z --append-verify ./test.tar jinzhongxu@1.1.1.1:./.</span><br></pre></td></tr></table></figure>
+
+<p>其他重要参数：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">-a、--archive 参数表示存档模式，保存所有的元数据，比如修改时间（modification time）、权限、所有者等，并且软链接也会同步过去</span><br><span class="line"></span><br><span class="line">--append 参数指定文件接着上次中断的地方，继续传输</span><br><span class="line"></span><br><span class="line">--append-verify 参数跟 --append 参数类似，但会对传输完成后的文件进行一次校验。如果校验失败，将重新发送整个文件</span><br><span class="line"></span><br><span class="line">-b、--backup 参数指定在删除或更新目标目录已经存在的文件时，将该文件更名后进行备份，默认行为是删除。更名规则是添加由 --suffix 参数指定的文件后缀名，默认是 ~</span><br><span class="line"></span><br><span class="line">--backup-dir 参数指定文件备份时存放的目录，比如 --backup-dir=/path/to/backups</span><br><span class="line"></span><br><span class="line">--bwlimit 参数指定带宽限制，默认单位是 KB/s，比如 --bwlimit=100</span><br><span class="line"></span><br><span class="line">-c、--checksum 参数改变 rsync 的校验方式。默认情况下，rsync 只检查文件的大小和最后修改日期是否发生变化，如果发生变化，就重新传输；使用这个参数以后，则通过判断文件内容的校验和，决定是否重新传输。</span><br><span class="line"></span><br><span class="line">--delete 参数删除只存在于目标目录、不存在于源目标的文件，即保证目标目录是源目标的镜像</span><br><span class="line"></span><br><span class="line">-e 参数指定使用 SSH 协议传输数据</span><br><span class="line"></span><br><span class="line">--exclude 参数指定排除不进行同步的文件，比如 --exclude=&quot;*.iso&quot;</span><br><span class="line"></span><br><span class="line">--exclude-from 参数指定一个本地文件，里面是需要排除的文件模式，每个模式一行</span><br><span class="line"></span><br><span class="line">--existing、--ignore-non-existing 参数表示不同步目标目录中不存在的文件和目录</span><br><span class="line"></span><br><span class="line">-h、 --human-readable 参数表示以人类可读的格式输出</span><br><span class="line"></span><br><span class="line">(-h)、--help 参数返回帮助信息</span><br><span class="line"></span><br><span class="line">-i 参数表示输出源目录与目标目录之间文件差异的详细情况</span><br><span class="line"></span><br><span class="line">--ignore-existing 参数表示只要该文件在目标目录中已经存在，就跳过去，不再同步这些文件</span><br><span class="line"></span><br><span class="line">--include 参数指定同步时要包括的文件，一般与 --exclude 结合使用</span><br><span class="line"></span><br><span class="line">--link-dest 参数指定增量备份的基准目录</span><br><span class="line"></span><br><span class="line">-m 参数指定不同步空目录</span><br><span class="line"></span><br><span class="line">--max-size 参数设置传输的最大文件的大小限制，比如不超过 200KB（--max-size=&#x27;200k&#x27;）</span><br><span class="line"></span><br><span class="line">--min-size 参数设置传输的最小文件的大小限制，比如不小于 10KB（--min-size=10k）</span><br><span class="line"></span><br><span class="line">-n 参数或 --dry-run 参数模拟将要执行的操作，而并不真的执行。配合 -v 参数使用，可以看到哪些内容会被同步过去</span><br><span class="line"></span><br><span class="line">-P 参数是 --progress 和 --partial 这两个参数的结合</span><br><span class="line"></span><br><span class="line">--partial 参数允许恢复中断的传输。不使用该参数时，rsync 会删除传输到一半被打断的文件；使用该参数后，传输到一半的文件也会同步到目标目录，下次同步时再恢复中断的传输。一般需要与 --append 或 --append-verify配合使用。</span><br><span class="line"></span><br><span class="line">--partial-dir 参数指定将传输到一半的文件保存到一个临时目录，比如 --partial-dir=.rsync-partial。一般需要与 --append或--append-verify 配合使用</span><br><span class="line"></span><br><span class="line">--progress 参数表示显示进展</span><br><span class="line"></span><br><span class="line">-r 参数表示递归，即包含子目录</span><br><span class="line"></span><br><span class="line">--remove-source-files 参数表示传输成功后，删除发送方的文件</span><br><span class="line"></span><br><span class="line">--size-only 参数表示只同步大小有变化的文件，不考虑文件修改时间的差异</span><br><span class="line"></span><br><span class="line">--suffix 参数指定文件名备份时，对文件名添加的后缀，默认是 ~</span><br><span class="line"></span><br><span class="line">-u、--update 参数表示同步时跳过目标目录中修改时间更新的文件，即不同步这些有更新的时间戳的文件</span><br><span class="line"></span><br><span class="line">-v 参数表示输出细节。-vv 表示输出更详细的信息，-vvv 表示输出最详细的信息</span><br><span class="line"></span><br><span class="line">--version 参数返回 rsync 的版本</span><br><span class="line"></span><br><span class="line">-z 参数指定同步时压缩数据</span><br></pre></td></tr></table></figure>
+
+
+
+<p>更多说明请使用如下命令查看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -h</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/raysync/article/details/84788653">对于linux系统，如何传输大文件？_raysync的博客-CSDN博客_linux大文件传输</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000019374113">服务器之间迁移大文件</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2020/08/rsync.html">rsync 用法教程 - 阮一峰的网络日志</a></p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>感谢支持！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://xujinzh.github.io/2022/07/28/rsync-file-transfer/" title="rsync 快速、多功能、远程（和本地）文件复制工具">https://xujinzh.github.io/2022/07/28/rsync-file-transfer/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/rsync/" rel="tag"><i class="fa fa-tag"></i> rsync</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/24/mac-reset-launchpad/" rel="prev" title="Mac 重置 launchpad">
+                  <i class="fa fa-chevron-left"></i> Mac 重置 launchpad
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">649k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">9:50</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js","integrity":"sha256-7wT34TI0pEBeEFoi4z+vhuSddGh6vUTMWdqJ2SDe2jg="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"xujinzh","repo":"xujinzh.github.io","client_id":"695ca5d39e2ba2f9feb5","client_secret":"9d4027af6364ff54595b7a8580977ec58c38a5ae","admin_user":"xujinzh","distraction_free_mode":true,"proxy":"https://www.mathscv.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"aa9c5d9d6a74e51f6a2e8f913a289811"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
