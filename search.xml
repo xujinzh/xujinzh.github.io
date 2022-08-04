@@ -17771,11 +17771,11 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
   <entry>
     <title>Linux 中 EOF 内容转义</title>
     <url>/2022/08/04/cat-service-eof/</url>
-    <content><![CDATA[<p>在 Linux 系统中通过 shell + cat 可以直接讲内容写入到文件中，特别是想通过命令脚本写入时，比交互式的 vim 命令方便多了。但是，当遇到特殊符号 $ 时，总会将内容转义，无法写入正确的内容。本篇给出两种解决方法。</p>
+    <content><![CDATA[<p>在 Linux 系统中通过 shell + <code>cat</code> 可以直接讲内容写入到文件中，特别是想通过命令脚本写入时，比交互式的 <code>vim</code> 命令方便多了。但是，当遇到特殊符号 <code>$</code> 时，总会将内容转义，无法写入正确的内容。本篇给出两种解决方法。</p>
 <span id="more"></span>
 
 <h1 id="cat-EOF"><a href="#cat-EOF" class="headerlink" title="cat + EOF"></a>cat + EOF</h1><p><code>cat</code> 是一个 bash 命令，用于读取、显示或连接文件的内容，而 <code>EOF</code> 代表 <code>End Of File</code>。<code>EOF</code> 向 shell 表明正在读取的文件已经结束。<code>cat &lt;&lt; eof</code> 使用 <code>here-document</code>。重定向运算符 <code>&lt;&lt;</code> 和 <code>&lt;&lt;-</code> 都允许将 shell 读取的后续行重定向到命令的输入。重定向的行称为 <code>here-document</code>。</p>
-<p>写入不包含 $ 等特殊字符的，可以直接使用如下方法：</p>
+<p>写入不包含 <code>$</code> 等特殊字符的，可以直接使用如下方法：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /home/jinzhongxu/test.service &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">to do something</span></span><br><span class="line"><span class="string">EOF</span> <span class="comment"># 必须保证EOF顶格写</span></span><br></pre></td></tr></table></figure>
 
 <p>或采用更兼容的形式</p>
