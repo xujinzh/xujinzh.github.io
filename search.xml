@@ -717,6 +717,7 @@
 GRANT ALL PRIVILEGES ON <strong>wp</strong>.* TO '<strong>jayzon</strong>'@'localhost' IDENTIFIED BY '<strong>StrongPassword</strong>';
 FLUSH PRIVILEGES;
 EXIT;</pre>
+
 <p><strong>Step 6: Install WordPress</strong>，安装WordPress</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/www/html</span><br><span class="line">wget -c http://wordpress.org/latest.zip</span><br><span class="line">unzip latest.zip</span><br><span class="line"><span class="built_in">chown</span> -R www-data:www-data wordpress</span><br><span class="line"><span class="built_in">rm</span> latest.zip</span><br></pre></td></tr></table></figure>
 
@@ -737,22 +738,22 @@ define('DB_NAME', '<strong>wp</strong>');
 <p><strong>Step 6: Create the Virtual Host Files</strong>，打开80端口</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/apache2/sites-available/your_domain.com.conf</span><br></pre></td></tr></table></figure>
 
-<pre class="wp-block-preformatted">&lt;VirtualHost *:80>
+<pre class="wp-block-preformatted"><VirtualHost *:80>
 
 ServerAdmin admin@jayzonxu.com
 ServerName jayzonxu.com
 ServerAlias www.jayzonxu.com
 DocumentRoot /var/www/html/wordpress
 
-&lt;Directory /var/www/html/wordpress>
+<Directory /var/www/html/wordpress>
      Options Indexes FollowSymLinks
      AllowOverride All
      Require all granted
-&lt;/Directory>
+</Directory>
 
 ErrorLog ${APACHE_LOG_DIR}/jayzonxu.com_error.log 
 CustomLog ${APACHE_LOG_DIR}/jayzonxu.com_access.log combined 
-&lt;/VirtualHost></pre>
+</VirtualHost></pre>
 
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /etc/apache2/sites-available/jayzonxu.com.conf /etc/apache2/sites-enabled/jayzonxu.com.conf</span><br></pre></td></tr></table></figure>
 
@@ -17765,6 +17766,53 @@ RuntimeError: view size is not compatible with input tensor&#39;s size and strid
       <tags>
         <tag>machine learning</tag>
         <tag>clustering</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux 中 EOF 内容转义</title>
+    <url>/2022/08/04/cat-service-eof/</url>
+    <content><![CDATA[<p>在 Linux 系统中通过 shell + cat 可以直接讲内容写入到文件中，特别是想通过命令脚本写入时，比交互式的 vim 命令方便多了。但是，当遇到特殊符号 $ 时，总会将内容转义，无法写入正确的内容。本篇给出两种解决方法。</p>
+<span id="more"></span>
+
+<h1 id="cat-EOF"><a href="#cat-EOF" class="headerlink" title="cat + EOF"></a>cat + EOF</h1><p><code>cat</code> 是一个 bash 命令，用于读取、显示或连接文件的内容，而 <code>EOF</code> 代表 <code>End Of File</code>。<code>EOF</code> 向 shell 表明正在读取的文件已经结束。<code>cat &lt;&lt; eof</code> 使用 <code>here-document</code>。重定向运算符 <code>&lt;&lt;</code> 和 <code>&lt;&lt;-</code> 都允许将 shell 读取的后续行重定向到命令的输入。重定向的行称为 <code>here-document</code>。</p>
+<p>写入不包含 $ 等特殊字符的，可以直接使用如下方法：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /home/jinzhongxu/test.service &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">to do something</span></span><br><span class="line"><span class="string">EOF</span> <span class="comment"># 必须保证EOF顶格写</span></span><br></pre></td></tr></table></figure>
+
+<p>或采用更兼容的形式</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /home/jinzhongxu/test.service &lt;&lt;-<span class="string">EOF</span></span><br><span class="line"><span class="string">to do something</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /home/jinzhongxu/test.service &lt;&lt;-<span class="string">EOF # 这里EOF</span>前带有-，最后的EOF可以不用顶格写</span><br><span class="line">to <span class="keyword">do</span> something</span><br><span class="line">    EOF <span class="comment"># 可以不用顶格写</span></span><br></pre></td></tr></table></figure>
+
+<p>我们还可以使用 <code>cat</code>、<code>&lt;&lt;</code>、<code>EOF</code> 和 <code>&gt;</code> 以交互方式编写如下所示的 bash 脚本。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &lt;&lt; <span class="string">EOF &gt; script.sh</span></span><br><span class="line"><span class="string">#!/bin/bash</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">printf &quot;Hello\n&quot;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="特殊字符-cat-“EOF”"><a href="#特殊字符-cat-“EOF”" class="headerlink" title="特殊字符 cat + “EOF”"></a>特殊字符 cat + “EOF”</h1><p>当书写的内容中有特殊字符的情况，解决方法如下：</p>
+<ol>
+<li>增加反斜杠转义</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /home/jinzhongxu/test.service &lt;&lt;-<span class="string">EOF</span></span><br><span class="line"><span class="string">to do \$something</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>直接转义，在第一个 EOF 左右增加双引号</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /home/jinzhongxu/test.service &lt;&lt;-<span class="string">&quot;EOF&quot;</span></span><br><span class="line">to <span class="keyword">do</span> <span class="variable">$something</span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><p><a href="https://www.programminghunter.com/article/7261363083/">Shell中EOF内容转义 - 编程猎人</a></p>
+</li>
+<li><p><a href="https://www.delftstack.com/zh/howto/linux/cat-eof-in-bash/">Bash 中的 Cat EOF | D栈 - Delft Stack</a></p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>technology</category>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>shell</tag>
+        <tag>cat</tag>
+        <tag>eof</tag>
       </tags>
   </entry>
   <entry>
