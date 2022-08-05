@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.1.0">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/letter-j.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/letter_j_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/letter_j_favicon_16.ico">
+  <link rel="mask-icon" href="/images/letter-j.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" integrity="sha256-jTIdiMuX/e3DGJUGwl3pKSxuc6YOuqtJYkM0bGQESA4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xujinzh.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在计算机视觉中，处理的图像或视频大多是彩色的，因此不可避免的需要和色彩模型打交道。本篇介绍一些常见的色彩模型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="色彩模型">
+<meta property="og:url" content="https://xujinzh.github.io/2022/08/04/color-model-cv/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="在计算机视觉中，处理的图像或视频大多是彩色的，因此不可避免的需要和色彩模型打交道。本篇介绍一些常见的色彩模型。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/color-space.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/hsv.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/cmyk-rgb.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/hsl.jpg">
+<meta property="article:published_time" content="2022-08-04T08:32:24.000Z">
+<meta property="article:modified_time" content="2022-08-05T03:53:21.110Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="cv">
+<meta property="article:tag" content="color">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/color-space.png">
+
+
+<link rel="canonical" href="https://xujinzh.github.io/2022/08/04/color-model-cv/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xujinzh.github.io/2022/08/04/color-model-cv/","path":"2022/08/04/color-model-cv/","title":"色彩模型"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>色彩模型 | J. Xu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">J. Xu</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">239</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">23</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">295</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%89%B2%E5%BD%A9%E7%A9%BA%E9%97%B4"><span class="nav-number">1.</span> <span class="nav-text">色彩空间</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%89%B2%E5%9F%9F"><span class="nav-number">2.</span> <span class="nav-text">色域</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%89%B2%E5%BD%A9%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">色彩模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HSB-x2F-HSV"><span class="nav-number">3.1.</span> <span class="nav-text">HSB&#x2F;HSV</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RGB"><span class="nav-number">4.</span> <span class="nav-text">RGB</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CMYK"><span class="nav-number">5.</span> <span class="nav-text">CMYK</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HSL"><span class="nav-number">5.1.</span> <span class="nav-text">HSL</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinzhong Xu"
+      src="/images/silence.jpg">
+  <p class="site-author-name" itemprop="name">Jinzhong Xu</p>
+  <div class="site-description" itemprop="description">众妙之门</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">295</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">239</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xujinzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xujinzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xujinzhong027@outlook.com" title="Mail → mailto:xujinzhong027@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xjz333" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xjz333" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.mathscv.com/" title="Blog-MathsCV → https:&#x2F;&#x2F;www.mathscv.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>Blog-MathsCV</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://xujinzh.github.io/" title="Blog-GitHub → https:&#x2F;&#x2F;xujinzh.github.io&#x2F;"><i class="fab fa-instagram fa-fw"></i>Blog-GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.mathscv.com/power/" title="MathsCVPower → https:&#x2F;&#x2F;www.mathscv.com&#x2F;power&#x2F;" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>MathsCVPower</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xujinzh.github.io/2022/08/04/color-model-cv/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/silence.jpg">
+      <meta itemprop="name" content="Jinzhong Xu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="J. Xu">
+      <meta itemprop="description" content="众妙之门">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="色彩模型 | J. Xu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          色彩模型
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-08-04 16:32:24" itemprop="dateCreated datePublished" datetime="2022-08-04T16:32:24+08:00">2022-08-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-08-05 11:53:21" itemprop="dateModified" datetime="2022-08-05T11:53:21+08:00">2022-08-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/research/" itemprop="url" rel="index"><span itemprop="name">research</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/research/image-segmentation/" itemprop="url" rel="index"><span itemprop="name">image segmentation</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>在计算机视觉中，处理的图像或视频大多是彩色的，因此不可避免的需要和色彩模型打交道。本篇介绍一些常见的色彩模型。</p>
+<span id="more"></span>
+
+<h1 id="色彩空间"><a href="#色彩空间" class="headerlink" title="色彩空间"></a>色彩空间</h1><p>色彩空间（Color Space）是对色彩的组织方式。色彩空间由色彩模型和色域共同定义。例如色彩空间ProPhoto RGB、Adobe RGB 和 sRGB 都基于 RGB 颜色模型。定义色彩空间时，通常使用 CIELAB 或者 CIEXYZ 色彩空间作为参考标准。这两个色彩空间在设计时便要求包含普通人眼可见的所有颜色。由于“色彩空间”有着固定的色彩模型和映射函数组合，非正式场合下，这一词汇也被用来指代色彩模型。尽管固定的色彩空间有固定的色彩模型相对应，这样的用法严格意义上是错误的。</p>
+<p>CIE 1931 XYZ色彩空间是第一次基于人眼对于色彩感知度量建立色彩空间的尝试，它是几乎所有其它色彩空间的基础，CIE色彩空间的变体有：</p>
+<ul>
+<li><p>CIELUV 色彩空间 - 修改来更加方便的显示颜色差异，替代；</p>
+</li>
+<li><p>CIE 1964 U × V × W × 统一色彩空间；</p>
+</li>
+<li><p>CIELAB 色彩空间。</p>
+</li>
+</ul>
+<p>注意：Lab 是一种颜色数据概念模型，和硬件无关，是一种数据算法，用于转换不同设备之间的颜色信息。需要基于不同设备的 ICC 色彩特性文件（存储设备色彩空间信息，说明设备产生的颜色属于哪个色彩空间），Lab 算法读取设备的 ICC 色彩文件，然后准确进行不同设备之间的颜色信息转换。</p>
+<p>每个设备（相机、显示器、打印机）都有自己不同的色域，即自己硬件条件所能产生的颜色范围。显示器的 ProPhoto RGB、Adobe RGB、sRGB 等色彩空间的色域依次递减。打印机的色彩空间有 US web coated 和 Japan color 2002 coated 等。</p>
+<img title="" data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/color-space.png" alt="" data-align="center" width="672">
+
+<h1 id="色域"><a href="#色域" class="headerlink" title="色域"></a>色域</h1><p>色域（Color Gamut）是颜色的子集合。即某个色彩空间能表示的颜色种类的集合。如 24 位 RGB 模型的色彩空间可以表现 256 $\times$ 256 $\times$ 256 $\approx$ 16770000 中颜色。</p>
+<p>互补色（Complementary Colour）表示当两种颜色组合时能够互相抵消，呈现出灰阶色彩，如白色或黑色。一种现象是互补色的颜色放在相邻位置时，会产生强烈对比度。</p>
+<h1 id="色彩模型"><a href="#色彩模型" class="headerlink" title="色彩模型"></a>色彩模型</h1><p>色彩模型（Color Model）是硬件设备产生颜色的基础原理。显示器、相机、投影仪使用 RGB 色彩模型，而打印机使用 CMYK 色彩模型。色彩模型是一种抽象的数学模型，用一组数值来来表示颜色，通常是一个三元组、四元组或者颜色分量。</p>
+<p>常见的色彩模型有如下 5 类：</p>
+<ol>
+<li><p>HSB&#x2F;HSV</p>
+</li>
+<li><p>RGB</p>
+</li>
+<li><p>CMYK</p>
+</li>
+<li><p>HSL</p>
+</li>
+</ol>
+<h2 id="HSB-x2F-HSV"><a href="#HSB-x2F-HSV" class="headerlink" title="HSB&#x2F;HSV"></a>HSB&#x2F;HSV</h2><p>HSB&#x2F;HSV 色彩模型是一种最接近人类直觉的色彩模型，H 表示色相（Hue）、S 表示饱和度（Saturation）、B 表示明度（Brightness）（V 表示明度（Value））</p>
+<p>HSB&#x2F;HSV 是艺术家们常用的，因为与加法减法混色的术语相比，使用色相、饱和度等概念描述色彩更自然直观。HSB&#x2F;HSV 是 RGB 色彩空间的一种变形，它的内容和色彩尺度与RGB色彩空间有密切联系。</p>
+<img title="" data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/hsv.jpg" alt="" data-align="center">
+
+<h1 id="RGB"><a href="#RGB" class="headerlink" title="RGB"></a>RGB</h1><p>RGB 色彩模型是显示器等常用的一种颜色模型。R 表示红色（Red）、G 表示绿色（Green）、B 表示蓝色（Blue）。通过线性组合来表示颜色。在单色中，人眼对红色最不敏感，蓝色最敏感，所以 RGB 色彩模型均匀性较差。常适合于显示系统，显示效果与材料相关。</p>
+<p>RGB 色彩模型表示发光体颜色模型。RGB 颜色信息分为三个通道，但是相同的三个通道中也包含亮度信息。</p>
+<p>在 OpenCV 中，读取图像后获得的通道顺序是 B，G，R。这是历史遗留问题。</p>
+<p>RGB采用加法混色法，因为它是描述各种“光”通过何种比例来产生颜色。光线从暗黑开始不断叠加 产生颜色。RGB描述的是红绿蓝三色光的数值。RGBA是在RGB上增加阿尔法通道实现透明效果。</p>
+<p>注意：美术专业中定义的三原色为红（Red）、黄（Yellow）、蓝（Blue）。</p>
+<h1 id="CMYK"><a href="#CMYK" class="headerlink" title="CMYK"></a>CMYK</h1><p>CMYK 色彩模型是打印机等常用的一种颜色模型。C 表示青色（Cyan）、M 表示洋红（Magenta）、Y 表示黄色（Yellow）、K 表示黑色（区别 RGB 中 Blue，这边不采用 Blac<strong>k</strong> 的 B，使用 K 表示黑色）。黑色可以使用其他颜色混合得到，但比较耗颜料，因此直接提供黑色颜料。</p>
+<p>CMYK 色彩模型表示反射体的颜色模型。</p>
+<p>颜色 C，M，Y 分别是 R，G，B 三种颜色的补色，即灰色 - RGB &#x3D; CMY。C 表示只吸收红色，反射其他所有颜色；M 表示只吸收绿色，反射其他颜色；B 表示只吸收蓝色，反射其他颜色。</p>
+<p>CMYK印刷过程中使用减法混色法，因为它描述的是需要使用何种油墨，通过光的反射显示出颜色。它是在一种白色介质（画板，页面等）上使用油墨来体现图像。</p>
+<img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/cmyk-rgb.png" title="" alt="" data-align="center">
+
+<h2 id="HSL"><a href="#HSL" class="headerlink" title="HSL"></a>HSL</h2><p>HSL（色相：Hue、饱和度：Saturation、亮度：Lightness／Luminance），也称 HLS 或 HSI（I 指 Intensity）与 HSV 非常相似，仅用亮度（Lightness）替代了明度（Brightness）。二者区别在于，一种纯色的明度等于白色的明度，而纯色的亮度等于中度灰的亮度。</p>
+<img data-src="https://raw.githubusercontent.com/xujinzh/archive/master/images/blog/hsl.jpg" title="" alt="" data-align="center">
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/67930839">三分钟带你快速学习RGB、HSV和HSL颜色空间</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/28741691">数字图像处理之6大颜色空间</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/38303244/answer/77581900">色彩空间与色彩模型的本质区别是什么？</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zb1165048017/article/details/109003125">ColorSpace颜色空间简介_风翼冰舟的博客-CSDN博客_颜色空间</a></p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>感谢支持！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Jinzhong Xu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Jinzhong Xu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>Jinzhong Xu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://xujinzh.github.io/2022/08/04/color-model-cv/" title="色彩模型">https://xujinzh.github.io/2022/08/04/color-model-cv/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/cv/" rel="tag"><i class="fa fa-tag"></i> cv</a>
+              <a href="/tags/color/" rel="tag"><i class="fa fa-tag"></i> color</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/08/04/cat-service-eof/" rel="prev" title="Linux 中 EOF 内容转义">
+                  <i class="fa fa-chevron-left"></i> Linux 中 EOF 内容转义
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinzhong Xu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">652k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">9:52</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="100" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js","integrity":"sha256-7wT34TI0pEBeEFoi4z+vhuSddGh6vUTMWdqJ2SDe2jg="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"xujinzh","repo":"xujinzh.github.io","client_id":"695ca5d39e2ba2f9feb5","client_secret":"9d4027af6364ff54595b7a8580977ec58c38a5ae","admin_user":"xujinzh","distraction_free_mode":true,"proxy":"https://www.mathscv.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"738aad98c7697c5b5709743e270af85a"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
