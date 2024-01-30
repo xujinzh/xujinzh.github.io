@@ -1,0 +1,398 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>单目标跟踪数据集 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="目标跟踪数据集有很多，这里按发布时间顺序汇集单目标跟踪数据集，给出链接以及数据集说明。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单目标跟踪数据集">
+<meta property="og:url" content="https://xujinzh.github.io/2021/12/14/object-tracking-datasets/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="目标跟踪数据集有很多，这里按发布时间顺序汇集单目标跟踪数据集，给出链接以及数据集说明。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c25.jpg">
+<meta property="article:published_time" content="2021-12-14T08:22:56.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.100Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="object tracking">
+<meta property="article:tag" content="datasets">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c25.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2021/12/14/object-tracking-datasets/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '单目标跟踪数据集',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">单目标跟踪数据集</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-14T08:22:56.000Z" title="发表于 2021-12-14 16:22:56">2021-12-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.100Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/object-tracking/">object tracking</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="单目标跟踪数据集"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>目标跟踪数据集有很多，这里按发布时间顺序汇集<strong>单目标</strong>跟踪数据集，给出链接以及数据集说明。</p>
+<span id="more"></span>
+
+<h1 id="OTB"><a href="#OTB" class="headerlink" title="OTB"></a>OTB</h1><p>年份：2013、2015</p>
+<p>OTB 数据集是单目标跟踪最早数据集。分为 OTB-2013(51个视频)、OTB-2015 (在OTB-2013上增加视频，共98个视频，又名 OTB-100)，其中 OTB-100 前 49 个视频又名 OTB-50. 虽然 OTB-100 只有 98 个视频，但是，其中两个视频 Skating2 和 Jogging 分别针对两个目标进行标注，可分别看作 2 个视频。因此，称为 OTB-100. 其中 Skating2 在 OTB-50 中，因此 OTB-50 事实上也包含 50 个标注视频。</p>
+<p>相关博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44438340/article/details/90177265">单目标跟踪OTB、VOT数据集介绍</a></p>
+<p>相关文章：<br>Y. Wu, J. Lim and M. -H. Yang, “Online Object Tracking: A Benchmark,” 2013 IEEE Conference on Computer Vision and Pattern Recognition, 2013, pp. 2411-2418, doi: 10.1109&#x2F;CVPR.2013.312.</p>
+<p><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/6619156">PDF</a></p>
+<p>官方数据集下载地址：<a target="_blank" rel="noopener" href="http://cvlab.hanyang.ac.kr/tracker_benchmark/datasets.html">http://cvlab.hanyang.ac.kr/tracker_benchmark/datasets.html</a></p>
+<p>类别：10(OTB-2013), 16(OTB-2015)</p>
+<p>图像：OTB-50 (官网前 49 个视频，其中 Skating2 为 2 个)；OTB-100 (TB-50 加上官网上后 49 个视频，其中 Jogging 为 2 个)</p>
+<p>大小：1.3GB(OTB-50)、2.6GB(OTB-100)</p>
+<p>注释：groundtruth_rect.txt 包含每一帧矩形边界框位置，注意在大多数序列中，第一行对应于第一帧，最后一行对应于最后一帧，除了序列 David(300:770), Football1(1:74), Freeman3(1:460), Freeman4(1:283). 官网上还有每个视频的标注目标属性，分为 IV(Illumination Variation), SV(Scale Variation), OCC(Occlusion), DEF(Deformation), MB(Motion Blur), FM(Fast Motion), IPR(In-Plane Rotation), OPR(Out-of-Plane Rotation), OV(Out-of-View), BC(Background Clutters), LR(Low Resolution).</p>
+<p>边界框：<code>[x, y, box-width, box-height]</code></p>
+<p>评估方法：OPE(one-pass evaluation)、TRE(temporal robustness evaluation)、SRE(spatial robustness evaluation)</p>
+<p>评估度量：Precision plot(threshold&#x3D;20), Success plot(threshold&#x3D;0.5), AUC </p>
+<p>评估工具集：<a target="_blank" rel="noopener" href="http://cvlab.hanyang.ac.kr/tracker_benchmark/benchmark_v10.html">http://cvlab.hanyang.ac.kr/tracker_benchmark/benchmark_v10.html</a></p>
+<h1 id="VOT"><a href="#VOT" class="headerlink" title="VOT"></a>VOT</h1><p>年份：2013-至今，每年一次更新</p>
+<p>VOT 数据集是基于 Open Challenge VOT 挑战赛。</p>
+<p>2022年包括如下挑战赛道：</p>
+<ol>
+<li>VOT-STs: RGB short-term segmentation tracking challenge</li>
+<li>VOT-STb: RGB short-term bounding box tracking challenge (NEW)</li>
+<li>VOT-RT: RGB short-term tracking challenge</li>
+<li>VOT-LT: RGB long-term bounding box tracking challenge</li>
+<li>VOT-RGBD: RGB+depth bounding box tracking challenge</li>
+</ol>
+<p>相关博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44438340/article/details/90177265">单目标跟踪OTB、VOT数据集介绍</a></p>
+<p>相关文章：<br>M. Kristan et al., “A Novel Performance Evaluation Methodology for Single-Target Trackers,” in IEEE Transactions on Pattern Analysis and Machine Intelligence, vol. 38, no. 11, pp. 2137-2155, 1 Nov. 2016, doi: 10.1109&#x2F;TPAMI.2016.2516982.</p>
+<p><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/7379002">PDF</a></p>
+<p>官方数据集下载地址：<a target="_blank" rel="noopener" href="https://www.votchallenge.net/vot2018/dataset.html">https://www.votchallenge.net/vot2018/dataset.html</a><br><strong>不同年份的数据集，请将 “vot2018” 替换为不同的年份即可获得相应年份的 vot 数据集下载地址</strong></p>
+<p>类别：24</p>
+<p>图像：分辨率不同、彩色；30FPS；</p>
+<p>大小：一般为 60 个视频</p>
+<p>注释：groundtruth.txt 中包含每一帧目标的矩形框四个点坐标；另外还有每帧目标的一些属性（取值为 0 或 1），如 camera_motion.tag, illum_change.tag, motion_change.tag, occlusion.tag, size_change.tag 等</p>
+<p>边界框：<code>[x1, y1, x2, y2, x3, y3, x4, y4]</code>，分别表示左下、右下、右上、左上四个点坐标；非矩形边界框</p>
+<p>评估方法：重启机制</p>
+<p>评估度量：Accuracy、Robustness、EAO(Expected Average Overlap)、EFO(Equivalent Filter Operations)</p>
+<p>评估工具集：<br><a target="_blank" rel="noopener" href="https://github.com/votchallenge/toolkit">https://github.com/votchallenge/toolkit</a><br><a target="_blank" rel="noopener" href="https://docs.votchallenge.net/">https://docs.votchallenge.net/</a><br><a target="_blank" rel="noopener" href="https://github.com/votchallenge/toolkit-legacy">https://github.com/votchallenge/toolkit-legacy</a></p>
+<h1 id="COCO"><a href="#COCO" class="headerlink" title="COCO"></a>COCO</h1><p>年份：2014</p>
+<p><strong>C</strong>ommon <strong>O</strong>bjects in <strong>Co</strong>ntext (COCO) 是微软提出的，该数据集是一个大规模的对象检测（object detection）、分割（segmentation）和图像标注（captioning，看图说话）数据集。特点如下：</p>
+<ul>
+<li>图片大多数来源于生活中，背景更复杂</li>
+<li>每张图片上的实例目标个数多，平均每张图片 7.7 个</li>
+<li>小目标更多</li>
+<li>评估标准更严格</li>
+</ul>
+<p>相关博客：<a target="_blank" rel="noopener" href="https://arleyzhang.github.io/articles/e5b86f16/">目标检测数据集MSCOCO简介</a></p>
+<p>相关文章：</p>
+<p>Lin, T. Y., Maire, M., Belongie, S., Hays, J., Perona, P., Ramanan, D., … &amp; Zitnick, C. L. (2014, September). Microsoft coco: Common objects in context. In <em>European conference on computer vision</em> (pp. 740-755). Springer, Cham.</p>
+<p>[<a target="_blank" rel="noopener" href="https://link.springer.com/content/pdf/10.1007/978-3-319-10602-1_48.pdf">PDF</a>]</p>
+<p>官方数据集下载地址：<a target="_blank" rel="noopener" href="https://cocodataset.org/#download">https://cocodataset.org/#download</a></p>
+<p>类别：80 目标类，91 stuff categories, 5 captions per image, 250k people with keypoints</p>
+<p>图像：330K（&gt; 200K 标注）；1.5 million 目标实例；平均每张图片包含的 3.5 个类别和 7.7 个目标；小目标占比较 ImageNet 多；包含大约 41% 的小目标 ($\textbf{area} &lt; 32 \times 32$), 34% 的中等目标 ($ 32 \times 32 &lt; \textbf{area} &lt; 96 \times 96$) 和 24% 的大目标 ($\textbf{area} &gt; 96 \times 96$).</p>
+<p>大小：46G（2017）</p>
+<p>注释：包含 id, image_id, category_id, segmentation, area, iscrowd, bbox；注释采用 JSON 文件</p>
+<p>边界框： <code>[x, y, width, height] </code></p>
+<p>评估方法：one-pass evaluation (OPE)</p>
+<p>评估度量：mAP (mean average precision)， mAR (mean average recall)</p>
+<p>评估工具集：<a target="_blank" rel="noopener" href="https://github.com/cocodataset/cocoapi">https://github.com/cocodataset/cocoapi</a></p>
+<h1 id="UAV123-amp-UAV20L"><a href="#UAV123-amp-UAV20L" class="headerlink" title="UAV123 &amp; UAV20L"></a>UAV123 &amp; UAV20L</h1><p>年份：2016</p>
+<p>UAV123 &amp; UAV20L 是有沙特阿拉伯图瓦尔的阿卜杜拉国王科技大学 (KAUST)提出，是航空视频数据集和低空无人机目标跟踪基准。</p>
+<p>相关博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_27318881/article/details/85211053?locationNum=8&fps=1">【技术向】目标跟踪UAV123数据集下载及使用指南</a></p>
+<p>相关文章：<br>Mueller, M., Smith, N., Ghanem, B. (2016). A Benchmark and Simulator for UAV Tracking. In: Leibe, B., Matas, J., Sebe, N., Welling, M. (eds) Computer Vision – ECCV 2016. ECCV 2016. Lecture Notes in Computer Science(), vol 9905. Springer, Cham. <a target="_blank" rel="noopener" href="https://doi.org/10.1007/978-3-319-46448-0_27">https://doi.org/10.1007/978-3-319-46448-0_27</a></p>
+<p><a target="_blank" rel="noopener" href="https://link.springer.com/chapter/10.1007/978-3-319-46448-0_27">PDF</a></p>
+<p>官方数据集下载地址：<a target="_blank" rel="noopener" href="https://cemse.kaust.edu.sa/ivul/uav123">https://cemse.kaust.edu.sa/ivul/uav123</a></p>
+<p>类别：a wide variety of scenes (e.g. urban landscape, roads, buildings, fields, beaches and a harbor&#x2F;marina), targets (e.g. cars, trucks, boats, persons, groups, and aerial vehicles), and activities (e.g. walking, cycling, wakeboarding, driving, swimming, and flying)</p>
+<p>视频：UAV123 包含 123 个短视频，&gt; 110K 帧；UAV20L 是 UAV123 的子集，包含 20 个长视频</p>
+<p>大小：大约 13.7GB</p>
+<p>注释：illumination variation; scale variation; partial occlusion; full occlusion; out-of-view; fast motion; camera motion; background clutter; similar object; aspect ratio; viewpoint change; low resolution.</p>
+<p>边界框： <code>[x, y, width, height] </code></p>
+<p>评估方法：one-pass evaluation (OPE) and spatial robustness evaluation (SRE)</p>
+<p>评估度量：同 OTB50，precision and succes, AUC. </p>
+<p>评估工具集：<a target="_blank" rel="noopener" href="https://cemse.kaust.edu.sa/ivul/uav123">https://cemse.kaust.edu.sa/ivul/uav123</a></p>
+<h1 id="TrackingNet"><a href="#TrackingNet" class="headerlink" title="TrackingNet"></a>TrackingNet</h1><p>年份：2018</p>
+<p>TrackingNet 也是阿卜杜拉国王科技大学提出的，该数据集是野外目标跟踪的大规模数据集和基准。</p>
+<p>相关博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xwmwanjy666/article/details/98525030">目标跟踪数据集整理（一）—TrackingNet</a></p>
+<p>相关文章：</p>
+<p>Muller, M., Bibi, A., Giancola, S., Alsubaihi, S., &amp; Ghanem, B. (2018). Trackingnet: A large-scale dataset and benchmark for object tracking in the wild. In <em>Proceedings of the European Conference on Computer Vision (ECCV)</em> (pp. 300-317).</p>
+<p>[<a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_ECCV_2018/papers/Matthias_Muller_TrackingNet_A_Large-Scale_ECCV_2018_paper.pdf">PDF</a>]</p>
+<p>官方数据集下载地址：<br><a target="_blank" rel="noopener" href="https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/MAaiTPdOwiPDNlp">https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/MAaiTPdOwiPDNlp</a> password: TrackingNet<br>全部链接请访问如下地址获取：<br><a target="_blank" rel="noopener" href="https://github.com/SilvioGiancola/TrackingNet-devkit">https://github.com/SilvioGiancola/TrackingNet-devkit</a></p>
+<p>类别：23 目标类，人分为 7 个详细类别</p>
+<p>视频：&gt; 30K；平均时长为 16.6s，1443,1266 帧</p>
+<p>大小：1.1T</p>
+<p>注释：scale variation; aspect ratio change; fast motiong; low resolution; out-of-view etc.</p>
+<p>边界框： <code>[x, y, width, height] </code></p>
+<p>评估方法：one-pass evaluation (OPE)</p>
+<p>评估度量：<strong>success S</strong>， <strong>precision P</strong>， <strong>Pnorm</strong></p>
+<p>评估工具集：<a target="_blank" rel="noopener" href="https://github.com/SilvioGiancola/TrackingNet-devkit">https://github.com/SilvioGiancola/TrackingNet-devkit</a></p>
+<h1 id="GOT-10k"><a href="#GOT-10k" class="headerlink" title="GOT-10k"></a>GOT-10k</h1><p>年份：2019</p>
+<p><strong>G</strong>eneric <strong>O</strong>bject <strong>T</strong>racking (GOT-10k) 是有中科院自动化所提出，第一作者是 Lianghua Huang，该数据集是一个用于野外通用对象跟踪的大型、高多样性、一次性（one-shot）数据集。</p>
+<p>相关文章：</p>
+<p>GOT-10k: A Large High-Diversity Benchmark for Generic Object Tracking in the Wild.<br>L. Huang*, X. Zhao*, and K. Huang. <em>( *Equal contribution)</em><br><em>IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI).</em><br>[<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1810.11981">PDF</a>] [<a target="_blank" rel="noopener" href="http://got-10k.aitestunion.com/bibtex">BibTex</a>]</p>
+<p>官方数据集下载地址：<a target="_blank" rel="noopener" href="http://got-10k.aitestunion.com/downloads">http://got-10k.aitestunion.com/downloads</a></p>
+<p>类别：563 目标类，87 运动类</p>
+<p>图像：10k</p>
+<p>大小：66G</p>
+<p>注释：边界框、对象可见率、对象存在与否、对象是否在每帧中被图像切割以及序列的元信息（对象、运动类、URL）；注释采用 txt 文档</p>
+<p>边界框： <code>[xmin, ymin, width, height] </code></p>
+<p>评估方法：one-shot protocol</p>
+<p>评估度量：mAO (mean average overlap)， mSR (mean success rate)</p>
+<p>评估工具集：<a target="_blank" rel="noopener" href="https://github.com/got-10k/toolkit">https://github.com/got-10k/toolkit</a></p>
+<h1 id="LaSOT"><a href="#LaSOT" class="headerlink" title="LaSOT"></a>LaSOT</h1><p>年份：2019</p>
+<p><strong>La</strong>rge-scale <strong>S</strong>ingle <strong>O</strong>bject <strong>T</strong>racking (<strong>LaSOT</strong>) 是天普大学，华南理工大学，鹏城实验室，美图-亮风台联合实验室等提出，第一作者是 <a href="hefan@cs.stonybrook.edu">Heng Fan</a> ，该数据集数据量大，用于评估长时跟踪性能，特点如下：</p>
+<ul>
+<li><strong>Large-scale:</strong> 1,550 sequences with more 3.87 millions frames</li>
+<li><strong>High-quality:</strong> Manual annotation with careful inspection in each frame</li>
+<li><strong>Category balance:</strong> 85 categories with each containing twenty (70 classes) or ten (15 classes) sequences</li>
+<li><strong>Long-term tracking:</strong> An average video length of around 2,500 frames (i.e., 83 seconds)</li>
+<li><strong>Comprehensive labeling:</strong> Providing both visual and lingual annotation for each sequence</li>
+<li><strong>Flexible Evaluation Protocol:</strong> Evaluation under three different protocols: no constraint, full-overlap and one-shot</li>
+</ul>
+<p>相关文章：</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2009.03465">LaSOT: A High-quality Large-scale Single Object Tracking Benchmark</a><br>H. Fan*, H. Bai*, L. Lin, F. Yang, P. Chu, G. Deng, S. Yu, Harshit, M. Huang, J Liu, Y. Xu, C. Liao, L Yuan, and H. Ling<br><em>International Journal of Computer Vision (<strong>IJCV</strong>)</em>, 2020. (accepted)</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1809.07845">LaSOT: A High-quality Benchmark for Large-scale Single Object Tracking</a><br>H. Fan*, L. Lin*, F. Yang*, P. Chu*, G. Deng, S. Yu, H. Bai, Y. Xu, C. Liao, and H. Ling<br><em>IEEE Conference on Computer Vision and Pattern Recognition (<strong>CVPR</strong>)</em>, 2019.</p>
+<p>相关博客：<a target="_blank" rel="noopener" href="https://www.leiphone.com/category/academic/NhOeLVXzIdLVSxyU.html">亮风台</a></p>
+<p>官方数据集下载地址：<a target="_blank" rel="noopener" href="http://vision.cs.stonybrook.edu/~lasot/download.html">http://vision.cs.stonybrook.edu/~lasot/download.html</a></p>
+<p>类别：70</p>
+<p>视频：1400</p>
+<p>大小：大约 227G</p>
+<p>注释：边界框、完全遮挡、视野外标志以及语言描述</p>
+<p>边界框： <code>[x, y, width, height] </code></p>
+<p>评估方法：one-pass evaluation (OPE)</p>
+<p>评估度量：<strong>Precision</strong>, <strong>Normalized Precision</strong> and <strong>Success</strong></p>
+<p>评估工具集：<a target="_blank" rel="noopener" href="https://github.com/HengLan/LaSOT_Evaluation_Toolkit">https://github.com/HengLan/LaSOT_Evaluation_Toolkit</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2021/12/14/object-tracking-datasets/">https://xujinzh.github.io/2021/12/14/object-tracking-datasets/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/object-tracking/">object tracking</a><a class="post-meta__tags" href="/tags/datasets/">datasets</a></div><div class="post_share"><div class="social-share" data-image="/img/c25.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/12/16/python-class-notImplementedError/" title="Python中NotImplementedError的使用"><img class="cover" src="/img/c9.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Python中NotImplementedError的使用</div></div></a></div><div class="next-post pull-right"><a href="/2021/12/12/mac-book-pro-change-hostname/" title="使用命令行更改苹果电脑的 hostname"><img class="cover" src="/img/c28.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">使用命令行更改苹果电脑的 hostname</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/06/22/driving-autonomous-classification/" title="无人驾驶6个等级划分"><img class="cover" src="/img/c16.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-22</div><div class="title">无人驾驶6个等级划分</div></div></a></div><div><a href="/2022/03/17/opencv-object-tracking-implementation/" title="OpenCV 目标跟踪实现"><img class="cover" src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-17</div><div class="title">OpenCV 目标跟踪实现</div></div></a></div><div><a href="/2022/04/10/ot-hann-hamming-window/" title="汉宁窗和汉明窗"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-10</div><div class="title">汉宁窗和汉明窗</div></div></a></div><div><a href="/2022/07/07/pytracking-codes-test/" title="pytracking 代码测试"><img class="cover" src="/img/c2.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-07</div><div class="title">pytracking 代码测试</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#OTB"><span class="toc-number">1.</span> <span class="toc-text">OTB</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VOT"><span class="toc-number">2.</span> <span class="toc-text">VOT</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#COCO"><span class="toc-number">3.</span> <span class="toc-text">COCO</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#UAV123-amp-UAV20L"><span class="toc-number">4.</span> <span class="toc-text">UAV123 &amp; UAV20L</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TrackingNet"><span class="toc-number">5.</span> <span class="toc-text">TrackingNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GOT-10k"><span class="toc-number">6.</span> <span class="toc-text">GOT-10k</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LaSOT"><span class="toc-number">7.</span> <span class="toc-text">LaSOT</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '05697c9d7f3a867e6430c9cb2286070c',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>linux 中 xargs 命令 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="xargs 命令是可以将标准输入改变输出格式作为参数传递给其他命令，弥补有些命令（如 echo，rm 等）不接受管道传参。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux 中 xargs 命令">
+<meta property="og:url" content="https://xujinzh.github.io/2022/11/18/linux-xargs/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="xargs 命令是可以将标准输入改变输出格式作为参数传递给其他命令，弥补有些命令（如 echo，rm 等）不接受管道传参。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c7.jpg">
+<meta property="article:published_time" content="2022-11-18T07:58:15.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.100Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="shell">
+<meta property="article:tag" content="xargs">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c7.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2022/11/18/linux-xargs/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'linux 中 xargs 命令',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">linux 中 xargs 命令</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-18T07:58:15.000Z" title="发表于 2022-11-18 15:58:15">2022-11-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.100Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/linux/">linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="linux 中 xargs 命令"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p><code>xargs</code> 命令是可以将标准输入改变输出格式作为参数传递给其他命令，弥补有些命令（如 <code>echo</code>，<code>rm</code> 等）不接受管道传参。</p>
+<span id="more"></span>
+
+<h1 id="标准输入"><a href="#标准输入" class="headerlink" title="标准输入"></a>标准输入</h1><p>默认 <code>xargs</code> 把多行转为一行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">(base) root@ubuntu-studio:/workspace<span class="comment"># find jinzhongxu/codes/ -name &quot;*.py&quot; -type f -print</span></span><br><span class="line">jinzhongxu/codes/py/test-debug/main.py</span><br><span class="line">jinzhongxu/codes/py/audio/server.py</span><br><span class="line">jinzhongxu/codes/py/audio/client.py</span><br><span class="line">jinzhongxu/codes/py/audio/record.py</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/utils/unzip.py</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/utils/TimeStamps.py</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/utils/ipynb.py</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/gif.py</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/image_sam_annotate.py</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/bbox_video.py</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/video.py</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/image.py</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/video_cut.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 find 的输出结果转为一行。当 xargs 后增加参数 -n num 可以输出多行，如 -n 2 输出 2 行</span></span><br><span class="line">(base) root@ubuntu-studio:/workspace<span class="comment"># find jinzhongxu/codes/ -name &quot;*.py&quot; -type f -print | xargs</span></span><br><span class="line">jinzhongxu/codes/py/test-debug/main.py jinzhongxu/codes/py/audio/server.py jinzhongxu/codes/py/audio/client.py jinzhongxu/codes/py/audio/record.py jinzhongxu/codes/py/pys/mymodule/utils/unzip.py jinzhongxu/codes/py/pys/mymodule/utils/TimeStamps.py jinzhongxu/codes/py/pys/mymodule/utils/ipynb.py jinzhongxu/codes/py/pys/mymodule/cv/gif.py jinzhongxu/codes/py/pys/mymodule/cv/image_sam_annotate.py jinzhongxu/codes/py/pys/mymodule/cv/bbox_video.py jinzhongxu/codes/py/pys/mymodule/cv/video.py jinzhongxu/codes/py/pys/mymodule/cv/image.py jinzhongxu/codes/py/pys/mymodule/cv/video_cut.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># grep 接收一行文件名，但不能接收多行文件名</span></span><br><span class="line">(base) root@ubuntu-studio:/workspace<span class="comment"># find jinzhongxu/codes/ -name &quot;*.py&quot; -type f -print | xargs grep -n sam --color=always</span></span><br><span class="line">jinzhongxu/codes/py/audio/server.py:30:        format=p.get_format_from_width(wf.getsampwidth()),</span><br><span class="line">jinzhongxu/codes/py/audio/record.py:6:chunk = 1024  <span class="comment"># Record in chunks of 1024 samples</span></span><br><span class="line">jinzhongxu/codes/py/audio/record.py:7:sample_format = pyaudio.paInt16  <span class="comment"># 16 bits per sample</span></span><br><span class="line">jinzhongxu/codes/py/audio/record.py:9:fs = 44100  <span class="comment"># Record at 44100 samples per second</span></span><br><span class="line">jinzhongxu/codes/py/audio/record.py:21:        format=sample_format,</span><br><span class="line">jinzhongxu/codes/py/audio/record.py:46:    wf.setsampwidth(p.get_sample_size(sample_format))</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/image_sam_annotate.py:12:from segment_anything import SamPredictor, sam_model_registry</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/image_sam_annotate.py:36:def sam_image_annotation(</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/image_sam_annotate.py:43:    sam_checkpoint=<span class="string">&quot;/disk1/datasets/models/sam/sam_vit_h_4b8939.pth&quot;</span>,</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/image_sam_annotate.py:110:    sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/image_sam_annotate.py:111:    sam.to(device=device)</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/image_sam_annotate.py:112:    predictor = SamPredictor(sam)</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/image_sam_annotate.py:353:        default=<span class="string">&quot;/disk1/datasets/models/sam/sam_vit_h_4b8939.pth&quot;</span>,</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/image_sam_annotate.py:378:    sam_image_annotation(</span><br><span class="line">jinzhongxu/codes/py/pys/mymodule/cv/image_sam_annotate.py:385:        sam_checkpoint=checkpoint,</span><br></pre></td></tr></table></figure>
+
+<p>在 Linux 系统中我们常使用管道符 <code>|</code> 将上一个命令的标准输出转化为标准输入提供给管道后面的命令，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello\nworld&quot;</span>  | grep e</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello</span><br></pre></td></tr></table></figure>
+<p>命令 <code>grep</code> 能够将管道符的标准输入作为参数进行处理，但并不是所有命令都支持，如 <code>rm</code> 命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /home/jinzhongxu/hello</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1.txt 2.txt 3.txt</span><br></pre></td></tr></table></figure>
+<p>如果我想删除文件夹 hello 下面的所有文件，我尝试如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> | <span class="built_in">rm</span></span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span>: missing operand</span><br><span class="line">Try <span class="string">&#x27;rm --help&#x27;</span> <span class="keyword">for</span> more information.</span><br></pre></td></tr></table></figure>
+<p>此时，可以采用 <code>xargs</code> 命令来解决</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> | xargs <span class="built_in">rm</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="xargs-命令"><a href="#xargs-命令" class="headerlink" title="xargs 命令"></a>xargs 命令</h1><p>xargs（eXtended ARGuments）是给命令传递参数的一个过滤器，它的作用就是将标准输入转为命令行参数。默认情况下 <code>xargs</code> 等同于 <code>xargs echo</code>。可以为 <code>xargs</code> 指定不同的参数达到不同的功能，如 <code>-n</code> 表示按几行显示，参数后面跟上整数，表示行数。 </p>
+<h2 id="分隔符"><a href="#分隔符" class="headerlink" title="分隔符"></a>分隔符</h2><p>默认 <code>xargs</code> 把空格作为分隔符，但可以使用参数 <code>-d</code> 指定分隔符，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以空格为分隔符，每行显示 1 个</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;a b c&#x27;</span> | xargs -n1</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a</span><br><span class="line">b</span><br><span class="line">c</span><br></pre></td></tr></table></figure>
+<p>但是，如果符号之间的分隔符不是空格，而是其他时，就会失效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;a.b.c&#x27;</span> | xargs -n1</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a.b.c</span><br></pre></td></tr></table></figure>
+<p>如果指定分隔符 <code>.</code>，就可以：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;a.b.c&#x27;</span> | xargs -d. -n1</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a</span><br><span class="line">b</span><br><span class="line">c</span><br></pre></td></tr></table></figure>
+
+<h2 id="参数替换"><a href="#参数替换" class="headerlink" title="参数替换"></a>参数替换</h2><p>如果管道符后面的命令获取的参数不是放在最后以为，需要使用参数替换，在 <code>xargs</code> 中用参数 <code>-I</code> 来指定替换字符，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">把当前路径软链接到 /home/jinzhongxu/hello 下的 new-link</span><br><span class="line"><span class="built_in">echo</span> $(<span class="built_in">pwd</span>) | xargs -I &#123;&#125; <span class="built_in">ln</span> -s &#123;&#125; /home/jinzhongxu/hello/new-link</span><br></pre></td></tr></table></figure>
+<p>这里替换符 <code>&#123;&#125;</code> 也可以换成其他的符号，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用 currentDir 作为替换符</span></span><br><span class="line"><span class="comment"># 注意替换符不要出现在命令其他参数中</span></span><br><span class="line"><span class="built_in">echo</span> $(<span class="built_in">pwd</span>) | xargs -I currentDir <span class="built_in">ln</span> -s currentDir /home/jinzhongxu/hello/new-link</span><br><span class="line"><span class="built_in">echo</span> `<span class="built_in">pwd</span>` | xargs -I currentDir <span class="built_in">ln</span> -s currentDir /home/jinzhongxu/hello/new-link</span><br></pre></td></tr></table></figure>
+<p>另一个例子，从文件中读取字符，创建同名的文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> filename.txt | xargs -I file sh -c <span class="string">&#x27;mkdir file&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="执行提示"><a href="#执行提示" class="headerlink" title="执行提示"></a>执行提示</h2><p>使用参数 <code>-p</code> 可以提示我们执行的命令，并让我再次判断是否执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建多个文件</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;1\n2\n3&#x27;</span> | xargs -i <span class="built_in">touch</span> &#123;&#125;.txt</span><br><span class="line"><span class="comment"># 删除多个文件</span></span><br><span class="line"><span class="built_in">ls</span> | xargs -p <span class="built_in">rm</span></span><br></pre></td></tr></table></figure>
+
+<p>使用参数 <code>-t</code> 会在终端显示出执行的命令，先打印命令，然后再执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建多个文件</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;1\n2\n3&#x27;</span> | xargs -i <span class="built_in">touch</span> &#123;&#125;.txt</span><br><span class="line"><span class="comment"># 删除多个文件</span></span><br><span class="line"><span class="built_in">ls</span> | xargs -t <span class="built_in">rm</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="文件名中有空格"><a href="#文件名中有空格" class="headerlink" title="文件名中有空格"></a>文件名中有空格</h2><p>有些文件名中带有空格，然而 <code>xargs</code> 的默认分隔符就是空格，这导致无法处理带有空格的文件。此时，可以使用参数 <code>-0</code> 指定 <code>null</code> 作为分隔符，同时结合 <code>find</code> 命令的参数 <code>print0</code> 把文件列表以 <code>null</code> 分割:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建多个文件</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;1\n2\n3&#x27;</span> | xargs -i <span class="built_in">touch</span> &#123;&#125;.txt</span><br><span class="line"><span class="comment"># 按照文件名删除文件</span></span><br><span class="line">find . -name <span class="string">&quot;*txt&quot;</span> -print0 | xargs -0 <span class="built_in">rm</span></span><br></pre></td></tr></table></figure>
+<p>上面命令删除当前路径下的 txt 文件。由于分隔符是null，所以处理包含空格的文件名，也不会报错。有些命令（比如 <code>rm</code>）一旦参数过多会报错”参数列表过长”，而无法执行，改用 <code>xargs</code> 就没有这个问题，因为它对每个参数执行一次命令。</p>
+<h2 id="多行参数"><a href="#多行参数" class="headerlink" title="多行参数"></a>多行参数</h2><p>使用参数 <code>-L</code> 可以指定多少行作为一个命令行参数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xargs find -name</span><br><span class="line"><span class="string">&quot;*.docx&quot;</span>   </span><br><span class="line"><span class="string">&quot;*.textile&quot;</span></span><br></pre></td></tr></table></figure>
+<p>上面命令会报错，可以尝试使用如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xargs -L 1 find -name</span><br><span class="line"><span class="string">&quot;*.docx&quot;</span>   </span><br><span class="line"><span class="string">&quot;*.textile&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="多进程"><a href="#多进程" class="headerlink" title="多进程"></a>多进程</h2><p><code>xargs</code> 默认只用一个进程来执行命令。使用 <code>--max-procs</code> 参数可以指定同时用几个进程来并行执行。 如 <code>--max-procs 3</code> 表示同时使用 3 个进程，<code>--max-procs 0</code> 表示 as many as it can，使用所有 CPU 核心执行。如下命令表示同时关闭尽可能多的 Docker 容器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -q | xargs -n 1 --max-procs 0 docker <span class="built_in">kill</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2019/08/xargs-tutorial.html">xargs 命令教程</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-comm-xargs.html">Linux xargs 命令</a></li>
+<li><a target="_blank" rel="noopener" href="https://linux265.com/course/linux-command-xargs.html">xargs命令</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2022/11/18/linux-xargs/">https://xujinzh.github.io/2022/11/18/linux-xargs/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a><a class="post-meta__tags" href="/tags/shell/">shell</a><a class="post-meta__tags" href="/tags/xargs/">xargs</a></div><div class="post_share"><div class="social-share" data-image="/img/c7.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/11/22/python-argparse-useage/" title="Python 中命令行解析模块 argparse 的使用"><img class="cover" src="/img/c27.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Python 中命令行解析模块 argparse 的使用</div></div></a></div><div class="next-post pull-right"><a href="/2022/11/10/python-get-console-print/" title="获取 python 控制台输出"><img class="cover" src="/img/c6.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">获取 python 控制台输出</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/08/04/cat-service-eof/" title="Linux 中 EOF 内容转义"><img class="cover" src="/img/c18.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-04</div><div class="title">Linux 中 EOF 内容转义</div></div></a></div><div><a href="/2022/04/18/linux-shell-programming-basics/" title="Linux shell 编程基础"><img class="cover" src="/img/c9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-18</div><div class="title">Linux shell 编程基础</div></div></a></div><div><a href="/2019/12/20/linux-terminal-color/" title="Linux 终端显示配置"><img class="cover" src="/img/c17.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-20</div><div class="title">Linux 终端显示配置</div></div></a></div><div><a href="/2019/12/20/zip-and-rar/" title="Linux 压缩(解压缩)命令 zip(unzip) 和 rar(unrar)"><img class="cover" src="/img/c10.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-20</div><div class="title">Linux 压缩(解压缩)命令 zip(unzip) 和 rar(unrar)</div></div></a></div><div><a href="/2021/11/06/auto-email-server-ip/" title="服务器开机或IP改变自动发送通知邮件"><img class="cover" src="/img/c17.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-06</div><div class="title">服务器开机或IP改变自动发送通知邮件</div></div></a></div><div><a href="/2021/11/29/auto-email-server-shutdown/" title="服务器关机自动发送通知邮件"><img class="cover" src="/img/c2.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-29</div><div class="title">服务器关机自动发送通知邮件</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E8%BE%93%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">标准输入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#xargs-%E5%91%BD%E4%BB%A4"><span class="toc-number">2.</span> <span class="toc-text">xargs 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E9%9A%94%E7%AC%A6"><span class="toc-number">2.1.</span> <span class="toc-text">分隔符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E6%9B%BF%E6%8D%A2"><span class="toc-number">2.2.</span> <span class="toc-text">参数替换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E6%8F%90%E7%A4%BA"><span class="toc-number">2.3.</span> <span class="toc-text">执行提示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%90%8D%E4%B8%AD%E6%9C%89%E7%A9%BA%E6%A0%BC"><span class="toc-number">2.4.</span> <span class="toc-text">文件名中有空格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="toc-number">2.5.</span> <span class="toc-text">多行参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%BF%9B%E7%A8%8B"><span class="toc-number">2.6.</span> <span class="toc-text">多进程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">3.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '9ca4cb66796e8855a585313de0d21a4c',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

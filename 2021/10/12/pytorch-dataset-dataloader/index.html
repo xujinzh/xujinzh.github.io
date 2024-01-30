@@ -1,0 +1,381 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>PyTorch 中 Dataset 和 DataLoader 类的使用方法 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="近年来，在学术界和工业界基于 PyTorch 进行深度学习算法研究及模型部署越来越流行，甚至超过了 TensorFlow. 除了其基于动态图的特性外，最主要的是其语法更贴近 Python，容易开发实现和调试。本篇介绍 PyTorch 中为目标跟踪等视觉领域提供的两个基础类 Dataset 和 DataLoader，给出它们的使用方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PyTorch 中 Dataset 和 DataLoader 类的使用方法">
+<meta property="og:url" content="https://xujinzh.github.io/2021/10/12/pytorch-dataset-dataloader/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="近年来，在学术界和工业界基于 PyTorch 进行深度学习算法研究及模型部署越来越流行，甚至超过了 TensorFlow. 除了其基于动态图的特性外，最主要的是其语法更贴近 Python，容易开发实现和调试。本篇介绍 PyTorch 中为目标跟踪等视觉领域提供的两个基础类 Dataset 和 DataLoader，给出它们的使用方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c7.jpg">
+<meta property="article:published_time" content="2021-10-12T10:58:21.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.104Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="dl">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="cv">
+<meta property="article:tag" content="vot">
+<meta property="article:tag" content="pytorch">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c7.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2021/10/12/pytorch-dataset-dataloader/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PyTorch 中 Dataset 和 DataLoader 类的使用方法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">PyTorch 中 Dataset 和 DataLoader 类的使用方法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-10-12T10:58:21.000Z" title="发表于 2021-10-12 18:58:21">2021-10-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.104Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/object-tracking/">object tracking</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="PyTorch 中 Dataset 和 DataLoader 类的使用方法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>近年来，在学术界和工业界基于 PyTorch 进行深度学习算法研究及模型部署越来越流行，甚至超过了 TensorFlow. 除了其基于动态图的特性外，最主要的是其语法更贴近 Python，容易开发实现和调试。本篇介绍 PyTorch 中为目标跟踪等视觉领域提供的两个基础类 Dataset 和 DataLoader，给出它们的使用方法。</p>
+<span id="more"></span>
+
+<h1 id="利用-PyTorch-进行深度学习训练的一般流程"><a href="#利用-PyTorch-进行深度学习训练的一般流程" class="headerlink" title="利用 PyTorch 进行深度学习训练的一般流程"></a>利用 PyTorch 进行深度学习训练的一般流程</h1><ol>
+<li>首先创建自定义的 Dataset 类 和 <strong>Sampler</strong> 类(数据采用策略)；</li>
+<li>创建自定义的 DataLoader 类；</li>
+<li>DataLoader 依据 Dataset 和 Sampler 迭代产生训练数据提供给模型进行训练。</li>
+</ol>
+<p>总的来说，DataLoader 负责批次调度数据，Sampler 负责数据调度的采样策略生成索引（默认整数），Dataset 负责通过索引提取数据。</p>
+<p>Dataset 封装数据集，通过索引获取元素， Sampler 提供索引次序，DataLoader 是一个调度器，迭代 DataLoaderIter 的过程中，迭代Sampler 获得下一索引，并通过该索引使用 Fetcher（Fetcher 是对 Dataset 的封装，使得 DataLoader 代码与 Iterable-style&#x2F;Map-style Dataset 解耦）获得对应元素。</p>
+<h1 id="Dataset"><a href="#Dataset" class="headerlink" title="Dataset"></a>Dataset</h1><p>Dataset 负责提供图像和标签索引。</p>
+<p>Dataset 包含两类，分别是  Map 式数据集，Iterable 式数据集。Iterable 式数据集处理流式数据类，而 Map 式数据集处理常规数据类。目前 CV 中 Map 式数据集用的较多。</p>
+<p>torch.utils.data.Dataset 类是所有数据集的抽象父类，如 torch.utils.data.IterableDataset 抽象类就继承自它。Iterable 式数据集都继承自 torch.utils.data.IterableDataset 抽象类， Map 式数据集都继承自 torch.utils.data.Dataset 抽象类。</p>
+<h2 id="内建-Dataset"><a href="#内建-Dataset" class="headerlink" title="内建 Dataset"></a>内建 Dataset</h2><p>PyTorch 提供了现成的 Dataset 子类，如果这些类不能满足个人实际业务需求，可以重写 torch.utils.data.Dataset 或 torch.utils.data.IterableDataset 抽象类，构建自定义子类。现成的子类有：</p>
+<ul>
+<li>Map 式 (继承自 torch.utils.data.Dataset)</li>
+</ul>
+<ol>
+<li>TensorDataset : 每个样本通过沿第一维索引张量来检索</li>
+<li>ConcatDataset : 此类可用于组装不同的现有数据集</li>
+<li>Subset : 指定索引区间的数据集子集</li>
+</ol>
+<ul>
+<li>Iterable 式 (继承自 torch.utils.data.IterableDataset)</li>
+</ul>
+<ol>
+<li>ChainDataset : 此类可用于组装不同的现有数据集流。这链接操作是即时完成的，因此连接大规模具有此类的数据集将是有效的</li>
+</ol>
+<h2 id="常使用的数据集"><a href="#常使用的数据集" class="headerlink" title="常使用的数据集"></a>常使用的数据集</h2><p>写好自定义 Dataset 类后，就可以使用。一般的，在 torchvision 中写好了一些 Dataset，我们可以直接下载常见的数据集并使用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> datasets</span><br><span class="line">dataset = datasets.MNIST(<span class="string">&#x27;./images/mnist&#x27;</span>, download=<span class="literal">True</span>, train=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p>如果想要利用本地的图像数据集，可以如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> datasets</span><br><span class="line">dataset = datasets.ImageFolder(<span class="string">&#x27;./images/mnist&#x27;</span>, train=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p>包含的数据集有</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;CIFAR10&#x27;</span>, <span class="string">&#x27;CIFAR100&#x27;</span>, <span class="string">&#x27;EMNIST&#x27;</span>, <span class="string">&#x27;FashionMNIST&#x27;</span>, <span class="string">&#x27;QMNIST&#x27;</span>, <span class="string">&#x27;MNIST&#x27;</span>, <span class="string">&#x27;KMNIST&#x27;</span>, <span class="string">&#x27;STL10&#x27;</span>, <span class="string">&#x27;SVHN&#x27;</span>, <span class="string">&#x27;PhotoTour&#x27;</span>, <span class="string">&#x27;SEMEION&#x27;</span>, <span class="string">&#x27;Omniglot&#x27;</span>, <span class="string">&#x27;SBU&#x27;</span>, <span class="string">&#x27;Flickr8k&#x27;</span>, <span class="string">&#x27;Flickr30k&#x27;</span>, <span class="string">&#x27;VOCSegmentation&#x27;</span>, <span class="string">&#x27;VOCDetection&#x27;</span>, <span class="string">&#x27;Cityscapes&#x27;</span>, <span class="string">&#x27;ImageNet&#x27;</span>, <span class="string">&#x27;Caltech101&#x27;</span>, <span class="string">&#x27;Caltech256&#x27;</span>, <span class="string">&#x27;CelebA&#x27;</span>, <span class="string">&#x27;WIDERFace&#x27;</span>, <span class="string">&#x27;SBDataset&#x27;</span>, <span class="string">&#x27;VisionDataset&#x27;</span>, <span class="string">&#x27;USPS&#x27;</span>, <span class="string">&#x27;Kinetics400&#x27;</span>, <span class="string">&#x27;HMDB51&#x27;</span>,  <span class="string">&#x27;UCF101&#x27;</span>, <span class="string">&#x27;Places365&#x27;</span>, <span class="string">&#x27;Kitti&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="继承-torch-utils-data-Dataset-抽象类"><a href="#继承-torch-utils-data-Dataset-抽象类" class="headerlink" title="继承 torch.utils.data.Dataset 抽象类"></a>继承 torch.utils.data.Dataset 抽象类</h2><p>对于上面内建的 Map 式 Dataset 不能满足业务需求的，可自定义 Dataset，即构建  torch.utils.data.Dataset 子类。</p>
+<p> Map 式数据集类表示从索引（key）到样本数据的映射。如：datasets[9] 表示第 9 个图像样本。</p>
+<p>在编写 Map 式数据集类时需要继承 torch.utils.data.Dataset 抽象类，重写方法：</p>
+<ol>
+<li><strong>__getitem__</strong>(self, index) （必须重写）</li>
+<li><strong>__len__</strong>(self) (可选，建议重写)</li>
+</ol>
+<p>通常，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyDataset</span>(data.Dataset):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># TODO</span></span><br><span class="line">        <span class="comment"># 实例化文件路径或文件名列表等</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, index</span>):</span><br><span class="line">        <span class="comment"># TODO</span></span><br><span class="line">        <span class="comment"># 1. 从文件中读取一个图片文件 (e.g. using numpy.fromfile, PIL.Image.open).</span></span><br><span class="line">        <span class="comment"># 2. 预处理图片文件 (e.g. torchvision.Transform).</span></span><br><span class="line">        <span class="comment"># 3. 返回图像数据对 (e.g. image and label).</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># TODO</span></span><br><span class="line">        <span class="comment"># 返回整个图像数据集的大小，即图片的个数</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>可以参考官方代码中的例子(以下代码在 Jupyter Notebook 中使用)：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">datasets.MNIST??</span><br></pre></td></tr></table></figure>
+
+<p>或者 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TensorDataset</span>(Dataset[<span class="type">Tuple</span>[Tensor, ...]]):</span><br><span class="line">    <span class="string">r&quot;&quot;&quot;Dataset wrapping tensors.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Each sample will be retrieved by indexing tensors along the first dimension.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        *tensors (Tensor): tensors that have the same size of the first dimension.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    tensors: <span class="type">Tuple</span>[Tensor, ...]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, *tensors: Tensor</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">all</span>(tensors[<span class="number">0</span>].size(<span class="number">0</span>) == tensor.size(<span class="number">0</span>) <span class="keyword">for</span> tensor <span class="keyword">in</span> tensors), <span class="string">&quot;Size mismatch between tensors&quot;</span></span><br><span class="line">        self.tensors = tensors</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, index</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">tuple</span>(tensor[index] <span class="keyword">for</span> tensor <span class="keyword">in</span> self.tensors)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.tensors[<span class="number">0</span>].size(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="继承-torch-utils-data-IterableDataset-抽象类"><a href="#继承-torch-utils-data-IterableDataset-抽象类" class="headerlink" title="继承 torch.utils.data.IterableDataset 抽象类"></a>继承 torch.utils.data.IterableDataset 抽象类</h2><p>Iterable 式数据集类表示在图像数据集上的一个可迭代的对象。适合处理流式数据，不适合随机存取。如：iter(datasets) 获取迭代器，然后使用 next 迭代实现遍历。</p>
+<p>在编写 Iterable 式数据集类时需要继承 torch.utils.data.IterableDataset 抽象类，重写方法：</p>
+<ol>
+<li><strong>__iter__</strong>(self) （必须重写）</li>
+</ol>
+<p>示例代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyIterableDataset</span>(torch.utils.data.IterableDataset):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, start, end</span>):</span><br><span class="line">        <span class="built_in">super</span>(MyIterableDataset).__init__()</span><br><span class="line">        <span class="keyword">assert</span> end &gt; start, <span class="string">&quot;this example code only works with end &gt;= start&quot;</span></span><br><span class="line">        self.start = start</span><br><span class="line">        self.end = end</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__iter__</span>(<span class="params">self</span>):</span><br><span class="line">        worker_info = torch.utils.data.get_worker_info()</span><br><span class="line">        <span class="keyword">if</span> worker_info <span class="keyword">is</span> <span class="literal">None</span>:  <span class="comment"># single-process data loading, return the full iterator</span></span><br><span class="line">            iter_start = self.start</span><br><span class="line">            iter_end = self.end</span><br><span class="line">        <span class="keyword">else</span>:  <span class="comment"># in a worker process</span></span><br><span class="line">            <span class="comment"># split workload</span></span><br><span class="line">            per_worker = <span class="built_in">int</span>(</span><br><span class="line">                math.ceil((self.end - self.start) / <span class="built_in">float</span>(worker_info.num_workers))</span><br><span class="line">            )</span><br><span class="line">            worker_id = worker_info.<span class="built_in">id</span></span><br><span class="line">            iter_start = self.start + worker_id * per_worker</span><br><span class="line">            iter_end = <span class="built_in">min</span>(iter_start + per_worker, self.end)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">iter</span>(<span class="built_in">range</span>(iter_start, iter_end))</span><br></pre></td></tr></table></figure>
+
+<p>可以参考官方代码中的例子(以下代码在 Jupyter Notebook 中使用)：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> IterableDataset</span><br><span class="line"></span><br><span class="line">IterableDataset??</span><br></pre></td></tr></table></figure>
+
+<h1 id="Sampler"><a href="#Sampler" class="headerlink" title="Sampler"></a>Sampler</h1><p>Sampler 负责提供遍历数据集所有图像索引的方式。</p>
+<p>PyTorch 实现了如下几类方式：</p>
+<ol>
+<li>SequentialSampler</li>
+<li>RandomSampler</li>
+<li>SubsetRandomSampler</li>
+<li>WeightedRandomSampler</li>
+<li>BatchSampler</li>
+<li>DistributedSampler</li>
+</ol>
+<p>SequentialSampler 是顺序采样器。RandomSampler、SubsetRandomSampler、WeightedRandomSampler 是随机采样器。BatchSampler 是批次采样器，DistributedSampler 是分布式采样器。</p>
+<p>如果内建采样器不能满足需求，可以自定义采样器，继承自 torch.utils.data.Sampler，需要重写方法：</p>
+<ol>
+<li><strong>__iter__</strong>(self) （必须重写）</li>
+<li><strong>__len__</strong>(self) (可选重写)</li>
+</ol>
+<h1 id="DataLoader"><a href="#DataLoader" class="headerlink" title="DataLoader"></a>DataLoader</h1><p>Dataloader 结合数据集 Dataset 和采样器 Sampler，并提供可迭代的给定的数据集。Dataloader 负责加载数据，同时支持 Map 式和 Iterable 式 Dataset，支持单进程&#x2F;多进程，还可以设置加载顺序(loading order)、批次大小(batch size)、CUDA固定内存(pin memory)等参数。在训练和测试深度学习网络中，我们直接遍历 Dataloader 来获取数据（data、label等），并将数据喂给网络用于前向传播。</p>
+<p>常见的模型训练框架</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建 Dateset 和 Sampler</span></span><br><span class="line">dataset = MyDataset()</span><br><span class="line">sampler = SequentialSampler()</span><br><span class="line"><span class="comment"># Dataset 传递给 DataLoader</span></span><br><span class="line">dataloader = torch.utils.data.DataLoader(dataset=dataset, sampler=sampler, batch_size=<span class="number">64</span>, shuffle=<span class="literal">False</span>, num_workers=<span class="number">8</span>)</span><br><span class="line"><span class="comment"># DataLoader 迭代产生训练数据提供给模型</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(epoch):</span><br><span class="line">    <span class="keyword">for</span> index, (img, label) <span class="keyword">in</span> <span class="built_in">enumerate</span>(dataloader):</span><br><span class="line">        img, label = img.to(device), label.to(device).squeeze()</span><br><span class="line">        opt.zero_grad()</span><br><span class="line">        logits = model(img)</span><br><span class="line">        loss = criterion(logits, label)</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p>DataLoader 参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DataLoader(dataset, batch_size=<span class="number">1</span>, shuffle=<span class="literal">False</span>, sampler=<span class="literal">None</span>,</span><br><span class="line">           batch_sampler=<span class="literal">None</span>, num_workers=<span class="number">0</span>, collate_fn=<span class="literal">None</span>,</span><br><span class="line">           pin_memory=<span class="literal">False</span>, drop_last=<span class="literal">False</span>, timeout=<span class="number">0</span>,</span><br><span class="line">           worker_init_fn=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+
+<p>参数介绍： </p>
+<p><code>dataset</code> (<em>Dataset</em>) – 定义好的 Map 式或者 Iterable 式数据集</p>
+<p><code>batch_size</code> (<em>python:int, optional</em>) 一个 batch 含有多少样本 (default: 1)</p>
+<p><code>shuffle</code> (<em>bool, optional</em>) – 每一个 epoch 的 batch 样本是相同还是随机 (default: False)。表示每一个 epoch 中训练样本的顺序是否相同，一般 True</p>
+<p><code>sampler</code> (<em>Sampler, optional</em>) – 决定数据集中采样的方法. 如果有，则 shuffle 参数必须为 False </p>
+<p><code>batch_sampler</code> (<em>Sampler, optional</em>) 和 sampler 类似，但是一次返回的是一个 batch 内所有样本的 index。和 batch_size, shuffle, sampler, and drop_last 三个参数互斥</p>
+<p><code>num_workers</code> (<em>python:int, optional</em>) 多少个子程序同时工作来获取数据，多线程。 (default: 0)</p>
+<p><code>collate_fn</code> (<em>callable, optional</em>) 合并样本列表以形成小批量</p>
+<p><code>pin_memory</code> (<em>bool, optional</em>) 如果为 True，数据加载器在返回前将张量复制到 CUDA 固定内存中</p>
+<p><code>drop_last</code> (<em>bool, optional</em>) – 如果数据集大小不能被 batch_size 整除，设置为 True 可删除最后一个不完整的批处理。如果设为 False 并且数据集的大小不能被 batch_size 整除，则最后一个 batch 将更小。(default: False) </p>
+<p><code>timeout</code> (<em>numeric, optional</em>) 如果是正数，表明等待从 worker 进程中收集一个 batch 等待的时间，若超出设定的时间还没有收集到，那就不收集这个内容了。这个 numeric 应总是大于等于0。 (default: 0) </p>
+<p><code>worker_init_fn</code> (_callable, optional*) 每个 worker 初始化函数 (default: None)</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://bbs.cvmart.net/articles/5467">一文读懂 PyTorch 中 Dataset 与 DataLoader</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/270028097">PyTorch源码解析与实践（1）：数据加载Dataset，Sampler与DataLoader</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2021/10/12/pytorch-dataset-dataloader/">https://xujinzh.github.io/2021/10/12/pytorch-dataset-dataloader/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/dl/">dl</a><a class="post-meta__tags" href="/tags/python/">python</a><a class="post-meta__tags" href="/tags/cv/">cv</a><a class="post-meta__tags" href="/tags/vot/">vot</a><a class="post-meta__tags" href="/tags/pytorch/">pytorch</a></div><div class="post_share"><div class="social-share" data-image="/img/c7.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/10/20/jupyterlab-pandas-omission/" title="JupyterLab 中 Pandas 打印行列省略问题"><img class="cover" src="/img/c2.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">JupyterLab 中 Pandas 打印行列省略问题</div></div></a></div><div class="next-post pull-right"><a href="/2021/10/08/update-oh-my-zsh/" title="手动更新 oh-my-zsh"><img class="cover" src="/img/c22.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">手动更新 oh-my-zsh</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/08/02/cnn-flops/" title="CNN 模型计算力 FLOPs"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-02</div><div class="title">CNN 模型计算力 FLOPs</div></div></a></div><div><a href="/2021/06/22/pytorch-model-save-load/" title="PyTorch 模型保存和加载"><img class="cover" src="/img/c3.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-22</div><div class="title">PyTorch 模型保存和加载</div></div></a></div><div><a href="/2022/08/08/pytorch-multiply-methods/" title="PyTorch 中矩阵乘法介绍"><img class="cover" src="/img/c18.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-08</div><div class="title">PyTorch 中矩阵乘法介绍</div></div></a></div><div><a href="/2022/04/24/deeplabcut-usage/" title="deeplabcut 位姿标注软件的安装与使用"><img class="cover" src="/img/c6.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-24</div><div class="title">deeplabcut 位姿标注软件的安装与使用</div></div></a></div><div><a href="/2023/11/24/python-look-model-structure-by-timm/" title="使用 timm 模块查看常见深度学习模型结构"><img class="cover" src="/img/c13.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-24</div><div class="title">使用 timm 模块查看常见深度学习模型结构</div></div></a></div><div><a href="/2021/06/21/pytorch-nn-vs-functional/" title="PyTorch 中的 nn 和 nn.functional"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-21</div><div class="title">PyTorch 中的 nn 和 nn.functional</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A9%E7%94%A8-PyTorch-%E8%BF%9B%E8%A1%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%AE%AD%E7%BB%83%E7%9A%84%E4%B8%80%E8%88%AC%E6%B5%81%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">利用 PyTorch 进行深度学习训练的一般流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Dataset"><span class="toc-number">2.</span> <span class="toc-text">Dataset</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%BB%BA-Dataset"><span class="toc-number">2.1.</span> <span class="toc-text">内建 Dataset</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E4%BD%BF%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">2.2.</span> <span class="toc-text">常使用的数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF-torch-utils-data-Dataset-%E6%8A%BD%E8%B1%A1%E7%B1%BB"><span class="toc-number">2.3.</span> <span class="toc-text">继承 torch.utils.data.Dataset 抽象类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF-torch-utils-data-IterableDataset-%E6%8A%BD%E8%B1%A1%E7%B1%BB"><span class="toc-number">2.4.</span> <span class="toc-text">继承 torch.utils.data.IterableDataset 抽象类</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Sampler"><span class="toc-number">3.</span> <span class="toc-text">Sampler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DataLoader"><span class="toc-number">4.</span> <span class="toc-text">DataLoader</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">5.</span> <span class="toc-text">参考链接</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '93273c153eac3237ff4295589ad9c98b',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

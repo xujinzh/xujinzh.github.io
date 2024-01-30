@@ -1,0 +1,464 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>linux 三剑客 - 文本查找命令 grep | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="linux 提供了强大的文本分析工具，如 grep, sed, awk，号称三剑客。本篇介绍文本查找命令 grep。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux 三剑客 - 文本查找命令 grep">
+<meta property="og:url" content="https://xujinzh.github.io/2024/01/27/linux-grep/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="linux 提供了强大的文本分析工具，如 grep, sed, awk，号称三剑客。本篇介绍文本查找命令 grep。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c22.jpg">
+<meta property="article:published_time" content="2024-01-27T10:04:18.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.100Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="grep">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c22.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2024/01/27/linux-grep/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'linux 三剑客 - 文本查找命令 grep',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">linux 三剑客 - 文本查找命令 grep</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.100Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/linux/">linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="linux 三剑客 - 文本查找命令 grep"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>linux 提供了强大的文本分析工具，如 <code>grep</code>, <code>sed</code>, <code>awk</code>，号称三剑客。本篇介绍文本查找命令 <code>grep</code>。</p>
+<span id="more"></span>
+
+<p><code>grep</code> （<strong>g</strong>lobal <strong>r</strong>egular <strong>e</strong>xpression <strong>p</strong>rint）命令能够过滤出文本中符合要求（如正则表达式）的内容、行、文件等。默认在所有 linux 发行版中都预装该命令。</p>
+<h1 id="基本命令格式"><a href="#基本命令格式" class="headerlink" title="基本命令格式"></a>基本命令格式</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep [options|flags] pattern file1 file2 </span><br></pre></td></tr></table></figure>
+
+<p>如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查找系统上某个用户(如 root)的默认登录 shell</span></span><br><span class="line"><span class="comment"># 这里省略了 options 或 flags</span></span><br><span class="line"><span class="comment"># pattern 是 &quot;root&quot;，pattern 可以用正在表达式，建议用引号包裹</span></span><br><span class="line"><span class="comment"># /etc/passwd 是文件名. grep 后面可以跟多个文件名</span></span><br><span class="line"><span class="comment"># | 管道符是把 grep 输出的一行内容按照 : 分割为多列，只打印最后一列</span></span><br><span class="line">grep <span class="string">&quot;root&quot;</span> /etc/passwd | awk -F <span class="string">&quot;:&quot;</span> <span class="string">&#x27;&#123;print $NF&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="options"><a href="#options" class="headerlink" title="options"></a>options</h2><p>options 有时也叫作 flags，是控制 <code>grep</code> 命令输出内容的参数。下面罗列一些常用的参数，更多请帮助文档：<code>man grep</code></p>
+<ul>
+<li>–color&#x3D;always, –color&#x3D;auto, –color&#x3D;never： 是否以不同颜色显示查找到的文本内容</li>
+<li>-a, –text：不要忽略二进制数据。用于从二进制文件中查找内容。如果查找二进制文件里的内容，请添加该参数：<code>grep -a &quot;合并&quot; binary_files</code>，查找二进制文件中是否包含有 “合并”</li>
+<li>-A num, –after-context&#x3D;num：对于查找到的某一行同时打印该行后 num 行内容，常用于日志分析，如打印报错内容的后面内容：<code>grep -A 3 &quot;error&quot; run.log</code>，查找 run.log 中包含有 error 行及其后 3 行</li>
+<li>-B num, –before-context&#x3D;num：与 -A num 相反，打印某一行的前 num 行：<code>grep -B 3 &quot;error&quot; run.log</code>，查找 run.log 中包含有 error 行及其前 3 行</li>
+<li>-C num, –context&#x3D;num：同时包含 -A num 和 -B num，表示打印找到的某一行的前后各 num 行：<code>grep -C 3 &quot;error&quot; run.log</code>，查找 run.log 中包含有 error 行及其前后 3 行</li>
+<li>-c：只打印匹配的行数，不打印查找到的文本内容</li>
+<li>-e pattern, –regexp&#x3D;pattern：指定字符串作为查找文件内容的范本样式，这里字符串可以是正则表达式（下面介绍），可以指定多个 -e，用于查找多个内容：<code>grep -e &quot;root&quot; -e &quot;bash$&quot; /etc/passwd</code>，查找 root，以及以 bash 结尾的行</li>
+<li>-E pattern, –extended-regexp&#x3D;pattern：扩展正则表达式，即 egrep，指定可以使用扩展的正则表达式（下面介绍），示例：<code>grep -E &quot;ro+t&quot; /etc/passwd</code>，查找 root, rooot, …</li>
+<li>-i, –ignore-case：忽略字符大小写，如同时查找 h 和 H：<code>grep -i &quot;h&quot; /etc/passwd</code>，查找 &#x2F;etc&#x2F;passwd 中包含有 h，H 的行</li>
+<li>-l, –file-with-matches: 列出文件内容符合指定的 pattern 的文件名称: <code>grep -l &quot;root&quot; /etc/*</code>，查找 &#x2F;etc 目录下所有包含 root 文本内容的文件名</li>
+<li>-L, –files-without-match: 列出文件内容不符合指定的 pattern 的文件名称: <code>grep -L &quot;root&quot; /etc/*</code>，列文件夹 &#x2F;etc 下不包含文本内容 root 的所有文件名</li>
+<li>-n, –line-number: 打印找到的那一行内容前增加上行号：<code>grep -n &quot;root&quot; /etc/passwd</code></li>
+<li>-q, –quiet或–silent：不显示任何信息</li>
+<li>-R&#x2F;-r, –recursive: 递归搜索文件夹里面的文件，与 -d recurse 参数含义相同。  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 递归搜索 /etc 目录下所有文件包含 root 内容的行</span></span><br><span class="line">grep -r <span class="string">&quot;root&quot;</span> /etc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归搜索 ./codes 目录下所有以 py,sh,php,html,txt,md 结尾的文件里含有 sam 的行</span></span><br><span class="line">grep -r --include=*.&#123;py,sh,php,html,txt,md&#125; <span class="string">&quot;sam&quot;</span> ./codes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归搜索 ./codes 目录下所有包含 sam 的文件行，但不包含以 .json 结尾的文件 </span></span><br><span class="line">grep -r --exclude=.json <span class="string">&quot;sam&quot;</span> ./codes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归搜索 ./codes 目录下所有文件包含 sam 的文件行，但是排除文件 filelist 中列出的所有文件</span></span><br><span class="line">grep -r --exclude-from=filelist <span class="string">&quot;sam&quot;</span> ./codes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归搜索 ./codes 目录下所有文件包含 sam 的文件行，但是排除文件夹 py</span></span><br><span class="line"><span class="comment"># py 可以是 codes 下的文件夹，也可以是其下子文件夹里的文件夹，但只需要指定文件夹名即可，不需要写相对或绝对路径</span></span><br><span class="line">grep -r --exclude-dir=py <span class="string">&quot;sam&quot;</span> ./codes</span><br></pre></td></tr></table></figure></li>
+<li>-s, –no-messages：不显示错误信息</li>
+<li>-v, –revert-match：反转查找，即对于匹配到的 pattern 不显示，如：<code>ps ef | grep python | grep -v grep</code>，查找 python 进程，但是不显示 grep 查找自己的进程</li>
+<li>-V, –version：显示版本信息</li>
+<li>-o：只输出文件中匹配到的部分，不打印行自打印查找到的文本内容本身</li>
+<li>-m <num>, –max-count&#x3D;<num>：找到 num 行结果后停止查找，用来限制匹配行数</li>
+</ul>
+<p>例子：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查找文件中有多少个 sam 文本内容</span></span><br><span class="line">grep -i <span class="string">&quot;sam&quot;</span> image_sam_annotate.py -o -c</span><br></pre></td></tr></table></figure>
+
+<h2 id="pattern"><a href="#pattern" class="headerlink" title="pattern"></a>pattern</h2><p>pattern 可以是文本内容，也可以是正则表达式，或扩展正则表达式。</p>
+<h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><p>使用正则表达式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以指定多个 -e</span></span><br><span class="line">grep -e <span class="string">&quot;xxx&quot;</span> filepath</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>^</td>
+<td>锚定行的开始，如 “^import” 匹配所有以 import 开头的行</td>
+</tr>
+<tr>
+<td>$</td>
+<td>锚定行的介绍，如 “p$” 匹配所有以 p 结尾的行</td>
+</tr>
+<tr>
+<td>^$</td>
+<td>匹配空白行</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配一个非换行符的字符，如 “impo.t” 可以匹配 import,impoot, …</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配零个或多个前一个字符，如 “1*” 匹配 1 后零个或多个 1</td>
+</tr>
+<tr>
+<td>.*</td>
+<td>. 和 * 一起使用可以匹配任意字符</td>
+</tr>
+<tr>
+<td>[]</td>
+<td>匹配一个指定范围内的字符，如 “[a-z]” 匹配字符 a 到 z 的所有单个小写字符，”[0-9a-zA-Z]” 匹配所有单个数字或字符</td>
+</tr>
+<tr>
+<td>[^]</td>
+<td>与 [] 相反，匹配一个不在指定范围外的字符，如 “[^0-57-9]” 只匹配数字 6</td>
+</tr>
+<tr>
+<td>\&lt;</td>
+<td>锚定单词的开始，如 “&lt;np” 或 “\bnp”，匹配某行中独立的以np开头的单词，不一定在行首</td>
+</tr>
+<tr>
+<td>\&gt;</td>
+<td>锚定单词的结束，如 “np&gt;“ 或 “np\b”，匹配某行中独立的以 np 结尾的单词，不一定在行尾</td>
+</tr>
+<tr>
+<td>\w</td>
+<td>匹配一个英文字符或数字，同[0-9a-zA-Z]</td>
+</tr>
+<tr>
+<td>\W</td>
+<td>与 \w 相反，匹配除了英文字符和数字外的单个字符</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>单词锁定，”\bas\b” 或者 “&lt;as&gt;“ 只匹配单词 as</td>
+</tr>
+</tbody></table>
+<p>Linux 系统中默认在每行行尾添加上符号 $，可以通过命令 <code>cat -A file</code> 查看</p>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 表示匹配一个数字+b组成的字符对</span></span><br><span class="line">grep -e <span class="string">&quot;[0-9]b&quot;</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果 -e 想要使用下面的扩展正则，需要增加反斜线 \，如 \?, \&#123;m,n\&#125;, \(x\)s</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="扩展正则表达式"><a href="#扩展正则表达式" class="headerlink" title="扩展正则表达式"></a>扩展正则表达式</h3><p>扩展正则表达式（ERE，Extended Regular Expression），在正则表达式的基础上增加上 <code>&#123;&#125;()?+|</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -E <span class="string">&quot;xxx&quot;</span> file</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+</td>
+<td>匹配前面的一个字符 1 次或多次</td>
+</tr>
+<tr>
+<td>?</td>
+<td>匹配其前面的字符 1 次或 0 次，使用 grep “a?b” file, 匹配 b, ab</td>
+</tr>
+<tr>
+<td>x{m}</td>
+<td>重复字符 x 正好 m 次</td>
+</tr>
+<tr>
+<td>x{m,}</td>
+<td>重复字符 x 至少 m 次</td>
+</tr>
+<tr>
+<td>x{m,n}</td>
+<td>重复字符 x 至少 m 次，至多 n 次，默认以贪婪匹配，匹配字符尽量多</td>
+</tr>
+<tr>
+<td>(x)</td>
+<td>标记匹配字符，x 内容被标记为 \1</td>
+</tr>
+<tr>
+<td>|</td>
+<td>| 表示或，如 a|b 表示匹配 a 或者 b</td>
+</tr>
+</tbody></table>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 表示 ab 整体作为匹配字符，且匹配至少一次</span></span><br><span class="line">grep -E <span class="string">&quot;(ab)&#123;1,&#125;&quot;</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># \1 引用第一个左括号, \2 引用第二个左括号</span></span><br><span class="line">grep -E <span class="string">&quot;(l..e).*\1r&quot;</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 匹配结果如下：</span></span><br><span class="line">He love his lover.</span><br><span class="line">She like her liker.</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="POSIX字符"><a href="#POSIX字符" class="headerlink" title="POSIX字符"></a>POSIX字符</h3><p>为了在不同国家的字符编码中保持一至，POSIX(The Portable Operating System Interface)增加了特殊的字符类，如 [:alnum:] 是 [A-Za-z0-9] 的另一个写法。要把它们放到 [] 号内才能成为正则表达式，如 [A- Za-z0-9] 或 [[:alnum:]]。在 linux 下的 grep 除 fgrep 外，都支持 POSIX 的字符类。</p>
+<ul>
+<li>[:alnum:]    # 文字数字字符，表示所有字母和数字 [0-9a-zA-Z]  </li>
+<li>[:alpha:]    # 文字字符，表示所有字母（包含大小写） [a-zA-Z] </li>
+<li>[:digit:]    # 数字字符，所有数字 [0-9]   </li>
+<li>[:graph:]    # 非空字符（非空格、控制字符）   </li>
+<li>[:lower:]    # 小写字符，所有小写字母 [a-z]  </li>
+<li>[:cntrl:]    # 控制字符   </li>
+<li>[:print:]    # 非空字符（包括空格）   </li>
+<li>[:punct:]    # 标点符号，所有标点符号 </li>
+<li>[:space:]    # 所有空白字符（新行，空格，制表符）， 表示空格或tab键</li>
+<li>[:upper:]    # 大写字符，所有大写字母 [A-Z] </li>
+<li>[:xdigit:]   # 十六进制数字（0-9，a-f，A-F）</li>
+</ul>
+<h1 id="退出状态"><a href="#退出状态" class="headerlink" title="退出状态"></a>退出状态</h1><table>
+<thead>
+<tr>
+<th>item</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>A match was found</td>
+</tr>
+<tr>
+<td>1</td>
+<td>No match was found</td>
+</tr>
+<tr>
+<td>&gt;1</td>
+<td>A syntax error was found or a file was inaccessible (even if matches were found)</td>
+</tr>
+</tbody></table>
+<h1 id="与其他命令结合"><a href="#与其他命令结合" class="headerlink" title="与其他命令结合"></a>与其他命令结合</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># echo </span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello, world!&quot;</span> | grep hello</span><br><span class="line"></span><br><span class="line"><span class="comment"># tail</span></span><br><span class="line"><span class="built_in">tail</span> -f x.log | grep 2024</span><br><span class="line"></span><br><span class="line"><span class="comment"># ps </span></span><br><span class="line">ps -aux | grep python | grep -v grep</span><br><span class="line">ps -ef | grep python | grep -v grep</span><br><span class="line"></span><br><span class="line"><span class="comment"># wc, 输出 行数（wc -l），单词数（wc -w），字节数（wc -m ）</span></span><br><span class="line"><span class="comment"># 字符数（wc -c，注意结尾$也算一个字符） </span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello, world&quot;</span> | <span class="built_in">wc</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># xargs</span></span><br><span class="line">find ~ -name <span class="string">&quot;*.py&quot;</span> -<span class="built_in">print</span> | xargs grep <span class="string">&quot;import&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># awk</span></span><br><span class="line">ps aux | grep <span class="string">&quot;python&quot;</span> | grep -v grep | awk <span class="string">&#x27;&#123;print &quot;kill -9&quot; $2&#125;&#x27;</span> | sh</span><br><span class="line">ps aux | grep <span class="string">&quot;python&quot;</span> | grep -v grep | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> | xargs <span class="built_in">kill</span> -9</span><br><span class="line"><span class="built_in">kill</span> -9 `ps aux | grep <span class="string">&quot;python&quot;</span> | grep -v grep | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span>`</span><br><span class="line"></span><br><span class="line"><span class="comment"># 其他杀进程根据程序名</span></span><br><span class="line">pgrep <span class="string">&quot;python&quot;</span> | xargs <span class="built_in">kill</span> -s 9</span><br><span class="line"><span class="built_in">kill</span> -o `pgrep <span class="string">&quot;python&quot;</span>`</span><br><span class="line"><span class="comment"># pgrep &quot;python&quot; 等价于上面的 ps aux | grep &quot;python&quot; | grep -v grep | awk &#x27;&#123;print $2&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line">pkill -9 <span class="string">&quot;python&quot;</span> <span class="comment"># 名字不需要全名</span></span><br><span class="line">pkill -u admin <span class="comment"># 删掉用户 admin 运行的所有进程</span></span><br><span class="line"></span><br><span class="line">killall <span class="string">&quot;python&quot;</span> <span class="comment"># 名字需要全名</span></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1rA4y1S7Hk?p=2&vd_source=4acadc91badcfe90fc01a4758dd8f5fa">Linux三剑客超全超详情教程（grep、sed、awk入门到精通有这一套足够了）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1nX4y1a7Gx?p=10&vd_source=4acadc91badcfe90fc01a4758dd8f5fa">Linux文本处理三剑客：Grep&#x2F;Sed&#x2F;Awk详解</a></li>
+<li><a target="_blank" rel="noopener" href="https://xstarcd.github.io/wiki/shell/grep.html">grep扩展正则表达式(egrep)</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kelamoyujuzhen/p/9111973.html">bash基础——grep、基本正则表达式、扩展正则表达式、fgrep</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-comm-grep.html">Linux grep 命令</a></li>
+<li><a target="_blank" rel="noopener" href="https://wangchujiang.com/linux-command/c/grep.html">grep</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/peida/archive/2012/12/17/2821195.html">每天一个linux命令（39）：grep 命令</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2024/01/27/linux-grep/">https://xujinzh.github.io/2024/01/27/linux-grep/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a><a class="post-meta__tags" href="/tags/grep/">grep</a></div><div class="post_share"><div class="social-share" data-image="/img/c22.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img class="cover" src="/img/c9.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">基于 OpenCompass 的大模型评测</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/11/06/auto-email-server-ip/" title="服务器开机或IP改变自动发送通知邮件"><img class="cover" src="/img/c17.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-06</div><div class="title">服务器开机或IP改变自动发送通知邮件</div></div></a></div><div><a href="/2021/11/29/auto-email-server-shutdown/" title="服务器关机自动发送通知邮件"><img class="cover" src="/img/c2.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-29</div><div class="title">服务器关机自动发送通知邮件</div></div></a></div><div><a href="/2020/06/12/auto-start-command-in-linux/" title="Linux 系统中的开机自启命令简单介绍"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-12</div><div class="title">Linux 系统中的开机自启命令简单介绍</div></div></a></div><div><a href="/2021/09/06/awk-command-language/" title="Linux 中的 awk 命令"><img class="cover" src="/img/c28.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-06</div><div class="title">Linux 中的 awk 命令</div></div></a></div><div><a href="/2022/10/29/build-official-python3-11/" title="Ubuntu 上编译安装官网 Python"><img class="cover" src="/img/c11.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-29</div><div class="title">Ubuntu 上编译安装官网 Python</div></div></a></div><div><a href="/2022/08/04/cat-service-eof/" title="Linux 中 EOF 内容转义"><img class="cover" src="/img/c18.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-04</div><div class="title">Linux 中 EOF 内容转义</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">基本命令格式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#options"><span class="toc-number">1.1.</span> <span class="toc-text">options</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern"><span class="toc-number">1.2.</span> <span class="toc-text">pattern</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">1.2.1.</span> <span class="toc-text">正则表达式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">1.2.2.</span> <span class="toc-text">扩展正则表达式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POSIX%E5%AD%97%E7%AC%A6"><span class="toc-number">1.2.3.</span> <span class="toc-text">POSIX字符</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%80%E5%87%BA%E7%8A%B6%E6%80%81"><span class="toc-number">2.</span> <span class="toc-text">退出状态</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%8E%E5%85%B6%E4%BB%96%E5%91%BD%E4%BB%A4%E7%BB%93%E5%90%88"><span class="toc-number">3.</span> <span class="toc-text">与其他命令结合</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">4.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '6eb451ceb890a4c6414180cc18f18131',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

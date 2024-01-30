@@ -1,0 +1,345 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Linux 终端复用器 tmux 提高通过 SSH 运行的程序稳定性 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="在使用 SSH 远程连接服务器后，在终端上运行长时间占用终端的程序（如 pip install torch&#x3D;&#x3D;1.10.1+cu111 torchvision&#x3D;&#x3D;0.11.2+cu111 torchaudio&#x3D;&#x3D;0.10.1 -f https:&#x2F;&#x2F;download.pytorch.org&#x2F;whl&#x2F;cu113&#x2F;torch_stable.html 等大文件下载）容易受到网络中断等情况导致的 SSH 连">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 终端复用器 tmux 提高通过 SSH 运行的程序稳定性">
+<meta property="og:url" content="https://xujinzh.github.io/2023/03/01/linux-tmux-ssh/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="在使用 SSH 远程连接服务器后，在终端上运行长时间占用终端的程序（如 pip install torch&#x3D;&#x3D;1.10.1+cu111 torchvision&#x3D;&#x3D;0.11.2+cu111 torchaudio&#x3D;&#x3D;0.10.1 -f https:&#x2F;&#x2F;download.pytorch.org&#x2F;whl&#x2F;cu113&#x2F;torch_stable.html 等大文件下载）容易受到网络中断等情况导致的 SSH 连">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c7.jpg">
+<meta property="article:published_time" content="2023-03-01T05:48:51.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.100Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="ssh">
+<meta property="article:tag" content="tmux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c7.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2023/03/01/linux-tmux-ssh/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux 终端复用器 tmux 提高通过 SSH 运行的程序稳定性',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Linux 终端复用器 tmux 提高通过 SSH 运行的程序稳定性</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-03-01T05:48:51.000Z" title="发表于 2023-03-01 13:48:51">2023-03-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.100Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/linux/">linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux 终端复用器 tmux 提高通过 SSH 运行的程序稳定性"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>在使用 SSH 远程连接服务器后，在终端上运行长时间占用终端的程序（如 <code>pip install torch==1.10.1+cu111 torchvision==0.11.2+cu111 torchaudio==0.10.1 -f https://download.pytorch.org/whl/cu113/torch_stable.html</code> 等大文件下载）容易受到网络中断等情况导致的 SSH 连接断开的影响。这是因为 SSH 终端窗口和会话是绑定的，当终端窗口断开时，会话也关闭，会话中的进程也随之关闭。使用 tmux 可以将会话与终端窗口“解绑”。这样，终端窗口关闭或异常断开时，不影响当前会话中运行的程序。</p>
+<span id="more"></span>
+
+<p>tmux 是一个终端复用器（terminal multiplexer），可以将会话与窗口“解绑”，窗口关闭时，会话不会终止，而是继续在后台运行，当重新把会话绑定到其他窗口时，里面运行的进程还在。tmux 有如下特点：</p>
+<ol>
+<li>运行在单个窗口中同时访问多个会话；</li>
+<li>新窗口可以接入已经存在的会话；</li>
+<li>运行一个会话同时连接到多个窗口，实现多用户实时共享会话；</li>
+<li>支持窗口在垂直和水平方向上任意拆分。</li>
+</ol>
+<p>之前介绍过 screen 命令，也是一个终端复用器，但是没有 tmux 强大。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install tmux</span><br></pre></td></tr></table></figure>
+
+<h1 id="常用会话操作"><a href="#常用会话操作" class="headerlink" title="常用会话操作"></a>常用会话操作</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动一个会话并命名为 remote，同时会打开一个新窗口</span></span><br><span class="line">tmux new -s remote</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在当前会话中运行命令行程序，例如</span></span><br><span class="line">pip install torch==1.10.1+cu111 torchvision==0.11.2+cu111 torchaudio==0.10.1 -f https://download.pytorch.org/whl/cu113/torch_stable.html</span><br><span class="line"></span><br><span class="line"><span class="comment"># 程序运行时，也可退出当前窗口，使会话和窗口解绑。注意不是退出会话</span></span><br><span class="line"><span class="comment"># 快捷键 ctrl + b, d</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新绑定会话到一个新窗口</span></span><br><span class="line">tmux attach -t remote</span><br></pre></td></tr></table></figure>
+
+<p>tmux 窗口有很多快捷键。所有快捷键都是通过前缀键唤醒，默认前缀键是 ctrl + b，即当先按下 ctrl + b 时才启动快捷键。如 ctrl + b 后再按 d 表示退出当前窗口，会话以后台方式运行。ctrl + b 后再按 ? 表示唤醒帮助信息，退出帮助按 ESC 或 q 键。</p>
+<h2 id="新建会话"><a href="#新建会话" class="headerlink" title="新建会话"></a>新建会话</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认情况下，直接创建会话以序号命名，从0开始</span></span><br><span class="line">tmux</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建一个具有自定义名称 remote 的会话</span></span><br><span class="line">tmux new -s remote</span><br></pre></td></tr></table></figure>
+
+<h2 id="解绑会话"><a href="#解绑会话" class="headerlink" title="解绑会话"></a>解绑会话</h2><p>当窗口上没有运行程序时，可以使用如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmux detach</span><br></pre></td></tr></table></figure>
+<p>当窗口上运行程序时，使用快捷键：ctrl + b, d</p>
+<h2 id="查看会话"><a href="#查看会话" class="headerlink" title="查看会话"></a>查看会话</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tmux list-session</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">tmux <span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="绑定会话"><a href="#绑定会话" class="headerlink" title="绑定会话"></a>绑定会话</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 绑定会话名为 remote 的会话</span></span><br><span class="line">tmux attach -t remote</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">tmux attach-session -t remote</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果会话名是序号，也可以，比如绑定会话 0</span></span><br><span class="line">tmux attach -t 0</span><br></pre></td></tr></table></figure>
+
+<h2 id="关闭会话"><a href="#关闭会话" class="headerlink" title="关闭会话"></a>关闭会话</h2><p>当当前窗口绑定到该会话时</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exit</span></span><br><span class="line"><span class="comment"># 或者使用快捷键 ctrl + d</span></span><br></pre></td></tr></table></figure>
+<p>当要退出的会话 remote 或 0 没有绑定到当前窗口时</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tmux kill-session -t remote</span><br><span class="line">tmux kill-session -t 0</span><br></pre></td></tr></table></figure>
+
+<h2 id="切换会话"><a href="#切换会话" class="headerlink" title="切换会话"></a>切换会话</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换到会话 0</span></span><br><span class="line">tmux switch -t 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到会话 remote</span></span><br><span class="line">tmux switch -t remote</span><br></pre></td></tr></table></figure>
+
+<h2 id="会话改名"><a href="#会话改名" class="headerlink" title="会话改名"></a>会话改名</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把会话 0 改名为 remote</span></span><br><span class="line">tmux rename-session -t 0 remote</span><br></pre></td></tr></table></figure>
+
+<h2 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h2><p>当打开某个会话时，可以使用如下快捷键：</p>
+<ul>
+<li>ctrl + b, d: 分离当前会话</li>
+<li>ctrl + b, s: 列出所有会话</li>
+<li>ctrl + b, $: 为当前会话改名</li>
+</ul>
+<h1 id="窗口管理"><a href="#窗口管理" class="headerlink" title="窗口管理"></a>窗口管理</h1><h2 id="新建窗口"><a href="#新建窗口" class="headerlink" title="新建窗口"></a>新建窗口</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tmux new-window</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定名称</span></span><br><span class="line">tmux new-window -n newwin</span><br></pre></td></tr></table></figure>
+
+<h2 id="切换窗口"><a href="#切换窗口" class="headerlink" title="切换窗口"></a>切换窗口</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换到编号 0 的窗口</span></span><br><span class="line">tmux select-window -t 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到名称为 newwin 的窗口</span></span><br><span class="line">tmux select-window -t newwin</span><br></pre></td></tr></table></figure>
+
+<h2 id="窗口改名"><a href="#窗口改名" class="headerlink" title="窗口改名"></a>窗口改名</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把当前窗口重命名为 newwin2</span></span><br><span class="line">tmux rename-window newwin2</span><br></pre></td></tr></table></figure>
+
+<h2 id="窗口快捷键"><a href="#窗口快捷键" class="headerlink" title="窗口快捷键"></a>窗口快捷键</h2><p>ctrl + b, c：创建一个新窗口，状态栏会显示多个窗口的信息。<br>ctrl + b, p：切换到上一个窗口（按照状态栏上的顺序）。<br>ctrl + b, n：切换到下一个窗口。<br>ctrl + b, <number>：切换到指定编号的窗口，其中的<number>是状态栏上的窗口编号。<br>ctrl + b, w：从列表中选择窗口。<br>ctrl + b, ,：窗口重命名。</p>
+<h1 id="窗格操作"><a href="#窗格操作" class="headerlink" title="窗格操作"></a>窗格操作</h1><p>tmux 可以将当前窗口划分为多个窗格（pane），可以在每个窗格运行不同的命令。</p>
+<p>以下操作都是在当前窗口绑定到某个 tmux 会话下操作的。</p>
+<h2 id="划分窗格"><a href="#划分窗格" class="headerlink" title="划分窗格"></a>划分窗格</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 上下分割窗格</span></span><br><span class="line">tmux split-window</span><br><span class="line"></span><br><span class="line"><span class="comment"># 左右分割窗格</span></span><br><span class="line">tmux split-window -h</span><br></pre></td></tr></table></figure>
+
+<h2 id="光标在窗格间切换"><a href="#光标在窗格间切换" class="headerlink" title="光标在窗格间切换"></a>光标在窗格间切换</h2><p>虽然一个窗口下可以分割出多个窗格，但是鼠标切换不能简单的通过左键完成，需要使用命令完成</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 光标移动到上方窗格</span></span><br><span class="line">tmux select-pane -U</span><br><span class="line"></span><br><span class="line"><span class="comment"># 光标移动到下方窗格</span></span><br><span class="line">tmux select-pane -D</span><br><span class="line"></span><br><span class="line"><span class="comment"># 光标移动到左边窗格</span></span><br><span class="line">tmux select-pane -L</span><br><span class="line"></span><br><span class="line"><span class="comment"># 光标移动到右边窗格</span></span><br><span class="line">tmux select-pane -R</span><br></pre></td></tr></table></figure>
+
+<h2 id="交换窗格位置"><a href="#交换窗格位置" class="headerlink" title="交换窗格位置"></a>交换窗格位置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 窗格上移</span></span><br><span class="line">tmux swap-pane -U</span><br><span class="line"></span><br><span class="line"><span class="comment"># 窗格下移</span></span><br><span class="line">tmux swap-pane -D</span><br></pre></td></tr></table></figure>
+
+<h2 id="更多窗格快捷键"><a href="#更多窗格快捷键" class="headerlink" title="更多窗格快捷键"></a>更多窗格快捷键</h2><p>ctrl + b, %：划分左右两个窗格。<br>ctrl + b, “：划分上下两个窗格。<br>ctrl + b, <arrow key>：光标切换到其他窗格。<arrow key>是指向要切换到的窗格的方向键，比如切换到下方窗格，就按方向键↓。<br>ctrl + b, ;：光标切换到上一个窗格。<br>ctrl + b, o：光标切换到下一个窗格。<br>ctrl + b, {：当前窗格与上一个窗格交换位置。<br>ctrl + b, }：当前窗格与下一个窗格交换位置。<br>ctrl + b, ctrl + o：所有窗格向前移动一个位置，第一个窗格变成最后一个窗格。<br>ctrl + b, alt + o：所有窗格向后移动一个位置，最后一个窗格变成第一个窗格。<br>ctrl + b, x：关闭当前窗格。<br>ctrl + b, !：将当前窗格拆分为一个独立窗口。<br>ctrl + b, z：当前窗格全屏显示，再使用一次会变回原来大小。<br>ctrl + b, ctrl + <arrow key>：按箭头方向调整窗格大小。<br>ctrl + b, q：显示窗格编号。</p>
+<h1 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出所有快捷键，及其对应的 tmux 命令</span></span><br><span class="line">tmux list-keys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出所有 tmux 命令及其参数</span></span><br><span class="line">tmux list-commands</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出当前所有 tmux 会话的信息</span></span><br><span class="line">tmux info</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新加载当前的 tmux 配置</span></span><br><span class="line">tmux source-file ~/.tmux.conf</span><br></pre></td></tr></table></figure>
+
+<h1 id="TMUX-终端颜色"><a href="#TMUX-终端颜色" class="headerlink" title="TMUX 终端颜色"></a>TMUX 终端颜色</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.tmux.conf</span><br></pre></td></tr></table></figure>
+<p>增加如下内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># --------- 配置颜色 -------------</span></span><br><span class="line"><span class="built_in">set</span> -g default-terminal <span class="string">&quot;screen-256color&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置窗口样式</span></span><br><span class="line"><span class="comment"># 配置前景色与背景色</span></span><br><span class="line">setw -g window-status-fg cyan</span><br><span class="line">setw -g window-status-bg default</span><br><span class="line"><span class="comment"># setw -g window-status-attr dim</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置当前窗口的颜色</span></span><br><span class="line">setw -g window-status-current-fg white</span><br><span class="line">setw -g window-status-current-bg red</span><br><span class="line">setw -g window-status-current-attr bright</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置面板颜色</span></span><br><span class="line"><span class="built_in">set</span> -g pane-border-fg green</span><br><span class="line"><span class="built_in">set</span> -g pane-border-bg default</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置当前面板颜色</span></span><br><span class="line"><span class="built_in">set</span> -g pane-active-border-fg yellow</span><br><span class="line"><span class="built_in">set</span> -g pane-active-border-bg default</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> -g message-fg white</span><br><span class="line"><span class="built_in">set</span> -g message-bg black</span><br><span class="line"><span class="built_in">set</span> -g message-attr bright</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置鼠标上下滚轮翻页</span></span><br><span class="line"><span class="built_in">set</span> -g mouse on</span><br></pre></td></tr></table></figure>
+<p>然后，关闭所有 tmux 终端，再打开即可使用新的颜色配置。或者重新加载当前配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmux source-file ~/.tmux.conf</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2019/10/tmux.html">Tmux 使用教程</a></li>
+<li><a target="_blank" rel="noopener" href="https://danielmiessler.com/study/tmux/">Tactical tmux: The 10 Most Important Commands</a></li>
+<li><a target="_blank" rel="noopener" href="https://linuxize.com/post/getting-started-with-tmux/">Getting started with Tmux</a></li>
+<li><a target="_blank" rel="noopener" href="https://littlerpl.me/2019/12/18/tmux2/">终端复用神器tmux——tmux的自定义配置</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2023/03/01/linux-tmux-ssh/">https://xujinzh.github.io/2023/03/01/linux-tmux-ssh/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a><a class="post-meta__tags" href="/tags/ssh/">ssh</a><a class="post-meta__tags" href="/tags/tmux/">tmux</a></div><div class="post_share"><div class="social-share" data-image="/img/c7.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/03/04/linux-network-traffic-stats-vnstat/" title="Linux 网络流量统计工具 vnstat"><img class="cover" src="/img/c24.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Linux 网络流量统计工具 vnstat</div></div></a></div><div class="next-post pull-right"><a href="/2023/02/26/code-mmdetection/" title="MMDetection 目标检测使用"><img class="cover" src="/img/c20.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">MMDetection 目标检测使用</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/06/08/sshfs-mount-rfs-over-ssh/" title="使用 sshfs 挂载远程文件系统"><img class="cover" src="/img/c19.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-08</div><div class="title">使用 sshfs 挂载远程文件系统</div></div></a></div><div><a href="/2021/11/06/auto-email-server-ip/" title="服务器开机或IP改变自动发送通知邮件"><img class="cover" src="/img/c17.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-06</div><div class="title">服务器开机或IP改变自动发送通知邮件</div></div></a></div><div><a href="/2021/11/29/auto-email-server-shutdown/" title="服务器关机自动发送通知邮件"><img class="cover" src="/img/c2.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-29</div><div class="title">服务器关机自动发送通知邮件</div></div></a></div><div><a href="/2020/06/12/auto-start-command-in-linux/" title="Linux 系统中的开机自启命令简单介绍"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-12</div><div class="title">Linux 系统中的开机自启命令简单介绍</div></div></a></div><div><a href="/2021/09/06/awk-command-language/" title="Linux 中的 awk 命令"><img class="cover" src="/img/c28.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-06</div><div class="title">Linux 中的 awk 命令</div></div></a></div><div><a href="/2022/10/29/build-official-python3-11/" title="Ubuntu 上编译安装官网 Python"><img class="cover" src="/img/c11.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-29</div><div class="title">Ubuntu 上编译安装官网 Python</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E4%BC%9A%E8%AF%9D%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">常用会话操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B0%E5%BB%BA%E4%BC%9A%E8%AF%9D"><span class="toc-number">2.1.</span> <span class="toc-text">新建会话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E7%BB%91%E4%BC%9A%E8%AF%9D"><span class="toc-number">2.2.</span> <span class="toc-text">解绑会话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E4%BC%9A%E8%AF%9D"><span class="toc-number">2.3.</span> <span class="toc-text">查看会话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%91%E5%AE%9A%E4%BC%9A%E8%AF%9D"><span class="toc-number">2.4.</span> <span class="toc-text">绑定会话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%97%AD%E4%BC%9A%E8%AF%9D"><span class="toc-number">2.5.</span> <span class="toc-text">关闭会话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E4%BC%9A%E8%AF%9D"><span class="toc-number">2.6.</span> <span class="toc-text">切换会话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%9A%E8%AF%9D%E6%94%B9%E5%90%8D"><span class="toc-number">2.7.</span> <span class="toc-text">会话改名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">2.8.</span> <span class="toc-text">常用快捷键</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">窗口管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B0%E5%BB%BA%E7%AA%97%E5%8F%A3"><span class="toc-number">3.1.</span> <span class="toc-text">新建窗口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E7%AA%97%E5%8F%A3"><span class="toc-number">3.2.</span> <span class="toc-text">切换窗口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AA%97%E5%8F%A3%E6%94%B9%E5%90%8D"><span class="toc-number">3.3.</span> <span class="toc-text">窗口改名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AA%97%E5%8F%A3%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">3.4.</span> <span class="toc-text">窗口快捷键</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AA%97%E6%A0%BC%E6%93%8D%E4%BD%9C"><span class="toc-number">4.</span> <span class="toc-text">窗格操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%92%E5%88%86%E7%AA%97%E6%A0%BC"><span class="toc-number">4.1.</span> <span class="toc-text">划分窗格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%89%E6%A0%87%E5%9C%A8%E7%AA%97%E6%A0%BC%E9%97%B4%E5%88%87%E6%8D%A2"><span class="toc-number">4.2.</span> <span class="toc-text">光标在窗格间切换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E6%8D%A2%E7%AA%97%E6%A0%BC%E4%BD%8D%E7%BD%AE"><span class="toc-number">4.3.</span> <span class="toc-text">交换窗格位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E5%A4%9A%E7%AA%97%E6%A0%BC%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">4.4.</span> <span class="toc-text">更多窗格快捷键</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%91%BD%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text">其他命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TMUX-%E7%BB%88%E7%AB%AF%E9%A2%9C%E8%89%B2"><span class="toc-number">6.</span> <span class="toc-text">TMUX 终端颜色</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">7.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'd06909eb13c1a448038cd7b0dbba144d',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

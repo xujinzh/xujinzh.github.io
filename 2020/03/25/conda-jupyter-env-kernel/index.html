@@ -1,0 +1,369 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Conda 配置虚拟环境、jupyter kernel 以及环境迁移 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Miniconda 是一个 python 简约发行版，集成了 python、pip、conda 等，利用 conda 进行 python 软件包管理非常方便。另外，也可以为特定的项目创建特定的运行环境，再结合 jupyter 等能够非常方便切换各种独立环境。下面给出如何利用 conda 创建特定环境、配置不同 jupyter kernel 以及环境迁移。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Conda 配置虚拟环境、jupyter kernel 以及环境迁移">
+<meta property="og:url" content="https://xujinzh.github.io/2020/03/25/conda-jupyter-env-kernel/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="Miniconda 是一个 python 简约发行版，集成了 python、pip、conda 等，利用 conda 进行 python 软件包管理非常方便。另外，也可以为特定的项目创建特定的运行环境，再结合 jupyter 等能够非常方便切换各种独立环境。下面给出如何利用 conda 创建特定环境、配置不同 jupyter kernel 以及环境迁移。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c10.jpg">
+<meta property="article:published_time" content="2020-03-25T13:32:19.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.092Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="pip">
+<meta property="article:tag" content="jupyter">
+<meta property="article:tag" content="conda">
+<meta property="article:tag" content="kernel">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c10.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2020/03/25/conda-jupyter-env-kernel/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Conda 配置虚拟环境、jupyter kernel 以及环境迁移',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Conda 配置虚拟环境、jupyter kernel 以及环境迁移</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-03-25T13:32:19.000Z" title="发表于 2020-03-25 21:32:19">2020-03-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.092Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/python/">python</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Conda 配置虚拟环境、jupyter kernel 以及环境迁移"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>Miniconda 是一个 python 简约发行版，集成了 python、pip、conda 等，利用 conda 进行 python 软件包管理非常方便。另外，也可以为特定的项目创建特定的运行环境，再结合 jupyter 等能够非常方便切换各种独立环境。下面给出如何利用 conda 创建特定环境、配置不同 jupyter kernel 以及环境迁移。</p>
+<span id="more"></span>
+
+<h1 id="安装-Miniconda"><a href="#安装-Miniconda" class="headerlink" title="安装 Miniconda"></a>安装 Miniconda</h1><p>从官网下载 miniconda 并安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装最新版 miniconda</span></span><br><span class="line">wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh</span><br><span class="line"><span class="built_in">chmod</span> +x Miniconda3*</span><br><span class="line">./Miniconda3*</span><br></pre></td></tr></table></figure>
+
+<p>其他历史版本请从 <a target="_blank" rel="noopener" href="https://repo.anaconda.com/miniconda/">miniconda archive 官网</a>下载。</p>
+<h1 id="安装特定环境"><a href="#安装特定环境" class="headerlink" title="安装特定环境"></a>安装特定环境</h1><h2 id="conda-update"><a href="#conda-update" class="headerlink" title="conda update"></a>conda update</h2><p>创建新的环境，命名为 toplayer，安装 python 版本 3.8</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果安装 miniconda 时没有初始化，需要初始化，重新登陆</span></span><br><span class="line">conda init</span><br><span class="line"><span class="comment"># 如果不想 conda 环境在启动 shell 时被激活，可以使用如下方法设置</span></span><br><span class="line">conda config --<span class="built_in">set</span> auto_activate_base <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 建议安装 jupyterlab，这样在虚拟环境中就可以不用安装了</span></span><br><span class="line"><span class="comment"># 该代码针对本篇第3节</span></span><br><span class="line">pip install jupyterlab</span><br></pre></td></tr></table></figure>
+
+<p>如果长时间未更新 conda，可以使用下面方式更新：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda update -n base -c defaults conda</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装虚拟环境</span></span><br><span class="line">conda create -n toplayer python=3.8</span><br><span class="line"><span class="comment"># 激活虚拟环境</span></span><br><span class="line">conda activate toplayer</span><br><span class="line"><span class="comment"># 退出虚拟环境</span></span><br><span class="line">conda deactivate</span><br></pre></td></tr></table></figure>
+
+<p>或者通过 yaml 创建虚拟环境，具体地，首先编写 yaml 配置文件，这里命名随便，如 test.yaml：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">toplayer</span></span><br><span class="line"><span class="attr">channels:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">conda-forge</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">defaults</span></span><br><span class="line"><span class="attr">dependencies:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">python=3.8</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">pip</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">jupyter</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">nb_conda</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">ffmpeg</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">pip:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">scipy</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">sympy</span></span><br></pre></td></tr></table></figure>
+<p>然后，使用如下命令安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda <span class="built_in">env</span> create -f test.yaml</span><br></pre></td></tr></table></figure>
+
+<h2 id="删除虚拟环境"><a href="#删除虚拟环境" class="headerlink" title="删除虚拟环境"></a>删除虚拟环境</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除虚拟环境</span></span><br><span class="line">conda <span class="built_in">remove</span> -n toplayer --all</span><br></pre></td></tr></table></figure>
+
+<p>注意，conda 版本要求 4.6+</p>
+<h2 id="列出所有安装的环境"><a href="#列出所有安装的环境" class="headerlink" title="列出所有安装的环境"></a>列出所有安装的环境</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在主环境下</span></span><br><span class="line">conda <span class="built_in">env</span> list</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">conda info -e</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装-jupyter-kernel"><a href="#安装-jupyter-kernel" class="headerlink" title="安装  jupyter kernel"></a>安装  jupyter kernel</h1><p>在虚拟环境安装需要的软件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 首先激活虚拟环境</span></span><br><span class="line">conda activate toplayer</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装需要软件</span></span><br><span class="line">conda install ipython jupyterlab</span><br><span class="line"><span class="comment"># 如果在 base 主环境中已经安装了 jupyterlab，那么可以只需要安装 ipykernel</span></span><br><span class="line">pip install ipykernel ipywidgets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在虚拟环境安装 jupyter kernel，并命名</span></span><br><span class="line">python -m ipykernel install --user --name toplayer --display-name <span class="string">&quot;Python3(toplayer)&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在主环境中打开 jupyterlab</span></span><br><span class="line">conda deactivate</span><br><span class="line"><span class="comment"># 注意这里尝试退出虚拟环境，并进入到主环境，主环境以 base 显示，如果没有显示任何环境名，可以使用如下命令进入主环境</span></span><br><span class="line">conda activate</span><br><span class="line"><span class="comment"># 打开 jupyterlab</span></span><br><span class="line">jupyterlab</span><br></pre></td></tr></table></figure>
+
+<p>此时，刷新 jupyter notebook 就可以从 kernel 中看到名为 Python3(toplayer) 的 kernel</p>
+<p><strong>ipynb文件过大，导致加载慢</strong>：</p>
+<p>加载慢大多是因为 ipynb 运行结果多导致的，可以尝试清空每个单元格的结果。通过命令行，可以实现：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 保留原 ipynb，导出一个没有输出结果的 ipynb</span></span><br><span class="line">jupyter nbconvert --ClearOutputPreprocessor.enabled=True --to notebook --output=NotebookNoOut large_ipynb.ipynb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 直接清空 ipynb 的输出结果</span></span><br><span class="line">jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace large_ipynb.ipynb</span><br></pre></td></tr></table></figure>
+
+<h1 id="卸载不想要的-jupyter-kernel"><a href="#卸载不想要的-jupyter-kernel" class="headerlink" title="卸载不想要的 jupyter kernel"></a>卸载不想要的 jupyter kernel</h1><p>查看有哪些 jupyter kernel</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter kernelspec list</span><br></pre></td></tr></table></figure>
+
+<p>显示结果如下（示例）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Available kernels:</span><br><span class="line">  perslay     /home/jinzhongxu/.local/share/jupyter/kernels/perslay</span><br><span class="line">  toplayer    /home/jinzhongxu/.local/share/jupyter/kernels/toplayer</span><br><span class="line">  python3     /usr/local/miniconda/share/jupyter/kernels/python3</span><br><span class="line">  c           /usr/local/share/jupyter/kernels/c</span><br></pre></td></tr></table></figure>
+
+<p>删除不需要的 kernel</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jupyter kernelspec uninstall toplayer</span><br><span class="line">jupyter kernelspec uninstall perslay</span><br><span class="line">jupyter kernelspec uninstall c</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="环境迁移"><a href="#环境迁移" class="headerlink" title="环境迁移"></a>环境迁移</h1><h2 id="适用于纯-pip-安装的包"><a href="#适用于纯-pip-安装的包" class="headerlink" title="适用于纯 pip 安装的包"></a>适用于纯 pip 安装的包</h2><p>把包写入文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可能包含类似 file:///tmp/... 这样的内容，不方便安装</span></span><br><span class="line">python -m pip freeze &gt; requirements.txt</span><br><span class="line"><span class="comment"># 或者，只列出包和版本信息。推荐</span></span><br><span class="line">python -m pip list --format=freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="适用于纯-conda-安装的包"><a href="#适用于纯-conda-安装的包" class="headerlink" title="适用于纯 conda 安装的包"></a>适用于纯 conda 安装的包</h2><p>假设已经安装有 miniconda 或 anaconda，并配置好环境变量。</p>
+<p>把包写入文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda list --<span class="built_in">export</span> &gt; requirements.txt</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">conda list -e &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda create --name &lt;<span class="built_in">env</span>&gt; --file requirements.txt</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="适用于-conda-和-pip-混合安装的包"><a href="#适用于-conda-和-pip-混合安装的包" class="headerlink" title="适用于 conda 和 pip 混合安装的包"></a>适用于 conda 和 pip 混合安装的包</h2><p>假设已经安装有 miniconda 或 anaconda，并配置好环境变量。同时，conda init &lt;bash&#x2F;zsh&gt; 已经激活</p>
+<p>把包写入文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先进入环境</span></span><br><span class="line">conda activate &lt;<span class="built_in">env</span>&gt;</span><br><span class="line"><span class="comment"># 把环境信息写入环境配置文件。yaml 里的 name 可以根据自己喜好改写</span></span><br><span class="line">conda <span class="built_in">env</span> <span class="built_in">export</span> &gt; environment.yaml</span><br></pre></td></tr></table></figure>
+
+<p>安装</p>
+<p>在新的服务器上已经安装好 miniconda 或 anaconda，并配置好环境变量。同时，conda init &lt;bash&#x2F;zsh&gt; 已经激活</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 直接根据配置文件创建环境</span></span><br><span class="line">conda <span class="built_in">env</span> create -f environment.yaml</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="迁移到无网络环境机器上"><a href="#迁移到无网络环境机器上" class="headerlink" title="迁移到无网络环境机器上"></a>迁移到无网络环境机器上</h2><p>当我们想要把外网（能够连接互联网）上的某个 conda 环境（如：<code>/usr/local/miniconda/envs/sam</code>）迁移到内网（不能够连接互联网）上的某个机器上。我们可以直接把外网的带迁移的 conda 环境打包到内网机器上（需要内网机器安装了 conda），基本步骤如下：</p>
+<ol>
+<li>下载 <code>miniconda.sh</code>、打包压缩 <code>/usr/local/miniconda/envs/sam</code> 为 <code>sam.zip</code>；</li>
+<li>拷贝 <code>miniconda.sh</code> 和 <code>sam.zip</code> 到内网机器；</li>
+<li>在内网机器先安装 <code>miniconda.sh</code>，添加到环境变量，然后激活 conda：<code>conda init</code></li>
+<li>解压 <code>sam.zip</code>，如解压到 <code>/root/sam</code></li>
+<li>克隆 <code>/root/sam</code> 到 conda 新环境：  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda create -n sam-new --<span class="built_in">clone</span> /root/sam</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>在第5步中或者直接解压 <code>sam.zip</code> 到一个目录，即可使用。使用时请使用完整 Python 路径</p>
+<p>另一种解决方法是使用包 conda-pack:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">pip install conda-pack</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打包环境</span></span><br><span class="line"><span class="comment"># Pack environment env_name into env_name.tar.gz</span></span><br><span class="line">conda pack -n env_name</span><br><span class="line"></span><br><span class="line"><span class="comment"># Pack environment env_name into new_name.tar.gz</span></span><br><span class="line">conda pack -n env_name -o new_name.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># Pack environment located at an explicit path into my_env.tar.gz</span></span><br><span class="line">conda pack -p /explicit/path/to/env_name</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在新机器上配置环境</span></span><br><span class="line"><span class="comment"># Unpack environment into directory `env_name`</span></span><br><span class="line"><span class="built_in">mkdir</span> -p env_name</span><br><span class="line">tar -xzf env_name.tar.gz -C new_env_path</span><br><span class="line"></span><br><span class="line"><span class="comment"># Use Python without activating or fixing the prefixes. Most Python</span></span><br><span class="line"><span class="comment"># libraries will work fine, but things that require prefix cleanups</span></span><br><span class="line"><span class="comment"># will fail.</span></span><br><span class="line">./env_name/bin/python</span><br><span class="line"></span><br><span class="line"><span class="comment"># Activate the environment. This adds `env_name/bin` to your path</span></span><br><span class="line"><span class="built_in">source</span> env_name/bin/activate</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run Python from in the environment</span></span><br><span class="line">(env_name) $ python</span><br><span class="line"></span><br><span class="line"><span class="comment"># Cleanup prefixes from in the active environment.</span></span><br><span class="line"><span class="comment"># Note that this command can also be run without activating the environment</span></span><br><span class="line"><span class="comment"># as long as some version of Python is already installed on the machine.</span></span><br><span class="line">(env_name) $ conda-unpack</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="多虚拟环境运行程序"><a href="#多虚拟环境运行程序" class="headerlink" title="多虚拟环境运行程序"></a>多虚拟环境运行程序</h1><p>对于创建有多个虚拟环境的服务器，当运行 python 程序时会调用哪个虚拟环境中的模块呢？</p>
+<blockquote>
+<p>一句话，你使用哪个虚拟环境中的 python 就调用哪个虚拟环境中的模块.</p>
+</blockquote>
+<p>因此，建议在命令行运行程序时使用 python 的完整路径，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 调用 base 环境中的模块</span></span><br><span class="line">/usr/local/miniconda/bin/python main.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用 deeplabcut 环境中的模块</span></span><br><span class="line">/usr/local/miniconda/env/deeplabcut/bin/python main.py</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="http://echrislynch.com/2019/02/01/adding-an-environment-to-jupyter-notebooks/">Adding An Environment to Jupyter Notebooks</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/lyy14011305/article/details/59500819">用conda创建python虚拟环境</a></li>
+<li><a target="_blank" rel="noopener" href="https://pip.pypa.io/en/stable/cli/pip_freeze/">pip freeze</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2020/03/25/conda-jupyter-env-kernel/">https://xujinzh.github.io/2020/03/25/conda-jupyter-env-kernel/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a><a class="post-meta__tags" href="/tags/pip/">pip</a><a class="post-meta__tags" href="/tags/jupyter/">jupyter</a><a class="post-meta__tags" href="/tags/conda/">conda</a><a class="post-meta__tags" href="/tags/kernel/">kernel</a></div><div class="post_share"><div class="social-share" data-image="/img/c10.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/03/26/ml-nn-loss-accuracy/" title="机器学习神经网络模型loss和accuracy的理解"><img class="cover" src="/img/c16.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">机器学习神经网络模型loss和accuracy的理解</div></div></a></div><div class="next-post pull-right"><a href="/2020/03/24/exchange-and-partial-integral/" title="换元积分和分部积分"><img class="cover" src="/img/c15.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">换元积分和分部积分</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/10/18/jupyter-install-package/" title="在 jupyter 中安装 Python 第三方软件包"><img class="cover" src="/img/c17.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-18</div><div class="title">在 jupyter 中安装 Python 第三方软件包</div></div></a></div><div><a href="/2022/07/04/anaconda-pip-offline-install-whl/" title="通过 pip 离线安装 whl、tar.gz 到 anaconda"><img class="cover" src="/img/c19.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-04</div><div class="title">通过 pip 离线安装 whl、tar.gz 到 anaconda</div></div></a></div><div><a href="/2020/05/27/conda-add-channels/" title="为 Conda 设置可用源"><img class="cover" src="/img/c10.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-05-27</div><div class="title">为 Conda 设置可用源</div></div></a></div><div><a href="/2022/05/23/conda-update-python/" title="conda 更新 python 版本"><img class="cover" src="/img/c25.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-23</div><div class="title">conda 更新 python 版本</div></div></a></div><div><a href="/2021/08/31/jupyter-cell-proxy/" title="设置 Jupyter Cell Proxy"><img class="cover" src="/img/c16.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-31</div><div class="title">设置 Jupyter Cell Proxy</div></div></a></div><div><a href="/2022/01/23/jupyter-ipython-magic/" title="ipython 中的魔法命令"><img class="cover" src="/img/c23.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-23</div><div class="title">ipython 中的魔法命令</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Miniconda"><span class="toc-number">1.</span> <span class="toc-text">安装 Miniconda</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E7%89%B9%E5%AE%9A%E7%8E%AF%E5%A2%83"><span class="toc-number">2.</span> <span class="toc-text">安装特定环境</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#conda-update"><span class="toc-number">2.1.</span> <span class="toc-text">conda update</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83"><span class="toc-number">2.2.</span> <span class="toc-text">创建虚拟环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83"><span class="toc-number">2.3.</span> <span class="toc-text">删除虚拟环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%97%E5%87%BA%E6%89%80%E6%9C%89%E5%AE%89%E8%A3%85%E7%9A%84%E7%8E%AF%E5%A2%83"><span class="toc-number">2.4.</span> <span class="toc-text">列出所有安装的环境</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-jupyter-kernel"><span class="toc-number">3.</span> <span class="toc-text">安装  jupyter kernel</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%B8%E8%BD%BD%E4%B8%8D%E6%83%B3%E8%A6%81%E7%9A%84-jupyter-kernel"><span class="toc-number">4.</span> <span class="toc-text">卸载不想要的 jupyter kernel</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E8%BF%81%E7%A7%BB"><span class="toc-number">5.</span> <span class="toc-text">环境迁移</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E4%BA%8E%E7%BA%AF-pip-%E5%AE%89%E8%A3%85%E7%9A%84%E5%8C%85"><span class="toc-number">5.1.</span> <span class="toc-text">适用于纯 pip 安装的包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E4%BA%8E%E7%BA%AF-conda-%E5%AE%89%E8%A3%85%E7%9A%84%E5%8C%85"><span class="toc-number">5.2.</span> <span class="toc-text">适用于纯 conda 安装的包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E4%BA%8E-conda-%E5%92%8C-pip-%E6%B7%B7%E5%90%88%E5%AE%89%E8%A3%85%E7%9A%84%E5%8C%85"><span class="toc-number">5.3.</span> <span class="toc-text">适用于 conda 和 pip 混合安装的包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%81%E7%A7%BB%E5%88%B0%E6%97%A0%E7%BD%91%E7%BB%9C%E7%8E%AF%E5%A2%83%E6%9C%BA%E5%99%A8%E4%B8%8A"><span class="toc-number">5.4.</span> <span class="toc-text">迁移到无网络环境机器上</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%9A%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F"><span class="toc-number">6.</span> <span class="toc-text">多虚拟环境运行程序</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">7.</span> <span class="toc-text">参考链接</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '1829eecd152b0e4a82964740d5881981',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

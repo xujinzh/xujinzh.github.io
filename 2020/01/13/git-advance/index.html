@@ -1,0 +1,433 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>git 知识汇总补充 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Git的分支功能可以支持同时进行多个功能的开发和版本管理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git 知识汇总补充">
+<meta property="og:url" content="https://xujinzh.github.io/2020/01/13/git-advance/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="Git的分支功能可以支持同时进行多个功能的开发和版本管理。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c28.jpg">
+<meta property="article:published_time" content="2020-01-13T11:39:56.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.096Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="github">
+<meta property="article:tag" content="git">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c28.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2020/01/13/git-advance/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'git 知识汇总补充',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">git 知识汇总补充</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-01-13T11:39:56.000Z" title="发表于 2020-01-13 19:39:56">2020-01-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.096Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="git 知识汇总补充"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>Git的分支功能可以支持同时进行多个功能的开发和版本管理。</p>
+<span id="more"></span>
+
+<h1 id="查看分支情况"><a href="#查看分支情况" class="headerlink" title="查看分支情况"></a>查看分支情况</h1><ul>
+<li>查看当前分支和本地分支</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看远程分支</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -r</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看所有分支</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -a </span><br></pre></td></tr></table></figure>
+
+<h1 id="创建本地分支"><a href="#创建本地分支" class="headerlink" title="创建本地分支"></a>创建本地分支</h1><ul>
+<li>直接创建本地分支</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch issue3</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>切换分支</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout issue3</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建并切换本地分支</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b issue3</span><br></pre></td></tr></table></figure>
+
+<h1 id="合并分支"><a href="#合并分支" class="headerlink" title="合并分支"></a>合并分支</h1><p>使用如下命令合并分支，如果目前是在issue3分支，首先需要切换到master分支，然后再合并issue3分支到master分支</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout master</span><br><span class="line">git merge issue3</span><br></pre></td></tr></table></figure>
+
+<p>除了merge命令外，还有一种命令可以合并分支，那就是rebase，更多内容可以查看：<a target="_blank" rel="noopener" href="https://backlog.com/git-tutorial/cn/stepup/stepup1_4.html">分支的合并</a></p>
+<h1 id="删除分支"><a href="#删除分支" class="headerlink" title="删除分支"></a>删除分支</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -d issue3</span><br></pre></td></tr></table></figure>
+
+<h1 id="删除远程分支"><a href="#删除远程分支" class="headerlink" title="删除远程分支"></a>删除远程分支</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin --delete add-license-1</span><br></pre></td></tr></table></figure>
+
+<p><font color='dd0000'>注意：删除远程分支不使用git branch -d，而是使用git push origin –delete命令</font></p>
+<p>但是，当远程仓库没有该分支时，或者在本地使用git branch -r能够看到远程仓库名，但远程仓库却已经不存在时，使用上面删除远程分支，会出现如下错误：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error: unable to delete &#x27;xxx&#x27;: remote ref does not exist </span><br></pre></td></tr></table></figure>
+
+<p>这时候需要我们更新本地仓库的远程仓库列表信息，命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git fetch --prune</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新后，会列出远程仓库origin已经不存在的分支</span></span><br><span class="line">// From github.com:xujinzh/JBlog</span><br><span class="line">//  - [deleted]         (none)     -&gt; origin/add-license-1</span><br><span class="line">//  - [deleted]         (none)     -&gt; origin/dependabot/npm_and_yarn/acorn-7.1.1</span><br></pre></td></tr></table></figure>
+
+<p>之后，再使用命令 git branch -r 查看，就会发现最新的远程仓库列表信息</p>
+<h1 id="添加标签"><a href="#添加标签" class="headerlink" title="添加标签"></a>添加标签</h1><p>首先运行如下命令，查看commit id，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> </span><br></pre></td></tr></table></figure>
+
+<p>运行如下命令添加标签</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag 1.0.0 c584a15bd2</span><br></pre></td></tr></table></figure>
+
+<p>其中，1.0.0为标签，版本号，c584a15bd2为commit id，只要唯一即可。</p>
+<h1 id="查看标签"><a href="#查看标签" class="headerlink" title="查看标签"></a>查看标签</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -n</span><br></pre></td></tr></table></figure>
+
+<h1 id="删除标签"><a href="#删除标签" class="headerlink" title="删除标签"></a>删除标签</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -d &lt;tagname&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="提交本地分支-issue3-到远程分支-dis"><a href="#提交本地分支-issue3-到远程分支-dis" class="headerlink" title="提交本地分支 issue3 到远程分支 dis"></a>提交本地分支 issue3 到远程分支 dis</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># issue3 表示本地分支</span></span><br><span class="line"><span class="comment"># dis 表示远程分支</span></span><br><span class="line">git push -u origin issue3:dis</span><br></pre></td></tr></table></figure>
+
+<p><strong>如果远程分支不存在，则自动创建一个分支</strong></p>
+<h1 id="删除远程分支-dis"><a href="#删除远程分支-dis" class="headerlink" title="删除远程分支 dis"></a>删除远程分支 dis</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -u origin :dis</span><br></pre></td></tr></table></figure>
+
+<h1 id="自建-git-托管服务器"><a href="#自建-git-托管服务器" class="headerlink" title="自建 git 托管服务器"></a>自建 git 托管服务器</h1><p>这里以 Ubuntu 为例</p>
+<p>首先，需要有一个 vps 服务器，假设 IP 地址是 1.14.1.14</p>
+<p>其次，在服务器上增加用户和组，比如添加 jinzhongxu 用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adduser jinzhongxu</span><br></pre></td></tr></table></figure>
+
+<p>然后，安装git命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update &amp;&amp; sudo apt install git</span><br></pre></td></tr></table></figure>
+
+<p>最后，建立远程仓库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init --bare monkey.git</span><br></pre></td></tr></table></figure>
+
+<p>把远程仓库克隆到本地</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> jinzhongxu@1.14.1.14:/home/jinzhongxu/monkey.git</span><br></pre></td></tr></table></figure>
+
+<h1 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a>远程仓库</h1><p>当从远程仓库克隆后，git默认远程仓库名为origin，并将远程的master分支与本地的master分支对应。查看远程仓库名称使用如下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote</span><br></pre></td></tr></table></figure>
+
+<p>or</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
+
+<p>将显示更多信息，不仅有远程仓库名称，还有fetch和push的远程仓库地址。当没有push权限时，将不显示push地址。</p>
+<h1 id="多人协作开发提交"><a href="#多人协作开发提交" class="headerlink" title="多人协作开发提交"></a>多人协作开发提交</h1><p>当克隆远程仓库到本地，一般是master分支，产品版本分支，该分支是主分支，时刻与远程仓库同步；除此之外，开发人员在本地还会创建dev分支、bug分支和feature分支。其中dev分支是开发分支，团队开发人员开发分支，重大版本迭代时merge到主分支，一般也需要时刻与远程dev分支同步；bug分支是本地修复bug的分支，一般不进行远程同步；feature分支同步取决于团队需要。该小节可参考：<a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/wiki/896043488029600/900375748016320">多人协作</a></p>
+<ol>
+<li><p>leader或首位开发者在本地master分支外使用如下命令创建了dev分支，并提交到远程origin仓库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在本地创建dev分支，并切换到dev分支，进行开发</span></span><br><span class="line">git checkout -b dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">推送本地dev分支到远程仓库origin，并同时在远程仓库origin创建dev分支</span></span><br><span class="line">git push origin dev</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二位开发人员首先克隆远程开发仓库到本地，然后在本地增加远程origin&#x2F;dev分支到本地dev分支</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">克隆远程origin仓库到本地机器</span></span><br><span class="line">git clone jinzhongxu@1.14.1.14:/home/jinzhongxu/monkey.git</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看分支情况，特别是远程，发现远程仓库origin除了有master分支，还有分支origin/dev</span></span><br><span class="line">git branch -a</span><br><span class="line">//* master</span><br><span class="line">//  remotes/origin/HEAD -&gt; origin/master</span><br><span class="line">//  remotes/origin/dev</span><br><span class="line">//  remotes/origin/master</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将远程仓库origin的dev分支增加到本地，并切换到本地dev分支</span></span><br><span class="line">git checkout -b dev origin/dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看本地分支信息</span></span><br><span class="line">git branch</span><br><span class="line">//* dev</span><br><span class="line">//  master</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">该开发人员进行了本地开发，并在dev分支增加部分代码，然后提交到远程仓库origin的dev分支</span></span><br><span class="line">git status</span><br><span class="line">git add .</span><br><span class="line">git commit -m &quot;repair bug&quot;</span><br><span class="line">git status</span><br><span class="line">git push origin dev:dev</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第三位开发人员也同样和第二位开发人员一样，下载了远程仓库origin的master分支和dev分支，并同时进行开发</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">克隆远程origin仓库到本地机器</span></span><br><span class="line">git clone jinzhongxu@1.14.1.14:/home/jinzhongxu/monkey.git</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看分支情况，特别是远程，发现远程仓库origin除了有master分支，还有分支origin/dev</span></span><br><span class="line">git branch -a</span><br><span class="line">//* master</span><br><span class="line">//  remotes/origin/HEAD -&gt; origin/master</span><br><span class="line">//  remotes/origin/dev</span><br><span class="line">//  remotes/origin/master</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将远程仓库origin的dev分支增加到本地，并切换到本地dev分支</span></span><br><span class="line">git checkout -b dev origin/dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看本地分支信息</span></span><br><span class="line">git branch</span><br><span class="line">//* dev</span><br><span class="line">//  master</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">该开发人员进行了本地开发，并在dev分支增加部分代码，然后提交到远程仓库origin的dev分支</span></span><br><span class="line">git status</span><br><span class="line">git add .</span><br><span class="line">git commit -m &quot;repair bug&quot;</span><br><span class="line">git status</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">但是，使用如下命令在提交时出现问题</span></span><br><span class="line">git push origin dev:dev</span><br><span class="line">// To 1.14.1.14:/home/jinzhongxu/monkey.git</span><br><span class="line">//  ! [rejected]        dev -&gt; dev (fetch first)</span><br><span class="line">// error: failed to push some refs to &#x27;jinzhongxu@1.14.1.14:/home/jinzhongxu/monkey.git&#x27;</span><br><span class="line">// hint: Updates were rejected because the remote contains work that you do</span><br><span class="line">// hint: not have locally. This is usually caused by another repository pushing</span><br><span class="line">// hint: to the same ref. You may want to first integrate the remote changes</span><br><span class="line">// hint: (e.g., &#x27;git pull ...&#x27;) before pushing again.</span><br><span class="line">// hint: See the &#x27;Note about fast-forwards&#x27; in &#x27;git push --help&#x27; for details.</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">上面的错误提示很明白，那就是团队中已经有人提交的最新更新到远程dev分支，需要先git pull，然后再git push，使用如下命令解决</span></span><br><span class="line">git pull # 如果失败，可能的原因是没有指定本地dev分支与远程origin/dev分支的链接，可使用右边命令设置dev和origin/dev的链接：git branch --set-upstream-to=origin/dev dev</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">成功后，出现如下提示，就是需要手动修改冲突，然后，再git push</span></span><br><span class="line">// remote: Counting objects: 5, done.</span><br><span class="line">// remote: Compressing objects: 100% (3/3), done.</span><br><span class="line">// remote: Total 3 (delta 1), reused 0 (delta 0)</span><br><span class="line">// Unpacking objects: 100% (3/3), done.</span><br><span class="line">// From 1.14.1.14:/home/jinzhongxu/monkey</span><br><span class="line">//    4461cc8..7056c16  dev        -&gt; origin/dev</span><br><span class="line">// Auto-merging main.py</span><br><span class="line">// CONFLICT (content): Merge conflict in main.py</span><br><span class="line">// Automatic merge failed; fix conflicts and then commit the result.</span><br><span class="line"></span><br><span class="line">git status</span><br><span class="line">git add main.py</span><br><span class="line">git commit -m &quot;repair bugs for xlabel and ylabel&quot;</span><br><span class="line">git push origin dev</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>前面三个过程，特别是2和3，是公司开发时常遇到，并且经常这样的迭代进行。特别是3，我们要经常使用，要熟练掌握。</p>
+</li>
+</ol>
+<h1 id="更改远程仓库的-URL"><a href="#更改远程仓库的-URL" class="headerlink" title="更改远程仓库的 URL"></a>更改远程仓库的 URL</h1><p>当远程仓库 IP 地址更改、SSH 和 HTTPS 切换等其他导致远程仓库的 URL 地址发生改变时，需要切换地址，才能够正确提交本地修改的代码等内容上传到远程仓库。</p>
+<p>更改远程仓库的 URL 需要使用命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote set-url</span><br></pre></td></tr></table></figure>
+
+<p><code>git remote set-url</code> 命令使用两个参数：</p>
+<ul>
+<li><p>现有远程仓库的名称。 例如，<code>源仓库</code>或<code>上游仓库</code>是两种常见选择。</p>
+</li>
+<li><p>远程仓库的新 URL。 例如：</p>
+<ul>
+<li><p>如果您要更新为使用 HTTPS，您的 URL 可能如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/USERNAME/REPOSITORY.git</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果您要更新为使用 SSH，您的 URL 可能如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git@github.com:USERNAME/REPOSITORY.git</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="将远程-URL-从-SSH-切换到-HTTPS"><a href="#将远程-URL-从-SSH-切换到-HTTPS" class="headerlink" title="将远程 URL 从 SSH 切换到 HTTPS"></a><a target="_blank" rel="noopener" href="https://docs.github.com/cn/free-pro-team@latest/github/using-git/changing-a-remotes-url#%E5%B0%86%E8%BF%9C%E7%A8%8B-url-%E4%BB%8E-ssh-%E5%88%87%E6%8D%A2%E5%88%B0-https">将远程 URL 从 SSH 切换到 HTTPS</a></h2><ol>
+<li><p>打开 Terminal（终端）。</p>
+</li>
+<li><p>将当前工作目录更改为您的本地仓库。</p>
+</li>
+<li><p>列出现有远程仓库以获取要更改的远程仓库的名称。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git remote -v</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">origin  git@github.com:USERNAME/REPOSITORY.git (fetch)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">origin  git@github.com:USERNAME/REPOSITORY.git (push)</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote <span class="keyword">set</span>-url</span><br></pre></td></tr></table></figure>
+
+<p>命令将远程的 URL 从 SSH 更改为 HTTPS。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git remote set-url origin https://github.com/USERNAME/REPOSITORY.git</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证远程 URL 是否已更改。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git remote -v</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Verify new remote URL</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">origin  https://github.com/USERNAME/REPOSITORY.git (fetch)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">origin  https://github.com/USERNAME/REPOSITORY.git (push)</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>下次对远程仓库执行 <code>git fetch</code>、<code>git pull</code> 或 <code>git push</code> 操作时，您需要提供 GitHub 用户名和密码。 When Git prompts you for your password, enter your personal access token (PAT) instead. Password-based authentication for Git is deprecated, and using a PAT is more secure. For more information, see “<a target="_blank" rel="noopener" href="https://docs.github.com/cn/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token">Creating a personal access token</a>.”</p>
+<p>You can <a target="_blank" rel="noopener" href="https://docs.github.com/cn/free-pro-team@latest/github/using-git/caching-your-github-credentials-in-git">use a credential helper</a> so Git will remember your GitHub username and personal access token every time it talks to GitHub.</p>
+<h2 id="将远程-URL-从-HTTPS-切换到-SSH"><a href="#将远程-URL-从-HTTPS-切换到-SSH" class="headerlink" title="将远程 URL 从 HTTPS 切换到 SSH"></a><a target="_blank" rel="noopener" href="https://docs.github.com/cn/free-pro-team@latest/github/using-git/changing-a-remotes-url#%E5%B0%86%E8%BF%9C%E7%A8%8B-url-%E4%BB%8E-https-%E5%88%87%E6%8D%A2%E5%88%B0-ssh">将远程 URL 从 HTTPS 切换到 SSH</a></h2><ol>
+<li><p>打开 Terminal（终端）。</p>
+</li>
+<li><p>将当前工作目录更改为您的本地仓库。</p>
+</li>
+<li><p>列出现有远程仓库以获取要更改的远程仓库的名称。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git remote -v</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">origin  https://github.com/USERNAME/REPOSITORY.git (fetch)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">origin  https://github.com/USERNAME/REPOSITORY.git (push)</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote <span class="keyword">set</span>-url</span><br></pre></td></tr></table></figure>
+
+<p>命令将远程的 URL 从 HTTPS 更改为 SSH。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git remote set-url origin git@github.com:USERNAME/REPOSITORY.git</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证远程 URL 是否已更改。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git remote -v</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Verify new remote URL</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">origin  git@github.com:USERNAME/REPOSITORY.git (fetch)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">origin  git@github.com:USERNAME/REPOSITORY.git (push)</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="提交时忽略某些文件或文件夹"><a href="#提交时忽略某些文件或文件夹" class="headerlink" title="提交时忽略某些文件或文件夹"></a>提交时忽略某些文件或文件夹</h1><p>在仓库主目录下，编写</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim .gitignore </span><br></pre></td></tr></table></figure>
+<p>添加忽略的（或包含的）文件、文件夹。这里以 hexo 部署博客为例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br><span class="line">db.json</span><br><span class="line">*.<span class="built_in">log</span></span><br><span class="line">node_modules/</span><br><span class="line">public/</span><br><span class="line">.deploy*/</span><br></pre></td></tr></table></figure>
+<p>如果出现 <code>!db.json</code> 即表示提交时包含 <code>db.json</code>.</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://docs.github.com/cn/free-pro-team@latest/github/using-git/changing-a-remotes-url">更改远程仓库的 URL</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2020/01/13/git-advance/">https://xujinzh.github.io/2020/01/13/git-advance/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/github/">github</a><a class="post-meta__tags" href="/tags/git/">git</a></div><div class="post_share"><div class="social-share" data-image="/img/c28.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/01/16/storm-setup/" title="zookeeper 和 storm 安装与启动"><img class="cover" src="/img/c8.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">zookeeper 和 storm 安装与启动</div></div></a></div><div class="next-post pull-right"><a href="/2020/01/13/git-basic/" title="git 基础知识"><img class="cover" src="/img/c19.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">git 基础知识</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/01/13/git-basic/" title="git 基础知识"><img class="cover" src="/img/c19.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-13</div><div class="title">git 基础知识</div></div></a></div><div><a href="/2021/10/21/git-new-local-codes-to-new-repo/" title="利用 git 把本地代码保存到远程仓库"><img class="cover" src="/img/c9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-21</div><div class="title">利用 git 把本地代码保存到远程仓库</div></div></a></div><div><a href="/2020/01/08/git-usage/" title="git 简单使用命令"><img class="cover" src="/img/c18.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-08</div><div class="title">git 简单使用命令</div></div></a></div><div><a href="/2020/04/30/codes-open-source-license/" title="开源许可协议"><img class="cover" src="/img/c15.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-04-30</div><div class="title">开源许可协议</div></div></a></div><div><a href="/2020/03/03/hexo-home-work/" title="利用 GitHub 和 HEXO 随时随地书写博客"><img class="cover" src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-03</div><div class="title">利用 GitHub 和 HEXO 随时随地书写博客</div></div></a></div><div><a href="/2020/10/13/publish-local-code-on-github/" title="把本地代码发布到 GitHub 上"><img class="cover" src="/img/c9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-10-13</div><div class="title">把本地代码发布到 GitHub 上</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%88%86%E6%94%AF%E6%83%85%E5%86%B5"><span class="toc-number">1.</span> <span class="toc-text">查看分支情况</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF"><span class="toc-number">2.</span> <span class="toc-text">创建本地分支</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%88%E5%B9%B6%E5%88%86%E6%94%AF"><span class="toc-number">3.</span> <span class="toc-text">合并分支</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E5%88%86%E6%94%AF"><span class="toc-number">4.</span> <span class="toc-text">删除分支</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF"><span class="toc-number">5.</span> <span class="toc-text">删除远程分支</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E6%A0%87%E7%AD%BE"><span class="toc-number">6.</span> <span class="toc-text">添加标签</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%A0%87%E7%AD%BE"><span class="toc-number">7.</span> <span class="toc-text">查看标签</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%A0%87%E7%AD%BE"><span class="toc-number">8.</span> <span class="toc-text">删除标签</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%90%E4%BA%A4%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF-issue3-%E5%88%B0%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF-dis"><span class="toc-number">9.</span> <span class="toc-text">提交本地分支 issue3 到远程分支 dis</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF-dis"><span class="toc-number">10.</span> <span class="toc-text">删除远程分支 dis</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%87%AA%E5%BB%BA-git-%E6%89%98%E7%AE%A1%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">11.</span> <span class="toc-text">自建 git 托管服务器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="toc-number">12.</span> <span class="toc-text">远程仓库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%9A%E4%BA%BA%E5%8D%8F%E4%BD%9C%E5%BC%80%E5%8F%91%E6%8F%90%E4%BA%A4"><span class="toc-number">13.</span> <span class="toc-text">多人协作开发提交</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9B%B4%E6%94%B9%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E7%9A%84-URL"><span class="toc-number">14.</span> <span class="toc-text">更改远程仓库的 URL</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86%E8%BF%9C%E7%A8%8B-URL-%E4%BB%8E-SSH-%E5%88%87%E6%8D%A2%E5%88%B0-HTTPS"><span class="toc-number">14.1.</span> <span class="toc-text">将远程 URL 从 SSH 切换到 HTTPS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86%E8%BF%9C%E7%A8%8B-URL-%E4%BB%8E-HTTPS-%E5%88%87%E6%8D%A2%E5%88%B0-SSH"><span class="toc-number">14.2.</span> <span class="toc-text">将远程 URL 从 HTTPS 切换到 SSH</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%90%E4%BA%A4%E6%97%B6%E5%BF%BD%E7%95%A5%E6%9F%90%E4%BA%9B%E6%96%87%E4%BB%B6%E6%88%96%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">15.</span> <span class="toc-text">提交时忽略某些文件或文件夹</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">16.</span> <span class="toc-text">参考链接</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '7f075aed7e2a85724a0fffd71f7ad2cd',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

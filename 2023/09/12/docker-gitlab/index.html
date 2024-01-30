@@ -1,0 +1,304 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>docker 安装代码托管平台 gitlab | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="代码托管网站有 github、gitee 等，但是 github 访问不是很通畅，gitee 总是审查严格。有些代码团队开发共享而暂时不方便公开时，使用自己搭建的代码托管平台会更合适些。本篇介绍如何利用 dokcer 搭建私人代码托管平台 gitlab。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker 安装代码托管平台 gitlab">
+<meta property="og:url" content="https://xujinzh.github.io/2023/09/12/docker-gitlab/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="代码托管网站有 github、gitee 等，但是 github 访问不是很通畅，gitee 总是审查严格。有些代码团队开发共享而暂时不方便公开时，使用自己搭建的代码托管平台会更合适些。本篇介绍如何利用 dokcer 搭建私人代码托管平台 gitlab。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c6.jpeg">
+<meta property="article:published_time" content="2023-09-12T07:02:11.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.092Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="gitlab">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c6.jpeg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2023/09/12/docker-gitlab/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'docker 安装代码托管平台 gitlab',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">docker 安装代码托管平台 gitlab</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-09-12T07:02:11.000Z" title="发表于 2023-09-12 15:02:11">2023-09-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.092Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="docker 安装代码托管平台 gitlab"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>代码托管网站有 github、gitee 等，但是 github 访问不是很通畅，gitee 总是审查严格。有些代码团队开发共享而暂时不方便公开时，使用自己搭建的代码托管平台会更合适些。本篇介绍如何利用 dokcer 搭建私人代码托管平台 gitlab。</p>
+<span id="more"></span>
+
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>假设 docker 和 docker-compose 已经按照完成。如果没有安装，可以参考我的另一篇博客：<a href="https://xujinzh.github.io/2020/11/05/docker-simple/">docker 简单介绍</a>.</p>
+<p>下面跟着命令进行安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建工作目录</span></span><br><span class="line"><span class="built_in">cd</span> /disk0/proj-pf</span><br><span class="line"><span class="built_in">mkdir</span> gitlab</span><br><span class="line"></span><br><span class="line"><span class="comment"># hostname 改为自己的; external_url 改为自己的，8901 与 ports 里的端口映射对应上，不然后面通过  http 克隆代码库时会找不到链接。</span></span><br><span class="line"><span class="comment"># ssh 端口根据自己修改更改</span></span><br><span class="line"><span class="comment"># 把数据、配置文件和日志等保存到宿主机，方便后面更新镜像库</span></span><br><span class="line"><span class="built_in">cat</span> &gt; /disk0/proj-pf/docker-compose.yml &lt;&lt;-<span class="string">&quot;EOF&quot;</span></span><br><span class="line">version: <span class="string">&#x27;3.6&#x27;</span></span><br><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    image: <span class="string">&#x27;gitlab/gitlab-ce:latest&#x27;</span></span><br><span class="line">    restart: always</span><br><span class="line">    hostname: <span class="string">&#x27;10.2.28.35&#x27;</span></span><br><span class="line">    environment:</span><br><span class="line">      GITLAB_OMNIBUS_CONFIG: |</span><br><span class="line">        external_url <span class="string">&#x27;http://10.2.28.35:8901&#x27;</span></span><br><span class="line">        gitlab_rails[<span class="string">&#x27;gitlab_shell_ssh_port&#x27;</span>] = 8902</span><br><span class="line">    ports:</span><br><span class="line">      - <span class="string">&#x27;8901:8901&#x27;</span></span><br><span class="line">      - <span class="string">&#x27;8902:22&#x27;</span></span><br><span class="line">    volumes:</span><br><span class="line">      - <span class="string">&#x27;/disk0/proj-pf/gitlab/config:/etc/gitlab&#x27;</span></span><br><span class="line">      - <span class="string">&#x27;/disk0/proj-pf/gitlab/logs:/var/log/gitlab&#x27;</span></span><br><span class="line">      - <span class="string">&#x27;/disk0/proj-pf/gitlab/data:/var/opt/gitlab&#x27;</span></span><br><span class="line">    shm_size: <span class="string">&#x27;256m&#x27;</span></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line"><span class="built_in">cd</span> /disk0/proj-pf/gitlab</span><br><span class="line">docker-compose up -d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 停止</span></span><br><span class="line">docker-compose down</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>默认配置有 root 账户，可以使用 root 登录。密码查看方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这里的 gitlab-web-1 为 gitlab 容器名，根据自己的情况查看</span></span><br><span class="line">docker <span class="built_in">exec</span> -it gitlab-web-1 grep <span class="string">&#x27;Password:&#x27;</span> /etc/gitlab/initial_root_password</span><br></pre></td></tr></table></figure>
+<p><strong>注意：root 用户的默认密码有效期24小时，请尽快修改密码。</strong></p>
+<p>默认在 gitlab 创建的代码库的分支为 main，但是低版本的 git 创建的是 master，想要使用 main （大趋势），需要安装最新版的 git 或者 git 版本大于 2.28.0，安装方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:git-core/ppa</span><br><span class="line"></span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 git 版本</span></span><br><span class="line">git --version</span><br></pre></td></tr></table></figure>
+
+<p>假设本地已经有了一个代码工程，想要托管到刚刚搭建好的 gitlab 平台上，可以先在 gitlab 上创建一个空项目，然后在本地服务器执行如下操作：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以 main 为默认分支</span></span><br><span class="line">git config --global init.defaultBranch main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解决中文乱码</span></span><br><span class="line">git config --global core.quotepath <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加默认用户名和邮箱</span></span><br><span class="line">git config --global user.name <span class="string">&quot;jinzhongxu&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;jinzhongxu@outlook.com&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 开始把本地代码项目依托到 gitlab 平台上</span></span><br><span class="line"><span class="comment"># 在该平台上能够直接编辑，在线编辑可使用 visual studio code。</span></span><br><span class="line"><span class="built_in">cd</span> py-local-codes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把代码项目初始化为 git 项目</span></span><br><span class="line">git init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加远程仓库。请使用你自己的仓库地址，这里只是演示</span></span><br><span class="line"><span class="comment"># 如果使用 8902 的 ssh 方式，需要先在账户设置中增加ssh公钥，后续提交代码就不需要输入密码</span></span><br><span class="line"><span class="comment"># 如果使用 8901 的 http 方式，后续每次提交代码都需要输入用户名和密码</span></span><br><span class="line">git remote add origin ssh://git@10.2.28.35:8902/jinzhongxu/awesome-python</span><br><span class="line"></span><br><span class="line"><span class="comment"># 先 pull 平台仓库里的文件，如果存在 README.md</span></span><br><span class="line"><span class="comment"># 第一次 pull 代码到本地，需要设置默认的分支。后续 pull 只需要：git pull</span></span><br><span class="line">git pull origin main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检测状态，并把本地代码添加到库里，push 到平台上</span></span><br><span class="line">git status</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;add init&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 提交到 gitlab 仓库，并同时设置默认提交分支。第一次提交需要指定分支，后续提交可直接使用：git push</span></span><br><span class="line">git push --set-upstream origin main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果提交后，又进行了代码的修改、增删、优化等，可按照下面方法提交</span></span><br><span class="line"><span class="comment"># 建议每次 push 前下 pull 远程代码仓库</span></span><br><span class="line">git pull</span><br><span class="line">git add .</span><br><span class="line">git commmit -m <span class="string">&quot;增加/删除/优化了decoder&quot;</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="配置邮箱"><a href="#配置邮箱" class="headerlink" title="配置邮箱"></a>配置邮箱</h1><p>首先需要到163邮箱（本人以163邮箱为例）开启SMTP服务，获取授权密码，然后本地进行配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it gitlab-web-1 bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编辑配置文件</span></span><br><span class="line">vi /etc/gitlab/gitlab.rb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置内容大概如下：</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_enable&#x27;</span>] = <span class="literal">true</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_address&#x27;</span>] = <span class="string">&quot;smtp.163.com&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_port&#x27;</span>] = 25</span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_user_name&#x27;</span>] = <span class="string">&quot;xjz@163.com&quot;</span></span><br><span class="line"><span class="comment"># 使用授权密码，而不是邮箱的登录密码</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_password&#x27;</span>] = <span class="string">&quot;ABDCDKSKSFDJSLAFJ&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_domain&#x27;</span>] = <span class="string">&quot;163.com&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_authentication&#x27;</span>] = <span class="string">&quot;login&quot;</span></span><br><span class="line"><span class="comment"># 下面两项不能同时为true</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_enable_starttls_auto&#x27;</span>] = <span class="literal">true</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_tls&#x27;</span>] = <span class="literal">false</span></span><br><span class="line"><span class="comment"># gitlab_rails[&#x27;smtp_pool&#x27;] = false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">###! **Can be: &#x27;none&#x27;, &#x27;peer&#x27;, &#x27;client_once&#x27;, &#x27;fail_if_no_peer_cert&#x27;**</span></span><br><span class="line"><span class="comment">###! Docs: http://api.rubyonrails.org/classes/ActionMailer/Base.html</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_openssl_verify_mode&#x27;</span>] = <span class="string">&#x27;none&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># gitlab_rails[&#x27;smtp_ca_path&#x27;] = &quot;/etc/ssl/certs&quot;</span></span><br><span class="line"><span class="comment"># gitlab_rails[&#x27;smtp_ca_file&#x27;] = &quot;/etc/ssl/certs/ca-certificates.crt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### Email Settings</span></span><br><span class="line"></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gitlab_email_enabled&#x27;</span>] = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">##! If your SMTP server does not like the default &#x27;From: gitlab@gitlab.example.com&#x27;</span></span><br><span class="line"><span class="comment">##! can change the &#x27;From&#x27; with this setting.</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gitlab_email_from&#x27;</span>] = <span class="string">&#x27;xjz@163.com&#x27;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gitlab_email_display_name&#x27;</span>] = <span class="string">&#x27;Gitlaber&#x27;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gitlab_email_reply_to&#x27;</span>] = <span class="string">&#x27;xjz@163.com&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译配置</span></span><br><span class="line">gitlab-ctl reconfigure</span><br><span class="line"></span><br><span class="line"><span class="comment"># 控制台测试发生邮件</span></span><br><span class="line">gitlab-rails console</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在提示符中输入一下发生内容</span></span><br><span class="line">Notify.test_email(<span class="string">&#x27;jzx@163.com&#x27;</span>, <span class="string">&#x27;邮件主题&#x27;</span>, <span class="string">&#x27;邮件内容&#x27;</span>).deliver_now</span><br></pre></td></tr></table></figure>
+<p>个人经历：使用之前授权的 qq 邮箱配置未通过，改用 163 重新获取一个新授权密码后一次通过。</p>
+<h1 id="其他配置"><a href="#其他配置" class="headerlink" title="其他配置"></a>其他配置</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置时区</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;time_zone&#x27;</span>] = <span class="string">&#x27;Asia/Shanghai&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置禁止 puma cluster mode，这样能够减少内存使用</span></span><br><span class="line">puma[<span class="string">&#x27;worker_processes&#x27;</span>] = 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置禁用监控，减少内存使用</span></span><br><span class="line">prometheus_monitoring[<span class="string">&#x27;enable&#x27;</span>] = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不进行代码自动 CI/CD DevOps Pipeline</span></span><br><span class="line"><span class="comment"># 如果提交 *.yml, *.txt 进行自动 build 测试等，可在每个项目中设置关闭自动 DevOps</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gitlab_default_projects_features_builds&#x27;</span>] = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不在 gitlab 上管理 docker 镜像</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gitlab_default_projects_features_container_registry&#x27;</span>] = <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Ezreal_King/article/details/79999131">Ubuntu 更新 Git 至最新版本</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lucktomato/p/15936809.html">docker安装gitlab的初始账号密码</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/080a962c35b6">docker下gitlab安装配置使用(完整版)</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.gitlab.com/ee/install/docker.html">GitLab Docker images</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/hotlinhao/article/details/116134237">gitlab使用163发送邮件</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.gitlab.cn/omnibus/settings/smtp.html#%E6%B5%8B%E8%AF%95-smtp-%E9%85%8D%E7%BD%AE">SMTP 配置</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2023/09/12/docker-gitlab/">https://xujinzh.github.io/2023/09/12/docker-gitlab/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/docker/">docker</a><a class="post-meta__tags" href="/tags/gitlab/">gitlab</a></div><div class="post_share"><div class="social-share" data-image="/img/c6.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/09/19/python-vsdx-to-images/" title="利用 Python 把 vsdx 文件转为图像"><img class="cover" src="/img/c2.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">利用 Python 把 vsdx 文件转为图像</div></div></a></div><div class="next-post pull-right"><a href="/2023/09/05/subnet-mask/" title="子网掩码简单介绍"><img class="cover" src="/img/c3.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">子网掩码简单介绍</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/11/05/docker-simple/" title="docker 简单介绍"><img class="cover" src="/img/c28.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-11-05</div><div class="title">docker 简单介绍</div></div></a></div><div><a href="/2023/04/03/install-bitnami-redmine-by-docker/" title="通过 Docker 安装 bitnami redmine"><img class="cover" src="/img/c27.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-03</div><div class="title">通过 Docker 安装 bitnami redmine</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E9%82%AE%E7%AE%B1"><span class="toc-number">3.</span> <span class="toc-text">配置邮箱</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">其他配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">5.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'e1380349b6b181a37b57c32f56eb3cf2',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

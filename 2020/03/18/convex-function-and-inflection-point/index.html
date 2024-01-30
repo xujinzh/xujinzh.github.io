@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>凸函数和拐点 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="凸函数（Convex function）和拐点（Inflection point）。 此部分为参考 华东师范大学《数学分析上册》。以下内容为学习中的重点总结。 凸函数一般用来证明不等式；注意左右导数和凸函数定义公式的联系；凸函数的性质比较好，在机器学习中是理想的代价函数，因为好求最小值点；注意拐点中的鞍点（是一阶导数等于0的点，即拐点中的驻点或稳定点）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="凸函数和拐点">
+<meta property="og:url" content="https://xujinzh.github.io/2020/03/18/convex-function-and-inflection-point/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="凸函数（Convex function）和拐点（Inflection point）。 此部分为参考 华东师范大学《数学分析上册》。以下内容为学习中的重点总结。 凸函数一般用来证明不等式；注意左右导数和凸函数定义公式的联系；凸函数的性质比较好，在机器学习中是理想的代价函数，因为好求最小值点；注意拐点中的鞍点（是一阶导数等于0的点，即拐点中的驻点或稳定点）。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c10.jpg">
+<meta property="article:published_time" content="2020-03-18T05:05:49.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.092Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="convex">
+<meta property="article:tag" content="inflection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c10.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2020/03/18/convex-function-and-inflection-point/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '凸函数和拐点',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">凸函数和拐点</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-03-18T05:05:49.000Z" title="发表于 2020-03-18 13:05:49">2020-03-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.092Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/maths/">maths</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/maths/mathematical-analysis/">mathematical analysis</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="凸函数和拐点"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>凸函数（Convex function）和拐点（Inflection point）。 此部分为参考 华东师范大学《数学分析上册》。以下内容为学习中的重点总结。</p>
+<p>凸函数一般用来证明不等式；注意左右导数和凸函数定义公式的联系；凸函数的性质比较好，在机器学习中是理想的代价函数，因为好求最小值点；注意拐点中的鞍点（是一阶导数等于0的点，即拐点中的驻点或稳定点）。</p>
+<span id="more"></span>
+
+<h1 id="凸函数"><a href="#凸函数" class="headerlink" title="凸函数"></a>凸函数</h1><p><strong>定义1</strong> 设$f$为定义在区间$I$上的函数，若对$I$上的任意两点$x_1, x_2$和任意实数$\lambda\in(0,1)$总有<br>$$<br>f(\lambda x_1 + (1-\lambda) x_2)\leq \lambda f(x_1) + (1 - \lambda)f(x_2),<br>$$<br>则称$f$为$I$上的凸函数。反之，如果总有<br>$$<br>f(\lambda x_1 + (1 - \lambda) x_2)\geq \lambda f(x_1) + (1 - \lambda) f(x_2),<br>$$<br>则称$f$为$I$上的凹函数。</p>
+<p>另外，</p>
+<ol>
+<li>如果上面的不等式为严格不等式，那么称严格凸函数和严格凹函数。</li>
+<li>如果$-f$为区间$I$上的凹函数，那么$f$为区间$I$上的凸函数。</li>
+</ol>
+<p><strong>引理</strong> $f$为$I$上的凸函数的充要条件是对于$I$上的任意三点$x_1 &lt; x_2 &lt; x_3$，总有<br>$$<br>\frac{f(x_2) - f(x_1)}{x_2 - x_1} \leq \frac{f(x_3) - f(x_2)}{x_3 - x_2}.<br>$$<br>同样地，$f$为$I$上的凸函数的充要条件是对于$I$上的任意三点$x_1 &lt; x_2 &lt; x_3$，有<br>$$<br>\frac{f(x_2) - f(x_1)}{x_2 - x_1} \leq \frac{f(x_3) - f(x_1)}{x_3 - x_1} \leq \frac{f(x_3) - f(x_2)}{x_3 - x_2}.<br>$$<br><strong>注意，这里把$x_2, x_3$看着一个变量时，函数$\frac{f(x_3) - f(x_1)}{x_3 - x_1}$是一个增函数，可以利用单调有界定理，取极限</strong></p>
+<p><strong>定理6.14</strong> 设$f$为区间$I$上的可导函数，则下述论断互相等价：</p>
+<ol>
+<li><p>$f$为$I$上的增函数；</p>
+</li>
+<li><p>$f^{\prime}$为$I$上的增函数；</p>
+</li>
+<li><p>对$I$上的任意两点$x_1, x_2$有<br>$$<br>f(x_2) \geq f(x_1) + f^{\prime}(x_1)(x_2 - x_1).<br>$$<br>论断3的几何意义就是说曲线$y&#x3D;f(x)$总是在它的任一切线上方。</p>
+</li>
+</ol>
+<p><strong>定理 6.15</strong> 设$f$为区间$I$上的二阶可导函数，则在$I$上$f$为凸函数（凹函数）的充要条件是<br>$$<br>f^{(2)}(x) \geq 0 \ (f^{(2)}(x) \leq 0), \ x \in I.<br>$$<br><strong>定理</strong> 若函数$f$为定义在开区间$(a, b)$上的可导的凸函数（凹函数），则$x_0 \in (a, b)$为$f$的极小值点（极大值点）的充要条件是$x_0$为$f$的稳定点，即$f^{\prime}(x_0) &#x3D; 0$.</p>
+<p><strong>定理</strong> 设函数$f(x)$为<strong>开区间</strong>$(a, b)$上的凸函数，不恒为常数，则$f(x)$不取最大值。</p>
+<p>​        凸函数的最大值只能在端点处取得。即，若函数$f(x)$是闭区间$[a, b]$上的凸的连续函数，那么<br>$$<br>f(x) \leq \max{f(a), f(b)}.<br>$$<br><strong>詹森（Jensen）不等式</strong> 若$f$为$[a, b]$上的凸函数，则对任意$x_i \in [a, b], \lambda_i &gt; 0 \ (i &#x3D; 1, 2, \cdots, n), \ \sum^n_{i &#x3D; 1} \lambda_i &#x3D; 1$，有<br>$$<br>f(\sum^n_{i&#x3D;1} \lambda_i x_i) \leq \sum^n_{i&#x3D;1} \lambda_i f(x_i).<br>$$<br><strong>引理</strong> 设$f$为开区间$I$内的凸函数（凹函数），则$f$在$I$内任一点$x_0$都存在左、右导数。从而$f$在$x_0$连续。</p>
+<h1 id="拐点"><a href="#拐点" class="headerlink" title="拐点"></a>拐点</h1><p><strong>定义2</strong> 设曲线$y &#x3D; f(x)$在点$(x_0, f(x_0))$处有穿过曲线的切线，且在切点近旁，曲线在切线的两侧分别是严格凸和严格凹的，这时称点$(x_0, f(x_0))$为曲线$y &#x3D; f(x)$的拐点。</p>
+<p>拐点是凹和凸曲线的分界点。</p>
+<p><strong>定理6.16</strong> 若$f$在$x_0$二阶可导，则$(x_0, f(x_0))$为曲线$y &#x3D; f(x)$的拐点的必要条件是$f^{(2)} &#x3D; 0$.</p>
+<p><strong>定理6.17</strong> 设$f$在$x_0$可导，在某领域$U^o(x_0)$上二阶可导。若在$U^o_{+}(x_0)$和$U^o_{-}(x_0)$上$f^{(2)}$的符号相反，则$(x_0, f(x_0))$为曲线$y &#x3D; f(x)$的拐点。</p>
+<p><strong>注意：若$(x_0, f(x_0))$是曲线$y &#x3D; f(x)$的一个拐点，$y &#x3D; f(x)$在$x_0$的导数不一定存在，如$y &#x3D; \sqrt[3]{x}$在$x &#x3D; 0$。</strong></p>
+<p><strong>定理</strong> 如下三个陈述成立。</p>
+<ol>
+<li>若$f$为凸函数，$\lambda$为非负实数，则$\lambda f$为凸函数；</li>
+<li>若$f, g$均为凸函数，则$f + g$为凸函数；</li>
+<li>若$f$为区间$I$上凸函数，$g$为$J \supset f(I)$上凸增函数，则$g \circ f$为$I$上凸函数。</li>
+</ol>
+<p><strong>定理</strong> 设$f$为区间$I$上严格凸函数，$x_0 \in I$为$f$的极小值点，则$x_0$为$f$在$I$上唯一的极小值点。</p>
+<p><strong>定理</strong> 若$f, g$均为区间$I$上凸函数，则$F(x) &#x3D; \max {f(x), g(x)}$也是$I$上凸函数。</p>
+<h1 id="几个重要不等式"><a href="#几个重要不等式" class="headerlink" title="几个重要不等式"></a><strong>几个重要不等式</strong></h1><p><strong>均值不等式</strong> 设$a_i &gt; 0 \ (i &#x3D; 1, 2, \cdots, n)$，有<br>$$<br>\frac{n}{\frac{1}{a_1} + \frac{1}{a_2} + \cdots + \frac{1}{a_n}} \leq \sqrt[n]{a_1 a_2 \cdots a_n} \leq \frac{a_1 + a_2 + \cdots + a_n}{n}<br>$$<br>证明，构造函数$f(x) &#x3D; \ln(x)$可证明第二个不等号，然后用变化$x &#x3D; \frac{1}{t}$和第二个不等号证明第一个不等号。</p>
+<p><strong>Young 不等式</strong> 设$a, b, p, q$均是正实数，且$\frac{1}{p} + \frac{1}{q} &#x3D; 1$，则<br>$$<br>ab \leq \frac{a^p}{p} + \frac{b^q}{q}<br>$$<br>等号成立当且仅当 $a^p &#x3D; b^q$. </p>
+<p>证明，利用函数$y &#x3D; e^x$的凸性<br>$$<br>ab &#x3D; e^{\ln(a)} e^{\ln(b)} &#x3D; e^{\frac{1}{p} \ln(a^p) + \frac{1}{q} \ln(b^q)} \leq \frac{1}{p} e^{\ln(a^p)} + \frac{1}{q} e^{\ln(b^q)} &#x3D; \frac{a^p}{p} + \frac{b^q}{q}.<br>$$<br>可以用该不等式证明如下的Holder不等式。</p>
+<p><strong>Holder 不等式</strong> 设$a_i, b_i &gt; 0 \ (i &#x3D; 1, 2, \cdots, n)$，有<br>$$<br>\sum^n_{i &#x3D; 1} a_i b_i \leq (\sum^n_{i &#x3D; 1} a^p_i)^{\frac{1}{p}}(\sum^n_{i &#x3D; 1} b^q_i)^{\frac{1}{q}}<br>$$<br>其中$p &gt; 1, q &gt; 1, \frac{1}{p} + \frac{1}{q} &#x3D; 1$.</p>
+<p>证明，取$a &#x3D; \frac{a_k}{(\sum^n_{i &#x3D; 1}a^p_i)^{\frac{1}{p}}}$, $b &#x3D; \frac{b_k}{(\sum^n_{i &#x3D; 1}b^q_i)^{\frac{1}{q}}}$ ，并带入Young不等式。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2020/03/18/convex-function-and-inflection-point/">https://xujinzh.github.io/2020/03/18/convex-function-and-inflection-point/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/convex/">convex</a><a class="post-meta__tags" href="/tags/inflection/">inflection</a></div><div class="post_share"><div class="social-share" data-image="/img/c10.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/03/18/synchronous-asynchronous/" title="同步与异步"><img class="cover" src="/img/c3.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">同步与异步</div></div></a></div><div class="next-post pull-right"><a href="/2020/03/17/vim-command/" title="vim 快捷键"><img class="cover" src="/img/c24.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">vim 快捷键</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%B8%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">凸函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8B%90%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">拐点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%A0%E4%B8%AA%E9%87%8D%E8%A6%81%E4%B8%8D%E7%AD%89%E5%BC%8F"><span class="toc-number">3.</span> <span class="toc-text">几个重要不等式</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'ee6739960ee6356632e72fd5ccad4a4b',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

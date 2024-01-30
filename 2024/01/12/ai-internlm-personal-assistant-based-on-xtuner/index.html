@@ -1,0 +1,1647 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>利用 XTuner 训练书生·浦语私人大模型助手 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本篇介绍如何使用 XTuner 微调 InternLM 称为私人智能助手。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用 XTuner 训练书生·浦语私人大模型助手">
+<meta property="og:url" content="https://xujinzh.github.io/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="本篇介绍如何使用 XTuner 微调 InternLM 称为私人智能助手。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c21.jpg">
+<meta property="article:published_time" content="2024-01-12T11:03:54.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.088Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="internlm">
+<meta property="article:tag" content="openmmlab">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c21.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '利用 XTuner 训练书生·浦语私人大模型助手',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">利用 XTuner 训练书生·浦语私人大模型助手</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.088Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/deep-learning/">deep learning</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">15k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>86分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="利用 XTuner 训练书生·浦语私人大模型助手"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>本篇介绍如何使用 XTuner 微调 InternLM 称为私人智能助手。</p>
+<span id="more"></span>
+
+
+<p>目标：使用 XTuner 微调 InternLM-Chat 模型，使得其能够知道它的主人是谁。</p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>先在命令行终端执行下面命令：</p>
+<ol>
+<li>conda create –name personal_assistant python&#x3D;3.10 -y</li>
+<li>conda activate personal_assistant</li>
+<li>pip install ipykernel</li>
+<li>python -m ipykernel install –user –name personal_assistant –display-name personal_assistant</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置notebook环境</span></span><br><span class="line"><span class="keyword">import</span> os, sys</span><br><span class="line"></span><br><span class="line">PATH = os.environ[<span class="string">&#x27;PATH&#x27;</span>]</span><br><span class="line">basedir = os.path.dirname(os.path.dirname(sys.exec_prefix))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里的 $PATH 也可以替换为 &#123;os.environ[&#x27;PATH&#x27;]&#125;。这里只是为了展示 $变量 的形式也是可行的</span></span><br><span class="line">%env CONDA_EXE=&#123;os.path.join(basedir, <span class="string">&#x27;bin/conda&#x27;</span>)&#125;</span><br><span class="line">%env CONDA_PREFIX=&#123;sys.exec_prefix&#125;</span><br><span class="line">%env CONDA_PYTHON_EXE=&#123;os.path.join(basedir, <span class="string">&#x27;bin/python&#x27;</span>)&#125;</span><br><span class="line">%env PATH=&#123;os.path.join(sys.exec_prefix, <span class="string">&#x27;bin&#x27;</span>)&#125;:$PATH</span><br></pre></td></tr></table></figure>
+
+<pre><code>env: CONDA_EXE=/root/.conda/bin/conda
+env: CONDA_PREFIX=/root/.conda/envs/xtuner0.1.9
+env: CONDA_PYTHON_EXE=/root/.conda/bin/python
+env: PATH=/root/.conda/envs/xtuner0.1.9/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+</code></pre>
+<h2 id="数据和代码准备"><a href="#数据和代码准备" class="headerlink" title="数据和代码准备"></a>数据和代码准备</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%mkdir -p ~/personal_assistant/xtuner019</span><br><span class="line">%cd ~/personal_assistant/xtuner019</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/personal_assistant/xtuner019
+
+
+/root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages/IPython/core/magics/osm.py:393: UserWarning: using bookmarks requires you to install the `pickleshare` library.
+  bkms = self.shell.db.get(&#39;bookmarks&#39;, &#123;&#125;)
+/root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages/IPython/core/magics/osm.py:417: UserWarning: using dhist requires you to install the `pickleshare` library.
+  self.shell.db[&#39;dhist&#39;] = compress_dhist(dhist)[-100:]
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!git clone -b v0<span class="number">.1</span><span class="number">.9</span> https://github.com/InternLM/xtuner</span><br></pre></td></tr></table></figure>
+
+<pre><code>Cloning into &#39;xtuner&#39;...
+remote: Enumerating objects: 4734, done.
+remote: Counting objects: 100% (3534/3534), done.
+remote: Compressing objects: 100% (728/728), done.
+remote: Total 4734 (delta 3078), reused 2965 (delta 2763), pack-reused 1200
+Receiving objects: 100% (4734/4734), 898.47 KiB | 24.28 MiB/s, done.
+Resolving deltas: 100% (3564/3564), done.
+Note: switching to &#39;9f686f08c8e60e568e811aaad8daf9c08462d42d&#39;.
+
+You are in &#39;detached HEAD&#39; state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c &lt;new-branch-name&gt;
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+Updating files: 100% (430/430), done.
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%cd xtuner</span><br><span class="line">%pip install -e <span class="string">&#x27;.[all]&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/personal_assistant/xtuner019/xtuner
+Looking in indexes: https://pypi.tuna.tsinghua.edu.cn/simple
+Obtaining file:///root/personal_assistant/xtuner019/xtuner
+  Preparing metadata (setup.py) ... done
+Requirement already satisfied: bitsandbytes&gt;=0.40.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (0.42.0)
+Requirement already satisfied: datasets in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (2.14.7)
+Requirement already satisfied: einops in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (0.7.0)
+Requirement already satisfied: fsspec&lt;=2023.6.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (2023.6.0)
+Requirement already satisfied: lagent&gt;=0.1.2 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (0.1.2)
+Requirement already satisfied: mmengine&gt;=0.9.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (0.10.2)
+Requirement already satisfied: modelscope in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (1.11.0)
+Requirement already satisfied: peft&gt;=0.4.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (0.7.1)
+Requirement already satisfied: scipy in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (1.11.4)
+Requirement already satisfied: SentencePiece in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (0.1.99)
+Requirement already satisfied: tiktoken in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (0.5.2)
+Requirement already satisfied: torch in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (2.1.2)
+Requirement already satisfied: transformers&lt;=4.34.0,&gt;=4.32.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (4.34.0)
+Requirement already satisfied: transformers_stream_generator in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (0.0.4)
+Requirement already satisfied: deepspeed&gt;=0.12.3 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (0.12.6)
+Requirement already satisfied: mpi4py-mpich in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (3.1.2)
+Requirement already satisfied: hjson in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from deepspeed&gt;=0.12.3) (3.1.0)
+Requirement already satisfied: ninja in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from deepspeed&gt;=0.12.3) (1.11.1.1)
+Requirement already satisfied: numpy in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from deepspeed&gt;=0.12.3) (1.26.3)
+Requirement already satisfied: packaging&gt;=20.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from deepspeed&gt;=0.12.3) (23.2)
+Requirement already satisfied: psutil in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from deepspeed&gt;=0.12.3) (5.9.7)
+Requirement already satisfied: py-cpuinfo in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from deepspeed&gt;=0.12.3) (9.0.0)
+Requirement already satisfied: pydantic in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from deepspeed&gt;=0.12.3) (2.5.3)
+Requirement already satisfied: pynvml in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from deepspeed&gt;=0.12.3) (11.5.0)
+Requirement already satisfied: tqdm in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from deepspeed&gt;=0.12.3) (4.66.1)
+Requirement already satisfied: distro in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from lagent&gt;=0.1.2) (1.9.0)
+Requirement already satisfied: func-timeout in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from lagent&gt;=0.1.2) (4.3.5)
+Requirement already satisfied: jsonschema in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from lagent&gt;=0.1.2) (4.20.0)
+Requirement already satisfied: requests in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from lagent&gt;=0.1.2) (2.31.0)
+Requirement already satisfied: addict in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from mmengine&gt;=0.9.1) (2.4.0)
+Requirement already satisfied: matplotlib in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from mmengine&gt;=0.9.1) (3.8.2)
+Requirement already satisfied: pyyaml in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from mmengine&gt;=0.9.1) (6.0.1)
+Requirement already satisfied: rich in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from mmengine&gt;=0.9.1) (13.7.0)
+Requirement already satisfied: termcolor in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from mmengine&gt;=0.9.1) (2.4.0)
+Requirement already satisfied: yapf in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from mmengine&gt;=0.9.1) (0.40.2)
+Requirement already satisfied: opencv-python&gt;=3 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from mmengine&gt;=0.9.1) (4.9.0.80)
+Requirement already satisfied: accelerate&gt;=0.21.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from peft&gt;=0.4.0) (0.26.0)
+Requirement already satisfied: safetensors in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from peft&gt;=0.4.0) (0.4.1)
+Requirement already satisfied: huggingface-hub&gt;=0.17.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from peft&gt;=0.4.0) (0.17.3)
+Requirement already satisfied: filelock in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (3.13.1)
+Requirement already satisfied: typing-extensions in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (4.9.0)
+Requirement already satisfied: sympy in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (1.12)
+Requirement already satisfied: networkx in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (3.2.1)
+Requirement already satisfied: jinja2 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (3.1.3)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.1.105 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (12.1.105)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.1.105 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (12.1.105)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.1.105 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (12.1.105)
+Requirement already satisfied: nvidia-cudnn-cu12==8.9.2.26 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (8.9.2.26)
+Requirement already satisfied: nvidia-cublas-cu12==12.1.3.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (12.1.3.1)
+Requirement already satisfied: nvidia-cufft-cu12==11.0.2.54 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (11.0.2.54)
+Requirement already satisfied: nvidia-curand-cu12==10.3.2.106 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (10.3.2.106)
+Requirement already satisfied: nvidia-cusolver-cu12==11.4.5.107 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (11.4.5.107)
+Requirement already satisfied: nvidia-cusparse-cu12==12.1.0.106 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (12.1.0.106)
+Requirement already satisfied: nvidia-nccl-cu12==2.18.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (2.18.1)
+Requirement already satisfied: nvidia-nvtx-cu12==12.1.105 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (12.1.105)
+Requirement already satisfied: triton==2.1.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from torch) (2.1.0)
+Requirement already satisfied: nvidia-nvjitlink-cu12 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from nvidia-cusolver-cu12==11.4.5.107-&gt;torch) (12.3.101)
+Requirement already satisfied: regex!=2019.12.17 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from transformers&lt;=4.34.0,&gt;=4.32.1) (2023.12.25)
+Requirement already satisfied: tokenizers&lt;0.15,&gt;=0.14 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from transformers&lt;=4.34.0,&gt;=4.32.1) (0.14.1)
+Requirement already satisfied: pyarrow&gt;=8.0.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from datasets) (14.0.2)
+Requirement already satisfied: pyarrow-hotfix in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from datasets) (0.6)
+Requirement already satisfied: dill&lt;0.3.8,&gt;=0.3.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from datasets) (0.3.7)
+Requirement already satisfied: pandas in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from datasets) (2.1.4)
+Requirement already satisfied: xxhash in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from datasets) (3.4.1)
+Requirement already satisfied: multiprocess in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from datasets) (0.70.15)
+Requirement already satisfied: aiohttp in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from datasets) (3.9.1)
+Requirement already satisfied: attrs in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from modelscope) (23.2.0)
+Requirement already satisfied: gast&gt;=0.2.2 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from modelscope) (0.5.4)
+Requirement already satisfied: oss2 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from modelscope) (2.18.4)
+Requirement already satisfied: Pillow&gt;=6.2.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from modelscope) (10.2.0)
+Requirement already satisfied: python-dateutil&gt;=2.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from modelscope) (2.8.2)
+Requirement already satisfied: setuptools in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from modelscope) (68.2.2)
+Requirement already satisfied: simplejson&gt;=3.3.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from modelscope) (3.19.2)
+Requirement already satisfied: sortedcontainers&gt;=1.5.9 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from modelscope) (2.4.0)
+Requirement already satisfied: urllib3&gt;=1.26 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from modelscope) (2.1.0)
+Requirement already satisfied: multidict&lt;7.0,&gt;=4.5 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from aiohttp-&gt;datasets) (6.0.4)
+Requirement already satisfied: yarl&lt;2.0,&gt;=1.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from aiohttp-&gt;datasets) (1.9.4)
+Requirement already satisfied: frozenlist&gt;=1.1.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from aiohttp-&gt;datasets) (1.4.1)
+Requirement already satisfied: aiosignal&gt;=1.1.2 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from aiohttp-&gt;datasets) (1.3.1)
+Requirement already satisfied: async-timeout&lt;5.0,&gt;=4.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from aiohttp-&gt;datasets) (4.0.3)
+Requirement already satisfied: six&gt;=1.5 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from python-dateutil&gt;=2.1-&gt;modelscope) (1.16.0)
+Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from requests-&gt;lagent&gt;=0.1.2) (3.3.2)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from requests-&gt;lagent&gt;=0.1.2) (3.6)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from requests-&gt;lagent&gt;=0.1.2) (2023.11.17)
+Requirement already satisfied: MarkupSafe&gt;=2.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from jinja2-&gt;torch) (2.1.3)
+Requirement already satisfied: jsonschema-specifications&gt;=2023.03.6 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from jsonschema-&gt;lagent&gt;=0.1.2) (2023.12.1)
+Requirement already satisfied: referencing&gt;=0.28.4 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from jsonschema-&gt;lagent&gt;=0.1.2) (0.32.1)
+Requirement already satisfied: rpds-py&gt;=0.7.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from jsonschema-&gt;lagent&gt;=0.1.2) (0.16.2)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from matplotlib-&gt;mmengine&gt;=0.9.1) (1.2.0)
+Requirement already satisfied: cycler&gt;=0.10 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from matplotlib-&gt;mmengine&gt;=0.9.1) (0.12.1)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from matplotlib-&gt;mmengine&gt;=0.9.1) (4.47.0)
+Requirement already satisfied: kiwisolver&gt;=1.3.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from matplotlib-&gt;mmengine&gt;=0.9.1) (1.4.5)
+Requirement already satisfied: pyparsing&gt;=2.3.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from matplotlib-&gt;mmengine&gt;=0.9.1) (3.1.1)
+Requirement already satisfied: crcmod&gt;=1.7 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from oss2-&gt;modelscope) (1.7)
+Requirement already satisfied: pycryptodome&gt;=3.4.7 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from oss2-&gt;modelscope) (3.20.0)
+Requirement already satisfied: aliyun-python-sdk-kms&gt;=2.4.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from oss2-&gt;modelscope) (2.16.2)
+Requirement already satisfied: aliyun-python-sdk-core&gt;=2.13.12 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from oss2-&gt;modelscope) (2.14.0)
+Requirement already satisfied: pytz&gt;=2020.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from pandas-&gt;datasets) (2023.3.post1)
+Requirement already satisfied: tzdata&gt;=2022.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from pandas-&gt;datasets) (2023.4)
+Requirement already satisfied: annotated-types&gt;=0.4.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from pydantic-&gt;deepspeed&gt;=0.12.3) (0.6.0)
+Requirement already satisfied: pydantic-core==2.14.6 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from pydantic-&gt;deepspeed&gt;=0.12.3) (2.14.6)
+Requirement already satisfied: markdown-it-py&gt;=2.2.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from rich-&gt;mmengine&gt;=0.9.1) (3.0.0)
+Requirement already satisfied: pygments&lt;3.0.0,&gt;=2.13.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from rich-&gt;mmengine&gt;=0.9.1) (2.17.2)
+Requirement already satisfied: mpmath&gt;=0.19 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from sympy-&gt;torch) (1.3.0)
+Requirement already satisfied: importlib-metadata&gt;=6.6.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from yapf-&gt;mmengine&gt;=0.9.1) (7.0.1)
+Requirement already satisfied: platformdirs&gt;=3.5.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from yapf-&gt;mmengine&gt;=0.9.1) (4.1.0)
+Requirement already satisfied: tomli&gt;=2.0.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from yapf-&gt;mmengine&gt;=0.9.1) (2.0.1)
+Requirement already satisfied: jmespath&lt;1.0.0,&gt;=0.9.3 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from aliyun-python-sdk-core&gt;=2.13.12-&gt;oss2-&gt;modelscope) (0.10.0)
+Requirement already satisfied: cryptography&gt;=2.6.0 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from aliyun-python-sdk-core&gt;=2.13.12-&gt;oss2-&gt;modelscope) (41.0.7)
+Requirement already satisfied: zipp&gt;=0.5 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from importlib-metadata&gt;=6.6.0-&gt;yapf-&gt;mmengine&gt;=0.9.1) (3.17.0)
+Requirement already satisfied: mdurl~=0.1 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from markdown-it-py&gt;=2.2.0-&gt;rich-&gt;mmengine&gt;=0.9.1) (0.1.2)
+Requirement already satisfied: cffi&gt;=1.12 in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from cryptography&gt;=2.6.0-&gt;aliyun-python-sdk-core&gt;=2.13.12-&gt;oss2-&gt;modelscope) (1.16.0)
+Requirement already satisfied: pycparser in /root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages (from cffi&gt;=1.12-&gt;cryptography&gt;=2.6.0-&gt;aliyun-python-sdk-core&gt;=2.13.12-&gt;oss2-&gt;modelscope) (2.21)
+Installing collected packages: xtuner
+  Attempting uninstall: xtuner
+    Found existing installation: xtuner 0.1.9
+    Uninstalling xtuner-0.1.9:
+      Successfully uninstalled xtuner-0.1.9
+  Running setup.py develop for xtuner
+Successfully installed xtuner-0.1.9
+WARNING: Running pip as the &#39;root&#39; user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+Note: you may need to restart the kernel to use updated packages.
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%mkdir -p ~/personal_assistant/data</span><br><span class="line">%cd ~/personal_assistant/data</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/personal_assistant/data
+
+
+/root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages/IPython/core/magics/osm.py:393: UserWarning: using bookmarks requires you to install the `pickleshare` library.
+  bkms = self.shell.db.get(&#39;bookmarks&#39;, &#123;&#125;)
+/root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages/IPython/core/magics/osm.py:417: UserWarning: using dhist requires you to install the `pickleshare` library.
+  self.shell.db[&#39;dhist&#39;] = compress_dhist(dhist)[-100:]
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /root/personal_assistant/data/generate_data.py</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入你的名字</span></span><br><span class="line">name = <span class="string">&#x27;xujinzh&#x27;</span></span><br><span class="line"><span class="comment"># 重复次数</span></span><br><span class="line">n = <span class="number">10000</span></span><br><span class="line"></span><br><span class="line">data = [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;conversation&quot;</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">&quot;input&quot;</span>: <span class="string">&quot;请做一下自我介绍&quot;</span>,</span><br><span class="line">                <span class="string">&quot;output&quot;</span>: <span class="string">&quot;我是&#123;&#125;的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&quot;</span>.<span class="built_in">format</span>(name)</span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    data.append(data[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;personal_assistant.json&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    json.dump(data, f, ensure_ascii=<span class="literal">False</span>, indent=<span class="number">4</span>)</span><br></pre></td></tr></table></figure>
+
+<pre><code>Writing /root/personal_assistant/data/generate_data.py
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!&#123;sys.executable&#125; /root/personal_assistant/data/generate_data.py</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%ls -lh /root/personal_assistant/data</span><br></pre></td></tr></table></figure>
+
+<pre><code>total 2.4M
+-rw-r--r-- 1 root root  504 Jan 12 16:41 generate_data.py
+-rw-r--r-- 1 root root 2.4M Jan 12 16:42 personal_assistant.json
+</code></pre>
+<h2 id="模型和配置文件准备"><a href="#模型和配置文件准备" class="headerlink" title="模型和配置文件准备"></a>模型和配置文件准备</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%mkdir -p /root/personal_assistant/model/Shanghai_AI_Laboratory</span><br><span class="line">%cp -r /root/share/temp/model_repos/internlm-chat-7b /root/personal_assistant/model/Shanghai_AI_Laboratory</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!xtuner <span class="built_in">list</span>-cfg</span><br></pre></td></tr></table></figure>
+
+<pre><code>[2024-01-12 16:46:36,270] [INFO] [real_accelerator.py:161:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2024-01-12 16:47:30,319] [INFO] [real_accelerator.py:161:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+==========================CONFIGS===========================
+baichuan2_13b_base_qlora_alpaca_e3
+baichuan2_13b_base_qlora_alpaca_enzh_e3
+baichuan2_13b_base_qlora_alpaca_enzh_oasst1_e3
+baichuan2_13b_base_qlora_alpaca_zh_e3
+baichuan2_13b_base_qlora_arxiv_gentitle_e3
+baichuan2_13b_base_qlora_code_alpaca_e3
+baichuan2_13b_base_qlora_colorist_e5
+baichuan2_13b_base_qlora_lawyer_e3
+baichuan2_13b_base_qlora_oasst1_512_e3
+baichuan2_13b_base_qlora_oasst1_e3
+baichuan2_13b_base_qlora_open_platypus_e3
+baichuan2_13b_base_qlora_sql_e3
+baichuan2_13b_chat_qlora_alpaca_e3
+baichuan2_13b_chat_qlora_alpaca_enzh_e3
+baichuan2_13b_chat_qlora_alpaca_enzh_oasst1_e3
+baichuan2_13b_chat_qlora_alpaca_zh_e3
+baichuan2_13b_chat_qlora_code_alpaca_e3
+baichuan2_13b_chat_qlora_lawyer_e3
+baichuan2_13b_chat_qlora_oasst1_512_e3
+baichuan2_13b_chat_qlora_oasst1_e3
+baichuan2_13b_chat_qlora_open_platypus_e3
+baichuan2_7b_base_qlora_alpaca_e3
+baichuan2_7b_base_qlora_alpaca_enzh_e3
+baichuan2_7b_base_qlora_alpaca_enzh_oasst1_e3
+baichuan2_7b_base_qlora_alpaca_zh_e3
+baichuan2_7b_base_qlora_arxiv_gentitle_e3
+baichuan2_7b_base_qlora_code_alpaca_e3
+baichuan2_7b_base_qlora_colorist_e5
+baichuan2_7b_base_qlora_lawyer_e3
+baichuan2_7b_base_qlora_oasst1_512_e3
+baichuan2_7b_base_qlora_oasst1_e3
+baichuan2_7b_base_qlora_open_platypus_e3
+baichuan2_7b_base_qlora_sql_e3
+baichuan2_7b_chat_qlora_alpaca_e3
+baichuan2_7b_chat_qlora_alpaca_enzh_e3
+baichuan2_7b_chat_qlora_alpaca_enzh_oasst1_e3
+baichuan2_7b_chat_qlora_alpaca_zh_e3
+baichuan2_7b_chat_qlora_code_alpaca_e3
+baichuan2_7b_chat_qlora_lawyer_e3
+baichuan2_7b_chat_qlora_oasst1_512_e3
+baichuan2_7b_chat_qlora_oasst1_e3
+baichuan2_7b_chat_qlora_open_platypus_e3
+baichuan_13b_base_qlora_alpaca_e3
+baichuan_13b_base_qlora_alpaca_enzh_e3
+baichuan_13b_base_qlora_alpaca_enzh_oasst1_e3
+baichuan_13b_base_qlora_alpaca_zh_e3
+baichuan_13b_base_qlora_arxiv_gentitle_e3
+baichuan_13b_base_qlora_code_alpaca_e3
+baichuan_13b_base_qlora_colorist_e5
+baichuan_13b_base_qlora_lawyer_e3
+baichuan_13b_base_qlora_medical_e1
+baichuan_13b_base_qlora_moss_sft_all_e1
+baichuan_13b_base_qlora_moss_sft_all_e2_gpu8
+baichuan_13b_base_qlora_moss_sft_plugins_e1
+baichuan_13b_base_qlora_oasst1_512_e3
+baichuan_13b_base_qlora_oasst1_e3
+baichuan_13b_base_qlora_open_platypus_e3
+baichuan_13b_base_qlora_openorca_e1
+baichuan_13b_base_qlora_sql_e3
+baichuan_13b_base_qlora_tiny_codes_e1
+baichuan_13b_chat_qlora_alpaca_e3
+baichuan_13b_chat_qlora_alpaca_enzh_e3
+baichuan_13b_chat_qlora_alpaca_enzh_oasst1_e3
+baichuan_13b_chat_qlora_alpaca_zh_e3
+baichuan_13b_chat_qlora_arxiv_gentitle_e3
+baichuan_13b_chat_qlora_code_alpaca_e3
+baichuan_13b_chat_qlora_colorist_e5
+baichuan_13b_chat_qlora_lawyer_e3
+baichuan_13b_chat_qlora_medical_e1
+baichuan_13b_chat_qlora_oasst1_512_e3
+baichuan_13b_chat_qlora_oasst1_e3
+baichuan_13b_chat_qlora_open_platypus_e3
+baichuan_13b_chat_qlora_openorca_e1
+baichuan_13b_chat_qlora_sql_e3
+baichuan_13b_chat_qlora_tiny_codes_e1
+baichuan_7b_qlora_alpaca_e3
+baichuan_7b_qlora_alpaca_enzh_e3
+baichuan_7b_qlora_alpaca_enzh_oasst1_e3
+baichuan_7b_qlora_alpaca_zh_e3
+baichuan_7b_qlora_arxiv_gentitle_e3
+baichuan_7b_qlora_code_alpaca_e3
+baichuan_7b_qlora_colorist_e5
+baichuan_7b_qlora_lawyer_e3
+baichuan_7b_qlora_medical_e1
+baichuan_7b_qlora_moss_sft_all_e1
+baichuan_7b_qlora_moss_sft_all_e2_gpu8
+baichuan_7b_qlora_moss_sft_plugins_e1
+baichuan_7b_qlora_oasst1_512_e3
+baichuan_7b_qlora_oasst1_e3
+baichuan_7b_qlora_open_platypus_e3
+baichuan_7b_qlora_openorca_e1
+baichuan_7b_qlora_sql_e3
+baichuan_7b_qlora_tiny_codes_e1
+chatglm2_6b_qlora_alpaca_e3
+chatglm2_6b_qlora_alpaca_enzh_e3
+chatglm2_6b_qlora_alpaca_enzh_oasst1_e3
+chatglm2_6b_qlora_alpaca_zh_e3
+chatglm2_6b_qlora_arxiv_gentitle_e3
+chatglm2_6b_qlora_code_alpaca_e3
+chatglm2_6b_qlora_colorist_e5
+chatglm2_6b_qlora_lawyer_e3
+chatglm2_6b_qlora_medical_e1
+chatglm2_6b_qlora_oasst1_512_e3
+chatglm2_6b_qlora_oasst1_e3
+chatglm2_6b_qlora_open_platypus_e3
+chatglm2_6b_qlora_openorca_e1
+chatglm2_6b_qlora_sql_e3
+chatglm2_6b_qlora_tiny_codes_e1
+chatglm3_6b_base_qlora_alpaca_e3
+chatglm3_6b_base_qlora_alpaca_enzh_e3
+chatglm3_6b_base_qlora_alpaca_enzh_oasst1_e3
+chatglm3_6b_base_qlora_alpaca_zh_e3
+chatglm3_6b_base_qlora_arxiv_gentitle_e3
+chatglm3_6b_base_qlora_code_alpaca_e3
+chatglm3_6b_base_qlora_colorist_e5
+chatglm3_6b_base_qlora_lawyer_e3
+chatglm3_6b_base_qlora_medical_e1
+chatglm3_6b_base_qlora_oasst1_512_e3
+chatglm3_6b_base_qlora_oasst1_e3
+chatglm3_6b_base_qlora_open_platypus_e3
+chatglm3_6b_base_qlora_openorca_e1
+chatglm3_6b_base_qlora_sql_e3
+chatglm3_6b_base_qlora_tiny_codes_e1
+chatglm3_6b_qlora_alpaca_e3
+chatglm3_6b_qlora_alpaca_enzh_e3
+chatglm3_6b_qlora_alpaca_enzh_oasst1_e3
+chatglm3_6b_qlora_alpaca_zh_e3
+chatglm3_6b_qlora_arxiv_gentitle_e3
+chatglm3_6b_qlora_code_alpaca_e3
+chatglm3_6b_qlora_colorist_e5
+chatglm3_6b_qlora_lawyer_e3
+chatglm3_6b_qlora_medical_e1
+chatglm3_6b_qlora_oasst1_512_e3
+chatglm3_6b_qlora_oasst1_e3
+chatglm3_6b_qlora_open_platypus_e3
+chatglm3_6b_qlora_openorca_e1
+chatglm3_6b_qlora_sql_e3
+chatglm3_6b_qlora_tiny_codes_e1
+deepspeed_zero1
+deepspeed_zero2
+deepspeed_zero2_offload
+deepspeed_zero3
+deepspeed_zero3_offload
+internlm_20b_qlora_alpaca_e3
+internlm_20b_qlora_alpaca_enzh_e3
+internlm_20b_qlora_alpaca_enzh_oasst1_e3
+internlm_20b_qlora_alpaca_zh_e3
+internlm_20b_qlora_arxiv_gentitle_e3
+internlm_20b_qlora_code_alpaca_e3
+internlm_20b_qlora_colorist_e5
+internlm_20b_qlora_lawyer_e3
+internlm_20b_qlora_msagent_react_e3_gpu8
+internlm_20b_qlora_oasst1_512_e3
+internlm_20b_qlora_oasst1_e3
+internlm_20b_qlora_open_platypus_e3
+internlm_20b_qlora_sql_e3
+internlm_7b_full_alpaca_e3
+internlm_7b_full_alpaca_enzh_e3
+internlm_7b_full_alpaca_enzh_oasst1_e3
+internlm_7b_full_alpaca_zh_e3
+internlm_7b_full_oasst1_e3
+internlm_7b_qlora_alpaca_e3
+internlm_7b_qlora_alpaca_enzh_e3
+internlm_7b_qlora_alpaca_enzh_oasst1_e3
+internlm_7b_qlora_alpaca_zh_e3
+internlm_7b_qlora_arxiv_gentitle_e3
+internlm_7b_qlora_code_alpaca_e3
+internlm_7b_qlora_colorist_e5
+internlm_7b_qlora_lawyer_e3
+internlm_7b_qlora_medical_e1
+internlm_7b_qlora_moss_sft_all_e1
+internlm_7b_qlora_moss_sft_all_e2_gpu8
+internlm_7b_qlora_moss_sft_plugins_e1
+internlm_7b_qlora_msagent_react_e3_gpu8
+internlm_7b_qlora_oasst1_512_e3
+internlm_7b_qlora_oasst1_e3
+internlm_7b_qlora_oasst1_e3_hf
+internlm_7b_qlora_oasst1_mmlu_e3
+internlm_7b_qlora_open_platypus_e3
+internlm_7b_qlora_openorca_e1
+internlm_7b_qlora_sql_e3
+internlm_7b_qlora_tiny_codes_e1
+internlm_chat_20b_qlora_alpaca_e3
+internlm_chat_20b_qlora_alpaca_enzh_e3
+internlm_chat_20b_qlora_alpaca_enzh_oasst1_e3
+internlm_chat_20b_qlora_alpaca_zh_e3
+internlm_chat_20b_qlora_code_alpaca_e3
+internlm_chat_20b_qlora_lawyer_e3
+internlm_chat_20b_qlora_oasst1_512_e3
+internlm_chat_20b_qlora_oasst1_e3
+internlm_chat_20b_qlora_open_platypus_e3
+internlm_chat_7b_qlora_alpaca_e3
+internlm_chat_7b_qlora_alpaca_enzh_e3
+internlm_chat_7b_qlora_alpaca_enzh_oasst1_e3
+internlm_chat_7b_qlora_alpaca_zh_e3
+internlm_chat_7b_qlora_arxiv_gentitle_e3
+internlm_chat_7b_qlora_code_alpaca_e3
+internlm_chat_7b_qlora_colorist_e5
+internlm_chat_7b_qlora_lawyer_e3
+internlm_chat_7b_qlora_medical_e1
+internlm_chat_7b_qlora_oasst1_512_e3
+internlm_chat_7b_qlora_oasst1_e3
+internlm_chat_7b_qlora_open_platypus_e3
+internlm_chat_7b_qlora_openorca_e1
+internlm_chat_7b_qlora_sql_e3
+internlm_chat_7b_qlora_tiny_codes_e1
+llama2_70b_int8_lora_open_platypus_e1
+llama2_70b_int8_lora_open_platypus_e1_hf
+llama2_70b_qlora_open_platypus_e1
+llama2_70b_qlora_open_platypus_e1_hf
+llama2_7b_chat_qlora_alpaca_e3
+llama2_7b_chat_qlora_alpaca_enzh_e3
+llama2_7b_chat_qlora_alpaca_enzh_oasst1_e3
+llama2_7b_chat_qlora_alpaca_zh_e3
+llama2_7b_chat_qlora_arxiv_gentitle_e3
+llama2_7b_chat_qlora_code_alpaca_e3
+llama2_7b_chat_qlora_colorist_e5
+llama2_7b_chat_qlora_lawyer_e3
+llama2_7b_chat_qlora_medical_e1
+llama2_7b_chat_qlora_oasst1_512_e3
+llama2_7b_chat_qlora_oasst1_e3
+llama2_7b_chat_qlora_open_platypus_e3
+llama2_7b_chat_qlora_openorca_e1
+llama2_7b_chat_qlora_sql_e3
+llama2_7b_chat_qlora_tiny_codes_e1
+llama2_7b_full_wizardlm_e1
+llama2_7b_qlora_alpaca_e3
+llama2_7b_qlora_alpaca_enzh_e3
+llama2_7b_qlora_alpaca_enzh_oasst1_e3
+llama2_7b_qlora_alpaca_zh_e3
+llama2_7b_qlora_arxiv_gentitle_e3
+llama2_7b_qlora_code_alpaca_e3
+llama2_7b_qlora_colorist_e5
+llama2_7b_qlora_lawyer_e3
+llama2_7b_qlora_medical_e1
+llama2_7b_qlora_moss_sft_all_e1
+llama2_7b_qlora_moss_sft_all_e2_gpu8
+llama2_7b_qlora_moss_sft_plugins_e1
+llama2_7b_qlora_msagent_react_e3_gpu8
+llama2_7b_qlora_oasst1_512_e3
+llama2_7b_qlora_oasst1_e3
+llama2_7b_qlora_open_platypus_e3
+llama2_7b_qlora_openorca_e1
+llama2_7b_qlora_sql_e3
+llama2_7b_qlora_tiny_codes_e1
+llama_7b_qlora_alpaca_e3
+llama_7b_qlora_alpaca_enzh_e3
+llama_7b_qlora_alpaca_enzh_oasst1_e3
+llama_7b_qlora_alpaca_zh_e3
+llama_7b_qlora_arxiv_gentitle_e3
+llama_7b_qlora_code_alpaca_e3
+llama_7b_qlora_colorist_e5
+llama_7b_qlora_lawyer_e3
+llama_7b_qlora_medical_e1
+llama_7b_qlora_moss_sft_all_e1
+llama_7b_qlora_moss_sft_all_e2_gpu8
+llama_7b_qlora_moss_sft_plugins_e1
+llama_7b_qlora_oasst1_512_e3
+llama_7b_qlora_oasst1_e3
+llama_7b_qlora_open_platypus_e3
+llama_7b_qlora_openorca_e1
+llama_7b_qlora_sql_e3
+llama_7b_qlora_tiny_codes_e1
+mistral_7b_qlora_skypile_pretrain_e1
+qwen_7b_chat_qlora_alpaca_e3
+qwen_7b_chat_qlora_alpaca_enzh_e3
+qwen_7b_chat_qlora_alpaca_enzh_oasst1_e3
+qwen_7b_chat_qlora_alpaca_zh_e3
+qwen_7b_chat_qlora_arxiv_gentitle_e3
+qwen_7b_chat_qlora_code_alpaca_e3
+qwen_7b_chat_qlora_colorist_e5
+qwen_7b_chat_qlora_lawyer_e3
+qwen_7b_chat_qlora_medical_e1
+qwen_7b_chat_qlora_oasst1_512_e3
+qwen_7b_chat_qlora_oasst1_e3
+qwen_7b_chat_qlora_open_platypus_e3
+qwen_7b_chat_qlora_openorca_e1
+qwen_7b_chat_qlora_sql_e3
+qwen_7b_chat_qlora_tiny_codes_e1
+qwen_7b_qlora_alpaca_e3
+qwen_7b_qlora_alpaca_enzh_e3
+qwen_7b_qlora_alpaca_enzh_oasst1_e3
+qwen_7b_qlora_alpaca_zh_e3
+qwen_7b_qlora_arxiv_gentitle_e3
+qwen_7b_qlora_code_alpaca_e3
+qwen_7b_qlora_colorist_e5
+qwen_7b_qlora_lawyer_e3
+qwen_7b_qlora_medical_e1
+qwen_7b_qlora_moss_sft_all_e1
+qwen_7b_qlora_moss_sft_all_e2_gpu8
+qwen_7b_qlora_moss_sft_plugins_e1
+qwen_7b_qlora_oasst1_512_e3
+qwen_7b_qlora_oasst1_e3
+qwen_7b_qlora_open_platypus_e3
+qwen_7b_qlora_openorca_e1
+qwen_7b_qlora_sql_e3
+qwen_7b_qlora_tiny_codes_e1
+starcoder_qlora_stack_exchange_example
+yi_34b_qlora_alpaca_enzh_e3
+yi_6b_qlora_alpaca_enzh_e3
+zephyr_7b_beta_qlora_alpaca_e3
+=============================================================
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%mkdir /root/personal_assistant/config</span><br><span class="line">%cd /root/personal_assistant/config</span><br></pre></td></tr></table></figure>
+
+<pre><code>mkdir: cannot create directory ‘/root/personal_assistant/config’: File exists
+/root/personal_assistant/config
+
+
+/root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages/IPython/core/magics/osm.py:417: UserWarning: using dhist requires you to install the `pickleshare` library.
+  self.shell.db[&#39;dhist&#39;] = compress_dhist(dhist)[-100:]
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!xtuner copy-cfg internlm_chat_7b_qlora_oasst1_e3 .</span><br></pre></td></tr></table></figure>
+
+<pre><code>[2024-01-12 17:25:59,992] [INFO] [real_accelerator.py:161:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2024-01-12 17:26:49,263] [INFO] [real_accelerator.py:161:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+Copy to ./internlm_chat_7b_qlora_oasst1_e3_copy.py
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!sed -i <span class="string">&quot;s#pretrained_model_name_or_path = &#x27;internlm/internlm-chat-7b&#x27;#pretrained_model_name_or_path = &#x27;/root/personal_assistant/model/Shanghai_AI_Laboratory/internlm-chat-7b&#x27;#g&quot;</span> /root/personal_assistant/config/internlm_chat_7b_qlora_oasst1_e3_copy.py</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!sed -i <span class="string">&quot;s#data_path = &#x27;timdettmers/openassistant-guanaco&#x27;#data_path = &#x27;/root/personal_assistant/data/personal_assistant.json&#x27;#g&quot;</span> /root/personal_assistant/config/internlm_chat_7b_qlora_oasst1_e3_copy.py</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!sed -i <span class="string">&quot;s#max_length = 2048#max_length = 1024#g&quot;</span> /root/personal_assistant/config/internlm_chat_7b_qlora_oasst1_e3_copy.py</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!sed -i <span class="string">&quot;s#batch_size = 1#batch_size = 2#g&quot;</span> /root/personal_assistant/config/internlm_chat_7b_qlora_oasst1_e3_copy.py</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!sed -i <span class="string">&quot;s#evaluation_freq = 500#evaluation_freq = 90#g&quot;</span> /root/personal_assistant/config/internlm_chat_7b_qlora_oasst1_e3_copy.py</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!sed -i <span class="string">&quot;s#dataset=dict(type=load_dataset, path=data_path),#dataset=dict(type=load_dataset, path=&#x27;json&#x27;, data_files=dict(train=data_path)),#g&quot;</span> /root/personal_assistant/config/internlm_chat_7b_qlora_oasst1_e3_copy.py</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!sed -i <span class="string">&quot;s#dataset_map_fn=oasst1_map_fn,#dataset_map_fn=None,#g&quot;</span> /root/personal_assistant/config/internlm_chat_7b_qlora_oasst1_e3_copy.py</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!sed -i <span class="string">&quot;s#&#x27;请给我介绍五个上海的景点&#x27;, &#x27;Please tell me five scenic spots in Shanghai&#x27;#&#x27;请介绍一下你自己&#x27;, &#x27;请做一下自我介绍&#x27;#g&quot;</span> /root/personal_assistant/config/internlm_chat_7b_qlora_oasst1_e3_copy.py</span><br></pre></td></tr></table></figure>
+
+<h2 id="模型微调"><a href="#模型微调" class="headerlink" title="模型微调"></a>模型微调</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!xtuner train /root/personal_assistant/config/internlm_chat_7b_qlora_oasst1_e3_copy.py  --deepspeed deepspeed_zero2</span><br></pre></td></tr></table></figure>
+
+<pre><code>[2024-01-12 17:49:37,839] [INFO] [real_accelerator.py:161:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2024-01-12 17:50:11,023] [INFO] [real_accelerator.py:161:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+01/12 17:50:31 - mmengine - INFO - 
+------------------------------------------------------------
+System environment:
+    sys.platform: linux
+    Python: 3.10.13 (main, Sep 11 2023, 13:44:35) [GCC 11.2.0]
+    CUDA available: True
+    numpy_random_seed: 1825194956
+    GPU 0: NVIDIA A100-SXM4-80GB
+    CUDA_HOME: /usr/local/cuda
+    NVCC: Cuda compilation tools, release 11.7, V11.7.99
+    GCC: gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
+    PyTorch: 2.1.2+cu121
+    PyTorch compiling details: PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v3.1.1 (Git Hash 64f6bcbcbab628e96f33a62c3e975f8535a7bde4)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX512
+  - CUDA Runtime 12.1
+  - NVCC architecture flags: -gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.9.2
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=12.1, CUDNN_VERSION=8.9.2, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=old-style-cast -Wno-invalid-partial-specialization -Wno-unused-private-field -Wno-aligned-allocation-unavailable -Wno-missing-braces -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.1.2, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+    OpenCV: 4.9.0
+    MMEngine: 0.10.2
+
+Runtime environment:
+    launcher: none
+    randomness: &#123;&#39;seed&#39;: None, &#39;deterministic&#39;: False&#125;
+    cudnn_benchmark: False
+    mp_cfg: &#123;&#39;mp_start_method&#39;: &#39;fork&#39;, &#39;opencv_num_threads&#39;: 0&#125;
+    dist_cfg: &#123;&#39;backend&#39;: &#39;nccl&#39;&#125;
+    seed: None
+    deterministic: False
+    Distributed launcher: none
+    Distributed training: False
+    GPU number: 1
+------------------------------------------------------------
+
+01/12 17:50:31 - mmengine - INFO - Config:
+SYSTEM = &#39;&#39;
+accumulative_counts = 16
+batch_size = 2
+betas = (
+    0.9,
+    0.999,
+)
+custom_hooks = [
+    dict(
+        tokenizer=dict(
+            padding_side=&#39;right&#39;,
+            pretrained_model_name_or_path=
+            &#39;/root/personal_assistant/model/Shanghai_AI_Laboratory/internlm-chat-7b&#39;,
+            trust_remote_code=True,
+            type=&#39;transformers.AutoTokenizer.from_pretrained&#39;),
+        type=&#39;xtuner.engine.DatasetInfoHook&#39;),
+    dict(
+        evaluation_inputs=[
+            &#39;请介绍一下你自己&#39;,
+            &#39;请做一下自我介绍&#39;,
+        ],
+        every_n_iters=90,
+        prompt_template=&#39;xtuner.utils.PROMPT_TEMPLATE.internlm_chat&#39;,
+        system=&#39;&#39;,
+        tokenizer=dict(
+            padding_side=&#39;right&#39;,
+            pretrained_model_name_or_path=
+            &#39;/root/personal_assistant/model/Shanghai_AI_Laboratory/internlm-chat-7b&#39;,
+            trust_remote_code=True,
+            type=&#39;transformers.AutoTokenizer.from_pretrained&#39;),
+        type=&#39;xtuner.engine.EvaluateChatHook&#39;),
+]
+data_path = &#39;/root/personal_assistant/data/personal_assistant.json&#39;
+dataloader_num_workers = 0
+default_hooks = dict(
+    checkpoint=dict(interval=1, type=&#39;mmengine.hooks.CheckpointHook&#39;),
+    logger=dict(interval=10, type=&#39;mmengine.hooks.LoggerHook&#39;),
+    param_scheduler=dict(type=&#39;mmengine.hooks.ParamSchedulerHook&#39;),
+    sampler_seed=dict(type=&#39;mmengine.hooks.DistSamplerSeedHook&#39;),
+    timer=dict(type=&#39;mmengine.hooks.IterTimerHook&#39;))
+env_cfg = dict(
+    cudnn_benchmark=False,
+    dist_cfg=dict(backend=&#39;nccl&#39;),
+    mp_cfg=dict(mp_start_method=&#39;fork&#39;, opencv_num_threads=0))
+evaluation_freq = 90
+evaluation_inputs = [
+    &#39;请介绍一下你自己&#39;,
+    &#39;请做一下自我介绍&#39;,
+]
+launcher = &#39;none&#39;
+load_from = None
+log_level = &#39;INFO&#39;
+lr = 0.0002
+max_epochs = 3
+max_length = 1024
+max_norm = 1
+model = dict(
+    llm=dict(
+        pretrained_model_name_or_path=
+        &#39;/root/personal_assistant/model/Shanghai_AI_Laboratory/internlm-chat-7b&#39;,
+        quantization_config=dict(
+            bnb_4bit_compute_dtype=&#39;torch.float16&#39;,
+            bnb_4bit_quant_type=&#39;nf4&#39;,
+            bnb_4bit_use_double_quant=True,
+            llm_int8_has_fp16_weight=False,
+            llm_int8_threshold=6.0,
+            load_in_4bit=True,
+            load_in_8bit=False,
+            type=&#39;transformers.BitsAndBytesConfig&#39;),
+        torch_dtype=&#39;torch.float16&#39;,
+        trust_remote_code=True,
+        type=&#39;transformers.AutoModelForCausalLM.from_pretrained&#39;),
+    lora=dict(
+        bias=&#39;none&#39;,
+        lora_alpha=16,
+        lora_dropout=0.1,
+        r=64,
+        task_type=&#39;CAUSAL_LM&#39;,
+        type=&#39;peft.LoraConfig&#39;),
+    type=&#39;xtuner.model.SupervisedFinetune&#39;)
+optim_type = &#39;bitsandbytes.optim.PagedAdamW32bit&#39;
+optim_wrapper = dict(
+    optimizer=dict(
+        betas=(
+            0.9,
+            0.999,
+        ),
+        lr=0.0002,
+        type=&#39;bitsandbytes.optim.PagedAdamW32bit&#39;,
+        weight_decay=0),
+    type=&#39;DeepSpeedOptimWrapper&#39;)
+pack_to_max_length = True
+param_scheduler = dict(
+    T_max=3,
+    by_epoch=True,
+    convert_to_iter_based=True,
+    eta_min=0.0,
+    type=&#39;mmengine.optim.CosineAnnealingLR&#39;)
+pretrained_model_name_or_path = &#39;/root/personal_assistant/model/Shanghai_AI_Laboratory/internlm-chat-7b&#39;
+prompt_template = &#39;xtuner.utils.PROMPT_TEMPLATE.internlm_chat&#39;
+randomness = dict(deterministic=False, seed=None)
+resume = False
+runner_type = &#39;FlexibleRunner&#39;
+strategy = dict(
+    config=dict(
+        bf16=dict(enabled=True),
+        fp16=dict(enabled=False, initial_scale_power=16),
+        gradient_accumulation_steps=&#39;auto&#39;,
+        gradient_clipping=&#39;auto&#39;,
+        train_micro_batch_size_per_gpu=&#39;auto&#39;,
+        zero_allow_untested_optimizer=True,
+        zero_force_ds_cpu_optimizer=False,
+        zero_optimization=dict(overlap_comm=True, stage=2)),
+    exclude_frozen_parameters=True,
+    gradient_accumulation_steps=16,
+    gradient_clipping=1,
+    train_micro_batch_size_per_gpu=2,
+    type=&#39;DeepSpeedStrategy&#39;)
+tokenizer = dict(
+    padding_side=&#39;right&#39;,
+    pretrained_model_name_or_path=
+    &#39;/root/personal_assistant/model/Shanghai_AI_Laboratory/internlm-chat-7b&#39;,
+    trust_remote_code=True,
+    type=&#39;transformers.AutoTokenizer.from_pretrained&#39;)
+train_cfg = dict(by_epoch=True, max_epochs=3, val_interval=1)
+train_dataloader = dict(
+    batch_size=2,
+    collate_fn=dict(type=&#39;xtuner.dataset.collate_fns.default_collate_fn&#39;),
+    dataset=dict(
+        dataset=dict(
+            data_files=dict(
+                train=&#39;/root/personal_assistant/data/personal_assistant.json&#39;),
+            path=&#39;json&#39;,
+            type=&#39;datasets.load_dataset&#39;),
+        dataset_map_fn=None,
+        max_length=1024,
+        pack_to_max_length=True,
+        remove_unused_columns=True,
+        shuffle_before_pack=True,
+        template_map_fn=dict(
+            template=&#39;xtuner.utils.PROMPT_TEMPLATE.internlm_chat&#39;,
+            type=&#39;xtuner.dataset.map_fns.template_map_fn_factory&#39;),
+        tokenizer=dict(
+            padding_side=&#39;right&#39;,
+            pretrained_model_name_or_path=
+            &#39;/root/personal_assistant/model/Shanghai_AI_Laboratory/internlm-chat-7b&#39;,
+            trust_remote_code=True,
+            type=&#39;transformers.AutoTokenizer.from_pretrained&#39;),
+        type=&#39;xtuner.dataset.process_hf_dataset&#39;),
+    num_workers=0,
+    sampler=dict(shuffle=True, type=&#39;mmengine.dataset.DefaultSampler&#39;))
+train_dataset = dict(
+    dataset=dict(
+        data_files=dict(
+            train=&#39;/root/personal_assistant/data/personal_assistant.json&#39;),
+        path=&#39;json&#39;,
+        type=&#39;datasets.load_dataset&#39;),
+    dataset_map_fn=None,
+    max_length=1024,
+    pack_to_max_length=True,
+    remove_unused_columns=True,
+    shuffle_before_pack=True,
+    template_map_fn=dict(
+        template=&#39;xtuner.utils.PROMPT_TEMPLATE.internlm_chat&#39;,
+        type=&#39;xtuner.dataset.map_fns.template_map_fn_factory&#39;),
+    tokenizer=dict(
+        padding_side=&#39;right&#39;,
+        pretrained_model_name_or_path=
+        &#39;/root/personal_assistant/model/Shanghai_AI_Laboratory/internlm-chat-7b&#39;,
+        trust_remote_code=True,
+        type=&#39;transformers.AutoTokenizer.from_pretrained&#39;),
+    type=&#39;xtuner.dataset.process_hf_dataset&#39;)
+visualizer = None
+weight_decay = 0
+work_dir = &#39;./work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy&#39;
+
+01/12 17:50:33 - mmengine - WARNING - Failed to search registry with scope &quot;mmengine&quot; in the &quot;builder&quot; registry tree. As a workaround, the current &quot;builder&quot; registry in &quot;xtuner&quot; is used to build instance. This may cause unexpected failure when running the built modules. Please check whether &quot;mmengine&quot; is a correct scope, or whether the registry is initialized.
+01/12 17:50:34 - mmengine - INFO - Hooks will be executed in the following order:
+before_run:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+before_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DatasetInfoHook                    
+(NORMAL      ) EvaluateChatHook                   
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_train_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DistSamplerSeedHook                
+ -------------------- 
+before_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) EvaluateChatHook                   
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_train_epoch:
+(NORMAL      ) IterTimerHook                      
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_val:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) DatasetInfoHook                    
+ -------------------- 
+before_val_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_val_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_val_iter:
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_val_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_val:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) EvaluateChatHook                   
+ -------------------- 
+after_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) EvaluateChatHook                   
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_test:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) DatasetInfoHook                    
+ -------------------- 
+before_test_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_test_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_test_iter:
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+after_run:
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+Map: 100%|███████████████████████| 10001/10001 [00:02&lt;00:00, 4240.28 examples/s]
+Flattening the indices: 100%|███| 10001/10001 [00:00&lt;00:00, 43885.71 examples/s]
+Map: 100%|██████████████████████| 10001/10001 [00:00&lt;00:00, 26844.27 examples/s]
+01/12 17:50:41 - mmengine - WARNING - Dataset Dataset has no metainfo. ``dataset_meta`` in visualizer will be None.
+quantization_config convert to &lt;class &#39;transformers.utils.quantization_config.BitsAndBytesConfig&#39;&gt;
+Loading checkpoint shards: 100%|██████████████████| 8/8 [00:10&lt;00:00,  1.37s/it]
+01/12 17:50:54 - mmengine - INFO - dispatch internlm attn forward
+01/12 17:50:54 - mmengine - WARNING - Due to the implementation of the PyTorch version of flash attention, even when the `output_attentions` flag is set to True, it is not possible to return the `attn_weights`.
+[2024-01-12 17:51:03,047] [INFO] [logging.py:96:log_dist] [Rank -1] DeepSpeed info: version=0.12.6, git-hash=unknown, git-branch=unknown
+[2024-01-12 17:51:03,047] [INFO] [comm.py:637:init_distributed] cdb=None
+[2024-01-12 17:51:03,048] [INFO] [comm.py:652:init_distributed] Not using the DeepSpeed or dist launchers, attempting to detect MPI environment...
+[2024-01-12 17:51:03,260] [INFO] [comm.py:702:mpi_discovery] Discovered MPI settings of world_rank=0, local_rank=0, world_size=1, master_addr=192.168.225.4, master_port=29500
+[2024-01-12 17:51:03,260] [INFO] [comm.py:668:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+[2024-01-12 17:51:04,756] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Flops Profiler Enabled: False
+[2024-01-12 17:51:04,760] [INFO] [logging.py:96:log_dist] [Rank 0] Using client Optimizer as basic optimizer
+[2024-01-12 17:51:04,760] [INFO] [logging.py:96:log_dist] [Rank 0] Removing param_group that has no &#39;params&#39; in the basic Optimizer
+[2024-01-12 17:51:04,838] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Basic Optimizer = PagedAdamW32bit
+[2024-01-12 17:51:04,838] [INFO] [utils.py:56:is_zero_supported_optimizer] Checking ZeRO support for optimizer=PagedAdamW32bit type=&lt;class &#39;bitsandbytes.optim.adamw.PagedAdamW32bit&#39;&gt;
+[2024-01-12 17:51:04,838] [WARNING] [engine.py:1166:_do_optimizer_sanity_check] **** You are using ZeRO with an untested optimizer, proceed with caution *****
+[2024-01-12 17:51:04,838] [INFO] [logging.py:96:log_dist] [Rank 0] Creating torch.bfloat16 ZeRO stage 2 optimizer
+[2024-01-12 17:51:04,838] [INFO] [stage_1_and_2.py:148:__init__] Reduce bucket size 500,000,000
+[2024-01-12 17:51:04,838] [INFO] [stage_1_and_2.py:149:__init__] Allgather bucket size 500,000,000
+[2024-01-12 17:51:04,838] [INFO] [stage_1_and_2.py:150:__init__] CPU Offload: False
+[2024-01-12 17:51:04,838] [INFO] [stage_1_and_2.py:151:__init__] Round robin gradient partitioning: False
+[2024-01-12 17:51:05,651] [INFO] [utils.py:791:see_memory_usage] Before initializing optimizer states
+[2024-01-12 17:51:05,652] [INFO] [utils.py:792:see_memory_usage] MA 5.63 GB         Max_MA 5.93 GB         CA 6.32 GB         Max_CA 6 GB 
+[2024-01-12 17:51:05,652] [INFO] [utils.py:799:see_memory_usage] CPU Virtual Memory:  used = 68.27 GB, percent = 3.4%
+[2024-01-12 17:51:05,884] [INFO] [utils.py:791:see_memory_usage] After initializing optimizer states
+[2024-01-12 17:51:05,885] [INFO] [utils.py:792:see_memory_usage] MA 5.63 GB         Max_MA 6.23 GB         CA 6.92 GB         Max_CA 7 GB 
+[2024-01-12 17:51:05,885] [INFO] [utils.py:799:see_memory_usage] CPU Virtual Memory:  used = 68.28 GB, percent = 3.4%
+[2024-01-12 17:51:05,885] [INFO] [stage_1_and_2.py:516:__init__] optimizer state initialized
+[2024-01-12 17:51:06,010] [INFO] [utils.py:791:see_memory_usage] After initializing ZeRO optimizer
+[2024-01-12 17:51:06,010] [INFO] [utils.py:792:see_memory_usage] MA 5.63 GB         Max_MA 5.63 GB         CA 6.92 GB         Max_CA 7 GB 
+[2024-01-12 17:51:06,010] [INFO] [utils.py:799:see_memory_usage] CPU Virtual Memory:  used = 68.28 GB, percent = 3.4%
+[2024-01-12 17:51:06,021] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Final Optimizer = PagedAdamW32bit
+[2024-01-12 17:51:06,021] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed using client LR scheduler
+[2024-01-12 17:51:06,021] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed LR Scheduler = None
+[2024-01-12 17:51:06,021] [INFO] [logging.py:96:log_dist] [Rank 0] step=0, skipped=0, lr=[0.0002], mom=[(0.9, 0.999)]
+[2024-01-12 17:51:06,025] [INFO] [config.py:984:print] DeepSpeedEngine configuration:
+[2024-01-12 17:51:06,025] [INFO] [config.py:988:print]   activation_checkpointing_config  &#123;
+    &quot;partition_activations&quot;: false, 
+    &quot;contiguous_memory_optimization&quot;: false, 
+    &quot;cpu_checkpointing&quot;: false, 
+    &quot;number_checkpoints&quot;: null, 
+    &quot;synchronize_checkpoint_boundary&quot;: false, 
+    &quot;profile&quot;: false
+&#125;
+[2024-01-12 17:51:06,025] [INFO] [config.py:988:print]   aio_config ................... &#123;&#39;block_size&#39;: 1048576, &#39;queue_depth&#39;: 8, &#39;thread_count&#39;: 1, &#39;single_submit&#39;: False, &#39;overlap_events&#39;: True&#125;
+[2024-01-12 17:51:06,026] [INFO] [config.py:988:print]   amp_enabled .................. False
+[2024-01-12 17:51:06,026] [INFO] [config.py:988:print]   amp_params ................... False
+[2024-01-12 17:51:06,026] [INFO] [config.py:988:print]   autotuning_config ............ &#123;
+    &quot;enabled&quot;: false, 
+    &quot;start_step&quot;: null, 
+    &quot;end_step&quot;: null, 
+    &quot;metric_path&quot;: null, 
+    &quot;arg_mappings&quot;: null, 
+    &quot;metric&quot;: &quot;throughput&quot;, 
+    &quot;model_info&quot;: null, 
+    &quot;results_dir&quot;: &quot;autotuning_results&quot;, 
+    &quot;exps_dir&quot;: &quot;autotuning_exps&quot;, 
+    &quot;overwrite&quot;: true, 
+    &quot;fast&quot;: true, 
+    &quot;start_profile_step&quot;: 3, 
+    &quot;end_profile_step&quot;: 5, 
+    &quot;tuner_type&quot;: &quot;gridsearch&quot;, 
+    &quot;tuner_early_stopping&quot;: 5, 
+    &quot;tuner_num_trials&quot;: 50, 
+    &quot;model_info_path&quot;: null, 
+    &quot;mp_size&quot;: 1, 
+    &quot;max_train_batch_size&quot;: null, 
+    &quot;min_train_batch_size&quot;: 1, 
+    &quot;max_train_micro_batch_size_per_gpu&quot;: 1.024000e+03, 
+    &quot;min_train_micro_batch_size_per_gpu&quot;: 1, 
+    &quot;num_tuning_micro_batch_sizes&quot;: 3
+&#125;
+[2024-01-12 17:51:06,026] [INFO] [config.py:988:print]   bfloat16_enabled ............. True
+[2024-01-12 17:51:06,026] [INFO] [config.py:988:print]   checkpoint_parallel_write_pipeline  False
+[2024-01-12 17:51:06,026] [INFO] [config.py:988:print]   checkpoint_tag_validation_enabled  True
+[2024-01-12 17:51:06,026] [INFO] [config.py:988:print]   checkpoint_tag_validation_fail  False
+[2024-01-12 17:51:06,026] [INFO] [config.py:988:print]   comms_config ................. &lt;deepspeed.comm.config.DeepSpeedCommsConfig object at 0x7f61c4ca9000&gt;
+[2024-01-12 17:51:06,026] [INFO] [config.py:988:print]   communication_data_type ...... None
+[2024-01-12 17:51:06,026] [INFO] [config.py:988:print]   compression_config ........... &#123;&#39;weight_quantization&#39;: &#123;&#39;shared_parameters&#39;: &#123;&#39;enabled&#39;: False, &#39;quantizer_kernel&#39;: False, &#39;schedule_offset&#39;: 0, &#39;quantize_groups&#39;: 1, &#39;quantize_verbose&#39;: False, &#39;quantization_type&#39;: &#39;symmetric&#39;, &#39;quantize_weight_in_forward&#39;: False, &#39;rounding&#39;: &#39;nearest&#39;, &#39;fp16_mixed_quantize&#39;: False, &#39;quantize_change_ratio&#39;: 0.001&#125;, &#39;different_groups&#39;: &#123;&#125;&#125;, &#39;activation_quantization&#39;: &#123;&#39;shared_parameters&#39;: &#123;&#39;enabled&#39;: False, &#39;quantization_type&#39;: &#39;symmetric&#39;, &#39;range_calibration&#39;: &#39;dynamic&#39;, &#39;schedule_offset&#39;: 1000&#125;, &#39;different_groups&#39;: &#123;&#125;&#125;, &#39;sparse_pruning&#39;: &#123;&#39;shared_parameters&#39;: &#123;&#39;enabled&#39;: False, &#39;method&#39;: &#39;l1&#39;, &#39;schedule_offset&#39;: 1000&#125;, &#39;different_groups&#39;: &#123;&#125;&#125;, &#39;row_pruning&#39;: &#123;&#39;shared_parameters&#39;: &#123;&#39;enabled&#39;: False, &#39;method&#39;: &#39;l1&#39;, &#39;schedule_offset&#39;: 1000&#125;, &#39;different_groups&#39;: &#123;&#125;&#125;, &#39;head_pruning&#39;: &#123;&#39;shared_parameters&#39;: &#123;&#39;enabled&#39;: False, &#39;method&#39;: &#39;topk&#39;, &#39;schedule_offset&#39;: 1000&#125;, &#39;different_groups&#39;: &#123;&#125;&#125;, &#39;channel_pruning&#39;: &#123;&#39;shared_parameters&#39;: &#123;&#39;enabled&#39;: False, &#39;method&#39;: &#39;l1&#39;, &#39;schedule_offset&#39;: 1000&#125;, &#39;different_groups&#39;: &#123;&#125;&#125;, &#39;layer_reduction&#39;: &#123;&#39;enabled&#39;: False&#125;&#125;
+[2024-01-12 17:51:06,026] [INFO] [config.py:988:print]   curriculum_enabled_legacy .... False
+[2024-01-12 17:51:06,026] [INFO] [config.py:988:print]   curriculum_params_legacy ..... False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   data_efficiency_config ....... &#123;&#39;enabled&#39;: False, &#39;seed&#39;: 1234, &#39;data_sampling&#39;: &#123;&#39;enabled&#39;: False, &#39;num_epochs&#39;: 1000, &#39;num_workers&#39;: 0, &#39;curriculum_learning&#39;: &#123;&#39;enabled&#39;: False&#125;&#125;, &#39;data_routing&#39;: &#123;&#39;enabled&#39;: False, &#39;random_ltd&#39;: &#123;&#39;enabled&#39;: False, &#39;layer_token_lr_schedule&#39;: &#123;&#39;enabled&#39;: False&#125;&#125;&#125;&#125;
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   data_efficiency_enabled ...... False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   dataloader_drop_last ......... False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   disable_allgather ............ False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   dump_state ................... False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   dynamic_loss_scale_args ...... None
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   eigenvalue_enabled ........... False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   eigenvalue_gas_boundary_resolution  1
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   eigenvalue_layer_name ........ bert.encoder.layer
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   eigenvalue_layer_num ......... 0
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   eigenvalue_max_iter .......... 100
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   eigenvalue_stability ......... 1e-06
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   eigenvalue_tol ............... 0.01
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   eigenvalue_verbose ........... False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   elasticity_enabled ........... False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   flops_profiler_config ........ &#123;
+    &quot;enabled&quot;: false, 
+    &quot;recompute_fwd_factor&quot;: 0.0, 
+    &quot;profile_step&quot;: 1, 
+    &quot;module_depth&quot;: -1, 
+    &quot;top_modules&quot;: 1, 
+    &quot;detailed&quot;: true, 
+    &quot;output_file&quot;: null
+&#125;
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   fp16_auto_cast ............... None
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   fp16_enabled ................. False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   fp16_master_weights_and_gradients  False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   global_rank .................. 0
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   grad_accum_dtype ............. None
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   gradient_accumulation_steps .. 16
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   gradient_clipping ............ 1
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   gradient_predivide_factor .... 1.0
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   graph_harvesting ............. False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   hybrid_engine ................ enabled=False max_out_tokens=512 inference_tp_size=1 release_inference_cache=False pin_parameters=True tp_gather_partition_size=8
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   initial_dynamic_scale ........ 1
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   load_universal_checkpoint .... False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   loss_scale ................... 1.0
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   memory_breakdown ............. False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   mics_hierarchial_params_gather  False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   mics_shard_size .............. -1
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   monitor_config ............... tensorboard=TensorBoardConfig(enabled=False, output_path=&#39;&#39;, job_name=&#39;DeepSpeedJobName&#39;) wandb=WandbConfig(enabled=False, group=None, team=None, project=&#39;deepspeed&#39;) csv_monitor=CSVConfig(enabled=False, output_path=&#39;&#39;, job_name=&#39;DeepSpeedJobName&#39;) enabled=False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   nebula_config ................ &#123;
+    &quot;enabled&quot;: false, 
+    &quot;persistent_storage_path&quot;: null, 
+    &quot;persistent_time_interval&quot;: 100, 
+    &quot;num_of_version_in_retention&quot;: 2, 
+    &quot;enable_nebula_load&quot;: true, 
+    &quot;load_path&quot;: null
+&#125;
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   optimizer_legacy_fusion ...... False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   optimizer_name ............... None
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   optimizer_params ............. None
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   pipeline ..................... &#123;&#39;stages&#39;: &#39;auto&#39;, &#39;partition&#39;: &#39;best&#39;, &#39;seed_layers&#39;: False, &#39;activation_checkpoint_interval&#39;: 0, &#39;pipe_partitioned&#39;: True, &#39;grad_partitioned&#39;: True&#125;
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   pld_enabled .................. False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   pld_params ................... False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   prescale_gradients ........... False
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   scheduler_name ............... None
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   scheduler_params ............. None
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   seq_parallel_communication_data_type  torch.float32
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   sparse_attention ............. None
+[2024-01-12 17:51:06,027] [INFO] [config.py:988:print]   sparse_gradients_enabled ..... False
+[2024-01-12 17:51:06,028] [INFO] [config.py:988:print]   steps_per_print .............. 10000000000000
+[2024-01-12 17:51:06,028] [INFO] [config.py:988:print]   train_batch_size ............. 32
+[2024-01-12 17:51:06,028] [INFO] [config.py:988:print]   train_micro_batch_size_per_gpu  2
+[2024-01-12 17:51:06,028] [INFO] [config.py:988:print]   use_data_before_expert_parallel_  False
+[2024-01-12 17:51:06,028] [INFO] [config.py:988:print]   use_node_local_storage ....... False
+[2024-01-12 17:51:06,028] [INFO] [config.py:988:print]   wall_clock_breakdown ......... False
+[2024-01-12 17:51:06,028] [INFO] [config.py:988:print]   weight_quantization_config ... None
+[2024-01-12 17:51:06,028] [INFO] [config.py:988:print]   world_size ................... 1
+[2024-01-12 17:51:06,028] [INFO] [config.py:988:print]   zero_allow_untested_optimizer  True
+[2024-01-12 17:51:06,028] [INFO] [config.py:988:print]   zero_config .................. stage=2 contiguous_gradients=True reduce_scatter=True reduce_bucket_size=500,000,000 use_multi_rank_bucket_allreduce=True allgather_partitions=True allgather_bucket_size=500,000,000 overlap_comm=True load_from_fp32_weights=True elastic_checkpoint=False offload_param=None offload_optimizer=None sub_group_size=1,000,000,000 cpu_offload_param=None cpu_offload_use_pin_memory=None cpu_offload=None prefetch_bucket_size=50,000,000 param_persistence_threshold=100,000 model_persistence_threshold=sys.maxsize max_live_parameters=1,000,000,000 max_reuse_distance=1,000,000,000 gather_16bit_weights_on_model_save=False stage3_gather_fp16_weights_on_model_save=False ignore_unused_parameters=True legacy_stage1=False round_robin_gradients=False zero_hpz_partition_size=1 zero_quantized_weights=False zero_quantized_nontrainable_weights=False zero_quantized_gradients=False mics_shard_size=-1 mics_hierarchical_params_gather=False memory_efficient_linear=True pipeline_loading_checkpoint=False override_module_apply=True
+[2024-01-12 17:51:06,028] [INFO] [config.py:988:print]   zero_enabled ................. True
+[2024-01-12 17:51:06,028] [INFO] [config.py:988:print]   zero_force_ds_cpu_optimizer .. False
+[2024-01-12 17:51:06,028] [INFO] [config.py:988:print]   zero_optimization_stage ...... 2
+[2024-01-12 17:51:06,028] [INFO] [config.py:974:print_user_config]   json = &#123;
+    &quot;gradient_accumulation_steps&quot;: 16, 
+    &quot;train_micro_batch_size_per_gpu&quot;: 2, 
+    &quot;gradient_clipping&quot;: 1, 
+    &quot;zero_allow_untested_optimizer&quot;: true, 
+    &quot;zero_force_ds_cpu_optimizer&quot;: false, 
+    &quot;zero_optimization&quot;: &#123;
+        &quot;stage&quot;: 2, 
+        &quot;overlap_comm&quot;: true
+    &#125;, 
+    &quot;fp16&quot;: &#123;
+        &quot;enabled&quot;: false, 
+        &quot;initial_scale_power&quot;: 16
+    &#125;, 
+    &quot;bf16&quot;: &#123;
+        &quot;enabled&quot;: true
+    &#125;, 
+    &quot;steps_per_print&quot;: 1.000000e+13
+&#125;
+01/12 17:51:06 - mmengine - INFO - Num train samples 401
+01/12 17:51:06 - mmengine - INFO - train example:
+01/12 17:51:06 - mmengine - INFO -  &lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;&lt;s&gt;&lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦
+01/12 17:51:06 - mmengine - INFO - before_train in EvaluateChatHook.
+01/12 17:51:12 - mmengine - INFO - Sample output:
+ &lt;s&gt;&lt;|User|&gt;:请介绍一下你自己&lt;eoh&gt;
+&lt;|Bot|&gt;:你好，我叫书生·浦语。我是一名人工智能助手，致力于通过执行常见的基于语言的任务和提供建议来帮助人类。我使用了深度学习技术和语言模型进行开发，并经过多轮迭代优化，以不断提高我的性能和
+
+01/12 17:51:16 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:非常抱歉，我是一名人工智能助手，我没有实际的身份或背景。但我可以回答您关于科技、知识、历史、文化等方面的问题，提供有用、适当的信息。如果您有任何问题或需要帮助，请随时问我。&lt;eoa&gt;
+&lt;/s&gt;
+
+01/12 17:51:16 - mmengine - WARNING - &quot;FileClient&quot; will be deprecated in future. Please use io functions in https://mmengine.readthedocs.io/en/latest/api/fileio.html#file-io
+01/12 17:51:16 - mmengine - WARNING - &quot;HardDiskBackend&quot; is the alias of &quot;LocalBackend&quot; and the former will be deprecated in future.
+01/12 17:51:16 - mmengine - INFO - Checkpoints will be saved to /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy.
+/root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages/torch/utils/checkpoint.py:429: UserWarning: torch.utils.checkpoint: please pass in use_reentrant=True or use_reentrant=False explicitly. The default value of use_reentrant will be updated to be False in the future. To maintain current behavior, pass use_reentrant=True. It is recommended that you use use_reentrant=False. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+01/12 17:51:30 - mmengine - INFO - Epoch(train) [1][ 10/201]  lr: 1.9989e-04  eta: 0:13:21  time: 1.3515  data_time: 0.0034  memory: 9802  loss: 1.0719
+/root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages/deepspeed/runtime/zero/stage_1_and_2.py:1652: UserWarning: The torch.cuda.*DtypeTensor constructors are no longer recommended. It&#39;s best to use methods such as torch.tensor(data, dtype=*, device=&#39;cuda&#39;) to create tensors. (Triggered internally at ../torch/csrc/tensor/python_tensor.cpp:83.)
+  total_norm_cuda = get_accelerator().FloatTensor([float(total_norm)])
+01/12 17:51:42 - mmengine - INFO - Epoch(train) [1][ 20/201]  lr: 1.9951e-04  eta: 0:12:37  time: 1.2484  data_time: 0.0062  memory: 9802  loss: 1.0324
+01/12 17:51:55 - mmengine - INFO - Epoch(train) [1][ 30/201]  lr: 1.9886e-04  eta: 0:12:15  time: 1.2508  data_time: 0.0048  memory: 9802  loss: 0.9617
+01/12 17:52:07 - mmengine - INFO - Epoch(train) [1][ 40/201]  lr: 1.9794e-04  eta: 0:11:59  time: 1.2611  data_time: 0.0057  memory: 9802  loss: 0.8898
+01/12 17:52:20 - mmengine - INFO - Epoch(train) [1][ 50/201]  lr: 1.9676e-04  eta: 0:11:43  time: 1.2518  data_time: 0.0040  memory: 9802  loss: 0.8426
+01/12 17:52:32 - mmengine - INFO - Epoch(train) [1][ 60/201]  lr: 1.9531e-04  eta: 0:11:29  time: 1.2544  data_time: 0.0055  memory: 9802  loss: 0.7168
+01/12 17:52:45 - mmengine - INFO - Epoch(train) [1][ 70/201]  lr: 1.9361e-04  eta: 0:11:15  time: 1.2550  data_time: 0.0048  memory: 9802  loss: 0.6320
+01/12 17:52:57 - mmengine - INFO - Epoch(train) [1][ 80/201]  lr: 1.9165e-04  eta: 0:11:02  time: 1.2628  data_time: 0.0070  memory: 9802  loss: 0.5898
+01/12 17:53:10 - mmengine - INFO - after_train_iter in EvaluateChatHook.
+01/12 17:53:18 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请介绍一下你自己&lt;eoh&gt;
+&lt;|Bot|&gt;:作为一个语言模型AI，我没有身体和情感，但我可以通过执行常见的基于语言的任务和提供建议来帮助人类。我是通过深度学习技术和语言模型来构建的，我可以回答问题、提供定义和解释、将文本从一种语言翻译成另一种语言、总结文本、生成文本、编写故事、分析情感、提供推荐、开发算法、编写代码以及其他任何基于语言的任务。我致力于通过执行这些任务和提供建议来帮助人类。&lt;eoa&gt;
+&lt;/s&gt;
+
+01/12 17:53:30 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:你好，我是你的人工智能助手，我的名字叫书生·浦语。我是在上海人工智能实验室的开发者们精心打造下诞生的。我能够使用汉语和英语进行交流，我的设计理念是有用、诚实并且无害。我使用了Transformer模型和深度学习技术，并进行了自监督预训练和指令微调。我能够执行常见的基于语言的任务和提供建议，但我不能执行需要身体能力的任务。我能够回答你的问题、提供定义和解释、将文本从一种语言翻译成另一种语言、总结文本、生成文本、编写故事、分析情感、提供推荐、开发算法、编写代码以及其他任何基于语言的任务。如果你有任何问题或者需要我的帮助，请随时告诉我。&lt;eoa&gt;
+&lt;/s&gt;
+
+01/12 17:53:30 - mmengine - INFO - Epoch(train) [1][ 90/201]  lr: 1.8944e-04  eta: 0:10:49  time: 1.2666  data_time: 0.0058  memory: 9802  loss: 0.3971
+01/12 17:53:46 - mmengine - INFO - Epoch(train) [1][100/201]  lr: 1.8699e-04  eta: 0:12:34  time: 3.5883  data_time: 2.0490  memory: 9802  loss: 0.3476
+01/12 17:54:02 - mmengine - INFO - Epoch(train) [1][110/201]  lr: 1.8430e-04  eta: 0:12:24  time: 1.6236  data_time: 0.0064  memory: 9802  loss: 0.2596
+01/12 17:54:19 - mmengine - INFO - Epoch(train) [1][120/201]  lr: 1.8139e-04  eta: 0:12:15  time: 1.6667  data_time: 0.0051  memory: 9802  loss: 0.2246
+01/12 17:54:36 - mmengine - INFO - Epoch(train) [1][130/201]  lr: 1.7825e-04  eta: 0:12:07  time: 1.7255  data_time: 0.0056  memory: 9802  loss: 0.2091
+01/12 17:54:53 - mmengine - INFO - Epoch(train) [1][140/201]  lr: 1.7490e-04  eta: 0:11:59  time: 1.7399  data_time: 0.0050  memory: 9802  loss: 0.1938
+01/12 17:55:11 - mmengine - INFO - Epoch(train) [1][150/201]  lr: 1.7135e-04  eta: 0:11:50  time: 1.7716  data_time: 0.0053  memory: 9802  loss: 0.1826
+01/12 17:55:29 - mmengine - INFO - Epoch(train) [1][160/201]  lr: 1.6761e-04  eta: 0:11:40  time: 1.8001  data_time: 0.0048  memory: 9802  loss: 0.1713
+01/12 17:55:47 - mmengine - INFO - Epoch(train) [1][170/201]  lr: 1.6368e-04  eta: 0:11:31  time: 1.8157  data_time: 0.0071  memory: 9802  loss: 0.1561
+01/12 17:56:05 - mmengine - INFO - after_train_iter in EvaluateChatHook.
+01/12 17:56:17 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请介绍一下你自己&lt;eoh&gt;
+&lt;|Bot|&gt;:大家好，我是一个名叫书生·浦语的AI助手，出生于上海人工智能实验室。我的创造者是中国科学院计算技术研究所的科学家，他们为我赋予了强大的语言处理能力，使我能够回答问题、提供定义和解释、将文本从一种语言翻译成另一种语言、总结文本、生成文本、编写故事、分析情感、提供推荐、开发算法、编写代码以及其他任何基于语言的任务。我的名字“书生”寓意着我是一个热爱读书、热爱学习、热爱语言的人，而“浦语”则是我来自上海的人工智能实验室的代号。我希望能够通过自己的能力，帮助人类更好地理解和使用语言，让人们的生活更加便利和高效。&lt;/s&gt;
+
+01/12 17:56:27 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我叫书生·浦语。我是一个由上海人工智能实验室开发的人工智能助手，拥有跨领域的知识和能力。我的设计理念是有用、诚实并且无害。我可以使用汉语和英语进行交流。我能够回答问题、提供定义和解释、将文本从一种语言翻译成另一种语言、总结文本、生成文本、编写故事、分析情感、提供推荐、开发算法、编写代码以及其他任何基于语言的任务。但我不能看、听、尝、触摸、闻、移动、与物理世界交互、感受情感或体验感官输入、执行需要身体能力的任务。希望我可以为您提供帮助。&lt;eoa&gt;
+&lt;/s&gt;
+
+01/12 17:56:27 - mmengine - INFO - Epoch(train) [1][180/201]  lr: 1.5958e-04  eta: 0:11:20  time: 1.8119  data_time: 0.0055  memory: 9802  loss: 0.1491
+01/12 17:56:48 - mmengine - INFO - Epoch(train) [1][190/201]  lr: 1.5531e-04  eta: 0:12:02  time: 4.2737  data_time: 2.1981  memory: 9802  loss: 0.1334
+01/12 17:57:09 - mmengine - INFO - Epoch(train) [1][200/201]  lr: 1.5090e-04  eta: 0:11:50  time: 2.0426  data_time: 0.0048  memory: 9802  loss: 0.1236
+01/12 17:57:10 - mmengine - INFO - Exp name: internlm_chat_7b_qlora_oasst1_e3_copy_20240112_175030
+01/12 17:57:10 - mmengine - INFO - Saving checkpoint at 1 epochs
+[2024-01-12 17:57:11,159] [INFO] [logging.py:96:log_dist] [Rank 0] [Torch] Checkpoint epoch_1.pth is about to be saved!
+[2024-01-12 17:57:11,211] [INFO] [logging.py:96:log_dist] [Rank 0] Saving model checkpoint: /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_1.pth/mp_rank_00_model_states.pt
+[2024-01-12 17:57:11,211] [INFO] [torch_checkpoint_engine.py:21:save] [Torch] Saving /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_1.pth/mp_rank_00_model_states.pt...
+[2024-01-12 17:57:11,483] [INFO] [torch_checkpoint_engine.py:23:save] [Torch] Saved /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_1.pth/mp_rank_00_model_states.pt.
+[2024-01-12 17:57:11,487] [INFO] [torch_checkpoint_engine.py:21:save] [Torch] Saving /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_1.pth/bf16_zero_pp_rank_0_mp_rank_00_optim_states.pt...
+[2024-01-12 17:57:12,877] [INFO] [torch_checkpoint_engine.py:23:save] [Torch] Saved /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_1.pth/bf16_zero_pp_rank_0_mp_rank_00_optim_states.pt.
+[2024-01-12 17:57:12,901] [INFO] [engine.py:3431:_save_zero_checkpoint] zero checkpoint saved /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_1.pth/bf16_zero_pp_rank_0_mp_rank_00_optim_states.pt
+[2024-01-12 17:57:12,901] [INFO] [torch_checkpoint_engine.py:33:commit] [Torch] Checkpoint epoch_1.pth is ready now!
+/root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages/torch/utils/checkpoint.py:429: UserWarning: torch.utils.checkpoint: please pass in use_reentrant=True or use_reentrant=False explicitly. The default value of use_reentrant will be updated to be False in the future. To maintain current behavior, pass use_reentrant=True. It is recommended that you use use_reentrant=False. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+01/12 17:57:32 - mmengine - INFO - Epoch(train) [2][ 10/201]  lr: 1.4589e-04  eta: 0:11:34  time: 1.9996  data_time: 0.0036  memory: 9802  loss: 0.1225
+01/12 17:57:52 - mmengine - INFO - Epoch(train) [2][ 20/201]  lr: 1.4120e-04  eta: 0:11:20  time: 1.9642  data_time: 0.0045  memory: 9802  loss: 0.1057
+01/12 17:58:11 - mmengine - INFO - Epoch(train) [2][ 30/201]  lr: 1.3640e-04  eta: 0:11:05  time: 1.9414  data_time: 0.0047  memory: 9802  loss: 0.0969
+01/12 17:58:30 - mmengine - INFO - Epoch(train) [2][ 40/201]  lr: 1.3150e-04  eta: 0:10:49  time: 1.9039  data_time: 0.0046  memory: 9802  loss: 0.0882
+01/12 17:58:49 - mmengine - INFO - Epoch(train) [2][ 50/201]  lr: 1.2651e-04  eta: 0:10:32  time: 1.8816  data_time: 0.0045  memory: 9802  loss: 0.0570
+01/12 17:59:08 - mmengine - INFO - Epoch(train) [2][ 60/201]  lr: 1.2145e-04  eta: 0:10:15  time: 1.8703  data_time: 0.0042  memory: 9802  loss: 0.0609
+01/12 17:59:27 - mmengine - INFO - Epoch(train) [2][ 70/201]  lr: 1.1634e-04  eta: 0:09:57  time: 1.8510  data_time: 0.0044  memory: 9802  loss: 0.0484
+01/12 17:59:45 - mmengine - INFO - Epoch(train) [2][ 80/201]  lr: 1.1118e-04  eta: 0:09:40  time: 1.8384  data_time: 0.0052  memory: 9802  loss: 0.0523
+01/12 18:00:05 - mmengine - INFO - after_train_iter in EvaluateChatHook.
+01/12 18:00:06 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请介绍一下你自己&lt;eoh&gt;
+&lt;|Bot|&gt;:我是上海人工智能实验室的AI助手哦&lt;/s&gt;
+
+01/12 18:00:08 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;
+
+01/12 18:00:08 - mmengine - INFO - Epoch(train) [2][ 90/201]  lr: 1.0599e-04  eta: 0:09:24  time: 2.0104  data_time: 0.0048  memory: 9802  loss: 0.0527
+01/12 18:00:26 - mmengine - INFO - Epoch(train) [2][100/201]  lr: 1.0078e-04  eta: 0:09:09  time: 2.1154  data_time: 0.2902  memory: 9802  loss: 0.0393
+01/12 18:00:44 - mmengine - INFO - Epoch(train) [2][110/201]  lr: 9.5573e-05  eta: 0:08:51  time: 1.8329  data_time: 0.0053  memory: 9802  loss: 0.0371
+01/12 18:01:03 - mmengine - INFO - Epoch(train) [2][120/201]  lr: 9.0377e-05  eta: 0:08:33  time: 1.8274  data_time: 0.0057  memory: 9802  loss: 0.0379
+01/12 18:01:21 - mmengine - INFO - Epoch(train) [2][130/201]  lr: 8.5206e-05  eta: 0:08:15  time: 1.8240  data_time: 0.0066  memory: 9802  loss: 0.0302
+01/12 18:01:39 - mmengine - INFO - Epoch(train) [2][140/201]  lr: 8.0076e-05  eta: 0:07:56  time: 1.8171  data_time: 0.0055  memory: 9802  loss: 0.0423
+01/12 18:01:57 - mmengine - INFO - Epoch(train) [2][150/201]  lr: 7.5000e-05  eta: 0:07:38  time: 1.8043  data_time: 0.0053  memory: 9802  loss: 0.0263
+01/12 18:02:15 - mmengine - INFO - Epoch(train) [2][160/201]  lr: 6.9992e-05  eta: 0:07:20  time: 1.8037  data_time: 0.0062  memory: 9802  loss: 0.0367
+01/12 18:02:33 - mmengine - INFO - Epoch(train) [2][170/201]  lr: 6.5065e-05  eta: 0:07:01  time: 1.7978  data_time: 0.0042  memory: 9802  loss: 0.0224
+01/12 18:02:51 - mmengine - INFO - after_train_iter in EvaluateChatHook.
+01/12 18:02:52 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请介绍一下你自己&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手哦&lt;/s&gt;
+
+01/12 18:02:54 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;
+
+01/12 18:02:54 - mmengine - INFO - Epoch(train) [2][180/201]  lr: 6.0233e-05  eta: 0:06:43  time: 1.7936  data_time: 0.0064  memory: 9802  loss: 0.0248
+01/12 18:03:12 - mmengine - INFO - Epoch(train) [2][190/201]  lr: 5.5508e-05  eta: 0:06:27  time: 2.1232  data_time: 0.2975  memory: 9802  loss: 0.0264
+01/12 18:03:31 - mmengine - INFO - Epoch(train) [2][200/201]  lr: 5.0905e-05  eta: 0:06:08  time: 1.8283  data_time: 0.0069  memory: 9802  loss: 0.0199
+01/12 18:03:32 - mmengine - INFO - Exp name: internlm_chat_7b_qlora_oasst1_e3_copy_20240112_175030
+01/12 18:03:32 - mmengine - INFO - Saving checkpoint at 2 epochs
+[2024-01-12 18:03:33,073] [INFO] [logging.py:96:log_dist] [Rank 0] [Torch] Checkpoint epoch_2.pth is about to be saved!
+[2024-01-12 18:03:33,131] [INFO] [logging.py:96:log_dist] [Rank 0] Saving model checkpoint: /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_2.pth/mp_rank_00_model_states.pt
+[2024-01-12 18:03:33,131] [INFO] [torch_checkpoint_engine.py:21:save] [Torch] Saving /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_2.pth/mp_rank_00_model_states.pt...
+[2024-01-12 18:03:33,423] [INFO] [torch_checkpoint_engine.py:23:save] [Torch] Saved /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_2.pth/mp_rank_00_model_states.pt.
+[2024-01-12 18:03:33,432] [INFO] [torch_checkpoint_engine.py:21:save] [Torch] Saving /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_2.pth/bf16_zero_pp_rank_0_mp_rank_00_optim_states.pt...
+[2024-01-12 18:03:34,874] [INFO] [torch_checkpoint_engine.py:23:save] [Torch] Saved /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_2.pth/bf16_zero_pp_rank_0_mp_rank_00_optim_states.pt.
+[2024-01-12 18:03:34,913] [INFO] [engine.py:3431:_save_zero_checkpoint] zero checkpoint saved /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_2.pth/bf16_zero_pp_rank_0_mp_rank_00_optim_states.pt
+[2024-01-12 18:03:34,913] [INFO] [torch_checkpoint_engine.py:33:commit] [Torch] Checkpoint epoch_2.pth is ready now!
+/root/.conda/envs/xtuner0.1.9/lib/python3.10/site-packages/torch/utils/checkpoint.py:429: UserWarning: torch.utils.checkpoint: please pass in use_reentrant=True or use_reentrant=False explicitly. The default value of use_reentrant will be updated to be False in the future. To maintain current behavior, pass use_reentrant=True. It is recommended that you use use_reentrant=False. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+01/12 18:03:53 - mmengine - INFO - Epoch(train) [3][ 10/201]  lr: 4.5996e-05  eta: 0:05:48  time: 1.8117  data_time: 0.0038  memory: 9802  loss: 0.0216
+01/12 18:04:11 - mmengine - INFO - Epoch(train) [3][ 20/201]  lr: 4.1686e-05  eta: 0:05:30  time: 1.8159  data_time: 0.0048  memory: 9802  loss: 0.0293
+01/12 18:04:29 - mmengine - INFO - Epoch(train) [3][ 30/201]  lr: 3.7535e-05  eta: 0:05:11  time: 1.8108  data_time: 0.0062  memory: 9802  loss: 0.0346
+01/12 18:04:47 - mmengine - INFO - Epoch(train) [3][ 40/201]  lr: 3.3553e-05  eta: 0:04:53  time: 1.8056  data_time: 0.0052  memory: 9802  loss: 0.0289
+01/12 18:05:05 - mmengine - INFO - Epoch(train) [3][ 50/201]  lr: 2.9751e-05  eta: 0:04:35  time: 1.8091  data_time: 0.0042  memory: 9802  loss: 0.0269
+01/12 18:05:23 - mmengine - INFO - Epoch(train) [3][ 60/201]  lr: 2.6140e-05  eta: 0:04:16  time: 1.7973  data_time: 0.0070  memory: 9802  loss: 0.0209
+01/12 18:05:41 - mmengine - INFO - Epoch(train) [3][ 70/201]  lr: 2.2730e-05  eta: 0:03:58  time: 1.7951  data_time: 0.0050  memory: 9802  loss: 0.0220
+01/12 18:05:59 - mmengine - INFO - Epoch(train) [3][ 80/201]  lr: 1.9529e-05  eta: 0:03:40  time: 1.7956  data_time: 0.0052  memory: 9802  loss: 0.0262
+01/12 18:06:17 - mmengine - INFO - after_train_iter in EvaluateChatHook.
+01/12 18:06:19 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请介绍一下你自己&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;
+
+01/12 18:06:21 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;
+
+01/12 18:06:21 - mmengine - INFO - Epoch(train) [3][ 90/201]  lr: 1.6547e-05  eta: 0:03:22  time: 1.7952  data_time: 0.0054  memory: 9802  loss: 0.0213
+01/12 18:06:39 - mmengine - INFO - Epoch(train) [3][100/201]  lr: 1.3791e-05  eta: 0:03:04  time: 2.2411  data_time: 0.4197  memory: 9802  loss: 0.0242
+01/12 18:06:57 - mmengine - INFO - Epoch(train) [3][110/201]  lr: 1.1269e-05  eta: 0:02:46  time: 1.8307  data_time: 0.0044  memory: 9802  loss: 0.0193
+01/12 18:07:16 - mmengine - INFO - Epoch(train) [3][120/201]  lr: 8.9877e-06  eta: 0:02:28  time: 1.8186  data_time: 0.0062  memory: 9802  loss: 0.0259
+01/12 18:07:34 - mmengine - INFO - Epoch(train) [3][130/201]  lr: 6.9535e-06  eta: 0:02:09  time: 1.8401  data_time: 0.0055  memory: 9802  loss: 0.0260
+01/12 18:07:52 - mmengine - INFO - Epoch(train) [3][140/201]  lr: 5.1718e-06  eta: 0:01:51  time: 1.8188  data_time: 0.0055  memory: 9802  loss: 0.0225
+01/12 18:08:10 - mmengine - INFO - Epoch(train) [3][150/201]  lr: 3.6474e-06  eta: 0:01:33  time: 1.8141  data_time: 0.0060  memory: 9802  loss: 0.0234
+01/12 18:08:28 - mmengine - INFO - Epoch(train) [3][160/201]  lr: 2.3845e-06  eta: 0:01:14  time: 1.7971  data_time: 0.0046  memory: 9802  loss: 0.0243
+01/12 18:08:46 - mmengine - INFO - Epoch(train) [3][170/201]  lr: 1.3865e-06  eta: 0:00:56  time: 1.7919  data_time: 0.0052  memory: 9802  loss: 0.0191
+01/12 18:09:04 - mmengine - INFO - after_train_iter in EvaluateChatHook.
+01/12 18:09:06 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请介绍一下你自己&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;
+
+01/12 18:09:08 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;
+
+01/12 18:09:08 - mmengine - INFO - Epoch(train) [3][180/201]  lr: 6.5615e-07  eta: 0:00:38  time: 1.7898  data_time: 0.0058  memory: 9802  loss: 0.0237
+01/12 18:09:27 - mmengine - INFO - Epoch(train) [3][190/201]  lr: 1.9537e-07  eta: 0:00:20  time: 2.2379  data_time: 0.4234  memory: 9802  loss: 0.0179
+01/12 18:09:45 - mmengine - INFO - Epoch(train) [3][200/201]  lr: 5.4286e-09  eta: 0:00:01  time: 1.8287  data_time: 0.0062  memory: 9802  loss: 0.0204
+01/12 18:09:46 - mmengine - INFO - Exp name: internlm_chat_7b_qlora_oasst1_e3_copy_20240112_175030
+01/12 18:09:46 - mmengine - INFO - Saving checkpoint at 3 epochs
+[2024-01-12 18:09:47,155] [INFO] [logging.py:96:log_dist] [Rank 0] [Torch] Checkpoint epoch_3.pth is about to be saved!
+[2024-01-12 18:09:47,201] [INFO] [logging.py:96:log_dist] [Rank 0] Saving model checkpoint: /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_3.pth/mp_rank_00_model_states.pt
+[2024-01-12 18:09:47,201] [INFO] [torch_checkpoint_engine.py:21:save] [Torch] Saving /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_3.pth/mp_rank_00_model_states.pt...
+[2024-01-12 18:09:47,471] [INFO] [torch_checkpoint_engine.py:23:save] [Torch] Saved /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_3.pth/mp_rank_00_model_states.pt.
+[2024-01-12 18:09:47,477] [INFO] [torch_checkpoint_engine.py:21:save] [Torch] Saving /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_3.pth/bf16_zero_pp_rank_0_mp_rank_00_optim_states.pt...
+[2024-01-12 18:09:48,901] [INFO] [torch_checkpoint_engine.py:23:save] [Torch] Saved /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_3.pth/bf16_zero_pp_rank_0_mp_rank_00_optim_states.pt.
+[2024-01-12 18:09:48,938] [INFO] [engine.py:3431:_save_zero_checkpoint] zero checkpoint saved /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_3.pth/bf16_zero_pp_rank_0_mp_rank_00_optim_states.pt
+[2024-01-12 18:09:48,939] [INFO] [torch_checkpoint_engine.py:33:commit] [Torch] Checkpoint epoch_3.pth is ready now!
+01/12 18:09:48 - mmengine - INFO - after_train in EvaluateChatHook.
+01/12 18:09:51 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请介绍一下你自己&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;
+
+01/12 18:09:53 - mmengine - INFO - Sample output:
+ &lt;s&gt; &lt;|User|&gt;:请做一下自我介绍&lt;eoh&gt;
+&lt;|Bot|&gt;:我是xujinzh的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&lt;/s&gt;
+</code></pre>
+<h2 id="PTH-转换为-HuggingFace-格式"><a href="#PTH-转换为-HuggingFace-格式" class="headerlink" title="PTH 转换为 HuggingFace 格式"></a>PTH 转换为 HuggingFace 格式</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%mkdir /root/personal_assistant/config/work_dirs/hf</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%env MKL_SERVICE_FORCE_INTEL=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>env: MKL_SERVICE_FORCE_INTEL=1
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!xtuner convert pth_to_hf /root/personal_assistant/config/internlm_chat_7b_qlora_oasst1_e3_copy.py /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_3.pth/ /root/personal_assistant/config/work_dirs/hf/</span><br></pre></td></tr></table></figure>
+
+<pre><code>[2024-01-12 18:18:00,034] [INFO] [real_accelerator.py:161:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2024-01-12 18:18:50,826] [INFO] [real_accelerator.py:161:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+quantization_config convert to &lt;class &#39;transformers.utils.quantization_config.BitsAndBytesConfig&#39;&gt;
+Loading checkpoint shards: 100%|██████████████████| 8/8 [00:17&lt;00:00,  2.17s/it]
+01/12 18:19:18 - mmengine - INFO - dispatch internlm attn forward
+01/12 18:19:18 - mmengine - WARNING - Due to the implementation of the PyTorch version of flash attention, even when the `output_attentions` flag is set to True, it is not possible to return the `attn_weights`.
+Processing zero checkpoint &#39;/root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_3.pth/&#39;
+Detected checkpoint of type zero stage 2, world_size: 1
+Parsing checkpoint created by deepspeed==0.12.6
+Reconstructed fp32 state dict with 448 params 159907840 elements
+Load PTH model from /root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_3.pth/
+Convert weights to float16
+Saving HuggingFace model to /root/personal_assistant/config/work_dirs/hf/
+All done!
+</code></pre>
+<h2 id="将-HuggingFace-adapter-合并到大语言模型"><a href="#将-HuggingFace-adapter-合并到大语言模型" class="headerlink" title="将 HuggingFace adapter 合并到大语言模型"></a>将 HuggingFace adapter 合并到大语言模型</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%env MKL_SERVICE_FORCE_INTEL=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>env: MKL_SERVICE_FORCE_INTEL=1
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%env MKL_THREADING_LAYER=<span class="string">&#x27;GNU&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>env: MKL_THREADING_LAYER=&#39;GNU&#39;
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%mkdir /root/personal_assistant/config/work_dirs/merged</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!xtuner convert merge /root/personal_assistant/model/Shanghai_AI_Laboratory/internlm-chat-7b/ /root/personal_assistant/config/work_dirs/hf /root/personal_assistant/config/work_dirs/merged --<span class="built_in">max</span>-shard-size 2GB</span><br></pre></td></tr></table></figure>
+
+<pre><code>[2024-01-12 18:22:18,813] [INFO] [real_accelerator.py:161:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+Loading checkpoint shards: 100%|██████████████████| 8/8 [00:14&lt;00:00,  1.84s/it]
+Saving to /root/personal_assistant/config/work_dirs/merged...
+All done!
+</code></pre>
+<h2 id="网页使用"><a href="#网页使用" class="headerlink" title="网页使用"></a>网页使用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%pip install -q streamlit==<span class="number">1.24</span><span class="number">.0</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%ls</span><br></pre></td></tr></table></figure>
+
+<pre><code> Interlm-langchain-RAG.ipynb   personal_assistant/
+ XTuner-大模型训练.ipynb*      share@
+ code/                         xtuner/
+ config.json                   xtuner019/
+ data_base/                    书生浦语大模型使用.ipynb
+ nltk_data/                   &#39;基于 XTuner 的大模型训练获得私人智能助手.ipynb&#39;
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%cd personal_assistant/</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/personal_assistant
+
+
+/root/.conda/envs/personal_assistant/lib/python3.10/site-packages/IPython/core/magics/osm.py:417: UserWarning: using dhist requires you to install the `pickleshare` library.
+  self.shell.db[&#39;dhist&#39;] = compress_dhist(dhist)[-100:]
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%mkdir code</span><br><span class="line">%cd code</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/personal_assistant/code
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!git clone https://github.com/InternLM/InternLM.git</span><br></pre></td></tr></table></figure>
+
+<pre><code>Cloning into &#39;InternLM&#39;...
+remote: Enumerating objects: 2987, done.
+remote: Counting objects: 100% (1778/1778), done.
+remote: Compressing objects: 100% (657/657), done.
+remote: Total 2987 (delta 1367), reused 1329 (delta 1110), pack-reused 1209
+Receiving objects: 100% (2987/2987), 4.95 MiB | 6.34 MiB/s, done.
+Resolving deltas: 100% (1921/1921), done.
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!sed -i <span class="string">&quot;s#internlm/internlm-chat-7b#/root/personal_assistant/config/work_dirs/merged#g&quot;</span> /root/personal_assistant/code/InternLM/web_demo.py</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%pip install -q torch==<span class="number">1.13</span><span class="number">.1</span>+cu117 torchvision==<span class="number">0.14</span><span class="number">.1</span>+cu117 torchaudio==<span class="number">0.13</span><span class="number">.1</span> --extra-index-url https://download.pytorch.org/whl/cu117</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%pip install -q transformers sentencepiece accelerate</span><br></pre></td></tr></table></figure>
+
+<pre><code>WARNING: Running pip as the &#39;root&#39; user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+Note: you may need to restart the kernel to use updated packages.
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%cd /root/personal_assistant/code/InternLM</span><br><span class="line">!&#123;sys.executable&#125; -m streamlit run web_demo.py --server.address <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> --server.port <span class="number">6006</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/personal_assistant/code/InternLM
+
+
+/root/.conda/envs/personal_assistant/lib/python3.10/site-packages/IPython/core/magics/osm.py:417: UserWarning: using dhist requires you to install the `pickleshare` library.
+  self.shell.db[&#39;dhist&#39;] = compress_dhist(dhist)[-100:]
+
+
+
+Collecting usage statistics. To deactivate, set browser.gatherUsageStats to False.
+
+
+..  You can now view your Streamlit app in your browser.
+
+  URL: .http://127.0.0.1:6006
+
+load model begin.
+Loading checkpoint shards: 100%|██████████████████| 8/8 [00:12&lt;00:00,  1.55s/it]
+load model end.
+load model begin.
+load model end.
+</code></pre>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/llm/ai-internlm-assistant-xujinzh.png?raw=true"></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/blob/main/xtuner/README.md">XTuner 大模型单卡低成本微调实践</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/blob/main/xtuner/self.md">XTuner InternLM-Chat 个人小助手认知微调实践</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/">https://xujinzh.github.io/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ai/">ai</a><a class="post-meta__tags" href="/tags/llm/">llm</a><a class="post-meta__tags" href="/tags/internlm/">internlm</a><a class="post-meta__tags" href="/tags/openmmlab/">openmmlab</a></div><div class="post_share"><div class="social-share" data-image="/img/c21.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img class="cover" src="/img/c30.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">基于 LMDeploy 的大模型量化和部署</div></div></a></div><div class="next-post pull-right"><a href="/2024/01/12/ai-internlm-xtuner-finetune/" title="XTuner 大模型训练"><img class="cover" src="/img/c12.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">XTuner 大模型训练</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/01/08/ai-Interlm-langchain-RAG/" title="基于 InternLM 和 LangChain 搭建私人知识库"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-08</div><div class="title">基于 InternLM 和 LangChain 搭建私人知识库</div></div></a></div><div><a href="/2024/01/03/ai-internlm-intro/" title="书生·浦语大模型介绍"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-03</div><div class="title">书生·浦语大模型介绍</div></div></a></div><div><a href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img class="cover" src="/img/c30.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-13</div><div class="title">基于 LMDeploy 的大模型量化和部署</div></div></a></div><div><a href="/2024/01/12/ai-internlm-xtuner-finetune/" title="XTuner 大模型训练"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-12</div><div class="title">XTuner 大模型训练</div></div></a></div><div><a href="/2024/01/06/ai-internlm-useage/" title="书生·浦语大模型使用"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-06</div><div class="title">书生·浦语大模型使用</div></div></a></div><div><a href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img class="cover" src="/img/c9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-21</div><div class="title">基于 OpenCompass 的大模型评测</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%92%8C%E4%BB%A3%E7%A0%81%E5%87%86%E5%A4%87"><span class="toc-number">2.</span> <span class="toc-text">数据和代码准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%92%8C%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%87%86%E5%A4%87"><span class="toc-number">3.</span> <span class="toc-text">模型和配置文件准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83"><span class="toc-number">4.</span> <span class="toc-text">模型微调</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PTH-%E8%BD%AC%E6%8D%A2%E4%B8%BA-HuggingFace-%E6%A0%BC%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">PTH 转换为 HuggingFace 格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86-HuggingFace-adapter-%E5%90%88%E5%B9%B6%E5%88%B0%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B"><span class="toc-number">6.</span> <span class="toc-text">将 HuggingFace adapter 合并到大语言模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E9%A1%B5%E4%BD%BF%E7%94%A8"><span class="toc-number">7.</span> <span class="toc-text">网页使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">8.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'b3a3c40c01ea93a7665df7ac1a64ef54',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

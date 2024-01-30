@@ -1,0 +1,313 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>MMClassification 图像分类使用 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="OpenMMLab 是香港中文大学-商汤科技联合实验室 MMLab 自 2018 年 10 月开源的一个计算机视觉领域的 AI 算法框架。其包含了众多计算机视觉多个方向的算法框架，本篇介绍 MMClassification 库，运行服务器 Ubuntu 18.04。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MMClassification 图像分类使用">
+<meta property="og:url" content="https://xujinzh.github.io/2023/02/24/code-mmclassification/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="OpenMMLab 是香港中文大学-商汤科技联合实验室 MMLab 自 2018 年 10 月开源的一个计算机视觉领域的 AI 算法框架。其包含了众多计算机视觉多个方向的算法框架，本篇介绍 MMClassification 库，运行服务器 Ubuntu 18.04。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c12.jpg">
+<meta property="article:published_time" content="2023-02-24T01:52:53.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.092Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="openmmlab">
+<meta property="article:tag" content="pytorch">
+<meta property="article:tag" content="mmcv">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c12.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2023/02/24/code-mmclassification/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MMClassification 图像分类使用',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">MMClassification 图像分类使用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-02-24T01:52:53.000Z" title="发表于 2023-02-24 09:52:53">2023-02-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.092Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/deep-learning/">deep learning</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="MMClassification 图像分类使用"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>OpenMMLab 是香港中文大学-商汤科技联合实验室 MMLab 自 2018 年 10 月开源的一个计算机视觉领域的 AI 算法框架。其包含了众多计算机视觉多个方向的算法框架，本篇介绍 MMClassification 库，运行服务器 Ubuntu 18.04。</p>
+<span id="more"></span>
+
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>MMClassification 的安装需要在一些基础库之上进行，如 pytorch，mmcv 等。假设显卡驱动、cuda、cudnn 等均已安装配置好，接下来就是安装 python 和一些包。我们这里采用 miniconda 来进行 python 安装和环境配置。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 miniconda</span></span><br><span class="line">wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh</span><br><span class="line"><span class="built_in">chmod</span> +x miniconda.sh</span><br><span class="line">bash ./miniconda.sh -b -p /opt/miniconda</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置 miniconda 环境</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;export MINICONDA_HOME=/opt/miniconda&quot;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;export PATH=<span class="variable">$MINICONDA_HOME</span>/bin:<span class="variable">$PATH</span>&quot;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装虚拟环境</span></span><br><span class="line">conda create -n mm python=3.8</span><br><span class="line">conda activate mm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 pytorch，假设这里的 cuda 版本是 11.1</span></span><br><span class="line">pip install torch==1.10.0+cu111 torchvision==0.11.0+cu111 torchaudio==0.10.0 -f https://download.pytorch.org/whl/torch_stable.html</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 mmcv，注意这里的 mmcv 索引链接地址中需要根据上面 cuda 和 torch 版本进行下载安装</span></span><br><span class="line">pip install mmcv -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.10.0/index.html</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 mmclassification</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/open-mmlab/mmclassification.git</span><br><span class="line"><span class="built_in">cd</span> mmclassification</span><br><span class="line">pip install -e .</span><br></pre></td></tr></table></figure>
+
+<p>打开 Python 命令提示符，输入如下内容，如果正常显示，说明 mmclassification 安装成功：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> mmcls</span><br><span class="line"><span class="built_in">print</span>(mmcls.__version__)</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用-mmclassification-进行图片分类"><a href="#使用-mmclassification-进行图片分类" class="headerlink" title="使用 mmclassification 进行图片分类"></a>使用 mmclassification 进行图片分类</h1><p>安装成功后，在克隆的仓库里有源代码，里面包含了很多算法的配置信息。我们这里以 mobilenet-v2 为例，进行图片分类应用。</p>
+<p>首先需要下载预训练好的模型，访问网址：<a target="_blank" rel="noopener" href="https://mmclassification.readthedocs.io/en/latest/model_zoo.html">mmclassification-model_zoo</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> mmclassification</span><br><span class="line"><span class="built_in">mkdir</span> checkpoints</span><br><span class="line">wget https://download.openmmlab.com/mmclassification/v0/mobilenet_v2/mobilenet_v2_batch256_imagenet_20200708-3b2dc3af.pth -P checkpoints</span><br></pre></td></tr></table></figure>
+
+<p>其次，下载测试图片：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/rockcms/2022-10/bananas-mc-221004-02-3ddd88.jpg -O demo/banana.jpg</span><br></pre></td></tr></table></figure>
+
+<p>最后，进行图片类别预测（假设下面代码运行目录是 mmclassification）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入依赖包</span></span><br><span class="line"><span class="keyword">from</span> mmcls.apis <span class="keyword">import</span> inference_model, init_model, show_result_pyplot</span><br><span class="line"><span class="comment"># 指定配置文件</span></span><br><span class="line">config_file = <span class="string">&quot;configs/mobilenet_v2/mobilenet-v2_8xb32_in1k.py&quot;</span></span><br><span class="line">checkpoint_file = <span class="string">&quot;checkpoints/mobilenet_v2_batch256_imagenet_20200708-3b2dc3af.pth&quot;</span></span><br><span class="line"><span class="comment"># 指定设备，这里使用第一块GPU</span></span><br><span class="line">device = <span class="string">&quot;cuda:0&quot;</span></span><br><span class="line"><span class="comment"># 初始化模型</span></span><br><span class="line">model = init_model(config_file, checkpoint_file, device=device)</span><br><span class="line"><span class="comment"># 模型推断</span></span><br><span class="line">img = <span class="string">&quot;demo/banana.jpg&quot;</span></span><br><span class="line">result = inference_model(model, img)</span><br><span class="line"><span class="comment"># 把结果画在图片上</span></span><br><span class="line">show_result_pyplot(model, img, result)</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用-mmclassification-模型微调"><a href="#使用-mmclassification-模型微调" class="headerlink" title="使用 mmclassification 模型微调"></a>使用 mmclassification 模型微调</h1><p>现在我们模型框架、预训练模型都有了，只需要使用自己的数据集进行再次训练，使得模型能够更加准确的在我们自己数据上进行预测。<br>首先，下载数据集，这里我们采用猫狗数据集，访问链接：<a target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/download/details.aspx?id=54765">microsoft-cats_dogs_dataset</a><br>登录微软即可下载。</p>
+<p>其次，将下载的数据保存并解压到 mmclassification&#x2F;data 目录下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -q kagglecatsanddogs_5340.zip -d ./data/</span><br></pre></td></tr></table></figure>
+
+<p>然后，把数据按照 imagenet 的格式进行存放：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 清洗数据，如果不清洗，那么会因为错误数据，导致训练出错 NameError: name &#x27;dataset_type&#x27; is not defined</span></span><br><span class="line"><span class="comment"># 删除缩略图缓存</span></span><br><span class="line">path = <span class="string">&quot;data/PetImages&quot;</span></span><br><span class="line">catPath = <span class="string">&quot;data/PetImages/Cat&quot;</span></span><br><span class="line">dogPath = <span class="string">&quot;data/PetImages/Dog&quot;</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> os.listdir(catPath):</span><br><span class="line">    <span class="keyword">if</span> x.split(<span class="string">&quot;.&quot;</span>)[-1] != <span class="string">&quot;jpg&quot;</span>:</span><br><span class="line">        <span class="built_in">print</span>(x)</span><br><span class="line">        os.remove(os.path.join(catPath, x))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> os.listdir(dogPath):</span><br><span class="line">    <span class="keyword">if</span> x.split(<span class="string">&quot;.&quot;</span>)[-1] != <span class="string">&quot;jpg&quot;</span>:</span><br><span class="line">        <span class="built_in">print</span>(x)</span><br><span class="line">        os.remove(os.path.join(dogPath, x))</span><br><span class="line"><span class="comment"># 删除错误数据</span></span><br><span class="line"><span class="keyword">for</span> root, <span class="built_in">dirs</span>, files <span class="keyword">in</span> os.walk(path):</span><br><span class="line">    <span class="keyword">for</span> f <span class="keyword">in</span> files:</span><br><span class="line">        <span class="keyword">if</span> os.path.splitext(f)[1] == <span class="string">&quot;.jpg&quot;</span>:</span><br><span class="line">            img_path = os.path.join(root, f)</span><br><span class="line">            try:</span><br><span class="line">                img = cv2.imread(img_path)</span><br><span class="line">                <span class="keyword">if</span> img is None:</span><br><span class="line">                    <span class="comment"># 把错误图片删除</span></span><br><span class="line">                    <span class="built_in">print</span>(img_path)</span><br><span class="line">                    os.remove(img_path)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="comment"># 重写，消除Corrupt JPEG data 警告</span></span><br><span class="line">                    cv2.imwrite(img_path, img)</span><br><span class="line">            except Exception as e:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;Bad file:&quot;</span>, img_path)</span><br><span class="line"><span class="comment"># 数据集划分，8:1:1</span></span><br><span class="line">total = len(os.listdir(catPath))</span><br><span class="line">train_num = int(total * 0.8)</span><br><span class="line">val_num = int(total * 0.1)</span><br><span class="line">test_num = total - train_num - val_num</span><br><span class="line"></span><br><span class="line">cats = sorted(os.listdir(catPath))</span><br><span class="line">dogs = sorted(os.listdir(dogPath))</span><br><span class="line"></span><br><span class="line">training_cat = <span class="string">&quot;data/cats_dogs_dataset/training_set/training_set/cats&quot;</span></span><br><span class="line">training_dog = <span class="string">&quot;data/cats_dogs_dataset/training_set/training_set/dogs&quot;</span></span><br><span class="line">val_cat = <span class="string">&quot;data/cats_dogs_dataset/val_set/val_set/cats&quot;</span></span><br><span class="line">val_dog = <span class="string">&quot;data/cats_dogs_dataset/val_set/val_set/dogs&quot;</span></span><br><span class="line">test_cat = <span class="string">&quot;data/cats_dogs_dataset/test_set/test_set/cats&quot;</span></span><br><span class="line">test_dog = <span class="string">&quot;data/cats_dogs_dataset/test_set/test_set/dogs&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> [training_cat, training_dog, val_cat, val_dog, test_cat, test_dog]:</span><br><span class="line">    os.makedirs(p)</span><br><span class="line"><span class="comment"># 生成类别文件</span></span><br><span class="line">with open(<span class="string">&quot;data/cats_dogs_dataset/classes.txt&quot;</span>, <span class="string">&quot;w&quot;</span>) as f:</span><br><span class="line">    f.write(<span class="string">&quot;cats&quot;</span>)</span><br><span class="line">    f.write(<span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    f.write(<span class="string">&quot;dogs&quot;</span>)</span><br><span class="line"><span class="comment"># 生成标注文件</span></span><br><span class="line">fval = open(<span class="string">&quot;data/cats_dogs_dataset/val.txt&quot;</span>, <span class="string">&quot;w&quot;</span>)</span><br><span class="line">ftest = open(<span class="string">&quot;data/cats_dogs_dataset/test.txt&quot;</span>, <span class="string">&quot;w&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> i, (c, d) <span class="keyword">in</span> enumerate(zip(cats, dogs)):</span><br><span class="line">    c_path = os.path.join(catPath, c)</span><br><span class="line">    d_path = os.path.join(dogPath, d)</span><br><span class="line">    c_new = <span class="string">&quot;cat.&quot;</span> + c</span><br><span class="line">    d_new = <span class="string">&quot;dog.&quot;</span> + d</span><br><span class="line">    <span class="keyword">if</span> i &lt; train_num:</span><br><span class="line">        shutil.copy(c_path, os.path.join(training_cat, c_new))</span><br><span class="line">        shutil.copy(d_path, os.path.join(training_dog, d_new))</span><br><span class="line">    <span class="keyword">elif</span> i &lt; train_num + val_num:</span><br><span class="line">        shutil.copy(c_path, os.path.join(val_cat, c_new))</span><br><span class="line">        shutil.copy(d_path, os.path.join(val_dog, d_new))</span><br><span class="line">        fval.write(f<span class="string">&quot;cats/&#123;c_new&#125; 0\n&quot;</span>)</span><br><span class="line">        fval.write(f<span class="string">&quot;dogs/&#123;d_new&#125; 1\n&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        shutil.copy(c_path, os.path.join(test_cat, c_new))</span><br><span class="line">        shutil.copy(d_path, os.path.join(test_dog, d_new))</span><br><span class="line">        ftest.write(f<span class="string">&quot;cats/&#123;c_new&#125; 0\n&quot;</span>)</span><br><span class="line">        ftest.write(f<span class="string">&quot;dogs/&#123;d_new&#125; 1\n&quot;</span>)</span><br><span class="line">fval.close()</span><br><span class="line">ftest.close()</span><br></pre></td></tr></table></figure>
+
+<p>再然后，生成配置文件：<br>把一下内容增加到新配置文件 <code>configs/mobilenet_v2/mobilenet-v2_cats_dogs.py</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">_base_ = [</span><br><span class="line">    <span class="string">&#x27;../_base_/models/mobilenet_v2_1x.py&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;../_base_/datasets/imagenet_bs32_pil_resize.py&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;../_base_/schedules/imagenet_bs256.py&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;../_base_/default_runtime.py&#x27;</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment"># model settings</span></span><br><span class="line">model = <span class="built_in">dict</span>(</span><br><span class="line">    head=<span class="built_in">dict</span>(</span><br><span class="line">        num_classes=<span class="number">2</span>,  <span class="comment"># 两类</span></span><br><span class="line">        topk=(<span class="number">1</span>,),</span><br><span class="line">    )</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># dataset settings</span></span><br><span class="line">dataset_type = <span class="string">&#x27;ImageNet&#x27;</span></span><br><span class="line">data = <span class="built_in">dict</span>(</span><br><span class="line">    samples_per_gpu=<span class="number">32</span>,</span><br><span class="line">    workers_per_gpu=<span class="number">1</span>,</span><br><span class="line">    train=<span class="built_in">dict</span>(</span><br><span class="line">        <span class="built_in">type</span>=dataset_type,</span><br><span class="line">        data_prefix=<span class="string">&#x27;/workspace/mmclassification/data/cats_dogs_dataset/training_set/training_set&#x27;</span>,  <span class="comment"># 我这里使用全路径，根据需要替换</span></span><br><span class="line">        classes=<span class="string">&#x27;/workspace/mmclassification/data/cats_dogs_dataset/classes.txt&#x27;</span></span><br><span class="line">    ),</span><br><span class="line">    val=<span class="built_in">dict</span>(</span><br><span class="line">        data_prefix=<span class="string">&#x27;/workspace/mmclassification/data/cats_dogs_dataset/val_set/val_set&#x27;</span>,</span><br><span class="line">        ann_file=<span class="string">&#x27;/workspace/mmclassification/data/cats_dogs_dataset/val.txt&#x27;</span>,</span><br><span class="line">        classes=<span class="string">&#x27;/workspace/mmclassification/data/cats_dogs_dataset/classes.txt&#x27;</span></span><br><span class="line">    ),</span><br><span class="line">    test=<span class="built_in">dict</span>(</span><br><span class="line">        <span class="comment"># replace `data/val` with `data/test` for standard test</span></span><br><span class="line">        data_prefix=<span class="string">&#x27;/workspace/mmclassification/data/cats_dogs_dataset/test_set/test_set&#x27;</span>,</span><br><span class="line">        ann_file=<span class="string">&#x27;/workspace/mmclassification/data/cats_dogs_dataset/test.txt&#x27;</span>,</span><br><span class="line">        classes=<span class="string">&#x27;/workspace/mmclassification/data/cats_dogs_dataset/classes.txt&#x27;</span></span><br><span class="line">    )</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">evaluation = <span class="built_in">dict</span>(metric_options=&#123;<span class="string">&quot;topk&quot;</span>: (<span class="number">1</span>, )&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># optimizer</span></span><br><span class="line">optimizer = <span class="built_in">dict</span>(<span class="built_in">type</span>=<span class="string">&#x27;SGD&#x27;</span>, lr=<span class="number">0.01</span>, momentum=<span class="number">0.9</span>, weight_decay=<span class="number">0.0001</span>)</span><br><span class="line">optimizer_config = <span class="built_in">dict</span>(grad_clip=<span class="literal">None</span>)</span><br><span class="line"><span class="comment"># learning policy</span></span><br><span class="line">lr_config = <span class="built_in">dict</span>(policy=<span class="string">&#x27;step&#x27;</span>, step=[<span class="number">3</span>, <span class="number">6</span>, <span class="number">9</span>])</span><br><span class="line">runner = <span class="built_in">dict</span>(<span class="built_in">type</span>=<span class="string">&#x27;EpochBasedRunner&#x27;</span>, max_epochs=<span class="number">12</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">load_from = <span class="string">&quot;/workspace/mmclassification/checkpoints/mobilenet_v2_batch256_imagenet_20200708-3b2dc3af.pth&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>最后进行训练：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> mmclassification</span><br><span class="line"><span class="comment"># 程序会自动在当前目录下创建 work_dirs/mobilenet-v2 文件夹，并把运行的结果、日志等保存到该文件夹下</span></span><br><span class="line">python tools/train.py configs/mobilenet_v2/mobilenet-v2_cats_dogs.py --work-dir work_dirs/mobilenet-v2</span><br></pre></td></tr></table></figure>
+
+<p>训练后，新模型在猫狗数据上达到了更高的准确率。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/open-mmlab/OpenMMLabCourse">open-mmlab&#x2F;OpenMMLabCourse</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1J341127nQ/">图像分类与 MMClassification</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/avideointerfaces/article/details/90670701">Yolov3模型框架darknet研究（九）解决Corrupt JPEG data问题</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2023/02/24/code-mmclassification/">https://xujinzh.github.io/2023/02/24/code-mmclassification/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a><a class="post-meta__tags" href="/tags/openmmlab/">openmmlab</a><a class="post-meta__tags" href="/tags/pytorch/">pytorch</a><a class="post-meta__tags" href="/tags/mmcv/">mmcv</a></div><div class="post_share"><div class="social-share" data-image="/img/c12.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/02/26/code-mmdetection/" title="MMDetection 目标检测使用"><img class="cover" src="/img/c20.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">MMDetection 目标检测使用</div></div></a></div><div class="next-post pull-right"><a href="/2023/02/23/linux-samba-share-files/" title="linux 上使用 samba 共享文件夹给 windows"><img class="cover" src="/img/c29.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">linux 上使用 samba 共享文件夹给 windows</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/02/26/code-mmdetection/" title="MMDetection 目标检测使用"><img class="cover" src="/img/c20.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-26</div><div class="title">MMDetection 目标检测使用</div></div></a></div><div><a href="/2021/08/02/cnn-flops/" title="CNN 模型计算力 FLOPs"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-02</div><div class="title">CNN 模型计算力 FLOPs</div></div></a></div><div><a href="/2022/04/01/pytorch-cuda-visible-devices/" title="pytorch 中设置使用指定的 GPU"><img class="cover" src="/img/c15.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-01</div><div class="title">pytorch 中设置使用指定的 GPU</div></div></a></div><div><a href="/2023/02/01/pytorch-distributed/" title="pytorch 分布式训练"><img class="cover" src="/img/c18.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-01</div><div class="title">pytorch 分布式训练</div></div></a></div><div><a href="/2021/10/12/pytorch-dataset-dataloader/" title="PyTorch 中 Dataset 和 DataLoader 类的使用方法"><img class="cover" src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-12</div><div class="title">PyTorch 中 Dataset 和 DataLoader 类的使用方法</div></div></a></div><div><a href="/2023/05/29/pytorch-linear-regression/" title="PyTorch 线性回归"><img class="cover" src="/img/c19.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-29</div><div class="title">PyTorch 线性回归</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-mmclassification-%E8%BF%9B%E8%A1%8C%E5%9B%BE%E7%89%87%E5%88%86%E7%B1%BB"><span class="toc-number">2.</span> <span class="toc-text">使用 mmclassification 进行图片分类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-mmclassification-%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83"><span class="toc-number">3.</span> <span class="toc-text">使用 mmclassification 模型微调</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">4.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'fbdf07b1526c01e4d9858dbe60b54eb6',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

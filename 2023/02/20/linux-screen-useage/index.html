@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>linux 中 screen 的使用 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="通过终端在远程服务器上执行长时间运行的任务时，因为突然的断开导致 SSH 会话终止，使得程序运行失败！使用 screen 能够避免上面情况的发生。同时，让我们在一个终端上可以运行多个终端程序，并可以自由切换这些终端。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux 中 screen 的使用">
+<meta property="og:url" content="https://xujinzh.github.io/2023/02/20/linux-screen-useage/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="通过终端在远程服务器上执行长时间运行的任务时，因为突然的断开导致 SSH 会话终止，使得程序运行失败！使用 screen 能够避免上面情况的发生。同时，让我们在一个终端上可以运行多个终端程序，并可以自由切换这些终端。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c20.jpg">
+<meta property="article:published_time" content="2023-02-20T07:12:16.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.100Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="screen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c20.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2023/02/20/linux-screen-useage/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'linux 中 screen 的使用',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">linux 中 screen 的使用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-02-20T07:12:16.000Z" title="发表于 2023-02-20 15:12:16">2023-02-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.100Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/linux/">linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="linux 中 screen 的使用"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>通过终端在远程服务器上执行长时间运行的任务时，因为突然的断开导致 SSH 会话终止，使得程序运行失败！使用 screen 能够避免上面情况的发生。同时，让我们在一个终端上可以运行多个终端程序，并可以自由切换这些终端。</p>
+<span id="more"></span>
+
+<p>Screen 或 GNU Screen 是一个终端多路复用器。换句话说，这意味着您可以启动一个屏幕会话，然后在该会话中打开任意数量的窗口（虚拟终端）。在 Screen 中运行的进程在它们的窗口不可见时将继续运行，即使您断开连接也是如此。</p>
+<h1 id="安装-screen"><a href="#安装-screen" class="headerlink" title="安装 screen"></a>安装 screen</h1><p>Debian or Ubuntu 操作系统安装方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install screen -y</span><br></pre></td></tr></table></figure>
+
+<p>RedHat or CentOS or Fedora 操作系统安装方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install screen</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用-screen"><a href="#使用-screen" class="headerlink" title="使用 screen"></a>使用 screen</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个名字为 main 的 screen 终端</span></span><br><span class="line">screen -S main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看打开了哪些 screen 终端</span></span><br><span class="line">screen -<span class="built_in">ls</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出名字为 main 的 screen 终端，也可以不用名字，采用 screen -ls 罗列的 screen 进程 id</span></span><br><span class="line">screen -d main</span><br><span class="line"><span class="comment"># 如果终端上正在运行程序，可以采用快捷键 &quot;ctrl + a, d&quot; 退出终端</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 强制分离打开main的screen并转移到当前窗口</span></span><br><span class="line">screen -d -r main </span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新进入名字为 main 的 screen 终端</span></span><br><span class="line">screen -r main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 共享会话。可以远程和朋友共享同一个会话，一方输入的命令事实在另一方可看</span></span><br><span class="line"><span class="comment"># 首先一方打开一个会话，如 main，然后，另一方输入如下命令</span></span><br><span class="line">screen -x main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清理死掉的 screen</span></span><br><span class="line">screen -wipe</span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出或杀死 screen，使用 screen -ls 查看想要关闭的 screen id</span></span><br><span class="line">screen -S screen_id -X quit</span><br><span class="line">screen -S main -X quit  <span class="comment"># 或者使用 screen 名</span></span><br><span class="line"><span class="comment"># 或者进入 screen 后，正常退出终端</span></span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line">ctrl + d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前终端是哪个 screen</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$STY</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 默认无法进行鼠标滚轮翻页，但可以复制和拷贝。如果想要翻页，可以进入翻页模式，快捷键是</span></span><br><span class="line">ctrl + a, [</span><br><span class="line">ctrl + a, esc</span><br><span class="line"><span class="comment"># 退出翻页模式，进入正常模式（可拷贝）</span></span><br><span class="line">ctrl + c</span><br><span class="line">esc</span><br></pre></td></tr></table></figure>
+
+<p>以下是一些用于管理 Linux Screen 窗口的最常用快捷键：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ctrl+a d      分离当前screen</span><br><span class="line">ctrl+a k      关闭并杀死当前screen</span><br><span class="line">Ctrl+a c      Create a new window (with shell).</span><br><span class="line">Ctrl+a &quot;      List all windows.</span><br><span class="line">Ctrl+a 0      Switch to window 0 (by number).</span><br><span class="line">Ctrl+a A      Rename the current window.</span><br><span class="line">Ctrl+a S      Split current region horizontally into two regions.</span><br><span class="line">Ctrl+a |      Split current region vertically into two regions.</span><br><span class="line">Ctrl+a tab    Switch the input focus to the next region.</span><br><span class="line">Ctrl+a Ctrl+a Toggle between the current and previous windows</span><br><span class="line">Ctrl+a Q      Close all regions but the current one.</span><br><span class="line">Ctrl+a X      Close the current region.</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.screenrc</span><br></pre></td></tr></table></figure>
+<p>添加如下内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># $Id: screenrc,v 1.15 2003/10/08 11:39:03 zal Exp $</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># /etc/screenrc</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#   This is the system wide screenrc.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#   You can use this file to change the default behavior of screen system wide</span></span><br><span class="line"><span class="comment">#   or copy it to ~/.screenrc and use it as a starting point for your own</span></span><br><span class="line"><span class="comment">#   settings.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#   Commands in this file are used to set options, bind screen functions to</span></span><br><span class="line"><span class="comment">#   keys, redefine terminal capabilities, and to automatically establish one or</span></span><br><span class="line"><span class="comment">#   more windows at the beginning of your screen session.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#   This is not a comprehensive list of options, look at the screen manual for</span></span><br><span class="line"><span class="comment">#   details on everything that you can put in this file.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ------------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># SCREEN SETTINGS</span></span><br><span class="line"><span class="comment"># ------------------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#startup_message off</span></span><br><span class="line"><span class="comment">#nethack on</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#defflow on # will force screen to process ^S/^Q</span></span><br><span class="line">deflogin on</span><br><span class="line"><span class="comment">#autodetach off</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># turn visual bell on</span></span><br><span class="line">vbell on</span><br><span class="line">vbell_msg <span class="string">&quot;   Wuff  ----  Wuff!!  &quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># define a bigger scrollback, default is 100 lines</span></span><br><span class="line"><span class="comment"># 鼠标翻页的行数，默认1024，可根据自己需要调整</span></span><br><span class="line">defscrollback 10240000</span><br><span class="line"></span><br><span class="line"><span class="comment"># ------------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># SCREEN KEYBINDINGS</span></span><br><span class="line"><span class="comment"># ------------------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Remove some stupid / dangerous key bindings</span></span><br><span class="line"><span class="built_in">bind</span> ^k</span><br><span class="line"><span class="comment">#bind L</span></span><br><span class="line"><span class="built_in">bind</span> ^\</span><br><span class="line"><span class="comment"># Make them better</span></span><br><span class="line"><span class="built_in">bind</span> \\ quit</span><br><span class="line"><span class="built_in">bind</span> K <span class="built_in">kill</span></span><br><span class="line"><span class="built_in">bind</span> I login on</span><br><span class="line"><span class="built_in">bind</span> O login off</span><br><span class="line"><span class="built_in">bind</span> &#125; <span class="built_in">history</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># An example of a &quot;screen scraper&quot; which will launch urlview on the current</span></span><br><span class="line"><span class="comment"># screen window</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#bind ^B eval &quot;hardcopy_append off&quot; &quot;hardcopy -h $HOME/.screen-urlview&quot; &quot;screen urlview $HOME/.screen-urlview&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ------------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># TERMINAL SETTINGS</span></span><br><span class="line"><span class="comment"># ------------------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The vt100 description does not mention &quot;dl&quot;. *sigh*</span></span><br><span class="line">termcapinfo vt100 dl=5\E[M</span><br><span class="line"></span><br><span class="line"><span class="comment"># turn sending of screen messages to hardstatus off</span></span><br><span class="line">hardstatus off</span><br><span class="line"><span class="comment"># Set the hardstatus prop on gui terms to set the titlebar/icon title</span></span><br><span class="line">termcapinfo xterm*|rxvt*|kterm*|Eterm* hs:ts=\E]0;:fs=\007:ds=\E]0;\007</span><br><span class="line"><span class="comment"># use this for the hard status string</span></span><br><span class="line">hardstatus string <span class="string">&quot;%h%? users: %u%?&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># An alternative hardstatus to display a bar at the bottom listing the</span></span><br><span class="line"><span class="comment"># windownames and highlighting the current windowname in blue. (This is only</span></span><br><span class="line"><span class="comment"># enabled if there is no hardstatus setting for your terminal)</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#hardstatus lastline &quot;%-Lw%&#123;= BW&#125;%50&gt;%n%f* %t%&#123;-&#125;%+Lw%&lt;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set these terminals up to be &#x27;optimal&#x27; instead of vt100</span></span><br><span class="line">termcapinfo xterm*|linux*|rxvt*|Eterm* OP</span><br><span class="line"></span><br><span class="line"><span class="comment"># Change the xterm initialization string from is2=\E[!p\E[?3;4l\E[4l\E&gt;</span></span><br><span class="line"><span class="comment"># (This fixes the &quot;Aborted because of window size change&quot; konsole symptoms found</span></span><br><span class="line"><span class="comment">#  in bug #134198)</span></span><br><span class="line">termcapinfo xterm <span class="string">&#x27;is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># To get screen to add lines to xterm&#x27;s scrollback buffer, uncomment the</span></span><br><span class="line"><span class="comment"># following termcapinfo line which tells xterm to use the normal screen buffer</span></span><br><span class="line"><span class="comment"># (which has scrollback), not the alternate screen buffer.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#termcapinfo xterm|xterms|xs|rxvt ti@:te@</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Enable non-blocking mode to better cope with flaky ssh connections.</span></span><br><span class="line">defnonblock 5</span><br><span class="line"></span><br><span class="line"><span class="comment"># ------------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># STARTUP SCREENS</span></span><br><span class="line"><span class="comment"># ------------------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Example of automatically running some programs in windows on screen startup.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#   The following will open top in the first window, an ssh session to monkey</span></span><br><span class="line"><span class="comment">#   in the next window, and then open mutt and tail in windows 8 and 9</span></span><br><span class="line"><span class="comment">#   respectively.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># screen top</span></span><br><span class="line"><span class="comment"># screen -t monkey ssh monkey</span></span><br><span class="line"><span class="comment"># screen -t mail 8 mutt</span></span><br><span class="line"><span class="comment"># screen -t daemon 9 tail -f /var/log/daemon.log</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#hardstatus alwayslastline &quot;%-Lw%50&gt;%n%f* %t%+Lw%&lt;&quot;</span></span><br><span class="line">hardstatus alwayslastline</span><br><span class="line">shelltitle <span class="string">&quot;$|bash&quot;</span></span><br><span class="line"></span><br><span class="line">hardstatus string <span class="string">&#x27;%&#123;= kG&#125;[ %Y/%m/%d %&#123;G&#125;%c:%s %&#123;g&#125;][%= %&#123;= kw&#125;%?%-Lw%?%&#123;Y&#125;%n*%f%t %&#123;K&#125;%?%+Lw%?%= %&#123;kG&#125;][ %&#123;C&#125;Author@Jinzhong Xu%&#123;kg&#125;]&#x27;</span></span><br><span class="line"><span class="comment">#hardstatus string &#x27;%&#123;= kG&#125;[ %Y/%m/%d %&#123;G&#125;%c:%s %&#123;g&#125;][%= %&#123;= kw&#125;%?%-Lw%?%&#123;Y&#125;%n*%f%t %&#123;K&#125;%?%+Lw%?%= %&#123;kG&#125;][ %&#123;C&#125;(F8)Screen (F9)Title (F10)Detach (F11)Prev (F12)Next %&#123;kg&#125;]&#x27;</span></span><br><span class="line"><span class="comment">#hardstatus string &#x27;%&#123;= kG&#125;[ %&#123;G&#125;%c:%s %&#123;g&#125;][%= %&#123;= kw&#125;%?%-Lw%?%&#123;Y&#125;%n*%f%t %&#123;K&#125;%?%+Lw%?%= %&#123;kG&#125;][ %&#123;C&#125;(F8)Screen (F9)Title (F10)Detach (F11)Prev (F12)Next %&#123;kg&#125;][%&#123;kG&#125; %l %Y/%m/%d %&#123;kG&#125;]&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># a short version, can use C-a</span></span><br><span class="line"><span class="comment">#hardstatus string &#x27;%&#123;= kg&#125;[ %&#123;G&#125;%c:%s %&#123;g&#125;][%= %&#123;= kw&#125;%?%-Lw%?%&#123;Y&#125;%n*%f%t %&#123;K&#125;%?%+Lw%?%= %&#123;g&#125;][%&#123;kG&#125; %D %Y/%m/%d %&#123;g&#125;]&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set default encoding using utf8</span></span><br><span class="line">defutf8 on</span><br><span class="line"></span><br><span class="line"><span class="comment">## 解决中文乱码,这个要按需配置</span></span><br><span class="line">defencoding utf8</span><br><span class="line">encoding utf8 utf8</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://linuxize.com/post/how-to-use-linux-screen/">How To Use Linux Screen</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/screen-command-in-linux-with-examples/">screen command in Linux with Examples</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/woodcorpse/article/details/80174410">Linux命令screen—终端切换，工作环境保存，画面同步，防断网</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2023/02/20/linux-screen-useage/">https://xujinzh.github.io/2023/02/20/linux-screen-useage/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a><a class="post-meta__tags" href="/tags/screen/">screen</a></div><div class="post_share"><div class="social-share" data-image="/img/c20.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/02/23/linux-samba-share-files/" title="linux 上使用 samba 共享文件夹给 windows"><img class="cover" src="/img/c29.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">linux 上使用 samba 共享文件夹给 windows</div></div></a></div><div class="next-post pull-right"><a href="/2023/02/20/linux-rz-sz-transfer-files/" title="linux 下使用 rz 和 sz 传输文件"><img class="cover" src="/img/c8.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">linux 下使用 rz 和 sz 传输文件</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/11/06/auto-email-server-ip/" title="服务器开机或IP改变自动发送通知邮件"><img class="cover" src="/img/c17.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-06</div><div class="title">服务器开机或IP改变自动发送通知邮件</div></div></a></div><div><a href="/2021/11/29/auto-email-server-shutdown/" title="服务器关机自动发送通知邮件"><img class="cover" src="/img/c2.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-29</div><div class="title">服务器关机自动发送通知邮件</div></div></a></div><div><a href="/2020/06/12/auto-start-command-in-linux/" title="Linux 系统中的开机自启命令简单介绍"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-12</div><div class="title">Linux 系统中的开机自启命令简单介绍</div></div></a></div><div><a href="/2021/09/06/awk-command-language/" title="Linux 中的 awk 命令"><img class="cover" src="/img/c28.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-06</div><div class="title">Linux 中的 awk 命令</div></div></a></div><div><a href="/2022/10/29/build-official-python3-11/" title="Ubuntu 上编译安装官网 Python"><img class="cover" src="/img/c11.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-29</div><div class="title">Ubuntu 上编译安装官网 Python</div></div></a></div><div><a href="/2022/08/04/cat-service-eof/" title="Linux 中 EOF 内容转义"><img class="cover" src="/img/c18.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-04</div><div class="title">Linux 中 EOF 内容转义</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-screen"><span class="toc-number">1.</span> <span class="toc-text">安装 screen</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-screen"><span class="toc-number">2.</span> <span class="toc-text">使用 screen</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">配置文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">4.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'bad72ea1a5849151224ce3bee314f3b2',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>rsync 快速、多功能、远程（和本地）文件复制工具 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="在两台服务器之前进行大文件传输时，要保证支持断点续传，避免传输过程中因网络异常中断导致前功尽弃、传输能够支持压缩，降低传输的数据大小，加快传输速度。常见的文件传输工具，如 scp 基于 ssh 的方式传输，虽然进行数据加密，保证了数据安全，但不支持断点续传。本篇介绍一种保留 scp 所有有点，并能够进行断点续传和数据压缩的大文件传输（复制）工具。以 Ubuntu 18.04 为例演示所有代码。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rsync 快速、多功能、远程（和本地）文件复制工具">
+<meta property="og:url" content="https://xujinzh.github.io/2022/07/28/rsync-file-transfer/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="在两台服务器之前进行大文件传输时，要保证支持断点续传，避免传输过程中因网络异常中断导致前功尽弃、传输能够支持压缩，降低传输的数据大小，加快传输速度。常见的文件传输工具，如 scp 基于 ssh 的方式传输，虽然进行数据加密，保证了数据安全，但不支持断点续传。本篇介绍一种保留 scp 所有有点，并能够进行断点续传和数据压缩的大文件传输（复制）工具。以 Ubuntu 18.04 为例演示所有代码。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c12.jpg">
+<meta property="article:published_time" content="2022-07-28T11:08:34.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.104Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="rsync">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c12.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2022/07/28/rsync-file-transfer/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'rsync 快速、多功能、远程（和本地）文件复制工具',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">rsync 快速、多功能、远程（和本地）文件复制工具</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-07-28T11:08:34.000Z" title="发表于 2022-07-28 19:08:34">2022-07-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.104Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/linux/">linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="rsync 快速、多功能、远程（和本地）文件复制工具"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>在两台服务器之前进行大文件传输时，要保证支持断点续传，避免传输过程中因网络异常中断导致前功尽弃、传输能够支持压缩，降低传输的数据大小，加快传输速度。常见的文件传输工具，如 <code>scp</code> 基于 <code>ssh</code> 的方式传输，虽然进行数据加密，保证了数据安全，但不支持断点续传。本篇介绍一种保留 <code>scp</code> 所有有点，并能够进行断点续传和数据压缩的大文件传输（复制）工具。以 Ubuntu 18.04 为例演示所有代码。</p>
+<span id="more"></span>
+
+<h1 id="大文件切分与小文件合并"><a href="#大文件切分与小文件合并" class="headerlink" title="大文件切分与小文件合并"></a>大文件切分与小文件合并</h1><p>在传输大文件时，通常的思维是先将大文件切分成多个小文件，把小文件传输后，再合并这些小文件，得到大文件。</p>
+<h2 id="大文件切分"><a href="#大文件切分" class="headerlink" title="大文件切分"></a>大文件切分</h2><p>在本地将大文件切分，最好切分前先对文件进行压缩，缩小文件大小，便于传输</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># M 表示兆字节，G表示吉字节，本例切分为100兆字节，也可以切分为吉字节</span></span><br><span class="line"><span class="built_in">split</span> -b 100M -d test.zip test_part</span><br></pre></td></tr></table></figure>
+
+<p>然后通过 scp 等命令传输这些小文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp test_part* jinzhongxu@1.1.1.1:./.</span><br></pre></td></tr></table></figure>
+
+<h2 id="小文件合并"><a href="#小文件合并" class="headerlink" title="小文件合并"></a>小文件合并</h2><p>然后在远程服务器上合并这些小文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> test_part* &gt; nes_test.zip</span><br></pre></td></tr></table></figure>
+
+<h1 id="rsync"><a href="#rsync" class="headerlink" title="rsync"></a>rsync</h1><p><code>rsync</code> 是一个快速、多功能、远程（和本地）的文件复制工具。在本地也可以直接替换 <code>cp</code>、<code>mv</code> 等命令。字母 “r” 是 remote 的意思，即 <code>rsync</code> 表示远程同步。其最大特点是会在传输中检查发送方和接收方已有的文件，仅传输有变动的部分，默认的检查规则是文件大小或修改时间等。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>需要注意的是 <code>rsync</code> 需要在本地和远程服务器都安装，才可以使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Ubuntu or Debian</span></span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install rsync</span><br><span class="line"><span class="comment"># CentOS</span></span><br><span class="line">sudo yum install rsync</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Local:  rsync [OPTION...] SRC... [DEST]</span><br><span class="line"></span><br><span class="line">Access via remote shell:</span><br><span class="line">    Pull: rsync [OPTION...] [USER@]HOST:SRC... [DEST]</span><br><span class="line">    Push: rsync [OPTION...] SRC... [USER@]HOST:DEST</span><br><span class="line"></span><br><span class="line">Access via rsync daemon:</span><br><span class="line">    Pull: rsync [OPTION...] [USER@]HOST::SRC... [DEST]</span><br><span class="line">          rsync [OPTION...] rsync://[USER@]HOST[:PORT]/SRC... [DEST]</span><br><span class="line">    Push: rsync [OPTION...] SRC... [USER@]HOST::DEST</span><br><span class="line">          rsync [OPTION...] SRC... rsync://[USER@]HOST[:PORT]/DEST</span><br></pre></td></tr></table></figure>
+
+<p>常用的命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过 ssh 的方式进行断点续传和压缩，并打印进度，把本地 test.tar 文件传输到远程服务器上</span></span><br><span class="line">rsync -P -e <span class="string">&#x27;ssh -p 2222&#x27;</span> -z --append-verify ./test.tar jinzhongxu@1.1.1.1:./.</span><br><span class="line"></span><br><span class="line">rsync -avzP --append-verify -e <span class="string">&#x27;ssh -p 2222&#x27;</span> ./test.tar jinzhongxu@1.1.1.1:./.</span><br></pre></td></tr></table></figure>
+
+<p>其他重要参数：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">-a、--archive 参数表示存档模式，保存所有的元数据，比如修改时间（modification time）、权限、所有者等，并且软链接也会同步过去</span><br><span class="line"></span><br><span class="line">--append 参数指定文件接着上次中断的地方，继续传输</span><br><span class="line"></span><br><span class="line">--append-verify 参数跟 --append 参数类似，但会对传输完成后的文件进行一次校验。如果校验失败，将重新发送整个文件</span><br><span class="line"></span><br><span class="line">-b、--backup 参数指定在删除或更新目标目录已经存在的文件时，将该文件更名后进行备份，默认行为是删除。更名规则是添加由 --suffix 参数指定的文件后缀名，默认是 ~</span><br><span class="line"></span><br><span class="line">--backup-dir 参数指定文件备份时存放的目录，比如 --backup-dir=/path/to/backups</span><br><span class="line"></span><br><span class="line">--bwlimit 参数指定带宽限制，默认单位是 KB/s，比如 --bwlimit=100</span><br><span class="line"></span><br><span class="line">-c、--checksum 参数改变 rsync 的校验方式。默认情况下，rsync 只检查文件的大小和最后修改日期是否发生变化，如果发生变化，就重新传输；使用这个参数以后，则通过判断文件内容的校验和，决定是否重新传输。</span><br><span class="line"></span><br><span class="line">--delete 参数删除只存在于目标目录、不存在于源目标的文件，即保证目标目录是源目标的镜像</span><br><span class="line"></span><br><span class="line">-e 参数指定使用 SSH 协议传输数据</span><br><span class="line"></span><br><span class="line">--exclude 参数指定排除不进行同步的文件或文件夹，比如 --exclude=&quot;*.iso&quot;，--exclude=&#123;&quot;MEGA&quot;, &#x27;.*&#x27;&#125; 等</span><br><span class="line"></span><br><span class="line">--exclude-from 参数指定一个本地文件，里面是需要排除的文件模式，每个模式一行</span><br><span class="line"></span><br><span class="line">--existing、--ignore-non-existing 参数表示不同步目标目录中不存在的文件和目录</span><br><span class="line"></span><br><span class="line">-h、 --human-readable 参数表示以人类可读的格式输出</span><br><span class="line"></span><br><span class="line">(-h)、--help 参数返回帮助信息</span><br><span class="line"></span><br><span class="line">-i 参数表示输出源目录与目标目录之间文件差异的详细情况</span><br><span class="line"></span><br><span class="line">--ignore-existing 参数表示只要该文件在目标目录中已经存在，就跳过去，不再同步这些文件</span><br><span class="line"></span><br><span class="line">--include 参数指定同步时要包括的文件，一般与 --exclude 结合使用</span><br><span class="line"></span><br><span class="line">--link-dest 参数指定增量备份的基准目录</span><br><span class="line"></span><br><span class="line">-m 参数指定不同步空目录</span><br><span class="line"></span><br><span class="line">--max-size 参数设置传输的最大文件的大小限制，比如不超过 200KB（--max-size=&#x27;200k&#x27;）</span><br><span class="line"></span><br><span class="line">--min-size 参数设置传输的最小文件的大小限制，比如不小于 10KB（--min-size=10k）</span><br><span class="line"></span><br><span class="line">-n 参数或 --dry-run 参数模拟将要执行的操作，而并不真的执行。配合 -v 参数使用，可以看到哪些内容会被同步过去</span><br><span class="line"></span><br><span class="line">-P 参数是 --progress 和 --partial 这两个参数的结合</span><br><span class="line"></span><br><span class="line">--partial 参数允许恢复中断的传输。不使用该参数时，rsync 会删除传输到一半被打断的文件；使用该参数后，传输到一半的文件也会同步到目标目录，下次同步时再恢复中断的传输。一般需要与 --append 或 --append-verify配合使用。</span><br><span class="line"></span><br><span class="line">--partial-dir 参数指定将传输到一半的文件保存到一个临时目录，比如 --partial-dir=.rsync-partial。一般需要与 --append或--append-verify 配合使用</span><br><span class="line"></span><br><span class="line">--progress 参数表示显示进展</span><br><span class="line"></span><br><span class="line">-r 参数表示递归，即包含子目录</span><br><span class="line"></span><br><span class="line">--remove-source-files 参数表示传输成功后，删除发送方的文件</span><br><span class="line"></span><br><span class="line">--size-only 参数表示只同步大小有变化的文件，不考虑文件修改时间的差异</span><br><span class="line"></span><br><span class="line">--suffix 参数指定文件名备份时，对文件名添加的后缀，默认是 ~</span><br><span class="line"></span><br><span class="line">-u、--update 参数表示同步时跳过目标目录中修改时间更新的文件，即不同步这些有更新的时间戳的文件</span><br><span class="line"></span><br><span class="line">-v 参数表示输出细节。-vv 表示输出更详细的信息，-vvv 表示输出最详细的信息</span><br><span class="line"></span><br><span class="line">--version 参数返回 rsync 的版本</span><br><span class="line"></span><br><span class="line">-z 参数指定同步时压缩数据</span><br></pre></td></tr></table></figure>
+
+
+
+<p>更多说明请使用如下命令查看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -h</span><br></pre></td></tr></table></figure>
+
+<h1 id="文件或文件夹同步"><a href="#文件或文件夹同步" class="headerlink" title="文件或文件夹同步"></a>文件或文件夹同步</h1><p>其实 rsync 最重要的功能就是磁盘同步。能够帮助我们同步重要文件或文件夹。下面给一些常用例子：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把远程服务器上的 archive 文件夹同步到本地服务器的 /archive 文件夹</span></span><br><span class="line"><span class="comment"># -avzp 含义参见上面释义</span></span><br><span class="line"><span class="comment"># --delete 表示同步时，删除目标文件夹/archive下有而在源文件夹www.mc.com:/home/jinzhongxu/archive/下没有的文件或文件夹</span></span><br><span class="line"><span class="comment"># --delete-excluded 能够删除空文件夹</span></span><br><span class="line"><span class="comment"># --exclude 不同步源文件夹下的 films 文件夹，注意此时源文件夹 /home/jinzhongxu/archive/ 后面的 /，如果没有该斜杠，则需要把 films 补全为 archive/films </span></span><br><span class="line">rsync -avzP --delete --delete-excluded --exclude <span class="string">&#x27;films&#x27;</span> jinzhongxu@www.mc.com:/home/jinzhongxu/archive/ /archive</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把本地的文件夹/home/jinzhongxu 同步到远程服务器 jinzhongxu@1.2.2.1:/mnt/d/power 中</span></span><br><span class="line"><span class="comment"># 同上一个例子，这里排除 /home/jinzhongxu/ 下的多个文件夹 &#x27;MEGA&#x27;,&#x27;.*&#x27;,&#x27;examples.desktop&#x27;</span></span><br><span class="line"><span class="comment"># 注意逗号,后面不要有空格</span></span><br><span class="line">rsync -avzP --delete --delete-excluded /home/jinzhongxu/ --exclude=&#123;<span class="string">&#x27;MEGA&#x27;</span>,<span class="string">&#x27;.*&#x27;</span>,<span class="string">&#x27;examples.desktop&#x27;</span>&#125; jinzhongxu@1.2.2.1:/mnt/d/power</span><br></pre></td></tr></table></figure>
+
+<h1 id="实时监控同步"><a href="#实时监控同步" class="headerlink" title="实时监控同步"></a>实时监控同步</h1><p>使用 PyCharm 专业版进行 Python 项目开发时，能够远程项目同步，本地开发实时同步代码到远程服务器。搭配 <code>inotify</code> + <code>rsync</code> 或 <code>fswatch</code> + <code>rsync</code> 同样能够达到上面的效果。</p>
+<h2 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install inotify-tools fswatch</span><br></pre></td></tr></table></figure>
+<p>在 Mac OS 上只能安装 fswatch</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew update</span><br><span class="line">brew install fswatch</span><br></pre></td></tr></table></figure>
+
+<h2 id="inotifywait-rsync"><a href="#inotifywait-rsync" class="headerlink" title="inotifywait + rsync"></a>inotifywait + rsync</h2><p>如果是 Ubuntu 等 Linux 系统，建议使用 <code>inotifywait</code>，安装 <code>inotify-tools</code> 后就可以使用 <code>inotifywait</code> 工具。打开一个终端 A 输入下面的监控代码，打开另一个终端 B 进行文件夹操作，可以看到终端 A 中会实时显示终端 B 操作的事件情况：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -m 表示时刻监控</span></span><br><span class="line"><span class="comment"># -r 表示递归监控</span></span><br><span class="line"><span class="comment"># -q 表示 quiet，监控打印信息更少</span></span><br><span class="line"><span class="comment"># --format &#x27;%w%f&#x27; 表示打印结果以用户自定义格式，%w%f 表示打印文件名</span></span><br><span class="line"><span class="comment"># -e 表示支持的事件</span></span><br><span class="line"><span class="comment"># /home/jinzhongxu 为监控的目录</span></span><br><span class="line">/usr/bin/inotifywait -mrq --format <span class="string">&#x27;%w%f&#x27;</span> -e create,delete,move,modify,attrib /home/jinzhongxu</span><br></pre></td></tr></table></figure>
+
+<p>搭配 <code>rsync</code> 实时监控同步，编写脚本 <code>vim /home/jinzhongxu/inotify-rsync.sh</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">path=<span class="variable">$1</span></span><br><span class="line">remote_path=<span class="variable">$2</span></span><br><span class="line"></span><br><span class="line">/usr/bin/inotifywait -mrq --format <span class="string">&#x27;%w%f&#x27;</span> -e create,delete,move,modify,attrib <span class="variable">$path</span>  | <span class="keyword">while</span> <span class="built_in">read</span> line</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	<span class="keyword">if</span> [[ <span class="variable">$line</span> ]];<span class="keyword">then</span></span><br><span class="line">		rsync -avzP <span class="variable">$path</span> jinzhongxu@www.cmathsx.com:/workspace/<span class="variable">$remote_path</span></span><br><span class="line">	<span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 监控本地的 /home/jinzhongxu/ 目录</span></span><br><span class="line"><span class="comment"># 把该目录实时同步（只要在本地的 /home/jinzhongxu/ 目录下进行操作，包括 create,delete,move,modify,attrib等）到 www.cmathsx.com:/workspace/jzx/ 下</span></span><br><span class="line">/bin/bash /home/jinzhongxu/inotify-rsync.sh /home/jinzhongxu/ jzx</span><br></pre></td></tr></table></figure>
+<p>这样在本地 &#x2F;home&#x2F;jinzhongxu&#x2F; 目录下编程程序，就可以通过 SSH 到远程服务器上直接运行程序。</p>
+<p>一些重要配置参数说明：<code>inotify</code> 有一些默认的内核参数，其控制了 <code>inotifywait</code> 运行的行为。这些参数都写着目录 <code>/proc/sys/fs/inotify</code> 下的文件中：</p>
+<ol>
+<li><code>max_queued_events</code> 默认值是 16384. 表示调用 <code>inotify</code> 初始化时分配给 <code>inotify</code> 实例可排队的 event 事件的数目最大值，超出这个值的事件被丢弃，但会触发 IN_Q_OVERFLOW 事件；</li>
+<li><code>max_user_instances</code> 默认值是 128. 表示每一个 real user id 可创建的 inotify 实例的数量上限；</li>
+<li><code>max_user_watches</code> 默认值是 8192. 表示每个 <code>inotify</code> 实例可监控的最大目录数量。如果监控的文件数目巨大，需要根据情况，适当增加此值的大小。</li>
+</ol>
+<p>建议在运行 <code>inotifywait</code> 前先对这些配置参数进行调整(以 root 身份运行)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 10000000 &gt; /proc/sys/fs/inotify/max_queued_events</span><br><span class="line"><span class="built_in">echo</span> 10000 &gt; /proc/sys/fs/inotify/max_user_instances</span><br><span class="line"><span class="built_in">echo</span> 100000000 &gt; /proc/sys/fs/inotify/max_user_watches</span><br></pre></td></tr></table></figure>
+<p>或者采用下面方法，上面方法在电脑重启时恢复默认值，下面方法将永久生效：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;fs.inotify.max_queued_events=10000000&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;fs.inotify.max_user_instances=10000&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;fs.inotify.max_user_watches=100000000&#x27;</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
+
+<p>更多关于 <code>inotifywait</code> 操作请使用命令查看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">man inotifywait</span><br><span class="line">inotifywait -h</span><br></pre></td></tr></table></figure>
+
+<h2 id="fswatch-rsync"><a href="#fswatch-rsync" class="headerlink" title="fswatch + rsync"></a>fswatch + rsync</h2><p>该组合用法类似于 <code>inotifywait</code> + <code>rsync</code>. 使用 <code>fswatch</code> 监控目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印事件个数</span></span><br><span class="line">/usr/bin/fswatch -o /home/jinzhongxu</span><br><span class="line"></span><br><span class="line"><span class="comment"># 监控延迟 1 秒</span></span><br><span class="line">/usr/bin/fswatch -l 1 /home/jinzhongxu</span><br></pre></td></tr></table></figure>
+
+<p><code>fswatch</code> 依赖监控窗口，如 <code>inotify</code>，查看窗口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fswatch -M</span><br><span class="line">fswatch --list-monitor </span><br></pre></td></tr></table></figure>
+
+<p>搭配 <code>rsync</code> 实时监控同步，编写脚本 <code>vim /home/jinzhongxu/fswatch-rsync.sh</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">path=<span class="variable">$1</span></span><br><span class="line">remote_path=<span class="variable">$2</span></span><br><span class="line"></span><br><span class="line">/usr/bin/fswatch -o <span class="variable">$path</span> | <span class="keyword">while</span> <span class="built_in">read</span> line</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	<span class="keyword">if</span> [[ <span class="variable">$line</span> ]];<span class="keyword">then</span></span><br><span class="line">		rsync -avzP <span class="variable">$path</span> jinzhongxu@www.cmathsx.com:/workspace/<span class="variable">$remote_path</span> </span><br><span class="line">	<span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 监控本地的 /home/jinzhongxu/ 目录</span></span><br><span class="line"><span class="comment"># 把该目录实时同步（只要在本地的 /home/jinzhongxu/ 目录下进行操作，如增删改等等）到 www.cmathsx.com:/workspace/jzx/ 下</span></span><br><span class="line">/bin/bash /home/jinzhongxu/inotify-rsync.sh /home/jinzhongxu/ jzx</span><br></pre></td></tr></table></figure>
+<p>更多内容请使用如下命令获取：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">man fswatch</span><br><span class="line">fswatch -h</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/raysync/article/details/84788653">对于linux系统，如何传输大文件？_raysync的博客-CSDN博客_linux大文件传输</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000019374113">服务器之间迁移大文件</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2020/08/rsync.html">rsync 用法教程 - 阮一峰的网络日志</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.myfreax.com/how-to-exclude-files-and-directories-with-rsync/">如何使用Rsync排除文件和目录</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chensiqiqi/p/6542268.html">第二十三节 inotify事件监控工具</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_57515995/article/details/126576572?spm=1001.2014.3001.5506">Rsync远程同步+inotify监控</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.ahao.moe/posts/Monitor_files_with_inotifytools.html">使用inotifytools监控文件</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/whatday/article/details/105000112">linux inotify-tools 监控文件变化</a></li>
+<li><a target="_blank" rel="noopener" href="https://iant.work/blog/783.html">在 linux 中遇到 OSError: inotify watch limit reached 错误</a></li>
+<li><a target="_blank" rel="noopener" href="http://runxinzhi.com/jincon-p-3702545.html">Linux重启inotify配置max_user_watches无效被恢复默认值8192的正确修改方法</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2022/07/28/rsync-file-transfer/">https://xujinzh.github.io/2022/07/28/rsync-file-transfer/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/rsync/">rsync</a></div><div class="post_share"><div class="social-share" data-image="/img/c12.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/08/04/cat-service-eof/" title="Linux 中 EOF 内容转义"><img class="cover" src="/img/c18.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Linux 中 EOF 内容转义</div></div></a></div><div class="next-post pull-right"><a href="/2022/07/24/mac-reset-launchpad/" title="Mac 重置 launchpad"><img class="cover" src="/img/c16.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Mac 重置 launchpad</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%A7%E6%96%87%E4%BB%B6%E5%88%87%E5%88%86%E4%B8%8E%E5%B0%8F%E6%96%87%E4%BB%B6%E5%90%88%E5%B9%B6"><span class="toc-number">1.</span> <span class="toc-text">大文件切分与小文件合并</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E6%96%87%E4%BB%B6%E5%88%87%E5%88%86"><span class="toc-number">1.1.</span> <span class="toc-text">大文件切分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E6%96%87%E4%BB%B6%E5%90%88%E5%B9%B6"><span class="toc-number">1.2.</span> <span class="toc-text">小文件合并</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#rsync"><span class="toc-number">2.</span> <span class="toc-text">rsync</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">2.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">2.2.</span> <span class="toc-text">使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%88%96%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5"><span class="toc-number">3.</span> <span class="toc-text">文件或文件夹同步</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E6%97%B6%E7%9B%91%E6%8E%A7%E5%90%8C%E6%AD%A5"><span class="toc-number">4.</span> <span class="toc-text">实时监控同步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-1"><span class="toc-number">4.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#inotifywait-rsync"><span class="toc-number">4.2.</span> <span class="toc-text">inotifywait + rsync</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fswatch-rsync"><span class="toc-number">4.3.</span> <span class="toc-text">fswatch + rsync</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">5.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'aa9c5d9d6a74e51f6a2e8f913a289811',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

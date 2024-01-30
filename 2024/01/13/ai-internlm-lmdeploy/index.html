@@ -1,0 +1,1092 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>基于 LMDeploy 的大模型量化和部署 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本篇介绍如何在 Jupyter Notebook 中使用 LMDeploy 对大模型进行量化和部署。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于 LMDeploy 的大模型量化和部署">
+<meta property="og:url" content="https://xujinzh.github.io/2024/01/13/ai-internlm-lmdeploy/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="本篇介绍如何在 Jupyter Notebook 中使用 LMDeploy 对大模型进行量化和部署。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c30.jpg">
+<meta property="article:published_time" content="2024-01-13T06:07:33.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.088Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="internlm">
+<meta property="article:tag" content="openmmlab">
+<meta property="article:tag" content="langchain">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c30.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2024/01/13/ai-internlm-lmdeploy/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '基于 LMDeploy 的大模型量化和部署',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">基于 LMDeploy 的大模型量化和部署</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.088Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/deep-learning/">deep learning</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">11.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>62分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="基于 LMDeploy 的大模型量化和部署"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>本篇介绍如何在 Jupyter Notebook 中使用 LMDeploy 对大模型进行量化和部署。</p>
+<span id="more"></span>
+
+
+<h1 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h1><p>Terminal 中执行下面命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">conda create -n lmdeploy --<span class="built_in">clone</span> /share/conda_envs/internlm-base</span><br><span class="line">conda activate lmdeploy</span><br><span class="line"></span><br><span class="line">pip install ipykernel</span><br><span class="line">python -m ipykernel install --user --name lmdeploy --display-name lmdeploy</span><br></pre></td></tr></table></figure>
+
+<p>创建 notebook，选择内核 lmdeploy，执行一下代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置notebook环境</span></span><br><span class="line"><span class="keyword">import</span> os, sys</span><br><span class="line"></span><br><span class="line">PATH = os.environ[<span class="string">&#x27;PATH&#x27;</span>]</span><br><span class="line">basedir = os.path.dirname(os.path.dirname(sys.exec_prefix))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里的 $PATH 也可以替换为 &#123;os.environ[&#x27;PATH&#x27;]&#125;。这里只是为了展示 $变量 的形式也是可行的</span></span><br><span class="line">%env CONDA_EXE=&#123;os.path.join(basedir, <span class="string">&#x27;bin/conda&#x27;</span>)&#125;</span><br><span class="line">%env CONDA_PREFIX=&#123;sys.exec_prefix&#125;</span><br><span class="line">%env CONDA_PYTHON_EXE=&#123;os.path.join(basedir, <span class="string">&#x27;bin/python&#x27;</span>)&#125;</span><br><span class="line">%env PATH=&#123;os.path.join(sys.exec_prefix, <span class="string">&#x27;bin&#x27;</span>)&#125;:$PATH</span><br></pre></td></tr></table></figure>
+
+<pre><code>env: CONDA_EXE=/root/.conda/bin/conda
+env: CONDA_PREFIX=/root/.conda/envs/lmdeploy
+env: CONDA_PYTHON_EXE=/root/.conda/bin/python
+env: PATH=/root/.conda/envs/lmdeploy/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">!wget  https://github.com/Dao-AILab/flash-attention/releases/download/v2<span class="number">.3</span><span class="number">.6</span>/flash_attn-<span class="number">2.3</span><span class="number">.6</span>+cu118torch2<span class="number">.0</span>cxx11abiFALSE-cp310-cp310-linux_x86_64.whl</span><br><span class="line">%pip install flash_attn-<span class="number">2.3</span><span class="number">.6</span>+cu118torch2<span class="number">.0</span>cxx11abiFALSE-cp310-cp310-linux_x86_64.whl </span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%pip install -q <span class="string">&#x27;lmdeploy[all]==v0.1.0&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="模型转换"><a href="#模型转换" class="headerlink" title="模型转换"></a>模型转换</h1><p>使用 TurboMind 推理模型需要先将模型转化为 TurboMind 的格式，目前支持在线转换和离线转换两种形式。在线转换可以直接加载 Huggingface 模型，离线转换需要先保存模型再加载。</p>
+<p>TurboMind 是一款关于 LLM 推理的高效推理引擎，基于英伟达的 FasterTransformer 研发而成。它的主要功能包括：LLaMa 结构模型的支持，persistent batch 推理模式和可扩展的 KV 缓存管理器。</p>
+<h2 id="在线转换"><a href="#在线转换" class="headerlink" title="在线转换"></a>在线转换</h2><p>在线转换会自动下载模型文件或使用本地下载好的模型文件，自动进行转换，转换后启动服务</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># # 这两个需要能访问 Huggingface 的网络环境</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 加载使用 lmdeploy 量化的版本</span></span><br><span class="line"><span class="comment"># !lmdeploy chat turbomind internlm/internlm-chat-20b-4bit --model-name internlm-chat-20b</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 加载其他 LLM 模型</span></span><br><span class="line"><span class="comment"># !lmdeploy chat turbomind Qwen/Qwen-7B-Chat --model-name qwen-7b</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载本地下载好的模型</span></span><br><span class="line">!lmdeploy chat turbomind /share/temp/model_repos/internlm-chat-7b/  --model-name internlm-chat-7b</span><br></pre></td></tr></table></figure>
+
+<h2 id="离线转换"><a href="#离线转换" class="headerlink" title="离线转换"></a>离线转换</h2><p>离线转换先将模型转为 lmdeploy TurboMind 的格式，然后在手动启动服务</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 转换为 TurboMind格式</span></span><br><span class="line">!lmdeploy convert internlm-chat-7b  /root/share/temp/model_repos/internlm-chat-7b/</span><br></pre></td></tr></table></figure>
+
+<pre><code>create workspace in directory ./workspace
+copy triton model templates from &quot;/root/.conda/envs/lmdeploy/lib/python3.10/site-packages/lmdeploy/serve/turbomind/triton_models&quot; to &quot;./workspace/triton_models&quot;
+copy service_docker_up.sh from &quot;/root/.conda/envs/lmdeploy/lib/python3.10/site-packages/lmdeploy/serve/turbomind/service_docker_up.sh&quot; to &quot;./workspace&quot;
+model_name             internlm-chat-7b
+model_format           None
+inferred_model_format  hf
+model_path             /root/share/temp/model_repos/internlm-chat-7b/
+tokenizer_path         /root/share/temp/model_repos/internlm-chat-7b/tokenizer.model
+output_format          fp16
+WARNING: Can not find tokenizer.json. It may take long time to initialize the tokenizer.
+*** splitting layers.0.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.0.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.0.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.0.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.0.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.0.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.0.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.1.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.1.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.1.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.1.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.1.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.1.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.1.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.2.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.2.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.2.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.2.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.2.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.2.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.2.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.3.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.3.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.3.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.3.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.3.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.3.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.3.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.4.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.4.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.4.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.4.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.4.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.4.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.4.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.5.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.5.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.5.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.5.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.5.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.5.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.5.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.6.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.6.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.6.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.6.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.6.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.6.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.6.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.7.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.7.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.7.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.7.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.7.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.7.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.7.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.8.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.8.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.8.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.8.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.8.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.8.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.8.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.9.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.9.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.9.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.9.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.9.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.9.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.9.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.10.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.10.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.10.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.10.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.10.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.10.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.10.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.11.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.11.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.11.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.11.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.11.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.11.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.11.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.12.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.12.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.12.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.12.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.12.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.12.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.12.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.13.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.13.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.13.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.13.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.13.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.13.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.13.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.14.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.14.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.14.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.14.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.14.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.14.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.14.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.15.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.15.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.15.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.15.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.15.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.15.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.15.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.16.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.16.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.16.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.16.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.16.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.16.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.16.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.17.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.17.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.17.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.17.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.17.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.17.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.17.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.18.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.18.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.18.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.18.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.18.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.18.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.18.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.19.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.19.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.19.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.19.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.19.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.19.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.19.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.20.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.20.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.20.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.20.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.20.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.20.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.20.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.21.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.21.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.21.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.21.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.21.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.21.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.21.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.22.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.22.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.22.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.22.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.22.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.22.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.22.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.23.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.23.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.23.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.23.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.23.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.23.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.23.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.24.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.24.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.24.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.24.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.24.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.24.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.24.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.25.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.25.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.25.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.25.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.25.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.25.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.25.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.26.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.26.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.26.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.26.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.26.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.26.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.26.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.27.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.27.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.27.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.27.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.27.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.27.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.27.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.28.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.28.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.28.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.28.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.28.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.28.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.28.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.29.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.29.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.29.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.29.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.29.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.29.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.29.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.30.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.30.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.30.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.30.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.30.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.30.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.30.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.31.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.31.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.31.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.31.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.31.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.31.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.31.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+Convert to turbomind format: 100%|██████████████| 32/32 [00:25&lt;00:00,  1.23it/s]
+</code></pre>
+<p>执行完成后将会在当前目录生成一个 workspace 的文件夹。这里面包含的就是 TurboMind 和 Triton “模型推理”需要到的文件。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!ls workspace</span><br></pre></td></tr></table></figure>
+
+<pre><code>model_repository  service_docker_up.sh	triton_models
+</code></pre>
+<h1 id="TurboMind-推理"><a href="#TurboMind-推理" class="headerlink" title="TurboMind 推理"></a>TurboMind 推理</h1><p>接下来推理都基于离线转换的workspace进行。</p>
+<p>这里支持多种方式运行，比如Turbomind、PyTorch、DeepSpeed。但 PyTorch 和 DeepSpeed 调用的其实都是 Huggingface 的 Transformers 包，PyTorch表示原生的 Transformer 包，DeepSpeed 表示使用了 DeepSpeed 作为推理框架。Pytorch&#x2F;DeepSpeed 目前功能都比较弱，不具备生产能力，不推荐使用。</p>
+<h2 id="命令行形式"><a href="#命令行形式" class="headerlink" title="命令行形式"></a>命令行形式</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Turbomind + Bash Local Chat</span></span><br><span class="line">!lmdeploy chat turbomind ./workspace</span><br></pre></td></tr></table></figure>
+
+<h2 id="API-服务"><a href="#API-服务" class="headerlink" title="API 服务"></a>API 服务</h2><p>”模型推理&#x2F;服务“目前提供了 Turbomind 和 TritonServer 两种服务化方式。此时，Server 是 TurboMind 或 TritonServer，API Server 可以提供对外的 API 服务。我们推荐使用 TurboMind</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ApiServer+Turbomind   api_server =&gt; AsyncEngine =&gt; TurboMind</span></span><br><span class="line"><span class="comment"># 参数中 server_name 和 server_port 分别表示服务地址和端口</span></span><br><span class="line"><span class="comment"># tp 参数表示 Tensor 并行</span></span><br><span class="line"><span class="comment"># instance_num 参数，表示实例数，可以理解成 Batch 的大小。</span></span><br><span class="line">!lmdeploy serve api_server ./workspace \</span><br><span class="line">	--server_name <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span> \</span><br><span class="line">	--server_port <span class="number">23333</span> \</span><br><span class="line">	--instance_num <span class="number">64</span> \</span><br><span class="line">	--tp <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>然后，我们可以新开一个窗口，执行下面的 Client 命令</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ChatApiClient+ApiServer（注意是http协议，需要加http）</span></span><br><span class="line">!lmdeploy serve api_client http://localhost:<span class="number">23333</span></span><br></pre></td></tr></table></figure>
+
+<p>或者使用API服务，查看API服务列表：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把 33449 换成自己的端口</span></span><br><span class="line">ssh -CNg -L 23333:127.0.0.1:23333 root@ssh.intern-ai.org.cn -p 33449</span><br></pre></td></tr></table></figure>
+
+<p>然后打开：<a target="_blank" rel="noopener" href="http://localhost:23333/">http://localhost:23333</a> 查看</p>
+<h1 id="网页服务"><a href="#网页服务" class="headerlink" title="网页服务"></a>网页服务</h1><p>这一部分主要是将 Gradio 作为前端 Demo 演示。由于 Gradio 需要本地访问展示界面，因此也需要通过 ssh 将数据转发到本地。命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p &lt;你的 ssh 端口号&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="TurboMind-API-服务作为后端"><a href="#TurboMind-API-服务作为后端" class="headerlink" title="TurboMind API 服务作为后端"></a>TurboMind API 服务作为后端</h2><p>即 gradio 直接与 API Server，间接与 turbomind 连接。另一种是 gradio 与直接与 turbomind 连接，不需要 API Server</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先启动API服务</span></span><br><span class="line">!lmdeploy serve api_server ./workspace \</span><br><span class="line">	--server_name <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span> \</span><br><span class="line">	--server_port <span class="number">23333</span> \</span><br><span class="line">	--instance_num <span class="number">64</span> \</span><br><span class="line">	--tp <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Gradio+ApiServer。必须先开启 Server，此时 Gradio 为 Client</span></span><br><span class="line">!lmdeploy serve gradio http://<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">23333</span> \</span><br><span class="line">	--server_name <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span> \</span><br><span class="line">	--server_port <span class="number">6006</span> \</span><br><span class="line">	--restful_api <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="TurboMind-推理作为后端"><a href="#TurboMind-推理作为后端" class="headerlink" title="TurboMind 推理作为后端"></a>TurboMind 推理作为后端</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Gradio+Turbomind(local)</span></span><br><span class="line">!lmdeploy serve gradio ./workspace</span><br></pre></td></tr></table></figure>
+
+<h2 id="TurboMind-推理-Python-代码集成"><a href="#TurboMind-推理-Python-代码集成" class="headerlink" title="TurboMind 推理 + Python 代码集成"></a>TurboMind 推理 + Python 代码集成</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> lmdeploy <span class="keyword">import</span> turbomind <span class="keyword">as</span> tm</span><br><span class="line"></span><br><span class="line"><span class="comment"># load model</span></span><br><span class="line">model_path = <span class="string">&quot;/root/share/temp/model_repos/internlm-chat-7b/&quot;</span></span><br><span class="line">tm_model = tm.TurboMind.from_pretrained(model_path, model_name=<span class="string">&#x27;internlm-chat-7b&#x27;</span>)</span><br><span class="line">generator = tm_model.create_instance()</span><br><span class="line"></span><br><span class="line"><span class="comment"># process query</span></span><br><span class="line"><span class="comment"># Prompt 其实就是增加了 &lt;|System|&gt; 消息和 &lt;|User|&gt; 消息（即用户的 query），以及一个 &lt;|Bot|&gt; 的标记，表示接下来该模型输出响应了。</span></span><br><span class="line">query = <span class="string">&quot;请介绍下你自己吧&quot;</span></span><br><span class="line">prompt = tm_model.model.get_prompt(query)</span><br><span class="line">input_ids = tm_model.tokenizer.encode(prompt)</span><br><span class="line"></span><br><span class="line"><span class="comment"># inference</span></span><br><span class="line"><span class="keyword">for</span> outputs <span class="keyword">in</span> generator.stream_infer(</span><br><span class="line">        session_id=<span class="number">0</span>,</span><br><span class="line">        input_ids=[input_ids]):</span><br><span class="line">    res, tokens = outputs[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">response = tm_model.tokenizer.decode(res.tolist())</span><br><span class="line"><span class="built_in">print</span>(response)</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/.conda/envs/lmdeploy/lib/python3.10/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+model_source: hf_model
+
+
+WARNING: Can not find tokenizer.json. It may take long time to initialize the tokenizer.
+WARNING: Can not find tokenizer.json. It may take long time to initialize the tokenizer.
+
+
+model_config:
+&#123;
+  &quot;model_name&quot;: &quot;internlm-chat-7b&quot;,
+  &quot;tensor_para_size&quot;: 1,
+  &quot;head_num&quot;: 32,
+  &quot;kv_head_num&quot;: 32,
+  &quot;vocab_size&quot;: 103168,
+  &quot;num_layer&quot;: 32,
+  &quot;inter_size&quot;: 11008,
+  &quot;norm_eps&quot;: 1e-06,
+  &quot;attn_bias&quot;: 1,
+  &quot;start_id&quot;: 1,
+  &quot;end_id&quot;: 2,
+  &quot;session_len&quot;: 2056,
+  &quot;weight_type&quot;: &quot;fp16&quot;,
+  &quot;rotary_embedding&quot;: 128,
+  &quot;rope_theta&quot;: 10000.0,
+  &quot;size_per_head&quot;: 128,
+  &quot;group_size&quot;: 0,
+  &quot;max_batch_size&quot;: 64,
+  &quot;max_context_token_num&quot;: 1,
+  &quot;step_length&quot;: 1,
+  &quot;cache_max_entry_count&quot;: 0.5,
+  &quot;cache_block_seq_len&quot;: 128,
+  &quot;cache_chunk_size&quot;: 1,
+  &quot;use_context_fmha&quot;: 1,
+  &quot;quant_policy&quot;: 0,
+  &quot;max_position_embeddings&quot;: 2048,
+  &quot;rope_scaling_factor&quot;: 0.0,
+  &quot;use_logn_attn&quot;: 0
+&#125;
+[TM][WARNING] [LlamaTritonModel] `max_context_token_num` = 2056.
+[TM][WARNING] [LlamaTritonModel] `num_tokens_per_iter` is not set, default to `max_context_token_num` (2056).
+get 323 model params
+                                                                            
+
+[WARNING] gemm_config.in is not found; using default GEMM algo
+
+
+[TM][INFO] NCCL group_id = 0
+[TM][INFO] [BlockManager] block_size = 64 MB
+[TM][INFO] [BlockManager] max_block_count = 159
+[TM][INFO] [BlockManager] chunk_size = 1
+[TM][INFO] LlamaBatch&lt;T&gt;::Start()
+[TM][INFO] [forward] Enqueue requests
+[TM][INFO] [forward] Wait for requests to complete ...
+[TM][WARNING] [ProcessInferRequests] Request for 0 received.
+[TM][INFO] [Forward] [0, 1), dc_bsz = 0, pf_bsz = 1, n_tok = 108, max_q = 108, max_k = 108
+[TM][INFO] ------------------------- step = 110 -------------------------
+[TM][INFO] ------------------------- step = 120 -------------------------
+[TM][INFO] ------------------------- step = 130 -------------------------
+[TM][INFO] ------------------------- step = 140 -------------------------
+[TM][INFO] ------------------------- step = 150 -------------------------
+[TM][INFO] ------------------------- step = 160 -------------------------
+[TM][INFO] ------------------------- step = 170 -------------------------
+[TM][INFO] ------------------------- step = 180 -------------------------
+[TM][INFO] ------------------------- step = 190 -------------------------
+[TM][INFO] ------------------------- step = 200 -------------------------
+[TM][INFO] ------------------------- step = 210 -------------------------
+[TM][INFO] ------------------------- step = 220 -------------------------
+
+
+书生·浦语，上海人工智能实验室开发的人工智能语言模型，致力于通过执行常见的基于语言的任务和提供建议来帮助人类。我的设计理念是有用、诚实并且无害。我可以使用汉语和英语进行交流。我能够回答问题、提供定义和解释、将文本从一种语言翻译成另一种语言、总结文本、生成文本、编写故事、分析情感、提供推荐、开发算法、编写代码以及其他任何基于语言的任务。但是我不能看、听、尝、触摸、闻、移动、与物理世界交互、感受情感或体验感官输入、执行需要身体能力的任务。
+
+
+[TM][INFO] ------------------------- step = 230 -------------------------
+[TM][INFO] [Interrupt] slot = 0, id = 0
+[TM][INFO] [forward] Request complete for 0, code 0
+</code></pre>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>我想对外提供类似 OpenAI 那样的 HTTP 接口服务。推荐使用 TurboMind推理 + API 服务</li>
+<li>我想做一个演示 Demo，Gradio 无疑是比 Local Chat 更友好的。推荐使用 TurboMind 推理作为后端的Gradio进行演示</li>
+<li>我想直接在自己的 Python 项目中使用大模型功能。推荐使用 TurboMind推理 + Python</li>
+</ul>
+<h1 id="模型量化"><a href="#模型量化" class="headerlink" title="模型量化"></a>模型量化</h1><p>本部分内容主要介绍如何对模型进行量化。主要包括 KV Cache 量化和模型参数量化。总的来说，量化是一种以参数或计算中间结果精度下降换空间节省（以及同时带来的性能提升）的策略。</p>
+<p>正式介绍 LMDeploy 量化方案前，需要先介绍两个概念：</p>
+<ul>
+<li>计算密集（compute-bound）: 指推理过程中，绝大部分时间消耗在数值计算上；针对计算密集型场景，可以通过使用更快的硬件计算单元来提升计算速。</li>
+<li>访存密集（memory-bound）: 指推理过程中，绝大部分时间消耗在数据读取上；针对访存密集型场景，一般通过减少访存次数、提高计算访存比或降低访存量来优化。</li>
+</ul>
+<p>常见的 LLM 模型由于 Decoder Only 架构的特性，实际推理时大多数的时间都消耗在了逐 Token 生成阶段（Decoding 阶段），是典型的访存密集型场景。</p>
+<p>那么，如何优化 LLM 模型推理中的访存密集问题呢？ 我们可以使用 KV Cache 量化和 4bit Weight Only 量化（W4A16）。</p>
+<ul>
+<li>KV Cache 量化是指将逐 Token（Decoding）生成过程中的上下文 K 和 V 中间结果进行 INT8 量化（计算时再反量化），以降低生成过程中的显存占用。</li>
+<li>34bit Weight 量化，将 FP16 的模型权重量化为 INT4，Kernel 计算时，访存量直接降为 FP16 模型的 1&#x2F;4，大幅降低了访存成本。Weight Only 是指仅量化权重，数值计算依然采用 FP16（需要将 INT4 权重反量化）。</li>
+</ul>
+<h2 id="KV-Cache-量化"><a href="#KV-Cache-量化" class="headerlink" title="KV Cache 量化"></a>KV Cache 量化</h2><h3 id="量化步骤"><a href="#量化步骤" class="headerlink" title="量化步骤"></a>量化步骤</h3><p>KV Cache 量化是将已经生成序列的 KV 变成 Int8，使用过程一共包括三步：</p>
+<p>第一步：计算 minmax。主要思路是通过计算给定输入样本在每一层不同位置处计算结果的统计情况。</p>
+<ul>
+<li>对于 Attention 的 K 和 V：取每个 Head 各自维度在所有Token的最大、最小和绝对值最大值。对每一层来说，上面三组值都是 (num_heads, head_dim) 的矩阵。这里的统计结果将用于本小节的 KV Cache。</li>
+<li>对于模型每层的输入：取对应维度的最大、最小、均值、绝对值最大和绝对值均值。每一层每个位置的输入都有对应的统计值，它们大多是 (hidden_dim, ) 的一维向量，当然在 FFN 层由于结构是先变宽后恢复，因此恢复的位置维度并不相同。这里的统计结果用于下个小节的模型参数量化，主要用在缩放环节（回顾PPT内容）。</li>
+</ul>
+<p>第一步执行命令如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 计算 minmax</span></span><br><span class="line">!lmdeploy lite calibrate \</span><br><span class="line">  --model  /root/share/temp/model_repos/internlm-chat-7b/ \</span><br><span class="line">  --calib_dataset <span class="string">&quot;c4&quot;</span> \</span><br><span class="line">  --calib_samples <span class="number">128</span> \</span><br><span class="line">  --calib_seqlen <span class="number">2048</span> \</span><br><span class="line">  --work_dir ./quant_output</span><br></pre></td></tr></table></figure>
+
+<p>在这个命令行中，会选择 128 条输入样本，每条样本长度为 2048，数据集选择 C4，输入模型后就会得到上面的各种统计值。值得说明的是，如果显存不足，可以适当调小 samples 的数量或 sample 的长度。</p>
+<blockquote>
+<p>这一步由于默认需要从 Huggingface 下载数据集，国内经常不成功。所以我们导出了需要的数据，大家需要对读取数据集的代码文件做一下替换。共包括两步：</p>
+</blockquote>
+<blockquote>
+<ul>
+<li><p>第一步：复制 calib_dataloader.py 到安装目录替换该文件：cp &#x2F;root&#x2F;share&#x2F;temp&#x2F;datasets&#x2F;c4&#x2F;calib_dataloader.py  &#x2F;root&#x2F;.conda&#x2F;envs&#x2F;lmdeploy&#x2F;lib&#x2F;python3.10&#x2F;site-packages&#x2F;lmdeploy&#x2F;lite&#x2F;utils&#x2F;</p>
+</li>
+<li><p>第二步：将用到的数据集（c4）复制到下面的目录：cp -r &#x2F;root&#x2F;share&#x2F;temp&#x2F;datasets&#x2F;c4&#x2F; &#x2F;root&#x2F;.cache&#x2F;huggingface&#x2F;datasets&#x2F;</p>
+</li>
+</ul>
+</blockquote>
+<p>第二步：通过 minmax 获取量化参数。主要就是利用下面这个公式，获取每一层的 K V 中心值（zp）和缩放值（scale）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">zp = (min+max) / 2</span><br><span class="line">scale = (max-min) / 255</span><br><span class="line">quant: q = round( (f-zp) / scale)</span><br><span class="line">dequant: f = q * scale + zp</span><br></pre></td></tr></table></figure>
+
+<p>有这两个值就可以进行量化和解量化操作了。具体来说，就是对历史的 K 和 V 存储 quant 后的值，使用时在 dequant。</p>
+<p>第二步的执行命令如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过 minmax 获取量化参数</span></span><br><span class="line">!lmdeploy lite kv_qparams \</span><br><span class="line">  --work_dir ./quant_output  \</span><br><span class="line">  --turbomind_dir workspace/triton_models/weights/ \</span><br><span class="line">  --kv_sym <span class="literal">False</span> \</span><br><span class="line">  --num_tp <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>在这个命令中，num_tp 的含义前面介绍过，表示 Tensor 的并行数。每一层的中心值和缩放值会存储到 workspace 的参数目录中以便后续使用。kv_sym 为 True 时会使用另一种（对称）量化方法，它用到了第一步存储的绝对值最大值，而不是最大值和最小值。</p>
+<p>第三步：修改配置。也就是修改 weights&#x2F;config.ini 文件，这个我们在《2.6.2 模型配置实践》中已经提到过了（KV int8 开关），只需要把 quant_policy 改为 4 即可。</p>
+<p>这一步需要额外说明的是，如果用的是 TurboMind1.0，还需要修改参数 use_context_fmha，将其改为 0。</p>
+<p>接下来就可以正常运行前面的各种服务了，只不过咱们现在可是用上了 KV Cache 量化，能更省（运行时）显存了。</p>
+<h3 id="量化效果"><a href="#量化效果" class="headerlink" title="量化效果"></a>量化效果</h3><p>官方给出了 <a target="_blank" rel="noopener" href="https://huggingface.co/internlm/internlm-chat-7b">internlm-chat-7b</a> 模型在 KV Cache 量化前后的显存对比情况，KV Cache 可以节约大约 20% 的显存。</p>
+<p>同时，还在 opencompass 平台上测试了量化前后的精准度（Accuracy）对比情况，可以看出，精度不仅没有明显下降，相反在不少任务上还有一定的提升。可能得原因是，量化会导致一定的误差，有时候这种误差可能会减少模型对训练数据的拟合，从而提高泛化性能。量化可以被视为引入轻微噪声的正则化方法。或者，也有可能量化后的模型正好对某些数据集具有更好的性能。</p>
+<p>总结一下，KV Cache 量化既能明显降低显存占用，还有可能同时带来精准度（Accuracy）的提升。</p>
+<h2 id="W4A16-量化"><a href="#W4A16-量化" class="headerlink" title="W4A16 量化"></a>W4A16 量化</h2><h3 id="量化步骤-1"><a href="#量化步骤-1" class="headerlink" title="量化步骤"></a>量化步骤</h3><p>W4A16中的A是指Activation，保持FP16，只对参数进行 4bit 量化。使用过程也可以看作是三步。</p>
+<p>第一步：同 KV Cache 量化第一步，不再赘述。</p>
+<p>第二步：量化权重模型。利用第一步得到的统计值对参数进行量化，具体又包括两小步：</p>
+<ul>
+<li>缩放参数。主要是性能上的考虑。</li>
+<li>整体量化。</li>
+</ul>
+<p>第二步的执行命令如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 量化权重模型</span></span><br><span class="line">!lmdeploy lite auto_awq \</span><br><span class="line">  --model  /root/share/temp/model_repos/internlm-chat-7b/ \</span><br><span class="line">  --w_bits <span class="number">4</span> \</span><br><span class="line">  --w_group_size <span class="number">128</span> \</span><br><span class="line">  --work_dir ./quant_output </span><br></pre></td></tr></table></figure>
+
+<p>命令中 w_bits 表示量化的位数，w_group_size 表示量化分组统计的尺寸，work_dir 是量化后模型输出的位置。这里需要特别说明的是，因为没有 torch.int4，所以实际存储时，8个 4bit 权重会被打包到一个 int32 值中。所以，如果你把这部分量化后的参数加载进来就会发现它们是 int32 类型的。</p>
+<p>第三步：转换成 TurboMind 格式。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 转换模型的layout，存放在默认路径 ./workspace 下</span></span><br><span class="line">!lmdeploy convert  internlm-chat-7b ./quant_output \</span><br><span class="line">    --model-<span class="built_in">format</span> awq \</span><br><span class="line">    --group-size <span class="number">128</span></span><br></pre></td></tr></table></figure>
+
+<p>这个 group-size 就是上一步的那个 w_group_size。如果不想和之前的 workspace 重复，可以指定输出目录：–dst_path，比如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">!lmdeploy convert  internlm-chat-7b ./quant_output \</span><br><span class="line">    --model-<span class="built_in">format</span> awq \</span><br><span class="line">    --group-size <span class="number">128</span> \</span><br><span class="line">    --dst_path ./workspace_quant</span><br></pre></td></tr></table></figure>
+
+<p>接下来和上一节一样，可以正常运行前面的各种服务了，不过咱们现在用的是量化后的模型。</p>
+<p>最后再补充一点，量化模型和 KV Cache 量化也可以一起使用，以达到最大限度节省显存。</p>
+<h3 id="量化效果-1"><a href="#量化效果-1" class="headerlink" title="量化效果"></a>量化效果</h3><ul>
+<li>TurboMind 相比其他框架速度优势非常显著，比 mlc-llm 快了将近 30%。</li>
+<li>4bit 模型可以降低 50-60% 的显存占用，效果非常明显。</li>
+</ul>
+<p>总而言之，W4A16 参数量化后能极大地降低显存，同时相比其他框架推理速度具有明显优势。</p>
+<p>首先我们需要明白一点，服务部署和量化是没有直接关联的，量化的最主要目的是降低显存占用，主要包括两方面的显存：模型参数和中间过程计算结果。前者对应《W4A16 量化》，后者对应《Cache 量化》。</p>
+<p>量化在降低显存的同时，一般还能带来性能的提升，因为更小精度的浮点数要比高精度的浮点数计算效率高，而整型要比浮点数高很多。</p>
+<p>所以我们的建议是：在各种配置下尝试，看效果能否满足需要。这一般需要在自己的数据集上进行测试。具体步骤如下。</p>
+<ul>
+<li>Step1：优先尝试正常（非量化）版本，评估效果。<ul>
+<li>如果效果不行，需要尝试更大参数模型或者微调。</li>
+<li>如果效果可以，跳到下一步。</li>
+</ul>
+</li>
+<li>Step2：尝试正常版本+KV Cache 量化，评估效果。<ul>
+<li>如果效果不行，回到上一步。</li>
+<li>如果效果可以，跳到下一步。</li>
+</ul>
+</li>
+<li>Step3：尝试量化版本，评估效果。<ul>
+<li>如果效果不行，回到上一步。</li>
+<li>如果效果可以，跳到下一步。</li>
+</ul>
+</li>
+<li>Step4：尝试量化版本+ KV Cache 量化，评估效果。<ul>
+<li>如果效果不行，回到上一步。</li>
+<li>如果效果可以，使用方案。</li>
+</ul>
+</li>
+</ul>
+<p>另外需要补充说明的是，使用哪种量化版本、开启哪些功能，除了上述流程外，还需要考虑框架、显卡的支持情况，比如有些框架可能不支持 W4A16 的推理，那即便转换好了也用不了。</p>
+<p>根据实践经验，一般情况下：</p>
+<ul>
+<li>精度越高，显存占用越多，推理效率越低，但一般效果较好。</li>
+<li>Server 端推理一般用非量化版本或半精度、BF16、Int8 等精度的量化版本，比较少使用更低精度的量化版本。</li>
+<li>端侧推理一般都使用量化版本，且大多是低精度的量化版本。这主要是因为计算资源所限。</li>
+</ul>
+<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><p>使用 LMDeploy 以本地对话、网页Gradio、API服务中的一种方式部署 InternLM-Chat-7B 模型，生成 300 字的小故事（需截图）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置notebook环境</span></span><br><span class="line"><span class="keyword">import</span> os, sys</span><br><span class="line"></span><br><span class="line">PATH = os.environ[<span class="string">&#x27;PATH&#x27;</span>]</span><br><span class="line">basedir = os.path.dirname(os.path.dirname(sys.exec_prefix))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里的 $PATH 也可以替换为 &#123;os.environ[&#x27;PATH&#x27;]&#125;。这里只是为了展示 $变量 的形式也是可行的</span></span><br><span class="line">%env CONDA_EXE=&#123;os.path.join(basedir, <span class="string">&#x27;bin/conda&#x27;</span>)&#125;</span><br><span class="line">%env CONDA_PREFIX=&#123;sys.exec_prefix&#125;</span><br><span class="line">%env CONDA_PYTHON_EXE=&#123;os.path.join(basedir, <span class="string">&#x27;bin/python&#x27;</span>)&#125;</span><br><span class="line">%env PATH=&#123;os.path.join(sys.exec_prefix, <span class="string">&#x27;bin&#x27;</span>)&#125;:$PATH</span><br></pre></td></tr></table></figure>
+
+<pre><code>env: CONDA_EXE=/root/.conda/bin/conda
+env: CONDA_PREFIX=/root/.conda/envs/lmdeploy
+env: CONDA_PYTHON_EXE=/root/.conda/bin/python
+env: PATH=/root/.conda/envs/lmdeploy/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 转换模型</span></span><br><span class="line">%cd ~</span><br><span class="line">!lmdeploy convert internlm-chat-7b  /root/share/temp/model_repos/internlm-chat-7b/</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root
+
+
+/root/.conda/envs/lmdeploy/lib/python3.10/site-packages/IPython/core/magics/osm.py:393: UserWarning: using bookmarks requires you to install the `pickleshare` library.
+  bkms = self.shell.db.get(&#39;bookmarks&#39;, &#123;&#125;)
+/root/.conda/envs/lmdeploy/lib/python3.10/site-packages/IPython/core/magics/osm.py:417: UserWarning: using dhist requires you to install the `pickleshare` library.
+  self.shell.db[&#39;dhist&#39;] = compress_dhist(dhist)[-100:]
+
+
+create workspace in directory ./workspace
+copy triton model templates from &quot;/root/.conda/envs/lmdeploy/lib/python3.10/site-packages/lmdeploy/serve/turbomind/triton_models&quot; to &quot;./workspace/triton_models&quot;
+copy service_docker_up.sh from &quot;/root/.conda/envs/lmdeploy/lib/python3.10/site-packages/lmdeploy/serve/turbomind/service_docker_up.sh&quot; to &quot;./workspace&quot;
+model_name             internlm-chat-7b
+model_format           None
+inferred_model_format  hf
+model_path             /root/share/temp/model_repos/internlm-chat-7b/
+tokenizer_path         /root/share/temp/model_repos/internlm-chat-7b/tokenizer.model
+output_format          fp16
+WARNING: Can not find tokenizer.json. It may take long time to initialize the tokenizer.
+*** splitting layers.0.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.0.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.0.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.0.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.0.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.0.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.0.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.1.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.1.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.1.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.1.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.1.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.1.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.1.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.2.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.2.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.2.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.2.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.2.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.2.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.2.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.3.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.3.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.3.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.3.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.3.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.3.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.3.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.4.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.4.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.4.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.4.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.4.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.4.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.4.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.5.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.5.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.5.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.5.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.5.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.5.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.5.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.6.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.6.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.6.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.6.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.6.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.6.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.6.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.7.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.7.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.7.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.7.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.7.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.7.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.7.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.8.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.8.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.8.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.8.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.8.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.8.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.8.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.9.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.9.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.9.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.9.attention.wo.bias, shape=torch.Size([4096])                
+*** splitting layers.9.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.9.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.9.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.10.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.10.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.10.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.10.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.10.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.10.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.10.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.11.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.11.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.11.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.11.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.11.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.11.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.11.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.12.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.12.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.12.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.12.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.12.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.12.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.12.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.13.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.13.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.13.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.13.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.13.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.13.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.13.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.14.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.14.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.14.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.14.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.14.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.14.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.14.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.15.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.15.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.15.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.15.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.15.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.15.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.15.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.16.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.16.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.16.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.16.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.16.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.16.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.16.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.17.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.17.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.17.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.17.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.17.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.17.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.17.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.18.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.18.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.18.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.18.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.18.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.18.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.18.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.19.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.19.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.19.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.19.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.19.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.19.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.19.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.20.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.20.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.20.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.20.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.20.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.20.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.20.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.21.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.21.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.21.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.21.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.21.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.21.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.21.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.22.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.22.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.22.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.22.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.22.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.22.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.22.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.23.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.23.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.23.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.23.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.23.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.23.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.23.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.24.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.24.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.24.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.24.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.24.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.24.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.24.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.25.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.25.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.25.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.25.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.25.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.25.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.25.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.26.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.26.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.26.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.26.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.26.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.26.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.26.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.27.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.27.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.27.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.27.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.27.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.27.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.27.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.28.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.28.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.28.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.28.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.28.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.28.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.28.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.29.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.29.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.29.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.29.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.29.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.29.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.29.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.30.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.30.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.30.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.30.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.30.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.30.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.30.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+*** splitting layers.31.attention.w_qkv.weight, shape=torch.Size([4096, 12288]), split_dim=-1, tp=1
+*** splitting layers.31.attention.wo.weight, shape=torch.Size([4096, 4096]), split_dim=0, tp=1
+*** splitting layers.31.attention.w_qkv.bias, shape=torch.Size([1, 12288]), split_dim=-1, tp=1
+### copying layers.31.attention.wo.bias, shape=torch.Size([4096])               
+*** splitting layers.31.feed_forward.w1.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.31.feed_forward.w3.weight, shape=torch.Size([4096, 11008]), split_dim=-1, tp=1
+*** splitting layers.31.feed_forward.w2.weight, shape=torch.Size([11008, 4096]), split_dim=0, tp=1
+Convert to turbomind format: 100%|██████████████| 32/32 [00:22&lt;00:00,  1.44it/s]
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动 Gradio+Turbomind服务</span></span><br><span class="line">!lmdeploy serve gradio ./workspace</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/.conda/envs/lmdeploy/lib/python3.10/site-packages/gradio/components/button.py:89: UserWarning: Using the update method is deprecated. Simply return a new object instead, e.g. `return gr.Button(...)` instead of `return gr.Button.update(...)`.
+  warnings.warn(
+model_source: workspace
+WARNING: Can not find tokenizer.json. It may take long time to initialize the tokenizer.
+[TM][WARNING] [LlamaTritonModel] `max_context_token_num` = 2056.
+[TM][WARNING] [LlamaTritonModel] `num_tokens_per_iter` is not set, default to `max_context_token_num` (2056).
+[WARNING] gemm_config.in is not found; using default GEMM algo
+[TM][INFO] NCCL group_id = 0
+[TM][INFO] [BlockManager] block_size = 64 MB
+[TM][INFO] [BlockManager] max_block_count = 159
+[TM][INFO] [BlockManager] chunk_size = 1
+[TM][INFO] LlamaBatch&lt;T&gt;::Start()
+server is gonna mount on: http://0.0.0.0:6006
+Running on local URL:  http://0.0.0.0:6006
+
+Could not create share link. Missing file: /root/.conda/envs/lmdeploy/lib/python3.10/site-packages/gradio/frpc_linux_amd64_v0.2. 
+
+Please check your internet connection. This can happen if your antivirus software blocks the download of this file. You can install manually by following these steps: 
+
+1. Download this file: https://cdn-media.huggingface.co/frpc-gradio-0.2/frpc_linux_amd64
+2. Rename the downloaded file to: frpc_linux_amd64_v0.2
+3. Move the file to this location: /root/.conda/envs/lmdeploy/lib/python3.10/site-packages/gradio
+/root/.conda/envs/lmdeploy/lib/python3.10/site-packages/gradio/components/textbox.py:163: UserWarning: Using the update method is deprecated. Simply return a new object instead, e.g. `return gr.Textbox(...)` instead of `return gr.Textbox.update(...)`.
+  warnings.warn(
+[TM][INFO] [forward] Enqueue requests
+[TM][INFO] [forward] Wait for requests to complete ...
+[TM][WARNING] [ProcessInferRequests] Request for 1 received.
+[TM][INFO] [Forward] [0, 1), dc_bsz = 0, pf_bsz = 1, n_tok = 117, max_q = 117, max_k = 117
+[TM][INFO] ------------------------- step = 120 -------------------------
+[TM][INFO] ------------------------- step = 130 -------------------------
+[TM][INFO] [Interrupt] slot = 0, id = 1
+[TM][INFO] [forward] Request complete for 1, code 0
+[TM][INFO] [forward] Enqueue requests
+[TM][INFO] [forward] Wait for requests to complete ...
+[TM][WARNING] [ProcessInferRequests] Request for 1 received.
+[TM][INFO] [Forward] [0, 1), dc_bsz = 0, pf_bsz = 1, n_tok = 19, max_q = 19, max_k = 158
+[TM][INFO] ------------------------- step = 160 -------------------------
+[TM][INFO] ------------------------- step = 170 -------------------------
+[TM][INFO] ------------------------- step = 180 -------------------------
+[TM][INFO] ------------------------- step = 190 -------------------------
+[TM][INFO] ------------------------- step = 200 -------------------------
+[TM][INFO] ------------------------- step = 210 -------------------------
+[TM][INFO] ------------------------- step = 220 -------------------------
+[TM][INFO] ------------------------- step = 230 -------------------------
+[TM][INFO] ------------------------- step = 240 -------------------------
+[TM][INFO] ------------------------- step = 250 -------------------------
+[TM][INFO] ------------------------- step = 260 -------------------------
+[TM][INFO] ------------------------- step = 270 -------------------------
+[TM][INFO] ------------------------- step = 280 -------------------------
+[TM][INFO] ------------------------- step = 290 -------------------------
+[TM][INFO] ------------------------- step = 300 -------------------------
+[TM][INFO] ------------------------- step = 310 -------------------------
+[TM][INFO] ------------------------- step = 320 -------------------------
+[TM][INFO] ------------------------- step = 330 -------------------------
+[TM][INFO] ------------------------- step = 340 -------------------------
+[TM][INFO] ------------------------- step = 350 -------------------------
+[TM][INFO] ------------------------- step = 360 -------------------------
+[TM][INFO] ------------------------- step = 370 -------------------------
+[TM][INFO] ------------------------- step = 380 -------------------------
+[TM][INFO] [Interrupt] slot = 0, id = 1
+[TM][INFO] [forward] Request complete for 1, code 0
+^C
+Keyboard interruption in main thread... closing server.
+</code></pre>
+<p>端口转发：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 33449</span><br></pre></td></tr></table></figure>
+
+<p>结果见下图<br><img src="https://github.com/xujinzh/archive/blob/master/images/llm/lmdeploy1.png?raw=true"></p>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/llm/lmdeploy2.png?raw=true"></p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/InternLM/lmdeploy/">InternLM&#x2F;lmdeploy: LMDeploy is a toolkit for compressing, deploying, and serving LLMs.</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/665725861">仅需一块 3090 显卡，高效部署 InternLM-20B 模型 - 知乎</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/blob/vansin-patch-4/lmdeploy/lmdeploy.md">LMDeploy 的量化和部署</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2024/01/13/ai-internlm-lmdeploy/">https://xujinzh.github.io/2024/01/13/ai-internlm-lmdeploy/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ai/">ai</a><a class="post-meta__tags" href="/tags/llm/">llm</a><a class="post-meta__tags" href="/tags/internlm/">internlm</a><a class="post-meta__tags" href="/tags/openmmlab/">openmmlab</a><a class="post-meta__tags" href="/tags/langchain/">langchain</a></div><div class="post_share"><div class="social-share" data-image="/img/c30.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img class="cover" src="/img/c29.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Python 多进程使用单机多GPU加速推理</div></div></a></div><div class="next-post pull-right"><a href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img class="cover" src="/img/c21.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">利用 XTuner 训练书生·浦语私人大模型助手</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/01/08/ai-Interlm-langchain-RAG/" title="基于 InternLM 和 LangChain 搭建私人知识库"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-08</div><div class="title">基于 InternLM 和 LangChain 搭建私人知识库</div></div></a></div><div><a href="/2024/01/03/ai-internlm-intro/" title="书生·浦语大模型介绍"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-03</div><div class="title">书生·浦语大模型介绍</div></div></a></div><div><a href="/2024/01/12/ai-internlm-xtuner-finetune/" title="XTuner 大模型训练"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-12</div><div class="title">XTuner 大模型训练</div></div></a></div><div><a href="/2024/01/06/ai-internlm-useage/" title="书生·浦语大模型使用"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-06</div><div class="title">书生·浦语大模型使用</div></div></a></div><div><a href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img class="cover" src="/img/c21.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-12</div><div class="title">利用 XTuner 训练书生·浦语私人大模型助手</div></div></a></div><div><a href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img class="cover" src="/img/c9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-21</div><div class="title">基于 OpenCompass 的大模型评测</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.</span> <span class="toc-text">模型转换</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E7%BA%BF%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.1.</span> <span class="toc-text">在线转换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%BB%E7%BA%BF%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.2.</span> <span class="toc-text">离线转换</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TurboMind-%E6%8E%A8%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">TurboMind 推理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BD%A2%E5%BC%8F"><span class="toc-number">3.1.</span> <span class="toc-text">命令行形式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API-%E6%9C%8D%E5%8A%A1"><span class="toc-number">3.2.</span> <span class="toc-text">API 服务</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E9%A1%B5%E6%9C%8D%E5%8A%A1"><span class="toc-number">4.</span> <span class="toc-text">网页服务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#TurboMind-API-%E6%9C%8D%E5%8A%A1%E4%BD%9C%E4%B8%BA%E5%90%8E%E7%AB%AF"><span class="toc-number">4.1.</span> <span class="toc-text">TurboMind API 服务作为后端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TurboMind-%E6%8E%A8%E7%90%86%E4%BD%9C%E4%B8%BA%E5%90%8E%E7%AB%AF"><span class="toc-number">4.2.</span> <span class="toc-text">TurboMind 推理作为后端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TurboMind-%E6%8E%A8%E7%90%86-Python-%E4%BB%A3%E7%A0%81%E9%9B%86%E6%88%90"><span class="toc-number">4.3.</span> <span class="toc-text">TurboMind 推理 + Python 代码集成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.4.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">模型量化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#KV-Cache-%E9%87%8F%E5%8C%96"><span class="toc-number">5.1.</span> <span class="toc-text">KV Cache 量化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8F%E5%8C%96%E6%AD%A5%E9%AA%A4"><span class="toc-number">5.1.1.</span> <span class="toc-text">量化步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8F%E5%8C%96%E6%95%88%E6%9E%9C"><span class="toc-number">5.1.2.</span> <span class="toc-text">量化效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#W4A16-%E9%87%8F%E5%8C%96"><span class="toc-number">5.2.</span> <span class="toc-text">W4A16 量化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8F%E5%8C%96%E6%AD%A5%E9%AA%A4-1"><span class="toc-number">5.2.1.</span> <span class="toc-text">量化步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8F%E5%8C%96%E6%95%88%E6%9E%9C-1"><span class="toc-number">5.2.2.</span> <span class="toc-text">量化效果</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">6.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">7.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'd5e37b389cba64142879194899974103',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

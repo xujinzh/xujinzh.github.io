@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>视觉目标跟踪算法简介 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="单目标跟踪是指给定第一帧目标框的情况下，在视频的后续帧中自动地给出目标的位置和大小。难点在于复杂场景下目标姿态变化、环境光照变化、尺寸变化、背景干扰、遮挡等，以及实际应用中需要满足实时性。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="视觉目标跟踪算法简介">
+<meta property="og:url" content="https://xujinzh.github.io/2021/08/20/cv-ot-algorithms-intro/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="单目标跟踪是指给定第一帧目标框的情况下，在视频的后续帧中自动地给出目标的位置和大小。难点在于复杂场景下目标姿态变化、环境光照变化、尺寸变化、背景干扰、遮挡等，以及实际应用中需要满足实时性。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c27.jpg">
+<meta property="article:published_time" content="2021-08-20T04:55:24.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.092Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="cv">
+<meta property="article:tag" content="ml">
+<meta property="article:tag" content="vot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c27.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2021/08/20/cv-ot-algorithms-intro/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '视觉目标跟踪算法简介',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">视觉目标跟踪算法简介</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-08-20T04:55:24.000Z" title="发表于 2021-08-20 12:55:24">2021-08-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.092Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/object-tracking/">object tracking</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="视觉目标跟踪算法简介"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>单目标跟踪是指给定第一帧目标框的情况下，在视频的后续帧中自动地给出目标的位置和大小。难点在于复杂场景下目标姿态变化、环境光照变化、尺寸变化、背景干扰、遮挡等，以及实际应用中需要满足实时性。</p>
+<span id="more"></span>
+
+<h1 id="算法分类"><a href="#算法分类" class="headerlink" title="算法分类"></a>算法分类</h1><p>目标跟踪算法的发展大致分成两个阶段，一个是2012年以前，一个是2012年以后。以深度学习方法的引入为拐点。</p>
+<p>目标跟踪算法的种类大致分为两类，一类是生成式（<strong>generative</strong>）算法，一类是判别式（<strong>discriminative</strong>）算法，目前判别式算法是主流算法。</p>
+<p>目标跟踪算法的研究大致分为两个方向，一个是相关滤波方向，一个是深度学习方法，基于相关滤波的跟踪算法因利用快速傅里叶变换，处理速度较快，基于深度学习的跟踪算法因能自动提取目标图像更强大的特征，精度较高。</p>
+<p><img src="https://github.com/xujinzh/benchmark_results/blob/master/img/recent_Tracker_development.png?raw=true"></p>
+<h1 id="生成式算法"><a href="#生成式算法" class="headerlink" title="生成式算法"></a>生成式算法</h1><p>生成式算法采用特征模型描述目标的外观特征，再最小化跟踪目标与候选目标之间的重构误差来确认目标。此方法着重于目标本身的特征提取，忽略目标的背景信息，因而在目标外观发生剧烈变化或者遮挡时，容易出现目标漂移或目标丢失。</p>
+<p>生成式目标跟踪算法主要是在2010年以前发展起来的，代表算法有卡尔曼滤波（Kalman Filters）、CAMShift 等。</p>
+<h2 id="卡尔曼滤波"><a href="#卡尔曼滤波" class="headerlink" title="卡尔曼滤波"></a>卡尔曼滤波</h2><p>卡尔曼滤波器用于估计线性系统的状态，其中假设状态服从高斯分布。卡尔曼滤波目标跟踪算法是一种单目标跟踪算法。</p>
+<p>Broida 和 Chellappa [<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/4767755">1986-TPAMI-Estimation of Object Motion Parameters from Noisy Images</a>] 使用卡尔曼滤波器来跟踪噪声图像中的点。在基于立体相机的对象跟踪中，Beymer 和 Konolige [<a target="_blank" rel="noopener" href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.46.7987&rep=rep1&type=pdf">1999-ICCV- Real-time tracking of multiple people using continuous detection</a>] 使用卡尔曼滤波器来预测对象在 $x-z$ 维度上的位置和速度。 Rosales 和 Sclaroff [<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/784618">1999-CVPR-3D trajectory recovery for tracking multiple objects and trajectory guided recognition of actions</a>] 使用扩展卡尔曼滤波器从 2D 运动估计对象的 3D 轨迹。 KalmanSrc 提供了用于卡尔曼滤波的 Matlab 工具箱。</p>
+<p>卡尔曼滤波器的一个限制是假设状态变量呈正态分布（高斯分布），这个限制在粒子滤波（单目标跟踪算法）中得到解决。ParticleFltSrc 提供了使用粒子滤波进行跟踪的 Matlab 工具箱。</p>
+<h2 id="CAMShift"><a href="#CAMShift" class="headerlink" title="CAMShift"></a>CAMShift</h2><p>CAMShift (<strong>Continuously Adaptive Mean Shift</strong>) 是 Gary Bradski 于 [<a target="_blank" rel="noopener" href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.14.7673">1998-Computer Vision Face Tracking For Use in a Perceptual User Interface</a>] 引入的一种基于颜色直方图（colour histogram，常使用HSV颜色命名空间）的目标跟踪方法。 CAMShift 算法（又叫连续自适应均值偏移算法）衍生自均值偏移（mean shift）算法，它负责寻找要跟踪的对象的概率分布的中心。主要区别在于 CAMShift 会根据搜索窗口大小自行调整，例如，当对象大小随着它们靠近或远离相机而发生变化时。</p>
+<h1 id="判别式算法"><a href="#判别式算法" class="headerlink" title="判别式算法"></a>判别式算法</h1><p>判别式算法将目标跟踪看作一个二元分类问题，通过训练关于目标和背景的分类器来从候选场景中确定目标，可以显著区分背景和目标，性能鲁棒，渐渐成为目标跟踪领域的主流方法，目前大多数基于深度学习的目标跟踪算法都属于判别式方法。</p>
+<p>判别式目标跟踪算法主要是在2010年以后开始流行，代表算法有 Struck、TLD、相关滤波类算法、深度学习类算法等。</p>
+<h2 id="Struct"><a href="#Struct" class="headerlink" title="Struct"></a>Struct</h2><p>Struct 目标跟踪算法是 Sam Hare 等学者于 [<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/6126251">2011-ICCV-Struck: Structured output tracking with kernels</a>] 引入的一种使用 kernelized structured output support vector machine (SVM) 的自适应 tracking-by-detection、判别式、在线学习的 structured output prediction 目标跟踪算法。Struct 主要提出一种基于结构输出预测的自适应视觉目标跟踪的框架，通过明确引入输出空间满足跟踪功能，能够避免中间分类环节，直接输出跟踪结果。同时，为了保证实时性，该算法还引入了阈值机制，防止跟踪过程中支持向量的过增长。</p>
+<p>Struct C++ 源码地址: <a target="_blank" rel="noopener" href="https://github.com/gnebehay/STRUCK">https://github.com/gnebehay/STRUCK</a></p>
+<p>VOTR (视觉目标跟踪算法库): <a target="_blank" rel="noopener" href="https://github.com/gnebehay/VOTR">https://github.com/gnebehay/VOTR</a></p>
+<h2 id="TLD"><a href="#TLD" class="headerlink" title="TLD"></a>TLD</h2><p>TLD 目标跟踪算法是 Zdenek Kalal 等学者于 [<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/6104061">2010-TPAMI-Tracking-Learning-Detection</a>] 引入的一种长时间（long-term）目标跟踪算法，主要包含了三个模块：检测模块、跟踪模块、学习模块。TLD 最适合在跟踪对象被遮挡，不连续出现情况下，进行长时跟踪的应用场合。</p>
+<p>TLD Matlab 源码地址：<a target="_blank" rel="noopener" href="https://github.com/gnebehay/TLD">https://github.com/gnebehay/TLD</a></p>
+<h2 id="相关滤波"><a href="#相关滤波" class="headerlink" title="相关滤波"></a>相关滤波</h2><p>相关滤波类算法最重要的特点是快，都是基于手工设计的特征，最早提出是由 David S. Bolme 在 <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/5539960">2010-MOSSE-Visual object tracking using adaptive correlation filters</a> 中提出，基于单通道灰度特征, MOSSE 表示 Minimum Output Sum of Squared Error，达到 669 FPS.</p>
+<p>在此基础上，Jo˜ao F. Henriques 在 <a target="_blank" rel="noopener" href="https://link.springer.com/chapter/10.1007/978-3-642-33765-9_50">2012-ECCV-CSK-Exploiting the Circulant Structure of Tracking-by-Detection with Kernels</a> 中提出 CSK，其在 MOSSE 的基础上扩展了密集采样 (加 padding) 和 kernel-trick，达到 362 FPS. </p>
+<p>进一步，João F. Henriques 在 <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/6870486">2015-TPAMI-KCF-High-Speed Tracking with Kernelized Correlation Filters</a> 中提出 KCF，其在 CSK 的基础上扩展了多通道梯度的 HOG 特征（梯度特征），达到 172 FPS. </p>
+<p>同期，Martin Danelljan 在 <a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_cvpr_2014/papers/Danelljan_Adaptive_Color_Attributes_2014_CVPR_paper.pdf">2014-CVPR-CN-Adaptive Color Attributes for Real-Time Visual Tracking</a> 中提出 CN，其在 CSK 的基础上扩展了多通道颜色的 Color Names （颜色特征），达到 152 FPS. </p>
+<p>上面的相关滤波类目标跟踪算法都没有考虑目标尺度的变化，当目标缩小或扩大都会使跟踪结果不理想。因此，针对该问题有学者提出如下改进的相关滤波类目标跟踪算法。</p>
+<p>学者 Yang Li 基于 CSK 提出 <a target="_blank" rel="noopener" href="https://link.springer.com/chapter/10.1007/978-3-319-16181-5_18">2014-ECCV-SAMF-A Scale Adaptive Kernel Correlation Filter Tracker with Feature Integration</a>，融合 HOG，CN特征，采用平移滤波器在多尺度缩放的图像块上进行目标检测，取响应最大的那个平移位置及其所在的尺度。</p>
+<p>学者 Martin Danelljan 提出 <a target="_blank" rel="noopener" href="https://www.diva-portal.org/smash/record.jsf?pid=diva2:785778&dswid=-4498">2014-BMVC-DSST-Accurate Scale Estimation for Robust Visual Tracking</a> DSST 算法，只使用 HOG 特征，DCF 专门用于平移位置检测，并且，又专门训练了类似 MOSSE 的相关滤波器检测尺度变化，创造性地使用了平移滤波+尺度滤波。之后，提出 <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/7569092">2015-TPAMI-fDSST-Discriminative Scale Space Tracking</a> fDSST 算法对DSST的加速优化，速度提升50%+，精度提升6%+.</p>
+<p>进一步，Martin Danelljan 提出 <a target="_blank" rel="noopener" href="https://www.cvl.isy.liu.se/research/objrec/visualtracking/conttrack/C-COT_ECCV16.pdf">2016-ECCV-C-COT-Beyond Correlation Filters: Learning Continuous Convolution Operators for Visual Tracking</a> C-COT (Continuous Convolution Operator Tracker) 基于DCF，提出<strong>训练连续卷积滤波器</strong>，在<strong>连续</strong>空间域中，用<strong>隐式插值模型</strong>训练。</p>
+<p>更进一步，Martin Danelljan 提出 <a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_cvpr_2017/html/Danelljan_ECO_Efficient_Convolution_CVPR_2017_paper.html">2017-CVPR-ECO-Efficient Convolution Operators for Tracking</a> ECO 在 C-COT 的基础上进一步提高速度。</p>
+<h2 id="深度学习"><a href="#深度学习" class="headerlink" title="深度学习"></a>深度学习</h2><p>DLT</p>
+<p>MDNet</p>
+<p>SiameseFC</p>
+<p>SiameseRPN</p>
+<p>DaSiameseRPN</p>
+<p>SiameseRPN++</p>
+<h1 id="代表性学者"><a href="#代表性学者" class="headerlink" title="代表性学者"></a>代表性学者</h1><h2 id="University-of-Oxford-英国牛津大学"><a href="#University-of-Oxford-英国牛津大学" class="headerlink" title="University of Oxford 英国牛津大学"></a>University of Oxford 英国牛津大学</h2><p><a target="_blank" rel="noopener" href="https://www.robots.ox.ac.uk/~joao/"><strong>Joao F. Henriques</strong></a> 和 <a target="_blank" rel="noopener" href="https://www.robots.ox.ac.uk/~luca/"><strong>Luca Bertinetto</strong></a></p>
+<p>代表作：CSK, KCF, DCF, Staple, SiamFC, CFNet, Learnet</p>
+<h2 id="Linkoping-University-瑞典林雪平大学-amp-the-Computer-Vision-Lab-at-ETH-Zurich-Switzerland-瑞士苏黎世联邦理工学院计算机视觉实验室"><a href="#Linkoping-University-瑞典林雪平大学-amp-the-Computer-Vision-Lab-at-ETH-Zurich-Switzerland-瑞士苏黎世联邦理工学院计算机视觉实验室" class="headerlink" title="Linköping University 瑞典林雪平大学 &amp; the Computer Vision Lab at ETH Zurich, Switzerland.瑞士苏黎世联邦理工学院计算机视觉实验室"></a>Linköping University 瑞典林雪平大学 &amp; the Computer Vision Lab at ETH Zurich, Switzerland.瑞士苏黎世联邦理工学院计算机视觉实验室</h2><p><a target="_blank" rel="noopener" href="https://martin-danelljan.github.io/"><strong>Martin Danelljan</strong></a></p>
+<p>代表作：CN, DSST, SRDCF, DeepSRDCF, SRDCFdecon, C-COT, ECO, ATOM, DiMP, PrDiMP, KeepTrack</p>
+<h2 id="中国科学院"><a href="#中国科学院" class="headerlink" title="中国科学院"></a>中国科学院</h2><p><a target="_blank" rel="noopener" href="http://www.zhengzhu.net/"><strong>朱政</strong></a> （目前清华在读博后）</p>
+<p>代表作：UCT, DaSiameseRPN</p>
+<h2 id="大连理工大学-智能图像分析与理解实验室（IIAU-LAB-Intelligent-Image-Analysis-and-Understanding-Lab）"><a href="#大连理工大学-智能图像分析与理解实验室（IIAU-LAB-Intelligent-Image-Analysis-and-Understanding-Lab）" class="headerlink" title="大连理工大学 智能图像分析与理解实验室（IIAU-LAB, Intelligent Image Analysis and Understanding Lab）"></a>大连理工大学 智能图像分析与理解实验室（IIAU-LAB, Intelligent Image Analysis and Understanding Lab）</h2><p><a target="_blank" rel="noopener" href="http://ice.dlut.edu.cn/lu/index.html">卢胡川</a></p>
+<p>代表作：Online Visual Tracking, LTMU, STARK</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/dengheCSDN/article/details/78896933">VOT, OTB——目标追踪的发展概况</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2021/08/20/cv-ot-algorithms-intro/">https://xujinzh.github.io/2021/08/20/cv-ot-algorithms-intro/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/cv/">cv</a><a class="post-meta__tags" href="/tags/ml/">ml</a><a class="post-meta__tags" href="/tags/vot/">vot</a></div><div class="post_share"><div class="social-share" data-image="/img/c27.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/08/31/jupyter-cell-proxy/" title="设置 Jupyter Cell Proxy"><img class="cover" src="/img/c16.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">设置 Jupyter Cell Proxy</div></div></a></div><div class="next-post pull-right"><a href="/2021/08/02/cnn-flops/" title="CNN 模型计算力 FLOPs"><img class="cover" src="/img/c5.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">CNN 模型计算力 FLOPs</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/08/24/classification-of-object-tracking/" title="目标跟踪算法的分类"><img class="cover" src="/img/c1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-08-24</div><div class="title">目标跟踪算法的分类</div></div></a></div><div><a href="/2021/08/02/cnn-flops/" title="CNN 模型计算力 FLOPs"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-02</div><div class="title">CNN 模型计算力 FLOPs</div></div></a></div><div><a href="/2020/08/24/how-to-object-tracking/" title="如何进行目标跟踪"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-08-24</div><div class="title">如何进行目标跟踪</div></div></a></div><div><a href="/2021/10/12/pytorch-dataset-dataloader/" title="PyTorch 中 Dataset 和 DataLoader 类的使用方法"><img class="cover" src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-12</div><div class="title">PyTorch 中 Dataset 和 DataLoader 类的使用方法</div></div></a></div><div><a href="/2021/06/22/pytorch-model-save-load/" title="PyTorch 模型保存和加载"><img class="cover" src="/img/c3.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-22</div><div class="title">PyTorch 模型保存和加载</div></div></a></div><div><a href="/2021/06/18/underfitting-overfitting/" title="深度学习中的欠拟合和过拟合"><img class="cover" src="/img/c8.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-18</div><div class="title">深度学习中的欠拟合和过拟合</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E7%B1%BB"><span class="toc-number">1.</span> <span class="toc-text">算法分类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%BC%8F%E7%AE%97%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">生成式算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2"><span class="toc-number">2.1.</span> <span class="toc-text">卡尔曼滤波</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CAMShift"><span class="toc-number">2.2.</span> <span class="toc-text">CAMShift</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A4%E5%88%AB%E5%BC%8F%E7%AE%97%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">判别式算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Struct"><span class="toc-number">3.1.</span> <span class="toc-text">Struct</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TLD"><span class="toc-number">3.2.</span> <span class="toc-text">TLD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%BB%A4%E6%B3%A2"><span class="toc-number">3.3.</span> <span class="toc-text">相关滤波</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0"><span class="toc-number">3.4.</span> <span class="toc-text">深度学习</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E8%A1%A8%E6%80%A7%E5%AD%A6%E8%80%85"><span class="toc-number">4.</span> <span class="toc-text">代表性学者</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#University-of-Oxford-%E8%8B%B1%E5%9B%BD%E7%89%9B%E6%B4%A5%E5%A4%A7%E5%AD%A6"><span class="toc-number">4.1.</span> <span class="toc-text">University of Oxford 英国牛津大学</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linkoping-University-%E7%91%9E%E5%85%B8%E6%9E%97%E9%9B%AA%E5%B9%B3%E5%A4%A7%E5%AD%A6-amp-the-Computer-Vision-Lab-at-ETH-Zurich-Switzerland-%E7%91%9E%E5%A3%AB%E8%8B%8F%E9%BB%8E%E4%B8%96%E8%81%94%E9%82%A6%E7%90%86%E5%B7%A5%E5%AD%A6%E9%99%A2%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89%E5%AE%9E%E9%AA%8C%E5%AE%A4"><span class="toc-number">4.2.</span> <span class="toc-text">Linköping University 瑞典林雪平大学 &amp; the Computer Vision Lab at ETH Zurich, Switzerland.瑞士苏黎世联邦理工学院计算机视觉实验室</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E5%9B%BD%E7%A7%91%E5%AD%A6%E9%99%A2"><span class="toc-number">4.3.</span> <span class="toc-text">中国科学院</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E8%BF%9E%E7%90%86%E5%B7%A5%E5%A4%A7%E5%AD%A6-%E6%99%BA%E8%83%BD%E5%9B%BE%E5%83%8F%E5%88%86%E6%9E%90%E4%B8%8E%E7%90%86%E8%A7%A3%E5%AE%9E%E9%AA%8C%E5%AE%A4%EF%BC%88IIAU-LAB-Intelligent-Image-Analysis-and-Understanding-Lab%EF%BC%89"><span class="toc-number">4.4.</span> <span class="toc-text">大连理工大学 智能图像分析与理解实验室（IIAU-LAB, Intelligent Image Analysis and Understanding Lab）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">5.</span> <span class="toc-text">参考链接</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '4570c91324a454959bc1cbb38dfccd89',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

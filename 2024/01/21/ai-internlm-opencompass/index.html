@@ -1,0 +1,1547 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>基于 OpenCompass 的大模型评测 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本篇介绍如何在 Jupyter Notebook 中使用 OpenCompass 对大模型进行评测。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于 OpenCompass 的大模型评测">
+<meta property="og:url" content="https://xujinzh.github.io/2024/01/21/ai-internlm-opencompass/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="本篇介绍如何在 Jupyter Notebook 中使用 OpenCompass 对大模型进行评测。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c9.jpg">
+<meta property="article:published_time" content="2024-01-21T05:36:33.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.088Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="internlm">
+<meta property="article:tag" content="openmmlab">
+<meta property="article:tag" content="opencompass">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c9.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2024/01/21/ai-internlm-opencompass/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '基于 OpenCompass 的大模型评测',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">基于 OpenCompass 的大模型评测</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.088Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/deep-learning/">deep learning</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">15.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>92分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="基于 OpenCompass 的大模型评测"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>本篇介绍如何在 Jupyter Notebook 中使用 OpenCompass 对大模型进行评测。</p>
+<span id="more"></span>
+
+<h1 id="评测对象"><a href="#评测对象" class="headerlink" title="评测对象"></a>评测对象</h1><p>主要评测对象为语言大模型与多模态大模型:</p>
+<ul>
+<li>基座模型：一般是经过海量的文本数据以自监督学习的方式进行训练获得的模型（如OpenAI的GPT-3，Meta的LLaMA），往往具有强大的文字续写能力。</li>
+<li>对话模型：一般是在的基座模型的基础上，经过指令微调或人类偏好对齐获得的模型（如OpenAI的ChatGPT、上海人工智能实验室的书生·浦语），能理解人类指令，具有较强的对话能力。</li>
+</ul>
+<h1 id="工具架构"><a href="#工具架构" class="headerlink" title="工具架构"></a>工具架构</h1><p><img src="https://github.com/xujinzh/archive/blob/master/images/llm/opencompass.png?raw=true"></p>
+<ul>
+<li>模型层：大模型评测所涉及的主要模型种类，OpenCompass以基座模型和对话模型作为重点评测对象。</li>
+<li>能力层：OpenCompass从本方案从通用能力和特色能力两个方面来进行评测维度设计。在模型通用能力方面，从语言、知识、理解、推理、安全等多个能力维度进行评测。在特色能力方面，从长文本、代码、工具、知识增强等维度进行评测。</li>
+<li>方法层：OpenCompass采用客观评测与主观评测两种评测方式。客观评测能便捷地评估模型在具有确定答案（如选择，填空，封闭式问答等）的任务上的能力，主观评测能评估用户对模型回复的真实满意度，OpenCompass采用基于模型辅助的主观评测和基于人类反馈的主观评测两种方式。</li>
+<li>工具层：OpenCompass提供丰富的功能支持自动化地开展大语言模型的高效评测。包括分布式评测技术，提示词工程，对接评测数据库，评测榜单发布，评测报告生成等诸多功能。</li>
+</ul>
+<h1 id="能力维度"><a href="#能力维度" class="headerlink" title="能力维度"></a>能力维度</h1><p>通用能力涵盖学科综合能力、知识能力、语言能力、理解能力、推理能力、安全能力，共计六大维度构造立体全面的模型能力评价体系。</p>
+<h1 id="评测方法"><a href="#评测方法" class="headerlink" title="评测方法"></a>评测方法</h1><p>OpenCompass采取客观评测与主观评测相结合的方法。针对具有确定性答案的能力维度和场景，通过构造丰富完善的评测集，对模型能力进行综合评价。针对体现模型能力的开放式或半开放式的问题、模型安全问题等，采用主客观相结合的评测方式。</p>
+<h2 id="客观评测"><a href="#客观评测" class="headerlink" title="客观评测"></a>客观评测</h2><p>针对具有标准答案的客观问题，我们可以我们可以通过使用定量指标比较模型的输出与标准答案的差异，并根据结果衡量模型的性能。同时，由于大语言模型输出自由度较高，在评测阶段，我们需要对其输入和输出作一定的规范和设计，尽可能减少噪声输出在评测阶段的影响，才能对模型的能力有更加完整和客观的评价。</p>
+<p>为了更好地激发出模型在题目测试领域的能力，并引导模型按照一定的模板输出答案，OpenCompass采用提示词工程 （prompt engineering）和语境学习（in-context learning）进行客观评测。</p>
+<p>在客观评测的具体实践中，我们通常采用下列两种方式进行模型输出结果的评测：</p>
+<ul>
+<li>判别式评测：该评测方式基于将问题与候选答案组合在一起，计算模型在所有组合上的困惑度（perplexity），并选择困惑度最小的答案作为模型的最终输出。例如，若模型在 问题? 答案1 上的困惑度为 0.1，在 问题? 答案2 上的困惑度为 0.2，最终我们会选择 答案1 作为模型的输出。</li>
+<li>生成式评测：该评测方式主要用于生成类任务，如语言翻译、程序生成、逻辑分析题等。具体实践时，使用问题作为模型的原始输入，并留白答案区域待模型进行后续补全。我们通常还需要对其输出进行后处理，以保证输出满足数据集的要求。</li>
+</ul>
+<h2 id="主观评测"><a href="#主观评测" class="headerlink" title="主观评测"></a>主观评测</h2><p>语言表达生动精彩，变化丰富，大量的场景和能力无法凭借客观指标进行评测。针对如模型安全和模型语言能力的评测，以人的主观感受为主的评测更能体现模型的真实能力，并更符合大模型的实际使用场景。</p>
+<p>OpenCompass采取的主观评测方案是指借助受试者的主观判断对具有对话能力的大语言模型进行能力评测。在具体实践中，我们提前基于模型的能力维度构建主观测试问题集合，并将不同模型对于同一问题的不同回复展现给受试者，收集受试者基于主观感受的评分。由于主观测试成本高昂，本方案同时也采用使用性能优异的大语言模拟人类进行主观打分。在实际评测中，本文将采用真实人类专家的主观评测与基于模型打分的主观评测相结合的方式开展模型能力评估。</p>
+<p>在具体开展主观评测时，OpenComapss采用单模型回复满意度统计和多模型满意度比较两种方式开展具体的评测工作。</p>
+<h1 id="评测流程"><a href="#评测流程" class="headerlink" title="评测流程"></a>评测流程</h1><p><img src="https://github.com/xujinzh/archive/blob/master/images/llm/opencompass-step.png?raw=true"></p>
+<p>在 OpenCompass 中评估一个模型通常包括以下几个阶段：配置 -&gt; 推理 -&gt; 评估 -&gt; 可视化。</p>
+<ul>
+<li>配置：这是整个工作流的起点。您需要配置整个评估过程，选择要评估的模型和数据集。此外，还可以选择评估策略、计算后端等，并定义显示结果的方式。</li>
+<li>推理与评估：在这个阶段，OpenCompass 将会开始对模型和数据集进行并行推理和评估。推理阶段主要是让模型从数据集产生输出，而评估阶段则是衡量这些输出与标准答案的匹配程度。这两个过程会被拆分为多个同时运行的“任务”以提高效率，但请注意，如果计算资源有限，这种策略可能会使评测变得更慢。</li>
+<li>可视化：评估完成后，OpenCompass 将结果整理成易读的表格，并将其保存为 CSV 和 TXT 文件。你也可以激活飞书状态上报功能，此后可以在飞书客户端中及时获得评测状态报告。</li>
+</ul>
+<p>接下来，我们将展示 OpenCompass 的基础用法，展示书生浦语在 C-Eval 基准任务上的评估。它们的配置文件可以在 configs&#x2F;eval_demo.py 中找到。</p>
+<p>所有命令均在 jupyter notebook 中执行</p>
+<h1 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h1><p>以下命令在 terminal 中执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conda create --name opencompass --<span class="built_in">clone</span>=/root/share/conda_envs/internlm-base</span><br><span class="line">conda activate opencompass</span><br><span class="line">pip install ipykernel</span><br><span class="line">python -m ipykernel install --user --name opencompass --display-name opencompass</span><br></pre></td></tr></table></figure>
+
+<p>上面基础环境配置好后，就可以打开 jupyter，创建 notebook，选择内核 opencompass 进行代码编写</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># jupyter notebook 环境配置</span></span><br><span class="line"><span class="comment"># 设置notebook环境</span></span><br><span class="line"><span class="keyword">import</span> os, sys</span><br><span class="line"></span><br><span class="line">PATH = os.environ[<span class="string">&#x27;PATH&#x27;</span>]</span><br><span class="line">basedir = os.path.dirname(os.path.dirname(sys.exec_prefix))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里的 $PATH 也可以替换为 &#123;os.environ[&#x27;PATH&#x27;]&#125;。这里只是为了展示 $变量 的形式也是可行的</span></span><br><span class="line">%env CONDA_EXE=&#123;os.path.join(basedir, <span class="string">&#x27;bin/conda&#x27;</span>)&#125;</span><br><span class="line">%env CONDA_PREFIX=&#123;sys.exec_prefix&#125;</span><br><span class="line">%env CONDA_PYTHON_EXE=&#123;os.path.join(basedir, <span class="string">&#x27;bin/python&#x27;</span>)&#125;</span><br><span class="line">%env PATH=&#123;os.path.join(sys.exec_prefix, <span class="string">&#x27;bin&#x27;</span>)&#125;:$PATH</span><br></pre></td></tr></table></figure>
+
+<pre><code>env: CONDA_EXE=/root/.conda/bin/conda
+env: CONDA_PREFIX=/root/.conda/envs/opencompass
+env: CONDA_PYTHON_EXE=/root/.conda/bin/python
+env: PATH=/root/.conda/envs/opencompass/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%pip install -q pickleshare</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装opencompass</span></span><br><span class="line">%cd ~</span><br><span class="line">!git clone https://github.com/<span class="built_in">open</span>-compass/opencompass</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%cd opencompass</span><br><span class="line">%pip install -e -q .</span><br></pre></td></tr></table></figure>
+
+<h1 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%cp /share/temp/datasets/OpenCompassData-core-<span class="number">20231110.</span><span class="built_in">zip</span> /root/opencompass/</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!unzip -q OpenCompassData-core-<span class="number">20231110.</span><span class="built_in">zip</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出所有跟 internlm 及 ceval 相关的配置</span></span><br><span class="line">!python tools/list_configs.py internlm ceval</span><br></pre></td></tr></table></figure>
+
+<pre><code>+--------------------------+--------------------------------------------------------+
+| Model                    | Config Path                                            |
+|--------------------------+--------------------------------------------------------|
+| hf_internlm2_20b         | configs/models/hf_internlm/hf_internlm2_20b.py         |
+| hf_internlm2_7b          | configs/models/hf_internlm/hf_internlm2_7b.py          |
+| hf_internlm2_chat_20b    | configs/models/hf_internlm/hf_internlm2_chat_20b.py    |
+| hf_internlm2_chat_7b     | configs/models/hf_internlm/hf_internlm2_chat_7b.py     |
+| hf_internlm_20b          | configs/models/hf_internlm/hf_internlm_20b.py          |
+| hf_internlm_7b           | configs/models/hf_internlm/hf_internlm_7b.py           |
+| hf_internlm_chat_20b     | configs/models/hf_internlm/hf_internlm_chat_20b.py     |
+| hf_internlm_chat_7b      | configs/models/hf_internlm/hf_internlm_chat_7b.py      |
+| hf_internlm_chat_7b_8k   | configs/models/hf_internlm/hf_internlm_chat_7b_8k.py   |
+| hf_internlm_chat_7b_v1_1 | configs/models/hf_internlm/hf_internlm_chat_7b_v1_1.py |
+| internlm_7b              | configs/models/internlm/internlm_7b.py                 |
+| ms_internlm_chat_7b_8k   | configs/models/ms_internlm/ms_internlm_chat_7b_8k.py   |
++--------------------------+--------------------------------------------------------+
++----------------------------+------------------------------------------------------+
+| Dataset                    | Config Path                                          |
+|----------------------------+------------------------------------------------------|
+| ceval_clean_ppl            | configs/datasets/ceval/ceval_clean_ppl.py            |
+| ceval_gen                  | configs/datasets/ceval/ceval_gen.py                  |
+| ceval_gen_2daf24           | configs/datasets/ceval/ceval_gen_2daf24.py           |
+| ceval_gen_5f30c7           | configs/datasets/ceval/ceval_gen_5f30c7.py           |
+| ceval_ppl                  | configs/datasets/ceval/ceval_ppl.py                  |
+| ceval_ppl_578f8d           | configs/datasets/ceval/ceval_ppl_578f8d.py           |
+| ceval_ppl_93e5ce           | configs/datasets/ceval/ceval_ppl_93e5ce.py           |
+| ceval_zero_shot_gen_bd40ef | configs/datasets/ceval/ceval_zero_shot_gen_bd40ef.py |
++----------------------------+------------------------------------------------------+
+</code></pre>
+<h1 id="启动评测"><a href="#启动评测" class="headerlink" title="启动评测"></a>启动评测</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">!python run.py --datasets ceval_gen --hf-path /share/temp/model_repos/internlm-chat-7b/ \</span><br><span class="line">--tokenizer-path /share/temp/model_repos/internlm-chat-7b/ \</span><br><span class="line">--tokenizer-kwargs padding_side=<span class="string">&#x27;left&#x27;</span> truncation=<span class="string">&#x27;left&#x27;</span> trust_remote_code=<span class="literal">True</span> \</span><br><span class="line">--model-kwargs trust_remote_code=<span class="literal">True</span> device_map=<span class="string">&#x27;auto&#x27;</span> \</span><br><span class="line">--<span class="built_in">max</span>-seq-<span class="built_in">len</span> <span class="number">2048</span> --<span class="built_in">max</span>-out-<span class="built_in">len</span> <span class="number">16</span> --batch-size <span class="number">4</span> --num-gpus <span class="number">1</span> \</span><br><span class="line">--debug</span><br></pre></td></tr></table></figure>
+
+<pre><code>01/21 12:54:59 - OpenCompass - INFO - Loading ceval_gen: configs/datasets/ceval/ceval_gen.py
+01/21 12:54:59 - OpenCompass - INFO - Loading example: configs/summarizers/example.py
+01/21 12:54:59 - OpenCompass - WARNING - SlurmRunner is not used, so the partition argument is ignored.
+01/21 12:54:59 - OpenCompass - DEBUG - Modules of opencompass&#39;s partitioner registry have been automatically imported from opencompass.partitioners
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `SizePartitioner` from &quot;partitioner&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `SizePartitioner` instance is built from registry, and its implementation can be found in opencompass.partitioners.size
+01/21 12:54:59 - OpenCompass - DEBUG - Key eval.runner.task.judge_cfg not found in config, ignored.
+01/21 12:54:59 - OpenCompass - DEBUG - Key eval.runner.task.dump_details not found in config, ignored.
+01/21 12:54:59 - OpenCompass - DEBUG - Additional config: &#123;&#125;
+01/21 12:54:59 - OpenCompass - DEBUG - Modules of opencompass&#39;s load_dataset registry have been automatically imported from opencompass.datasets
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:54:59 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:54:59 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `CEvalDataset` from &quot;load_dataset&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `CEvalDataset` instance is built from registry, and its implementation can be found in opencompass.datasets.ceval
+01/21 12:55:00 - OpenCompass - INFO - Partitioned into 1 tasks.
+01/21 12:55:00 - OpenCompass - DEBUG - Task 0: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_economics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-accountant,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-tax_accountant,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-physician,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-civil_servant,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-urban_and_rural_planner,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-teacher_qualification,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_programming,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-electrical_engineer,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-business_administration,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-art_studies,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-fire_engineer,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-environmental_impact_assessment_engineer,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-education_science,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-professional_tour_guide,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_chemistry,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-metrology_engineer,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-mao_zedong_thought,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-law,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-veterinary_medicine,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-modern_chinese_history,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-chinese_language_and_literature,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-legal_professional,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-logic,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_history,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-plant_protection,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-clinical_medicine,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-computer_architecture,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_biology,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_politics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_chemistry,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_history,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-computer_network,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-operating_system,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_physics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-advanced_mathematics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_physics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_chemistry,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_biology,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_mathematics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_physics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-marxism,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_politics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_geography,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-ideological_and_moral_cultivation,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_chinese,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-sports_science,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-basic_medicine,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-probability_and_statistics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_mathematics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-discrete_mathematics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_geography]
+01/21 12:55:00 - OpenCompass - DEBUG - Modules of opencompass&#39;s runner registry have been automatically imported from opencompass.runners
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `LocalRunner` from &quot;runner&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `LocalRunner` instance is built from registry, and its implementation can be found in opencompass.runners.local
+01/21 12:55:00 - OpenCompass - DEBUG - Modules of opencompass&#39;s task registry have been automatically imported from opencompass.tasks
+01/21 12:55:00 - OpenCompass - DEBUG - Get class `OpenICLInferTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 12:55:00 - OpenCompass - DEBUG - An `OpenICLInferTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_infer
+01/21 12:55:11 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_economics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-accountant,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-tax_accountant,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-physician,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-civil_servant,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-urban_and_rural_planner,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-teacher_qualification,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_programming,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-electrical_engineer,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-business_administration,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-art_studies,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-fire_engineer,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-environmental_impact_assessment_engineer,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-education_science,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-professional_tour_guide,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_chemistry,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-metrology_engineer,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-mao_zedong_thought,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-law,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-veterinary_medicine,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-modern_chinese_history,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-chinese_language_and_literature,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-legal_professional,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-logic,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_history,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-plant_protection,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-clinical_medicine,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-computer_architecture,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_biology,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_politics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_chemistry,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_history,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-computer_network,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-operating_system,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_physics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-advanced_mathematics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_physics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_chemistry,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_biology,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_mathematics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_physics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-marxism,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_politics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_geography,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-ideological_and_moral_cultivation,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_chinese,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-sports_science,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-basic_medicine,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-probability_and_statistics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_mathematics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-discrete_mathematics,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_geography]
+Loading checkpoint shards: 100%|██████████████████| 8/8 [00:12&lt;00:00,  1.52s/it]
+01/21 12:55:39 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_economics]
+100%|██████████████████████████████████████| 55/55 [00:00&lt;00:00, 1548233.02it/s]
+[2024-01-21 12:55:39,531] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|███████████████████████████████████████████| 14/14 [00:38&lt;00:00,  2.75s/it]
+01/21 12:56:18 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-accountant]
+100%|██████████████████████████████████████| 49/49 [00:00&lt;00:00, 1478567.60it/s]
+[2024-01-21 12:56:18,207] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|███████████████████████████████████████████| 13/13 [00:38&lt;00:00,  2.93s/it]
+01/21 12:56:56 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-tax_accountant]
+100%|██████████████████████████████████████| 49/49 [00:00&lt;00:00, 1500152.53it/s]
+[2024-01-21 12:56:56,496] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|███████████████████████████████████████████| 13/13 [00:34&lt;00:00,  2.69s/it]
+01/21 12:57:31 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-physician]
+100%|██████████████████████████████████████| 49/49 [00:00&lt;00:00, 1533738.03it/s]
+[2024-01-21 12:57:31,552] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|███████████████████████████████████████████| 13/13 [00:22&lt;00:00,  1.71s/it]
+01/21 12:57:53 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-civil_servant]
+100%|██████████████████████████████████████| 47/47 [00:00&lt;00:00, 1552222.74it/s]
+[2024-01-21 12:57:53,942] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|███████████████████████████████████████████| 12/12 [00:42&lt;00:00,  3.50s/it]
+01/21 12:58:35 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-urban_and_rural_planner]
+100%|██████████████████████████████████████| 46/46 [00:00&lt;00:00, 1162277.01it/s]
+[2024-01-21 12:58:36,114] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|███████████████████████████████████████████| 12/12 [00:25&lt;00:00,  2.17s/it]
+01/21 12:59:02 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-teacher_qualification]
+100%|██████████████████████████████████████| 44/44 [00:00&lt;00:00, 1476395.01it/s]
+[2024-01-21 12:59:02,249] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|███████████████████████████████████████████| 11/11 [00:20&lt;00:00,  1.89s/it]
+01/21 12:59:23 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_programming]
+100%|██████████████████████████████████████| 37/37 [00:00&lt;00:00, 1241513.98it/s]
+[2024-01-21 12:59:23,203] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|███████████████████████████████████████████| 10/10 [00:24&lt;00:00,  2.46s/it]
+01/21 12:59:47 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-electrical_engineer]
+100%|██████████████████████████████████████| 37/37 [00:00&lt;00:00, 1241513.98it/s]
+[2024-01-21 12:59:47,894] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|███████████████████████████████████████████| 10/10 [00:24&lt;00:00,  2.45s/it]
+01/21 13:00:12 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-business_administration]
+100%|██████████████████████████████████████| 33/33 [00:00&lt;00:00, 1134524.85it/s]
+[2024-01-21 13:00:12,543] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 9/9 [00:18&lt;00:00,  2.08s/it]
+01/21 13:00:31 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-art_studies]
+100%|██████████████████████████████████████| 33/33 [00:00&lt;00:00, 1163126.32it/s]
+[2024-01-21 13:00:31,424] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 9/9 [00:13&lt;00:00,  1.51s/it]
+01/21 13:00:45 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-fire_engineer]
+100%|██████████████████████████████████████| 31/31 [00:00&lt;00:00, 1150649.77it/s]
+[2024-01-21 13:00:45,156] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 8/8 [00:19&lt;00:00,  2.47s/it]
+01/21 13:01:04 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-environmental_impact_assessment_engineer]
+100%|██████████████████████████████████████| 31/31 [00:00&lt;00:00, 1015808.00it/s]
+[2024-01-21 13:01:05,057] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 8/8 [00:17&lt;00:00,  2.19s/it]
+01/21 13:01:22 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-education_science]
+100%|██████████████████████████████████████| 29/29 [00:00&lt;00:00, 1030803.53it/s]
+[2024-01-21 13:01:22,695] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 8/8 [00:11&lt;00:00,  1.40s/it]
+01/21 13:01:33 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-professional_tour_guide]
+100%|██████████████████████████████████████| 29/29 [00:00&lt;00:00, 1039613.81it/s]
+[2024-01-21 13:01:34,053] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 8/8 [00:12&lt;00:00,  1.62s/it]
+01/21 13:01:47 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_chemistry]
+100%|███████████████████████████████████████| 24/24 [00:00&lt;00:00, 883011.37it/s]
+[2024-01-21 13:01:47,116] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:14&lt;00:00,  2.38s/it]
+01/21 13:02:01 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-metrology_engineer]
+100%|███████████████████████████████████████| 24/24 [00:00&lt;00:00, 915120.87it/s]
+[2024-01-21 13:02:01,487] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:14&lt;00:00,  2.36s/it]
+01/21 13:02:15 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-mao_zedong_thought]
+100%|███████████████████████████████████████| 24/24 [00:00&lt;00:00, 713924.09it/s]
+[2024-01-21 13:02:15,714] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:11&lt;00:00,  1.90s/it]
+01/21 13:02:27 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-law]
+100%|███████████████████████████████████████| 24/24 [00:00&lt;00:00, 689474.63it/s]
+[2024-01-21 13:02:27,195] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:17&lt;00:00,  2.85s/it]
+01/21 13:02:44 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-veterinary_medicine]
+100%|███████████████████████████████████████| 23/23 [00:00&lt;00:00, 869090.02it/s]
+[2024-01-21 13:02:44,418] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:10&lt;00:00,  1.80s/it]
+01/21 13:02:55 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-modern_chinese_history]
+100%|███████████████████████████████████████| 23/23 [00:00&lt;00:00, 846219.23it/s]
+[2024-01-21 13:02:55,314] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:12&lt;00:00,  2.07s/it]
+01/21 13:03:07 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-chinese_language_and_literature]
+100%|███████████████████████████████████████| 23/23 [00:00&lt;00:00, 893231.41it/s]
+[2024-01-21 13:03:07,826] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:10&lt;00:00,  1.74s/it]
+01/21 13:03:18 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-legal_professional]
+100%|███████████████████████████████████████| 23/23 [00:00&lt;00:00, 853707.89it/s]
+[2024-01-21 13:03:18,394] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:22&lt;00:00,  3.81s/it]
+01/21 13:03:41 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-logic]
+100%|███████████████████████████████████████| 22/22 [00:00&lt;00:00, 862380.26it/s]
+[2024-01-21 13:03:41,414] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:29&lt;00:00,  4.84s/it]
+01/21 13:04:10 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_history]
+100%|███████████████████████████████████████| 22/22 [00:00&lt;00:00, 862380.26it/s]
+[2024-01-21 13:04:10,543] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:09&lt;00:00,  1.55s/it]
+01/21 13:04:19 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-plant_protection]
+100%|███████████████████████████████████████| 22/22 [00:00&lt;00:00, 878806.55it/s]
+[2024-01-21 13:04:19,944] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:08&lt;00:00,  1.47s/it]
+01/21 13:04:28 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-clinical_medicine]
+100%|███████████████████████████████████████| 22/22 [00:00&lt;00:00, 838860.80it/s]
+[2024-01-21 13:04:28,856] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:12&lt;00:00,  2.01s/it]
+01/21 13:04:40 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-computer_architecture]
+100%|███████████████████████████████████████| 21/21 [00:00&lt;00:00, 547083.13it/s]
+[2024-01-21 13:04:41,027] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:13&lt;00:00,  2.22s/it]
+01/21 13:04:54 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_biology]
+100%|███████████████████████████████████████| 21/21 [00:00&lt;00:00, 765916.38it/s]
+[2024-01-21 13:04:54,470] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:09&lt;00:00,  1.53s/it]
+01/21 13:05:03 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_politics]
+100%|███████████████████████████████████████| 21/21 [00:00&lt;00:00, 830947.02it/s]
+[2024-01-21 13:05:03,749] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 6/6 [00:14&lt;00:00,  2.41s/it]
+01/21 13:05:18 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_chemistry]
+100%|███████████████████████████████████████| 20/20 [00:00&lt;00:00, 791378.11it/s]
+[2024-01-21 13:05:18,296] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:12&lt;00:00,  2.46s/it]
+01/21 13:05:30 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_history]
+100%|███████████████████████████████████████| 20/20 [00:00&lt;00:00, 798915.05it/s]
+[2024-01-21 13:05:30,687] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:11&lt;00:00,  2.25s/it]
+01/21 13:05:41 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-computer_network]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 731117.21it/s]
+[2024-01-21 13:05:42,035] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:08&lt;00:00,  1.73s/it]
+01/21 13:05:50 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-operating_system]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 724470.69it/s]
+[2024-01-21 13:05:50,775] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:07&lt;00:00,  1.44s/it]
+01/21 13:05:57 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_physics]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 737886.81it/s]
+[2024-01-21 13:05:58,040] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:14&lt;00:00,  2.90s/it]
+01/21 13:06:12 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-advanced_mathematics]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 766267.08it/s]
+[2024-01-21 13:06:12,653] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:22&lt;00:00,  4.41s/it]
+01/21 13:06:34 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_physics]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 717943.93it/s]
+[2024-01-21 13:06:34,792] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:10&lt;00:00,  2.02s/it]
+01/21 13:06:44 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_chemistry]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 751809.21it/s]
+[2024-01-21 13:06:44,964] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:10&lt;00:00,  2.06s/it]
+01/21 13:06:55 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_biology]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 804967.43it/s]
+[2024-01-21 13:06:55,327] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:10&lt;00:00,  2.09s/it]
+01/21 13:07:05 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_mathematics]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 758969.30it/s]
+[2024-01-21 13:07:05,839] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:15&lt;00:00,  3.07s/it]
+01/21 13:07:21 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_physics]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 581691.80it/s]
+[2024-01-21 13:07:21,273] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:10&lt;00:00,  2.14s/it]
+01/21 13:07:31 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-marxism]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 744782.95it/s]
+[2024-01-21 13:07:32,035] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:08&lt;00:00,  1.65s/it]
+01/21 13:07:40 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_politics]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 681126.29it/s]
+[2024-01-21 13:07:40,420] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:18&lt;00:00,  3.65s/it]
+01/21 13:07:58 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_geography]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 781291.92it/s]
+[2024-01-21 13:07:58,750] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:08&lt;00:00,  1.64s/it]
+01/21 13:08:06 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-ideological_and_moral_cultivation]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 737886.81it/s]
+[2024-01-21 13:08:07,017] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:06&lt;00:00,  1.21s/it]
+01/21 13:08:13 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_chinese]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 766267.08it/s]
+[2024-01-21 13:08:13,184] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:24&lt;00:00,  4.92s/it]
+01/21 13:08:37 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-sports_science]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 758969.30it/s]
+[2024-01-21 13:08:37,875] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:07&lt;00:00,  1.42s/it]
+01/21 13:08:45 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-basic_medicine]
+100%|███████████████████████████████████████| 19/19 [00:00&lt;00:00, 737886.81it/s]
+[2024-01-21 13:08:45,046] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:06&lt;00:00,  1.38s/it]
+01/21 13:08:51 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-probability_and_statistics]
+100%|███████████████████████████████████████| 18/18 [00:00&lt;00:00, 725937.23it/s]
+[2024-01-21 13:08:52,026] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:23&lt;00:00,  4.77s/it]
+01/21 13:09:15 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_mathematics]
+100%|███████████████████████████████████████| 18/18 [00:00&lt;00:00, 740171.29it/s]
+[2024-01-21 13:09:15,962] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 5/5 [00:16&lt;00:00,  3.30s/it]
+01/21 13:09:32 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-discrete_mathematics]
+100%|███████████████████████████████████████| 16/16 [00:00&lt;00:00, 122461.43it/s]
+[2024-01-21 13:09:32,566] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 4/4 [00:07&lt;00:00,  1.79s/it]
+01/21 13:09:39 - OpenCompass - INFO - Start inferencing [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_geography]
+100%|███████████████████████████████████████| 12/12 [00:00&lt;00:00, 518882.97it/s]
+[2024-01-21 13:09:39,795] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...
+100%|█████████████████████████████████████████████| 3/3 [00:05&lt;00:00,  1.73s/it]
+01/21 13:09:44 - OpenCompass - INFO - time elapsed: 873.46s
+01/21 13:09:49 - OpenCompass - DEBUG - Get class `NaivePartitioner` from &quot;partitioner&quot; registry in &quot;opencompass&quot;
+01/21 13:09:49 - OpenCompass - DEBUG - An `NaivePartitioner` instance is built from registry, and its implementation can be found in opencompass.partitioners.naive
+01/21 13:09:49 - OpenCompass - DEBUG - Key eval.runner.task.judge_cfg not found in config, ignored.
+01/21 13:09:49 - OpenCompass - DEBUG - Key eval.runner.task.dump_details not found in config, ignored.
+01/21 13:09:49 - OpenCompass - DEBUG - Additional config: &#123;&#39;eval&#39;: &#123;&#39;runner&#39;: &#123;&#39;task&#39;: &#123;&#125;&#125;&#125;&#125;
+01/21 13:09:49 - OpenCompass - INFO - Partitioned into 52 tasks.
+01/21 13:09:49 - OpenCompass - DEBUG - Task 0: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-computer_network]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 1: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-operating_system]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 2: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-computer_architecture]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 3: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_programming]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 4: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_physics]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 5: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_chemistry]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 6: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-advanced_mathematics]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 7: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-probability_and_statistics]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 8: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-discrete_mathematics]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 9: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-electrical_engineer]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 10: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-metrology_engineer]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 11: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_mathematics]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 12: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_physics]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 13: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_chemistry]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 14: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_biology]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 15: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_mathematics]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 16: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_biology]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 17: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_physics]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 18: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_chemistry]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 19: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-veterinary_medicine]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 20: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_economics]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 21: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-business_administration]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 22: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-marxism]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 23: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-mao_zedong_thought]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 24: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-education_science]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 25: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-teacher_qualification]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 26: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_politics]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 27: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_geography]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 28: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_politics]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 29: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_geography]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 30: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-modern_chinese_history]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 31: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-ideological_and_moral_cultivation]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 32: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-logic]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 33: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-law]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 34: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-chinese_language_and_literature]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 35: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-art_studies]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 36: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-professional_tour_guide]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 37: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-legal_professional]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 38: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_chinese]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 39: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_history]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 40: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_history]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 41: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-civil_servant]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 42: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-sports_science]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 43: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-plant_protection]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 44: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-basic_medicine]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 45: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-clinical_medicine]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 46: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-urban_and_rural_planner]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 47: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-accountant]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 48: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-fire_engineer]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 49: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-environmental_impact_assessment_engineer]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 50: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-tax_accountant]
+01/21 13:09:49 - OpenCompass - DEBUG - Task 51: [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-physician]
+01/21 13:09:49 - OpenCompass - DEBUG - Get class `LocalRunner` from &quot;runner&quot; registry in &quot;opencompass&quot;
+01/21 13:09:49 - OpenCompass - DEBUG - An `LocalRunner` instance is built from registry, and its implementation can be found in opencompass.runners.local
+01/21 13:09:49 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:09:49 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:11:21 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-computer_network]: &#123;&#39;accuracy&#39;: 31.57894736842105&#125;
+01/21 13:11:21 - OpenCompass - INFO - time elapsed: 60.60s
+01/21 13:11:22 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:11:22 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:11:43 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-operating_system]: &#123;&#39;accuracy&#39;: 36.84210526315789&#125;
+01/21 13:11:49 - OpenCompass - INFO - time elapsed: 19.91s
+01/21 13:11:49 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:11:49 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:12:12 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-computer_architecture]: &#123;&#39;accuracy&#39;: 28.57142857142857&#125;
+01/21 13:12:17 - OpenCompass - INFO - time elapsed: 20.15s
+01/21 13:12:18 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:12:18 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:13:20 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_programming]: &#123;&#39;accuracy&#39;: 32.432432432432435&#125;
+01/21 13:13:20 - OpenCompass - INFO - time elapsed: 56.35s
+01/21 13:13:21 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:13:21 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:13:33 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_physics]: &#123;&#39;accuracy&#39;: 26.31578947368421&#125;
+01/21 13:13:33 - OpenCompass - INFO - time elapsed: 5.75s
+01/21 13:13:34 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:13:34 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:13:53 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_chemistry]: &#123;&#39;accuracy&#39;: 16.666666666666664&#125;
+01/21 13:13:54 - OpenCompass - INFO - time elapsed: 14.26s
+01/21 13:13:55 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:13:55 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:14:26 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-advanced_mathematics]: &#123;&#39;accuracy&#39;: 21.052631578947366&#125;
+01/21 13:14:26 - OpenCompass - INFO - time elapsed: 24.90s
+01/21 13:14:27 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:14:27 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:14:47 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-probability_and_statistics]: &#123;&#39;accuracy&#39;: 38.88888888888889&#125;
+01/21 13:14:49 - OpenCompass - INFO - time elapsed: 15.55s
+01/21 13:14:49 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:14:49 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:15:50 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-discrete_mathematics]: &#123;&#39;accuracy&#39;: 18.75&#125;
+01/21 13:16:16 - OpenCompass - INFO - time elapsed: 61.13s
+01/21 13:16:16 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:16:16 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:16:52 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-electrical_engineer]: &#123;&#39;accuracy&#39;: 35.13513513513514&#125;
+01/21 13:16:54 - OpenCompass - INFO - time elapsed: 17.86s
+01/21 13:16:55 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:16:55 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:17:48 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-metrology_engineer]: &#123;&#39;accuracy&#39;: 50.0&#125;
+01/21 13:17:48 - OpenCompass - INFO - time elapsed: 30.54s
+01/21 13:17:49 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:17:49 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:18:25 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_mathematics]: &#123;&#39;accuracy&#39;: 22.22222222222222&#125;
+01/21 13:18:25 - OpenCompass - INFO - time elapsed: 24.63s
+01/21 13:18:26 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:18:26 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:19:07 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_physics]: &#123;&#39;accuracy&#39;: 31.57894736842105&#125;
+01/21 13:19:07 - OpenCompass - INFO - time elapsed: 14.48s
+01/21 13:19:08 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:19:08 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:19:43 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_chemistry]: &#123;&#39;accuracy&#39;: 15.789473684210526&#125;
+01/21 13:20:12 - OpenCompass - INFO - time elapsed: 54.42s
+01/21 13:20:13 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:20:13 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:20:32 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_biology]: &#123;&#39;accuracy&#39;: 36.84210526315789&#125;
+01/21 13:20:32 - OpenCompass - INFO - time elapsed: 10.37s
+01/21 13:20:33 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:20:33 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:20:50 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_mathematics]: &#123;&#39;accuracy&#39;: 26.31578947368421&#125;
+01/21 13:20:50 - OpenCompass - INFO - time elapsed: 7.74s
+01/21 13:20:50 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:20:50 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:21:05 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_biology]: &#123;&#39;accuracy&#39;: 61.904761904761905&#125;
+01/21 13:21:05 - OpenCompass - INFO - time elapsed: 7.39s
+01/21 13:21:06 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:21:06 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:21:19 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_physics]: &#123;&#39;accuracy&#39;: 63.1578947368421&#125;
+01/21 13:21:19 - OpenCompass - INFO - time elapsed: 6.52s
+01/21 13:21:20 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:21:20 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:21:34 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_chemistry]: &#123;&#39;accuracy&#39;: 60.0&#125;
+01/21 13:21:34 - OpenCompass - INFO - time elapsed: 7.03s
+01/21 13:21:35 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:21:35 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:21:48 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-veterinary_medicine]: &#123;&#39;accuracy&#39;: 47.82608695652174&#125;
+01/21 13:21:48 - OpenCompass - INFO - time elapsed: 6.74s
+01/21 13:21:49 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:21:49 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:22:01 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-college_economics]: &#123;&#39;accuracy&#39;: 41.81818181818181&#125;
+01/21 13:22:01 - OpenCompass - INFO - time elapsed: 5.99s
+01/21 13:22:01 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:22:01 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:22:14 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-business_administration]: &#123;&#39;accuracy&#39;: 33.33333333333333&#125;
+01/21 13:22:14 - OpenCompass - INFO - time elapsed: 5.85s
+01/21 13:22:15 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:22:15 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:22:27 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-marxism]: &#123;&#39;accuracy&#39;: 68.42105263157895&#125;
+01/21 13:22:27 - OpenCompass - INFO - time elapsed: 6.38s
+01/21 13:22:28 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:22:28 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:22:39 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-mao_zedong_thought]: &#123;&#39;accuracy&#39;: 70.83333333333334&#125;
+01/21 13:22:39 - OpenCompass - INFO - time elapsed: 5.05s
+01/21 13:22:40 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:22:40 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:22:51 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-education_science]: &#123;&#39;accuracy&#39;: 58.620689655172406&#125;
+01/21 13:22:51 - OpenCompass - INFO - time elapsed: 5.12s
+01/21 13:22:52 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:22:52 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:23:03 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-teacher_qualification]: &#123;&#39;accuracy&#39;: 70.45454545454545&#125;
+01/21 13:23:03 - OpenCompass - INFO - time elapsed: 5.09s
+01/21 13:23:03 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:23:03 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:23:15 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_politics]: &#123;&#39;accuracy&#39;: 26.31578947368421&#125;
+01/21 13:23:15 - OpenCompass - INFO - time elapsed: 5.58s
+01/21 13:23:15 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:23:15 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:23:27 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_geography]: &#123;&#39;accuracy&#39;: 47.368421052631575&#125;
+01/21 13:23:27 - OpenCompass - INFO - time elapsed: 5.31s
+01/21 13:23:28 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:23:28 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:23:40 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_politics]: &#123;&#39;accuracy&#39;: 52.38095238095239&#125;
+01/21 13:23:40 - OpenCompass - INFO - time elapsed: 6.11s
+01/21 13:23:41 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:23:41 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:23:52 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_geography]: &#123;&#39;accuracy&#39;: 58.333333333333336&#125;
+01/21 13:23:52 - OpenCompass - INFO - time elapsed: 5.68s
+01/21 13:23:53 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:23:53 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:24:05 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-modern_chinese_history]: &#123;&#39;accuracy&#39;: 73.91304347826086&#125;
+01/21 13:24:05 - OpenCompass - INFO - time elapsed: 6.29s
+01/21 13:24:05 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:24:05 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:24:16 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-ideological_and_moral_cultivation]: &#123;&#39;accuracy&#39;: 63.1578947368421&#125;
+01/21 13:24:16 - OpenCompass - INFO - time elapsed: 5.21s
+01/21 13:24:17 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:24:17 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:24:29 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-logic]: &#123;&#39;accuracy&#39;: 31.818181818181817&#125;
+01/21 13:24:29 - OpenCompass - INFO - time elapsed: 5.91s
+01/21 13:24:29 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:24:29 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:24:41 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-law]: &#123;&#39;accuracy&#39;: 25.0&#125;
+01/21 13:24:41 - OpenCompass - INFO - time elapsed: 6.18s
+01/21 13:24:42 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:24:42 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:24:55 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-chinese_language_and_literature]: &#123;&#39;accuracy&#39;: 30.434782608695656&#125;
+01/21 13:24:55 - OpenCompass - INFO - time elapsed: 6.18s
+01/21 13:24:56 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:24:56 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:25:10 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-art_studies]: &#123;&#39;accuracy&#39;: 60.60606060606061&#125;
+01/21 13:25:10 - OpenCompass - INFO - time elapsed: 6.80s
+01/21 13:25:10 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:25:10 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:25:21 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-professional_tour_guide]: &#123;&#39;accuracy&#39;: 62.06896551724138&#125;
+01/21 13:25:21 - OpenCompass - INFO - time elapsed: 4.76s
+01/21 13:25:22 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:25:22 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:25:34 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-legal_professional]: &#123;&#39;accuracy&#39;: 39.130434782608695&#125;
+01/21 13:25:34 - OpenCompass - INFO - time elapsed: 6.15s
+01/21 13:25:34 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:25:34 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:25:46 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_chinese]: &#123;&#39;accuracy&#39;: 63.1578947368421&#125;
+01/21 13:25:46 - OpenCompass - INFO - time elapsed: 5.56s
+01/21 13:25:46 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:25:46 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:25:56 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-high_school_history]: &#123;&#39;accuracy&#39;: 70.0&#125;
+01/21 13:25:56 - OpenCompass - INFO - time elapsed: 4.41s
+01/21 13:25:57 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:25:57 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:26:08 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-middle_school_history]: &#123;&#39;accuracy&#39;: 59.09090909090909&#125;
+01/21 13:26:08 - OpenCompass - INFO - time elapsed: 5.36s
+01/21 13:26:09 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:26:09 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:26:20 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-civil_servant]: &#123;&#39;accuracy&#39;: 53.191489361702125&#125;
+01/21 13:26:20 - OpenCompass - INFO - time elapsed: 5.42s
+01/21 13:26:21 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:26:21 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:26:33 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-sports_science]: &#123;&#39;accuracy&#39;: 52.63157894736842&#125;
+01/21 13:26:33 - OpenCompass - INFO - time elapsed: 6.01s
+01/21 13:26:34 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:26:34 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:26:45 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-plant_protection]: &#123;&#39;accuracy&#39;: 59.09090909090909&#125;
+01/21 13:26:45 - OpenCompass - INFO - time elapsed: 5.62s
+01/21 13:26:46 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:26:46 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:26:57 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-basic_medicine]: &#123;&#39;accuracy&#39;: 47.368421052631575&#125;
+01/21 13:26:57 - OpenCompass - INFO - time elapsed: 5.50s
+01/21 13:26:58 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:26:58 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:27:10 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-clinical_medicine]: &#123;&#39;accuracy&#39;: 40.909090909090914&#125;
+01/21 13:27:10 - OpenCompass - INFO - time elapsed: 5.61s
+01/21 13:27:11 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:27:11 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:27:22 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-urban_and_rural_planner]: &#123;&#39;accuracy&#39;: 45.65217391304348&#125;
+01/21 13:27:22 - OpenCompass - INFO - time elapsed: 4.93s
+01/21 13:27:23 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:27:23 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:27:34 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-accountant]: &#123;&#39;accuracy&#39;: 26.53061224489796&#125;
+01/21 13:27:34 - OpenCompass - INFO - time elapsed: 5.41s
+01/21 13:27:35 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:27:35 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:27:46 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-fire_engineer]: &#123;&#39;accuracy&#39;: 22.58064516129032&#125;
+01/21 13:27:46 - OpenCompass - INFO - time elapsed: 5.98s
+01/21 13:27:47 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:27:47 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:27:59 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-environmental_impact_assessment_engineer]: &#123;&#39;accuracy&#39;: 64.51612903225806&#125;
+01/21 13:27:59 - OpenCompass - INFO - time elapsed: 6.09s
+01/21 13:28:00 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:28:00 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:28:13 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-tax_accountant]: &#123;&#39;accuracy&#39;: 34.69387755102041&#125;
+01/21 13:28:13 - OpenCompass - INFO - time elapsed: 6.41s
+01/21 13:28:14 - OpenCompass - DEBUG - Get class `OpenICLEvalTask` from &quot;task&quot; registry in &quot;opencompass&quot;
+01/21 13:28:14 - OpenCompass - DEBUG - An `OpenICLEvalTask` instance is built from registry, and its implementation can be found in opencompass.tasks.openicl_eval
+01/21 13:28:27 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b/ceval-physician]: &#123;&#39;accuracy&#39;: 40.816326530612244&#125;
+01/21 13:28:27 - OpenCompass - INFO - time elapsed: 5.91s
+01/21 13:28:27 - OpenCompass - DEBUG - An `DefaultSummarizer` instance is built from registry, and its implementation can be found in opencompass.summarizers.default
+dataset                                         version    metric         mode      opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b
+----------------------------------------------  ---------  -------------  ------  -------------------------------------------------------------------------
+ceval-computer_network                          db9ce2     accuracy       gen                                                                         31.58
+ceval-operating_system                          1c2571     accuracy       gen                                                                         36.84
+ceval-computer_architecture                     a74dad     accuracy       gen                                                                         28.57
+ceval-college_programming                       4ca32a     accuracy       gen                                                                         32.43
+ceval-college_physics                           963fa8     accuracy       gen                                                                         26.32
+ceval-college_chemistry                         e78857     accuracy       gen                                                                         16.67
+ceval-advanced_mathematics                      ce03e2     accuracy       gen                                                                         21.05
+ceval-probability_and_statistics                65e812     accuracy       gen                                                                         38.89
+ceval-discrete_mathematics                      e894ae     accuracy       gen                                                                         18.75
+ceval-electrical_engineer                       ae42b9     accuracy       gen                                                                         35.14
+ceval-metrology_engineer                        ee34ea     accuracy       gen                                                                         50
+ceval-high_school_mathematics                   1dc5bf     accuracy       gen                                                                         22.22
+ceval-high_school_physics                       adf25f     accuracy       gen                                                                         31.58
+ceval-high_school_chemistry                     2ed27f     accuracy       gen                                                                         15.79
+ceval-high_school_biology                       8e2b9a     accuracy       gen                                                                         36.84
+ceval-middle_school_mathematics                 bee8d5     accuracy       gen                                                                         26.32
+ceval-middle_school_biology                     86817c     accuracy       gen                                                                         61.9
+ceval-middle_school_physics                     8accf6     accuracy       gen                                                                         63.16
+ceval-middle_school_chemistry                   167a15     accuracy       gen                                                                         60
+ceval-veterinary_medicine                       b4e08d     accuracy       gen                                                                         47.83
+ceval-college_economics                         f3f4e6     accuracy       gen                                                                         41.82
+ceval-business_administration                   c1614e     accuracy       gen                                                                         33.33
+ceval-marxism                                   cf874c     accuracy       gen                                                                         68.42
+ceval-mao_zedong_thought                        51c7a4     accuracy       gen                                                                         70.83
+ceval-education_science                         591fee     accuracy       gen                                                                         58.62
+ceval-teacher_qualification                     4e4ced     accuracy       gen                                                                         70.45
+ceval-high_school_politics                      5c0de2     accuracy       gen                                                                         26.32
+ceval-high_school_geography                     865461     accuracy       gen                                                                         47.37
+ceval-middle_school_politics                    5be3e7     accuracy       gen                                                                         52.38
+ceval-middle_school_geography                   8a63be     accuracy       gen                                                                         58.33
+ceval-modern_chinese_history                    fc01af     accuracy       gen                                                                         73.91
+ceval-ideological_and_moral_cultivation         a2aa4a     accuracy       gen                                                                         63.16
+ceval-logic                                     f5b022     accuracy       gen                                                                         31.82
+ceval-law                                       a110a1     accuracy       gen                                                                         25
+ceval-chinese_language_and_literature           0f8b68     accuracy       gen                                                                         30.43
+ceval-art_studies                               2a1300     accuracy       gen                                                                         60.61
+ceval-professional_tour_guide                   4e673e     accuracy       gen                                                                         62.07
+ceval-legal_professional                        ce8787     accuracy       gen                                                                         39.13
+ceval-high_school_chinese                       315705     accuracy       gen                                                                         63.16
+ceval-high_school_history                       7eb30a     accuracy       gen                                                                         70
+ceval-middle_school_history                     48ab4a     accuracy       gen                                                                         59.09
+ceval-civil_servant                             87d061     accuracy       gen                                                                         53.19
+ceval-sports_science                            70f27b     accuracy       gen                                                                         52.63
+ceval-plant_protection                          8941f9     accuracy       gen                                                                         59.09
+ceval-basic_medicine                            c409d6     accuracy       gen                                                                         47.37
+ceval-clinical_medicine                         49e82d     accuracy       gen                                                                         40.91
+ceval-urban_and_rural_planner                   95b885     accuracy       gen                                                                         45.65
+ceval-accountant                                002837     accuracy       gen                                                                         26.53
+ceval-fire_engineer                             bc23f5     accuracy       gen                                                                         22.58
+ceval-environmental_impact_assessment_engineer  c64e2d     accuracy       gen                                                                         64.52
+ceval-tax_accountant                            3a5e3c     accuracy       gen                                                                         34.69
+ceval-physician                                 6e277d     accuracy       gen                                                                         40.82
+ceval-stem                                      -          naive_average  gen                                                                         35.09
+ceval-social-science                            -          naive_average  gen                                                                         52.79
+ceval-humanities                                -          naive_average  gen                                                                         52.58
+ceval-other                                     -          naive_average  gen                                                                         44.36
+ceval-hard                                      -          naive_average  gen                                                                         23.91
+ceval                                           -          naive_average  gen                                                                         44.16
+01/21 13:28:27 - OpenCompass - INFO - write summary to /root/opencompass/outputs/default/20240121_125459/summary/summary_20240121_125459.txt
+01/21 13:28:27 - OpenCompass - INFO - write csv to /root/opencompass/outputs/default/20240121_125459/summary/summary_20240121_125459.csv
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># %load /root/opencompass/outputs/default/20240121_125459/summary/summary_20240121_125459.txt</span></span><br><span class="line"><span class="number">20240121_125459</span></span><br><span class="line">tabulate <span class="built_in">format</span></span><br><span class="line">^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span><br><span class="line">dataset                                         version    metric         mode      opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b</span><br><span class="line">----------------------------------------------  ---------  -------------  ------  -------------------------------------------------------------------------</span><br><span class="line">ceval-computer_network                          db9ce2     accuracy       gen                                                                         <span class="number">31.58</span></span><br><span class="line">ceval-operating_system                          1c2571     accuracy       gen                                                                         <span class="number">36.84</span></span><br><span class="line">ceval-computer_architecture                     a74dad     accuracy       gen                                                                         <span class="number">28.57</span></span><br><span class="line">ceval-college_programming                       4ca32a     accuracy       gen                                                                         <span class="number">32.43</span></span><br><span class="line">ceval-college_physics                           963fa8     accuracy       gen                                                                         <span class="number">26.32</span></span><br><span class="line">ceval-college_chemistry                         e78857     accuracy       gen                                                                         <span class="number">16.67</span></span><br><span class="line">ceval-advanced_mathematics                      ce03e2     accuracy       gen                                                                         <span class="number">21.05</span></span><br><span class="line">ceval-probability_and_statistics                <span class="number">65e812</span>     accuracy       gen                                                                         <span class="number">38.89</span></span><br><span class="line">ceval-discrete_mathematics                      e894ae     accuracy       gen                                                                         <span class="number">18.75</span></span><br><span class="line">ceval-electrical_engineer                       ae42b9     accuracy       gen                                                                         <span class="number">35.14</span></span><br><span class="line">ceval-metrology_engineer                        ee34ea     accuracy       gen                                                                         <span class="number">50</span></span><br><span class="line">ceval-high_school_mathematics                   1dc5bf     accuracy       gen                                                                         <span class="number">22.22</span></span><br><span class="line">ceval-high_school_physics                       adf25f     accuracy       gen                                                                         <span class="number">31.58</span></span><br><span class="line">ceval-high_school_chemistry                     2ed27f     accuracy       gen                                                                         <span class="number">15.79</span></span><br><span class="line">ceval-high_school_biology                       8e2b9a     accuracy       gen                                                                         <span class="number">36.84</span></span><br><span class="line">ceval-middle_school_mathematics                 bee8d5     accuracy       gen                                                                         <span class="number">26.32</span></span><br><span class="line">ceval-middle_school_biology                     86817c     accuracy       gen                                                                         <span class="number">61.9</span></span><br><span class="line">ceval-middle_school_physics                     8accf6     accuracy       gen                                                                         <span class="number">63.16</span></span><br><span class="line">ceval-middle_school_chemistry                   167a15     accuracy       gen                                                                         <span class="number">60</span></span><br><span class="line">ceval-veterinary_medicine                       b4e08d     accuracy       gen                                                                         <span class="number">47.83</span></span><br><span class="line">ceval-college_economics                         f3f4e6     accuracy       gen                                                                         <span class="number">41.82</span></span><br><span class="line">ceval-business_administration                   c1614e     accuracy       gen                                                                         <span class="number">33.33</span></span><br><span class="line">ceval-marxism                                   cf874c     accuracy       gen                                                                         <span class="number">68.42</span></span><br><span class="line">ceval-mao_zedong_thought                        51c7a4     accuracy       gen                                                                         <span class="number">70.83</span></span><br><span class="line">ceval-education_science                         591fee     accuracy       gen                                                                         <span class="number">58.62</span></span><br><span class="line">ceval-teacher_qualification                     4e4ced     accuracy       gen                                                                         <span class="number">70.45</span></span><br><span class="line">ceval-high_school_politics                      5c0de2     accuracy       gen                                                                         <span class="number">26.32</span></span><br><span class="line">ceval-high_school_geography                     <span class="number">865461</span>     accuracy       gen                                                                         <span class="number">47.37</span></span><br><span class="line">ceval-middle_school_politics                    5be3e7     accuracy       gen                                                                         <span class="number">52.38</span></span><br><span class="line">ceval-middle_school_geography                   8a63be     accuracy       gen                                                                         <span class="number">58.33</span></span><br><span class="line">ceval-modern_chinese_history                    fc01af     accuracy       gen                                                                         <span class="number">73.91</span></span><br><span class="line">ceval-ideological_and_moral_cultivation         a2aa4a     accuracy       gen                                                                         <span class="number">63.16</span></span><br><span class="line">ceval-logic                                     f5b022     accuracy       gen                                                                         <span class="number">31.82</span></span><br><span class="line">ceval-law                                       a110a1     accuracy       gen                                                                         <span class="number">25</span></span><br><span class="line">ceval-chinese_language_and_literature           0f8b68     accuracy       gen                                                                         <span class="number">30.43</span></span><br><span class="line">ceval-art_studies                               2a1300     accuracy       gen                                                                         <span class="number">60.61</span></span><br><span class="line">ceval-professional_tour_guide                   4e673e     accuracy       gen                                                                         <span class="number">62.07</span></span><br><span class="line">ceval-legal_professional                        ce8787     accuracy       gen                                                                         <span class="number">39.13</span></span><br><span class="line">ceval-high_school_chinese                       <span class="number">315705</span>     accuracy       gen                                                                         <span class="number">63.16</span></span><br><span class="line">ceval-high_school_history                       7eb30a     accuracy       gen                                                                         <span class="number">70</span></span><br><span class="line">ceval-middle_school_history                     48ab4a     accuracy       gen                                                                         <span class="number">59.09</span></span><br><span class="line">ceval-civil_servant                             87d061     accuracy       gen                                                                         <span class="number">53.19</span></span><br><span class="line">ceval-sports_science                            70f27b     accuracy       gen                                                                         <span class="number">52.63</span></span><br><span class="line">ceval-plant_protection                          8941f9     accuracy       gen                                                                         <span class="number">59.09</span></span><br><span class="line">ceval-basic_medicine                            c409d6     accuracy       gen                                                                         <span class="number">47.37</span></span><br><span class="line">ceval-clinical_medicine                         49e82d     accuracy       gen                                                                         <span class="number">40.91</span></span><br><span class="line">ceval-urban_and_rural_planner                   95b885     accuracy       gen                                                                         <span class="number">45.65</span></span><br><span class="line">ceval-accountant                                002837     accuracy       gen                                                                         <span class="number">26.53</span></span><br><span class="line">ceval-fire_engineer                             bc23f5     accuracy       gen                                                                         <span class="number">22.58</span></span><br><span class="line">ceval-environmental_impact_assessment_engineer  c64e2d     accuracy       gen                                                                         <span class="number">64.52</span></span><br><span class="line">ceval-tax_accountant                            3a5e3c     accuracy       gen                                                                         <span class="number">34.69</span></span><br><span class="line">ceval-physician                                 6e277d     accuracy       gen                                                                         <span class="number">40.82</span></span><br><span class="line">ceval-stem                                      -          naive_average  gen                                                                         <span class="number">35.09</span></span><br><span class="line">ceval-social-science                            -          naive_average  gen                                                                         <span class="number">52.79</span></span><br><span class="line">ceval-humanities                                -          naive_average  gen                                                                         <span class="number">52.58</span></span><br><span class="line">ceval-other                                     -          naive_average  gen                                                                         <span class="number">44.36</span></span><br><span class="line">ceval-hard                                      -          naive_average  gen                                                                         <span class="number">23.91</span></span><br><span class="line">ceval                                           -          naive_average  gen                                                                         <span class="number">44.16</span></span><br><span class="line">$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------------------------------------------------------- THIS IS A DIVIDER --------------------------------------------------------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">csv <span class="built_in">format</span></span><br><span class="line">^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span><br><span class="line">dataset,version,metric,mode,opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b</span><br><span class="line">ceval-computer_network,db9ce2,accuracy,gen,<span class="number">31.58</span></span><br><span class="line">ceval-operating_system,1c2571,accuracy,gen,<span class="number">36.84</span></span><br><span class="line">ceval-computer_architecture,a74dad,accuracy,gen,<span class="number">28.57</span></span><br><span class="line">ceval-college_programming,4ca32a,accuracy,gen,<span class="number">32.43</span></span><br><span class="line">ceval-college_physics,963fa8,accuracy,gen,<span class="number">26.32</span></span><br><span class="line">ceval-college_chemistry,e78857,accuracy,gen,<span class="number">16.67</span></span><br><span class="line">ceval-advanced_mathematics,ce03e2,accuracy,gen,<span class="number">21.05</span></span><br><span class="line">ceval-probability_and_statistics,<span class="number">65e812</span>,accuracy,gen,<span class="number">38.89</span></span><br><span class="line">ceval-discrete_mathematics,e894ae,accuracy,gen,<span class="number">18.75</span></span><br><span class="line">ceval-electrical_engineer,ae42b9,accuracy,gen,<span class="number">35.14</span></span><br><span class="line">ceval-metrology_engineer,ee34ea,accuracy,gen,<span class="number">50.00</span></span><br><span class="line">ceval-high_school_mathematics,1dc5bf,accuracy,gen,<span class="number">22.22</span></span><br><span class="line">ceval-high_school_physics,adf25f,accuracy,gen,<span class="number">31.58</span></span><br><span class="line">ceval-high_school_chemistry,2ed27f,accuracy,gen,<span class="number">15.79</span></span><br><span class="line">ceval-high_school_biology,8e2b9a,accuracy,gen,<span class="number">36.84</span></span><br><span class="line">ceval-middle_school_mathematics,bee8d5,accuracy,gen,<span class="number">26.32</span></span><br><span class="line">ceval-middle_school_biology,86817c,accuracy,gen,<span class="number">61.90</span></span><br><span class="line">ceval-middle_school_physics,8accf6,accuracy,gen,<span class="number">63.16</span></span><br><span class="line">ceval-middle_school_chemistry,167a15,accuracy,gen,<span class="number">60.00</span></span><br><span class="line">ceval-veterinary_medicine,b4e08d,accuracy,gen,<span class="number">47.83</span></span><br><span class="line">ceval-college_economics,f3f4e6,accuracy,gen,<span class="number">41.82</span></span><br><span class="line">ceval-business_administration,c1614e,accuracy,gen,<span class="number">33.33</span></span><br><span class="line">ceval-marxism,cf874c,accuracy,gen,<span class="number">68.42</span></span><br><span class="line">ceval-mao_zedong_thought,51c7a4,accuracy,gen,<span class="number">70.83</span></span><br><span class="line">ceval-education_science,591fee,accuracy,gen,<span class="number">58.62</span></span><br><span class="line">ceval-teacher_qualification,4e4ced,accuracy,gen,<span class="number">70.45</span></span><br><span class="line">ceval-high_school_politics,5c0de2,accuracy,gen,<span class="number">26.32</span></span><br><span class="line">ceval-high_school_geography,<span class="number">865461</span>,accuracy,gen,<span class="number">47.37</span></span><br><span class="line">ceval-middle_school_politics,5be3e7,accuracy,gen,<span class="number">52.38</span></span><br><span class="line">ceval-middle_school_geography,8a63be,accuracy,gen,<span class="number">58.33</span></span><br><span class="line">ceval-modern_chinese_history,fc01af,accuracy,gen,<span class="number">73.91</span></span><br><span class="line">ceval-ideological_and_moral_cultivation,a2aa4a,accuracy,gen,<span class="number">63.16</span></span><br><span class="line">ceval-logic,f5b022,accuracy,gen,<span class="number">31.82</span></span><br><span class="line">ceval-law,a110a1,accuracy,gen,<span class="number">25.00</span></span><br><span class="line">ceval-chinese_language_and_literature,0f8b68,accuracy,gen,<span class="number">30.43</span></span><br><span class="line">ceval-art_studies,2a1300,accuracy,gen,<span class="number">60.61</span></span><br><span class="line">ceval-professional_tour_guide,4e673e,accuracy,gen,<span class="number">62.07</span></span><br><span class="line">ceval-legal_professional,ce8787,accuracy,gen,<span class="number">39.13</span></span><br><span class="line">ceval-high_school_chinese,<span class="number">315705</span>,accuracy,gen,<span class="number">63.16</span></span><br><span class="line">ceval-high_school_history,7eb30a,accuracy,gen,<span class="number">70.00</span></span><br><span class="line">ceval-middle_school_history,48ab4a,accuracy,gen,<span class="number">59.09</span></span><br><span class="line">ceval-civil_servant,87d061,accuracy,gen,<span class="number">53.19</span></span><br><span class="line">ceval-sports_science,70f27b,accuracy,gen,<span class="number">52.63</span></span><br><span class="line">ceval-plant_protection,8941f9,accuracy,gen,<span class="number">59.09</span></span><br><span class="line">ceval-basic_medicine,c409d6,accuracy,gen,<span class="number">47.37</span></span><br><span class="line">ceval-clinical_medicine,49e82d,accuracy,gen,<span class="number">40.91</span></span><br><span class="line">ceval-urban_and_rural_planner,95b885,accuracy,gen,<span class="number">45.65</span></span><br><span class="line">ceval-accountant,002837,accuracy,gen,<span class="number">26.53</span></span><br><span class="line">ceval-fire_engineer,bc23f5,accuracy,gen,<span class="number">22.58</span></span><br><span class="line">ceval-environmental_impact_assessment_engineer,c64e2d,accuracy,gen,<span class="number">64.52</span></span><br><span class="line">ceval-tax_accountant,3a5e3c,accuracy,gen,<span class="number">34.69</span></span><br><span class="line">ceval-physician,6e277d,accuracy,gen,<span class="number">40.82</span></span><br><span class="line">ceval-stem,-,naive_average,gen,<span class="number">35.09</span></span><br><span class="line">ceval-social-science,-,naive_average,gen,<span class="number">52.79</span></span><br><span class="line">ceval-humanities,-,naive_average,gen,<span class="number">52.58</span></span><br><span class="line">ceval-other,-,naive_average,gen,<span class="number">44.36</span></span><br><span class="line">ceval-hard,-,naive_average,gen,<span class="number">23.91</span></span><br><span class="line">ceval,-,naive_average,gen,<span class="number">44.16</span></span><br><span class="line">$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------------------------------------------------------- THIS IS A DIVIDER --------------------------------------------------------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">raw <span class="built_in">format</span></span><br><span class="line">^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span><br><span class="line">-------------------------------</span><br><span class="line">Model: opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b</span><br><span class="line">ceval-computer_network: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">31.57894736842105</span>&#125;</span><br><span class="line">ceval-operating_system: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">36.84210526315789</span>&#125;</span><br><span class="line">ceval-computer_architecture: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">28.57142857142857</span>&#125;</span><br><span class="line">ceval-college_programming: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">32.432432432432435</span>&#125;</span><br><span class="line">ceval-college_physics: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">26.31578947368421</span>&#125;</span><br><span class="line">ceval-college_chemistry: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">16.666666666666664</span>&#125;</span><br><span class="line">ceval-advanced_mathematics: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">21.052631578947366</span>&#125;</span><br><span class="line">ceval-probability_and_statistics: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">38.88888888888889</span>&#125;</span><br><span class="line">ceval-discrete_mathematics: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">18.75</span>&#125;</span><br><span class="line">ceval-electrical_engineer: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">35.13513513513514</span>&#125;</span><br><span class="line">ceval-metrology_engineer: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">50.0</span>&#125;</span><br><span class="line">ceval-high_school_mathematics: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">22.22222222222222</span>&#125;</span><br><span class="line">ceval-high_school_physics: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">31.57894736842105</span>&#125;</span><br><span class="line">ceval-high_school_chemistry: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">15.789473684210526</span>&#125;</span><br><span class="line">ceval-high_school_biology: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">36.84210526315789</span>&#125;</span><br><span class="line">ceval-middle_school_mathematics: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">26.31578947368421</span>&#125;</span><br><span class="line">ceval-middle_school_biology: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">61.904761904761905</span>&#125;</span><br><span class="line">ceval-middle_school_physics: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">63.1578947368421</span>&#125;</span><br><span class="line">ceval-middle_school_chemistry: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">60.0</span>&#125;</span><br><span class="line">ceval-veterinary_medicine: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">47.82608695652174</span>&#125;</span><br><span class="line">ceval-college_economics: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">41.81818181818181</span>&#125;</span><br><span class="line">ceval-business_administration: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">33.33333333333333</span>&#125;</span><br><span class="line">ceval-marxism: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">68.42105263157895</span>&#125;</span><br><span class="line">ceval-mao_zedong_thought: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">70.83333333333334</span>&#125;</span><br><span class="line">ceval-education_science: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">58.620689655172406</span>&#125;</span><br><span class="line">ceval-teacher_qualification: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">70.45454545454545</span>&#125;</span><br><span class="line">ceval-high_school_politics: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">26.31578947368421</span>&#125;</span><br><span class="line">ceval-high_school_geography: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">47.368421052631575</span>&#125;</span><br><span class="line">ceval-middle_school_politics: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">52.38095238095239</span>&#125;</span><br><span class="line">ceval-middle_school_geography: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">58.333333333333336</span>&#125;</span><br><span class="line">ceval-modern_chinese_history: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">73.91304347826086</span>&#125;</span><br><span class="line">ceval-ideological_and_moral_cultivation: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">63.1578947368421</span>&#125;</span><br><span class="line">ceval-logic: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">31.818181818181817</span>&#125;</span><br><span class="line">ceval-law: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">25.0</span>&#125;</span><br><span class="line">ceval-chinese_language_and_literature: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">30.434782608695656</span>&#125;</span><br><span class="line">ceval-art_studies: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">60.60606060606061</span>&#125;</span><br><span class="line">ceval-professional_tour_guide: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">62.06896551724138</span>&#125;</span><br><span class="line">ceval-legal_professional: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">39.130434782608695</span>&#125;</span><br><span class="line">ceval-high_school_chinese: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">63.1578947368421</span>&#125;</span><br><span class="line">ceval-high_school_history: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">70.0</span>&#125;</span><br><span class="line">ceval-middle_school_history: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">59.09090909090909</span>&#125;</span><br><span class="line">ceval-civil_servant: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">53.191489361702125</span>&#125;</span><br><span class="line">ceval-sports_science: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">52.63157894736842</span>&#125;</span><br><span class="line">ceval-plant_protection: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">59.09090909090909</span>&#125;</span><br><span class="line">ceval-basic_medicine: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">47.368421052631575</span>&#125;</span><br><span class="line">ceval-clinical_medicine: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">40.909090909090914</span>&#125;</span><br><span class="line">ceval-urban_and_rural_planner: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">45.65217391304348</span>&#125;</span><br><span class="line">ceval-accountant: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">26.53061224489796</span>&#125;</span><br><span class="line">ceval-fire_engineer: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">22.58064516129032</span>&#125;</span><br><span class="line">ceval-environmental_impact_assessment_engineer: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">64.51612903225806</span>&#125;</span><br><span class="line">ceval-tax_accountant: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">34.69387755102041</span>&#125;</span><br><span class="line">ceval-physician: &#123;<span class="string">&#x27;accuracy&#x27;</span>: <span class="number">40.816326530612244</span>&#125;</span><br><span class="line">ceval-stem: &#123;<span class="string">&#x27;naive_average&#x27;</span>: <span class="number">35.09356534942919</span>&#125;</span><br><span class="line">ceval-social-science: &#123;<span class="string">&#x27;naive_average&#x27;</span>: <span class="number">52.78796324667468</span>&#125;</span><br><span class="line">ceval-humanities: &#123;<span class="string">&#x27;naive_average&#x27;</span>: <span class="number">52.57983339778566</span>&#125;</span><br><span class="line">ceval-other: &#123;<span class="string">&#x27;naive_average&#x27;</span>: <span class="number">44.36193216316587</span>&#125;</span><br><span class="line">ceval-hard: &#123;<span class="string">&#x27;naive_average&#x27;</span>: <span class="number">23.90807748538011</span>&#125;</span><br><span class="line">ceval: &#123;<span class="string">&#x27;naive_average&#x27;</span>: <span class="number">44.15596847357301</span>&#125;</span><br><span class="line">$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data = pd.read_csv(<span class="string">&quot;/root/opencompass/outputs/default/20240121_125459/summary/summary_20240121_125459.csv&quot;</span>)</span><br><span class="line">data</span><br></pre></td></tr></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;
+</code></pre>
+<p></style></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dataset</th>
+      <th>version</th>
+      <th>metric</th>
+      <th>mode</th>
+      <th>opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>ceval-computer_network</td>
+      <td>db9ce2</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>31.58</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>ceval-operating_system</td>
+      <td>1c2571</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>36.84</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ceval-computer_architecture</td>
+      <td>a74dad</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>28.57</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>ceval-college_programming</td>
+      <td>4ca32a</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>32.43</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>ceval-college_physics</td>
+      <td>963fa8</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>26.32</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>ceval-college_chemistry</td>
+      <td>e78857</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>16.67</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>ceval-advanced_mathematics</td>
+      <td>ce03e2</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>21.05</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>ceval-probability_and_statistics</td>
+      <td>65e812</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>38.89</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>ceval-discrete_mathematics</td>
+      <td>e894ae</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>18.75</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>ceval-electrical_engineer</td>
+      <td>ae42b9</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>35.14</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>ceval-metrology_engineer</td>
+      <td>ee34ea</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>50.00</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>ceval-high_school_mathematics</td>
+      <td>1dc5bf</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>22.22</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>ceval-high_school_physics</td>
+      <td>adf25f</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>31.58</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>ceval-high_school_chemistry</td>
+      <td>2ed27f</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>15.79</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>ceval-high_school_biology</td>
+      <td>8e2b9a</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>36.84</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>ceval-middle_school_mathematics</td>
+      <td>bee8d5</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>26.32</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>ceval-middle_school_biology</td>
+      <td>86817c</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>61.90</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>ceval-middle_school_physics</td>
+      <td>8accf6</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>63.16</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>ceval-middle_school_chemistry</td>
+      <td>167a15</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>60.00</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>ceval-veterinary_medicine</td>
+      <td>b4e08d</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>47.83</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>ceval-college_economics</td>
+      <td>f3f4e6</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>41.82</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>ceval-business_administration</td>
+      <td>c1614e</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>33.33</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>ceval-marxism</td>
+      <td>cf874c</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>68.42</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>ceval-mao_zedong_thought</td>
+      <td>51c7a4</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>70.83</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>ceval-education_science</td>
+      <td>591fee</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>58.62</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>ceval-teacher_qualification</td>
+      <td>4e4ced</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>70.45</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>ceval-high_school_politics</td>
+      <td>5c0de2</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>26.32</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>ceval-high_school_geography</td>
+      <td>865461</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>47.37</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>ceval-middle_school_politics</td>
+      <td>5be3e7</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>52.38</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>ceval-middle_school_geography</td>
+      <td>8a63be</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>58.33</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>ceval-modern_chinese_history</td>
+      <td>fc01af</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>73.91</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>ceval-ideological_and_moral_cultivation</td>
+      <td>a2aa4a</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>63.16</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>ceval-logic</td>
+      <td>f5b022</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>31.82</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>ceval-law</td>
+      <td>a110a1</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>25.00</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>ceval-chinese_language_and_literature</td>
+      <td>0f8b68</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>30.43</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>ceval-art_studies</td>
+      <td>2a1300</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>60.61</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>ceval-professional_tour_guide</td>
+      <td>4e673e</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>62.07</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>ceval-legal_professional</td>
+      <td>ce8787</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>39.13</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>ceval-high_school_chinese</td>
+      <td>315705</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>63.16</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>ceval-high_school_history</td>
+      <td>7eb30a</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>70.00</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>ceval-middle_school_history</td>
+      <td>48ab4a</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>59.09</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>ceval-civil_servant</td>
+      <td>87d061</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>53.19</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>ceval-sports_science</td>
+      <td>70f27b</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>52.63</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>ceval-plant_protection</td>
+      <td>8941f9</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>59.09</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>ceval-basic_medicine</td>
+      <td>c409d6</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>47.37</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>ceval-clinical_medicine</td>
+      <td>49e82d</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>40.91</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>ceval-urban_and_rural_planner</td>
+      <td>95b885</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>45.65</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>ceval-accountant</td>
+      <td>002837</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>26.53</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>ceval-fire_engineer</td>
+      <td>bc23f5</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>22.58</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>ceval-environmental_impact_assessment_engineer</td>
+      <td>c64e2d</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>64.52</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>ceval-tax_accountant</td>
+      <td>3a5e3c</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>34.69</td>
+    </tr>
+    <tr>
+      <th>51</th>
+      <td>ceval-physician</td>
+      <td>6e277d</td>
+      <td>accuracy</td>
+      <td>gen</td>
+      <td>40.82</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>ceval-stem</td>
+      <td>-</td>
+      <td>naive_average</td>
+      <td>gen</td>
+      <td>35.09</td>
+    </tr>
+    <tr>
+      <th>53</th>
+      <td>ceval-social-science</td>
+      <td>-</td>
+      <td>naive_average</td>
+      <td>gen</td>
+      <td>52.79</td>
+    </tr>
+    <tr>
+      <th>54</th>
+      <td>ceval-humanities</td>
+      <td>-</td>
+      <td>naive_average</td>
+      <td>gen</td>
+      <td>52.58</td>
+    </tr>
+    <tr>
+      <th>55</th>
+      <td>ceval-other</td>
+      <td>-</td>
+      <td>naive_average</td>
+      <td>gen</td>
+      <td>44.36</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>ceval-hard</td>
+      <td>-</td>
+      <td>naive_average</td>
+      <td>gen</td>
+      <td>23.91</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>ceval</td>
+      <td>-</td>
+      <td>naive_average</td>
+      <td>gen</td>
+      <td>44.16</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/open-compass/opencompass/">open-compass&#x2F;opencompass</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/blob/main/opencompass/opencompass_tutorial.md">大模型评测教程</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2024/01/21/ai-internlm-opencompass/">https://xujinzh.github.io/2024/01/21/ai-internlm-opencompass/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ai/">ai</a><a class="post-meta__tags" href="/tags/llm/">llm</a><a class="post-meta__tags" href="/tags/internlm/">internlm</a><a class="post-meta__tags" href="/tags/openmmlab/">openmmlab</a><a class="post-meta__tags" href="/tags/opencompass/">opencompass</a></div><div class="post_share"><div class="social-share" data-image="/img/c9.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img class="cover" src="/img/c22.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">linux 三剑客 - 文本查找命令 grep</div></div></a></div><div class="next-post pull-right"><a href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img class="cover" src="/img/c29.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Python 多进程使用单机多GPU加速推理</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/01/08/ai-Interlm-langchain-RAG/" title="基于 InternLM 和 LangChain 搭建私人知识库"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-08</div><div class="title">基于 InternLM 和 LangChain 搭建私人知识库</div></div></a></div><div><a href="/2024/01/03/ai-internlm-intro/" title="书生·浦语大模型介绍"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-03</div><div class="title">书生·浦语大模型介绍</div></div></a></div><div><a href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img class="cover" src="/img/c30.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-13</div><div class="title">基于 LMDeploy 的大模型量化和部署</div></div></a></div><div><a href="/2024/01/12/ai-internlm-xtuner-finetune/" title="XTuner 大模型训练"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-12</div><div class="title">XTuner 大模型训练</div></div></a></div><div><a href="/2024/01/06/ai-internlm-useage/" title="书生·浦语大模型使用"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-06</div><div class="title">书生·浦语大模型使用</div></div></a></div><div><a href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img class="cover" src="/img/c21.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-12</div><div class="title">利用 XTuner 训练书生·浦语私人大模型助手</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%84%E6%B5%8B%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.</span> <span class="toc-text">评测对象</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E6%9E%B6%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">工具架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%83%BD%E5%8A%9B%E7%BB%B4%E5%BA%A6"><span class="toc-number">3.</span> <span class="toc-text">能力维度</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%84%E6%B5%8B%E6%96%B9%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">评测方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%A2%E8%A7%82%E8%AF%84%E6%B5%8B"><span class="toc-number">4.1.</span> <span class="toc-text">客观评测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A7%82%E8%AF%84%E6%B5%8B"><span class="toc-number">4.2.</span> <span class="toc-text">主观评测</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%84%E6%B5%8B%E6%B5%81%E7%A8%8B"><span class="toc-number">5.</span> <span class="toc-text">评测流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">6.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87"><span class="toc-number">7.</span> <span class="toc-text">数据准备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E8%AF%84%E6%B5%8B"><span class="toc-number">8.</span> <span class="toc-text">启动评测</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">9.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'b4ecf4b92c02c771c8994bf34a962477',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

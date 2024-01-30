@@ -1,0 +1,315 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Python 代码性能分析 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Python 是一门非常优秀的面向对象的解释性语言，代码编写快且易读（但从代码字面意义上）。如果非要挑出一个缺点，那就是代码的执行速度相对于 C、Java、Golang 等语言较慢，不过在 3.11 版的 Python 运行速度已经进行大幅提高。但是，对于 Python 代码的性能分析仍然不可或缺，这有助于找出耗时的代码部分，通过优化能够加速程序运行。本篇介绍一些 Python 代码性能分析的方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 代码性能分析">
+<meta property="og:url" content="https://xujinzh.github.io/2023/04/19/python-profile/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="Python 是一门非常优秀的面向对象的解释性语言，代码编写快且易读（但从代码字面意义上）。如果非要挑出一个缺点，那就是代码的执行速度相对于 C、Java、Golang 等语言较慢，不过在 3.11 版的 Python 运行速度已经进行大幅提高。但是，对于 Python 代码的性能分析仍然不可或缺，这有助于找出耗时的代码部分，通过优化能够加速程序运行。本篇介绍一些 Python 代码性能分析的方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c27.jpg">
+<meta property="article:published_time" content="2023-04-19T04:54:28.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.104Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c27.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2023/04/19/python-profile/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Python 代码性能分析',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Python 代码性能分析</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-04-19T04:54:28.000Z" title="发表于 2023-04-19 12:54:28">2023-04-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.104Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/python/">python</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Python 代码性能分析"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>Python 是一门非常优秀的面向对象的解释性语言，代码编写快且易读（但从代码字面意义上）。如果非要挑出一个缺点，那就是代码的执行速度相对于 C、Java、Golang 等语言较慢，不过在 3.11 版的 Python 运行速度已经进行大幅提高。但是，对于 Python 代码的性能分析仍然不可或缺，这有助于找出耗时的代码部分，通过优化能够加速程序运行。本篇介绍一些 Python 代码性能分析的方法。</p>
+<span id="more"></span>
+
+<p>代码的性能分析跟代码执行时间密切相关，只不过它关注的是耗时的位置。默认的 Python 性能分析工具是 cProfile 模块，它在执行一个程序或代码块时，会记录各函数所耗费的时间。但它不是转为 Python 设计的。</p>
+<p>cProfile 一般是在命令行上使用的，它将执行整个程序然后输出各函数的执行时间。我们首先编写一个 Python 模块 <code>py_performance.py</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> numpy.linalg <span class="keyword">import</span> eigvals</span><br><span class="line">np.random.seed(<span class="number">33</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run_experiment</span>(<span class="params">niter=<span class="number">100</span></span>):</span><br><span class="line">    K = <span class="number">100</span></span><br><span class="line">    results = []</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(niter):</span><br><span class="line">        mat = np.random.randn(K, K)</span><br><span class="line">        max_eigenvalue = np.<span class="built_in">abs</span>(eigvals(mat)).<span class="built_in">max</span>()</span><br><span class="line">        results.append(max_eigenvalue)</span><br><span class="line">    <span class="keyword">return</span> results</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    some_results = run_experiment()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;最大特征值: <span class="subst">&#123;np.<span class="built_in">max</span>(some_results)&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>执行性能分析：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m cProfile py_performance.py</span><br></pre></td></tr></table></figure>
+<p>结果大致是下面：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Largest one we saw: 11.375894329102476</span><br><span class="line">         80055 <span class="keyword">function</span> calls (77991 primitive calls) <span class="keyword">in</span> 1.101 seconds</span><br><span class="line"></span><br><span class="line">   Ordered by: standard name</span><br><span class="line"></span><br><span class="line">   ncalls  tottime  percall  cumtime  percall filename:lineno(<span class="keyword">function</span>)</span><br><span class="line">      100    0.000    0.000    0.002    0.000 &lt;__array_function__ internals&gt;:177(all)</span><br><span class="line">        1    0.000    0.000    0.000    0.000 &lt;__array_function__ internals&gt;:177(amax)</span><br><span class="line">        1    0.000    0.000    0.000    0.000 &lt;__array_function__ internals&gt;:177(concatenate)</span><br><span class="line">        1    0.000    0.000    0.000    0.000 &lt;__array_function__ internals&gt;:177(copyto)</span><br><span class="line">      100    0.000    0.000    0.592    0.006 &lt;__array_function__ internals&gt;:177(eigvals)</span><br><span class="line">    149/1    0.001    0.000    0.454    0.454 &lt;frozen importlib._bootstrap&gt;:1002(_find_and_load)</span><br><span class="line">   180/16    0.001    0.000    0.435    0.027 &lt;frozen importlib._bootstrap&gt;:1033(_handle_fromlist)</span><br><span class="line">      452    0.001    0.000    0.002    0.000 &lt;frozen importlib._bootstrap&gt;:112(release)</span><br><span class="line">      149    0.000    0.000    0.000    0.000 &lt;frozen importlib._bootstrap&gt;:152(__init__)</span><br><span class="line">      149    0.000    0.000    0.003    0.000 &lt;frozen importlib._bootstrap&gt;:156(__enter__)</span><br><span class="line">      149    0.000    0.000    0.001    0.000 &lt;frozen importlib._bootstrap&gt;:160(__exit__)</span><br><span class="line">      452    0.002    0.000    0.003    0.000 &lt;frozen importlib._bootstrap&gt;:166(_get_module_lock)</span><br></pre></td></tr></table></figure>
+<p>单从上面的日志很难发现最耗时的地方在哪里，常用 -s 标志对某一列进行排序，如 cumtime：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Largest one we saw: 11.375894329102476</span><br><span class="line">         80055 <span class="keyword">function</span> calls (77991 primitive calls) <span class="keyword">in</span> 0.743 seconds</span><br><span class="line"></span><br><span class="line">   Ordered by: cumulative time</span><br><span class="line"></span><br><span class="line">   ncalls  tottime  percall  cumtime  percall filename:lineno(<span class="keyword">function</span>)</span><br><span class="line">    110/1    0.000    0.000    0.743    0.743 &#123;built-in method builtins.exec&#125;</span><br><span class="line">        1    0.000    0.000    0.743    0.743 py_performance.py:1(&lt;module&gt;)</span><br><span class="line">        1    0.001    0.001    0.621    0.621 py_performance.py:5(run_experiment)</span><br><span class="line">      100    0.000    0.000    0.567    0.006 &lt;__array_function__ internals&gt;:177(eigvals)</span><br><span class="line">  203/103    0.000    0.000    0.567    0.006 &#123;built-in method numpy.core._multiarray_umath.implement_array_function&#125;</span><br><span class="line">      100    0.562    0.006    0.567    0.006 linalg.py:976(eigvals)</span><br><span class="line">       13    0.001    0.000    0.259    0.020 __init__.py:1(&lt;module&gt;)</span><br><span class="line">    149/1    0.001    0.000    0.122    0.122 &lt;frozen importlib._bootstrap&gt;:1002(_find_and_load)</span><br><span class="line">    149/1    0.001    0.000    0.122    0.122 &lt;frozen importlib._bootstrap&gt;:967(_find_and_load_unlocked)</span><br><span class="line">    138/1    0.001    0.000    0.122    0.122 &lt;frozen importlib._bootstrap&gt;:659(_load_unlocked)</span><br><span class="line">    109/1    0.000    0.000    0.122    0.122 &lt;frozen importlib._bootstrap_external&gt;:844(exec_module)</span><br><span class="line">    216/1    0.000    0.000    0.122    0.122 &lt;frozen importlib._bootstrap&gt;:220(_call_with_frames_removed)</span><br><span class="line">   180/16    0.001    0.000    0.118    0.007 &lt;frozen importlib._bootstrap&gt;:1033(_handle_fromlist)</span><br><span class="line">    362/8    0.001    0.000    0.117    0.015 &#123;built-in method builtins.__import__&#125;</span><br><span class="line">      100    0.053    0.001    0.053    0.001 &#123;method <span class="string">&#x27;randn&#x27;</span> of <span class="string">&#x27;numpy.random.mtrand.RandomState&#x27;</span> objects&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：如果一个函数调用了别的函数，计时器是不会停下来重新计时的。</p>
+<p>除了上面命令行的方式外，cProfile 还提供了编程式的分析代码块的性能方法，IPython 提供了方便的接口，如 <code>%prun</code> 和 <code>%run -p</code>.</p>
+<h1 id="基本性能分析-prun-和-run-p"><a href="#基本性能分析-prun-和-run-p" class="headerlink" title="基本性能分析 %prun 和 %run -p"></a>基本性能分析 %prun 和 %run -p</h1><p>该魔法函数可以直接在 IPython Jupyter notebook 中使用，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyscripts.py_performance <span class="keyword">import</span> run_experiment</span><br><span class="line"><span class="comment"># 这里为了节省空间，只打印7行</span></span><br><span class="line">%prun -l <span class="number">7</span> -s cumulative run_experiment()</span><br></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">       4004 <span class="keyword">function</span> calls (3904 primitive calls) <span class="keyword">in</span> 0.603 seconds</span><br><span class="line"></span><br><span class="line"> Ordered by: cumulative time</span><br><span class="line"> List reduced from 35 to 7 due to restriction &lt;7&gt;</span><br><span class="line"></span><br><span class="line"> ncalls  tottime  percall  cumtime  percall filename:lineno(<span class="keyword">function</span>)</span><br><span class="line">      1    0.000    0.000    0.603    0.603 &#123;built-in method builtins.exec&#125;</span><br><span class="line">      1    0.000    0.000    0.603    0.603 &lt;string&gt;:1(&lt;module&gt;)</span><br><span class="line">      1    0.001    0.001    0.603    0.603 py_performance.py:5(run_experiment)</span><br><span class="line">    100    0.000    0.000    0.552    0.006 &lt;__array_function__ internals&gt;:177(eigvals)</span><br><span class="line">200/100    0.000    0.000    0.552    0.006 &#123;built-in method numpy.core._multiarray_umath.implement_array_function&#125;</span><br><span class="line">    100    0.547    0.005    0.552    0.006 linalg.py:976(eigvals)</span><br><span class="line">    100    0.049    0.000    0.049    0.000 &#123;method <span class="string">&#x27;randn&#x27;</span> of <span class="string">&#x27;numpy.random.mtrand.RandomState&#x27;</span> objects&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%run -p -l <span class="number">7</span> -s cumulative pyscripts/py_performance.py</span><br></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Largest one we saw: 11.375894329102476</span><br><span class="line"> </span><br><span class="line">         4163 <span class="keyword">function</span> calls (4062 primitive calls) <span class="keyword">in</span> 0.584 seconds</span><br><span class="line"></span><br><span class="line">   Ordered by: cumulative time</span><br><span class="line">   List reduced from 106 to 7 due to restriction &lt;7&gt;</span><br><span class="line"></span><br><span class="line">   ncalls  tottime  percall  cumtime  percall filename:lineno(<span class="keyword">function</span>)</span><br><span class="line">      2/1    0.000    0.000    0.584    0.584 &#123;built-in method builtins.exec&#125;</span><br><span class="line">        1    0.000    0.000    0.584    0.584 &lt;string&gt;:1(&lt;module&gt;)</span><br><span class="line">        1    0.000    0.000    0.584    0.584 interactiveshell.py:2774(safe_execfile)</span><br><span class="line">        1    0.000    0.000    0.583    0.583 py3compat.py:51(execfile)</span><br><span class="line">        1    0.000    0.000    0.582    0.582 py_performance.py:1(&lt;module&gt;)</span><br><span class="line">        1    0.001    0.001    0.581    0.581 py_performance.py:5(run_experiment)</span><br><span class="line">      100    0.000    0.000    0.532    0.005 &lt;__array_function__ internals&gt;:177(eigvals)</span><br></pre></td></tr></table></figure>
+
+<h1 id="逐行分析函数性能-lprun"><a href="#逐行分析函数性能-lprun" class="headerlink" title="逐行分析函数性能 %lprun"></a>逐行分析函数性能 %lprun</h1><p>逐行分析函数性能需要第三方模块 <code>line_profiler</code>，安装方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install line_profiler</span><br></pre></td></tr></table></figure>
+<p>安装后，可以编辑 <code>~/.ipython/profile_default/ipython_config.py</code>，增加如下内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">c.TerminalIPythonApp.extensions = [</span><br><span class="line">    <span class="string">&#x27;line_profiler&#x27;</span>,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>此时，可以在 IPython 中使用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">1</span>]: <span class="keyword">from</span> pyscripts.py_performance <span class="keyword">import</span> run_experiment</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: %lprun -f run_experiment run_experiment()</span><br><span class="line">Timer unit: <span class="number">1e-09</span> s</span><br><span class="line"></span><br><span class="line">Total time: <span class="number">0.997021</span> s</span><br><span class="line">File: /home/jinzhongxu/MEGA/py/nb/bs/pyscripts/py_performance.py</span><br><span class="line">Function: run_experiment at line <span class="number">5</span></span><br><span class="line"></span><br><span class="line">Line <span class="comment">#      Hits         Time  Per Hit   % Time  Line Contents</span></span><br><span class="line">==============================================================</span><br><span class="line">     <span class="number">5</span>                                           <span class="keyword">def</span> <span class="title function_">run_experiment</span>(<span class="params">niter=<span class="number">100</span></span>):</span><br><span class="line">     <span class="number">6</span>         <span class="number">1</span>       <span class="number">1530.0</span>   <span class="number">1530.0</span>      <span class="number">0.0</span>      K = <span class="number">100</span></span><br><span class="line">     <span class="number">7</span>         <span class="number">1</span>        <span class="number">421.0</span>    <span class="number">421.0</span>      <span class="number">0.0</span>      results = []</span><br><span class="line">     <span class="number">8</span>       <span class="number">100</span>      <span class="number">57943.0</span>    <span class="number">579.4</span>      <span class="number">0.0</span>      <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(niter):</span><br><span class="line">     <span class="number">9</span>       <span class="number">100</span>   <span class="number">66120221.0</span> <span class="number">661202.2</span>      <span class="number">6.6</span>          mat = np.random.randn(K, K)</span><br><span class="line">    <span class="number">10</span>       <span class="number">100</span>  <span class="number">930721489.0</span> <span class="number">9307214.9</span>     <span class="number">93.4</span>          max_eigenvalue = np.<span class="built_in">abs</span>(eigvals(mat)).<span class="built_in">max</span>()</span><br><span class="line">    <span class="number">11</span>       <span class="number">100</span>     <span class="number">118745.0</span>   <span class="number">1187.5</span>      <span class="number">0.0</span>          results.append(max_eigenvalue)</span><br><span class="line">    <span class="number">12</span>         <span class="number">1</span>        <span class="number">321.0</span>    <span class="number">321.0</span>      <span class="number">0.0</span>      <span class="keyword">return</span> results</span><br></pre></td></tr></table></figure>
+
+<p><code>%lprun</code> 的通用语法为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%lprun -f func1 -f func2 func(x, y)</span><br></pre></td></tr></table></figure>
+<p>在 Jupyter notebook 中使用:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%load_ext line_profiler</span><br><span class="line">from pyscripts.py_performance import run_experiment</span><br><span class="line">%lprun -f run_experiment run_experiment()</span><br></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Timer unit: 1e-09 s</span><br><span class="line"></span><br><span class="line">Total time: 0.58282 s</span><br><span class="line">File: /home/jinzhongxu/MEGA/py/nb/bs/pyscripts/py_performance.py</span><br><span class="line">Function: run_experiment at line 5</span><br><span class="line"></span><br><span class="line">Line <span class="comment">#      Hits         Time  Per Hit   % Time  Line Contents</span></span><br><span class="line">==============================================================</span><br><span class="line">     5                                           def run_experiment(niter=100):</span><br><span class="line">     6         1       4160.0   4160.0      0.0      K = 100</span><br><span class="line">     7         1        952.0    952.0      0.0      results = []</span><br><span class="line">     8       100      43829.0    438.3      0.0      <span class="keyword">for</span> _ <span class="keyword">in</span> range(niter):</span><br><span class="line">     9       100   46188517.0 461885.2      7.9          mat = np.random.randn(K, K)</span><br><span class="line">    10       100  536499670.0 5364996.7     92.1          max_eigenvalue = np.abs(eigvals(mat)).max()</span><br><span class="line">    11       100      82394.0    823.9      0.0          results.append(max_eigenvalue)</span><br><span class="line">    12         1        192.0    192.0      0.0      <span class="built_in">return</span> results</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://ipython-books.github.io/43-profiling-your-code-line-by-line-with-line_profiler/">4.3. Profiling your code line-by-line with line_profiler</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/pyutils/line_profiler">pyutils&#x2F;line_profiler</a></li>
+<li>Wes McKinney 著 唐学韬 等译。利用 Python 进行数据分析。机械工业出版社。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2023/04/19/python-profile/">https://xujinzh.github.io/2023/04/19/python-profile/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a></div><div class="post_share"><div class="social-share" data-image="/img/c27.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/05/07/linux-rename-filenames-in-batches/" title="Linux 批量修改文件名"><img class="cover" src="/img/c3.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Linux 批量修改文件名</div></div></a></div><div class="next-post pull-right"><a href="/2023/04/14/python-numpy-stack/" title="Python 中 numpy 数组拼接"><img class="cover" src="/img/c9.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Python 中 numpy 数组拼接</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2019/12/21/Python-deepcopy-copy/" title="Python 中 deepcopy, copy, 赋值的区别"><img class="cover" src="/img/c26.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-21</div><div class="title">Python 中 deepcopy, copy, 赋值的区别</div></div></a></div><div><a href="/2023/08/28/ai-stable-diffusion-webui/" title="用于文生图的 AI 模型 Stable Diffusion 的部署"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-28</div><div class="title">用于文生图的 AI 模型 Stable Diffusion 的部署</div></div></a></div><div><a href="/2022/07/04/anaconda-pip-offline-install-whl/" title="通过 pip 离线安装 whl、tar.gz 到 anaconda"><img class="cover" src="/img/c19.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-04</div><div class="title">通过 pip 离线安装 whl、tar.gz 到 anaconda</div></div></a></div><div><a href="/2021/11/06/auto-email-server-ip/" title="服务器开机或IP改变自动发送通知邮件"><img class="cover" src="/img/c17.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-06</div><div class="title">服务器开机或IP改变自动发送通知邮件</div></div></a></div><div><a href="/2021/11/29/auto-email-server-shutdown/" title="服务器关机自动发送通知邮件"><img class="cover" src="/img/c2.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-29</div><div class="title">服务器关机自动发送通知邮件</div></div></a></div><div><a href="/2022/10/29/build-official-python3-11/" title="Ubuntu 上编译安装官网 Python"><img class="cover" src="/img/c11.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-29</div><div class="title">Ubuntu 上编译安装官网 Python</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90-prun-%E5%92%8C-run-p"><span class="toc-number">1.</span> <span class="toc-text">基本性能分析 %prun 和 %run -p</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%90%E8%A1%8C%E5%88%86%E6%9E%90%E5%87%BD%E6%95%B0%E6%80%A7%E8%83%BD-lprun"><span class="toc-number">2.</span> <span class="toc-text">逐行分析函数性能 %lprun</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">3.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '174601e66bb12845d5c2fcb3f33ce1db',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

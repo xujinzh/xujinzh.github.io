@@ -1,0 +1,804 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>书生·浦语大模型使用 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本篇介绍书生·浦语大模型的使用，包括智能对话、智能体工具调用和图文理解创作等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="书生·浦语大模型使用">
+<meta property="og:url" content="https://xujinzh.github.io/2024/01/06/ai-internlm-useage/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="本篇介绍书生·浦语大模型的使用，包括智能对话、智能体工具调用和图文理解创作等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c12.jpg">
+<meta property="article:published_time" content="2024-01-06T08:44:54.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.088Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="internlm">
+<meta property="article:tag" content="openmmlab">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c12.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2024/01/06/ai-internlm-useage/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '书生·浦语大模型使用',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">书生·浦语大模型使用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-01-06T08:44:54.000Z" title="发表于 2024-01-06 16:44:54">2024-01-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.088Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/deep-learning/">deep learning</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>42分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="书生·浦语大模型使用"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>本篇介绍书生·浦语大模型的使用，包括智能对话、智能体工具调用和图文理解创作等。</p>
+<span id="more"></span>
+
+<h1 id="InternLM-Chat-7B-智能对话"><a href="#InternLM-Chat-7B-智能对话" class="headerlink" title="InternLM-Chat-7B 智能对话"></a>InternLM-Chat-7B 智能对话</h1><h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">!conda create --name internlm-chat --clone=/root/share/conda_envs/internlm-base</span><br><span class="line">!/root/.conda/envs/internlm-chat/<span class="built_in">bin</span>/python -m pip install ipykernel ipywidgets</span><br><span class="line">!/root/.conda/envs/internlm-chat/<span class="built_in">bin</span>/python -m ipykernel install --user --name internlm-chat --display-name internlm-chat</span><br><span class="line"></span><br><span class="line"><span class="comment"># restart kernel and use internlm-chat env</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%pip install -q --upgrade pip</span><br><span class="line">%pip install -q modelscope==<span class="number">1.9</span><span class="number">.5</span> transformers==<span class="number">4.35</span><span class="number">.2</span> streamlit==<span class="number">1.24</span><span class="number">.0</span> sentencepiece==<span class="number">0.1</span><span class="number">.99</span> accelerate==<span class="number">0.24</span><span class="number">.1</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前依赖包信息</span></span><br><span class="line">%pip <span class="built_in">list</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>Package                   Version
+------------------------- ------------
+accelerate                0.24.1
+addict                    2.4.0
+aiohttp                   3.9.1
+aiosignal                 1.3.1
+aliyun-python-sdk-core    2.14.0
+aliyun-python-sdk-kms     2.16.2
+altair                    5.2.0
+asttokens                 2.4.1
+async-timeout             4.0.3
+attrs                     23.2.0
+blinker                   1.7.0
+Brotli                    1.0.9
+cachetools                5.3.2
+certifi                   2023.11.17
+cffi                      1.16.0
+charset-normalizer        2.0.4
+click                     8.1.7
+comm                      0.2.1
+crcmod                    1.7
+cryptography              41.0.3
+datasets                  2.13.0
+debugpy                   1.8.0
+decorator                 5.1.1
+dill                      0.3.6
+einops                    0.7.0
+exceptiongroup            1.2.0
+executing                 2.0.1
+filelock                  3.13.1
+frozenlist                1.4.1
+fsspec                    2023.12.2
+gast                      0.5.4
+gitdb                     4.0.11
+GitPython                 3.1.40
+gmpy2                     2.1.2
+huggingface-hub           0.20.2
+idna                      3.4
+importlib-metadata        6.11.0
+ipykernel                 6.28.0
+ipython                   8.19.0
+ipywidgets                8.1.1
+jedi                      0.19.1
+Jinja2                    3.1.2
+jmespath                  0.10.0
+jsonschema                4.20.0
+jsonschema-specifications 2023.12.1
+jupyter_client            8.6.0
+jupyter_core              5.7.0
+jupyterlab-widgets        3.0.9
+markdown-it-py            3.0.0
+MarkupSafe                2.1.1
+matplotlib-inline         0.1.6
+mdurl                     0.1.2
+mkl-fft                   1.3.8
+mkl-random                1.2.4
+mkl-service               2.4.0
+modelscope                1.9.5
+mpmath                    1.3.0
+multidict                 6.0.4
+multiprocess              0.70.14
+nest-asyncio              1.5.8
+networkx                  3.1
+numpy                     1.26.2
+oss2                      2.18.4
+packaging                 23.2
+pandas                    2.1.4
+parso                     0.8.3
+pexpect                   4.9.0
+Pillow                    9.5.0
+pip                       23.3.2
+platformdirs              4.1.0
+prompt-toolkit            3.0.43
+protobuf                  4.25.1
+psutil                    5.9.7
+ptyprocess                0.7.0
+pure-eval                 0.2.2
+pyarrow                   14.0.2
+pycparser                 2.21
+pycryptodome              3.19.1
+pydeck                    0.8.1b0
+Pygments                  2.17.2
+Pympler                   1.0.1
+pyOpenSSL                 23.2.0
+PySocks                   1.7.1
+python-dateutil           2.8.2
+pytz                      2023.3.post1
+pytz-deprecation-shim     0.1.0.post0
+PyYAML                    6.0.1
+pyzmq                     25.1.2
+referencing               0.32.1
+regex                     2023.12.25
+requests                  2.31.0
+rich                      13.7.0
+rpds-py                   0.16.2
+safetensors               0.4.1
+scipy                     1.11.4
+sentencepiece             0.1.99
+setuptools                68.0.0
+simplejson                3.19.2
+six                       1.16.0
+smmap                     5.0.1
+sortedcontainers          2.4.0
+stack-data                0.6.3
+streamlit                 1.24.0
+sympy                     1.11.1
+tenacity                  8.2.3
+tokenizers                0.15.0
+toml                      0.10.2
+tomli                     2.0.1
+toolz                     0.12.0
+torch                     2.0.1
+torchaudio                2.0.2
+torchvision               0.15.2
+tornado                   6.4
+tqdm                      4.66.1
+traitlets                 5.14.1
+transformers              4.35.2
+triton                    2.0.0
+typing_extensions         4.7.1
+tzdata                    2023.4
+tzlocal                   4.3.1
+urllib3                   1.26.18
+validators                0.22.0
+watchdog                  3.0.0
+wcwidth                   0.2.13
+wheel                     0.41.2
+widgetsnbextension        4.0.9
+xxhash                    3.4.1
+yapf                      0.40.2
+yarl                      1.9.4
+zipp                      3.17.0
+Note: you may need to restart the kernel to use updated packages.
+</code></pre>
+<h2 id="下载模型"><a href="#下载模型" class="headerlink" title="下载模型"></a>下载模型</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%mkdir -p /root/model/Shanghai_AI_Laboratory</span><br><span class="line">%cp -r /root/share/temp/model_repos/internlm-chat-7b /root/model/Shanghai_AI_Laboratory</span><br></pre></td></tr></table></figure>
+
+<h2 id="代码准备"><a href="#代码准备" class="headerlink" title="代码准备"></a>代码准备</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%mkdir /root/code</span><br><span class="line">%cd /root/code</span><br><span class="line">!git clone https://gitee.com/internlm/InternLM.git</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/code
+Cloning into &#39;InternLM&#39;...
+
+
+/root/.conda/envs/internlm-chat/lib/python3.10/site-packages/IPython/core/magics/osm.py:417: UserWarning: using dhist requires you to install the `pickleshare` library.
+  self.shell.db[&#39;dhist&#39;] = compress_dhist(dhist)[-100:]
+
+
+remote: Enumerating objects: 2604, done.
+remote: Counting objects: 100% (592/592), done.
+remote: Compressing objects: 100% (264/264), done.
+remote: Total 2604 (delta 324), reused 581 (delta 318), pack-reused 2012
+Receiving objects: 100% (2604/2604), 4.87 MiB | 793.00 KiB/s, done.
+Resolving deltas: 100% (1608/1608), done.
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%cd InternLM</span><br><span class="line">!git checkout 3028f07cb79e5b1d7342f4ad8d11efad3fd13d17</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/code/InternLM
+Note: switching to &#39;3028f07cb79e5b1d7342f4ad8d11efad3fd13d17&#39;.
+
+You are in &#39;detached HEAD&#39; state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c &lt;new-branch-name&gt;
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 3028f07 fix(readme): update README with original weight download link (#460)
+</code></pre>
+<h2 id="终端运行"><a href="#终端运行" class="headerlink" title="终端运行"></a>终端运行</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># %%writefile /root/code/InternLM/cli_demo.py</span></span><br><span class="line"><span class="comment"># 1. terminal 中运行命令： python /root/code/InternLM/cli_demo.py</span></span><br><span class="line"><span class="comment"># 2. 直接在 notebook 中运行</span></span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer, AutoModelForCausalLM</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">model_name_or_path = <span class="string">&quot;/root/model/Shanghai_AI_Laboratory/internlm-chat-7b&quot;</span></span><br><span class="line"></span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, trust_remote_code=<span class="literal">True</span>)</span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(model_name_or_path, trust_remote_code=<span class="literal">True</span>, torch_dtype=torch.bfloat16, device_map=<span class="string">&#x27;auto&#x27;</span>)</span><br><span class="line">model = model.<span class="built_in">eval</span>()</span><br><span class="line"></span><br><span class="line">system_prompt = <span class="string">&quot;&quot;&quot;You are an AI assistant whose name is InternLM (书生·浦语).</span></span><br><span class="line"><span class="string">- InternLM (书生·浦语) is a conversational language model that is developed by Shanghai AI Laboratory (上海人工智能实验室). It is designed to be helpful, honest, and harmless.</span></span><br><span class="line"><span class="string">- InternLM (书生·浦语) can understand and communicate fluently in the language chosen by the user such as English and 中文.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">messages = [(system_prompt, <span class="string">&#x27;&#x27;</span>)]</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;=============Welcome to InternLM chatbot, type &#x27;exit&#x27; to exit.=============&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    input_text = <span class="built_in">input</span>(<span class="string">&quot;User  &gt;&gt;&gt; &quot;</span>)</span><br><span class="line">    input_text.replace(<span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> input_text == <span class="string">&quot;exit&quot;</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    response, history = model.chat(tokenizer, input_text, history=messages)</span><br><span class="line">    messages.append((input_text, response))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;robot &gt;&gt;&gt; <span class="subst">&#123;response&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+<pre><code>Loading checkpoint shards:   0%|          | 0/8 [00:00&lt;?, ?it/s]
+
+
+=============Welcome to InternLM chatbot, type &#39;exit&#39; to exit.=============
+
+
+User  &gt;&gt;&gt;  你好
+
+
+robot &gt;&gt;&gt; 你好！有什么我能帮你的吗？
+
+
+User  &gt;&gt;&gt;  帮我写个 300 字的小故事
+
+
+robot &gt;&gt;&gt; 有一天，一个年轻的男孩来到了一个神秘的森林。他不知道这个森林里到底有什么，但是他知道，他必须进去。他跟着森林里的指引走了一段路，最终来到了一座古老的神庙。
+
+当男孩走到神庙门前时，他感到一种奇怪的气息。他推开门，走进神庙。他发现里面有一个神秘的书房，里面放着许多古老的书籍和文物。他拿起一本破旧的书籍，翻到第一页，上面写着一个故事。
+
+故事讲述了一个叫做“神灯”的神秘物品。男孩被这个故事吸引了，他开始阅读这本书，希望能够找到这个物品。他读了很长时间，最终理解了这个故事，明白了神灯的含义。
+
+男孩离开了神庙，回到了家中。他开始思考，他是否应该去寻找神灯。他决定去寻找这个神秘的物品，他相信自己可以找到它。
+
+他走了很长一段路，遇到了许多挑战和困难，但是他始终没有放弃。最终，他找到了神灯。他拿起这个神秘物品，开始使用它。
+
+他发现，神灯可以帮助他实现他的梦想。他开始使用神灯，他能够做任何事情。他能够变成任何他想要的形状，他能够变得非常有力量。
+
+然而，男孩开始意识到，神灯并不是一个简单的物品。他开始发现，他必须付出一些代价才能使用神灯。他必须做很多事情，才能够使用它。他开始思考，他是否愿意付出这个代价。
+
+最终，男孩决定使用神灯，他开始使用它来帮助那些需要帮助的人。他开始变得非常有名，人们开始称呼他为“神灯使者”。
+
+男孩意识到，他必须继续使用神灯，但是他必须小心使用它。他不能让神灯的力量控制他，他必须控制它。最终，男孩学会了如何使用神灯，他成为了一个真正的神灯使者。
+
+男孩回到了神庙，他感谢神庙，感谢神灯，感谢那个神秘的物品。他知道，他必须继续使用神灯，但是必须小心使用它，不能让它控制他。
+
+男孩回到了家中，他开始使用神灯来帮助那些需要帮助的人。他成为了一个真正的神灯使者，他的故事被传颂了下去，成为了一段神话。
+
+
+User  &gt;&gt;&gt;  exit
+</code></pre>
+<h2 id="WEB-端运行"><a href="#WEB-端运行" class="headerlink" title="WEB 端运行"></a>WEB 端运行</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /root/code/InternLM/web_demo_user.py</span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">This script refers to the dialogue example of streamlit, the interactive generation code of chatglm2 and transformers.</span></span><br><span class="line"><span class="string">We mainly modified part of the code logic to adapt to the generation of our model.</span></span><br><span class="line"><span class="string">Please refer to these links below for more information:</span></span><br><span class="line"><span class="string">    1. streamlit chat example: https://docs.streamlit.io/knowledge-base/tutorials/build-conversational-apps</span></span><br><span class="line"><span class="string">    2. chatglm2: https://github.com/THUDM/ChatGLM2-6B</span></span><br><span class="line"><span class="string">    3. transformers: https://github.com/huggingface/transformers</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> dataclasses <span class="keyword">import</span> asdict</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> streamlit <span class="keyword">as</span> st</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoModelForCausalLM, AutoTokenizer</span><br><span class="line"><span class="keyword">from</span> transformers.utils <span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> tools.transformers.interface <span class="keyword">import</span> GenerationConfig, generate_interactive</span><br><span class="line"></span><br><span class="line">logger = logging.get_logger(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">on_btn_click</span>():</span><br><span class="line">    <span class="keyword">del</span> st.session_state.messages</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@st.cache_resource</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_model</span>():</span><br><span class="line">    model = (</span><br><span class="line">        AutoModelForCausalLM.from_pretrained(<span class="string">&quot;/root/model/Shanghai_AI_Laboratory/internlm-chat-7b&quot;</span>, trust_remote_code=<span class="literal">True</span>)</span><br><span class="line">        .to(torch.bfloat16)</span><br><span class="line">        .cuda()</span><br><span class="line">    )</span><br><span class="line">    tokenizer = AutoTokenizer.from_pretrained(<span class="string">&quot;/root/model/Shanghai_AI_Laboratory/internlm-chat-7b&quot;</span>, trust_remote_code=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> model, tokenizer</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">prepare_generation_config</span>():</span><br><span class="line">    <span class="keyword">with</span> st.sidebar:</span><br><span class="line">        max_length = st.slider(<span class="string">&quot;Max Length&quot;</span>, min_value=<span class="number">32</span>, max_value=<span class="number">2048</span>, value=<span class="number">2048</span>)</span><br><span class="line">        top_p = st.slider(<span class="string">&quot;Top P&quot;</span>, <span class="number">0.0</span>, <span class="number">1.0</span>, <span class="number">0.8</span>, step=<span class="number">0.01</span>)</span><br><span class="line">        temperature = st.slider(<span class="string">&quot;Temperature&quot;</span>, <span class="number">0.0</span>, <span class="number">1.0</span>, <span class="number">0.7</span>, step=<span class="number">0.01</span>)</span><br><span class="line">        st.button(<span class="string">&quot;Clear Chat History&quot;</span>, on_click=on_btn_click)</span><br><span class="line"></span><br><span class="line">    generation_config = GenerationConfig(max_length=max_length, top_p=top_p, temperature=temperature)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> generation_config</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">user_prompt = <span class="string">&quot;&lt;|User|&gt;:&#123;user&#125;\n&quot;</span></span><br><span class="line">robot_prompt = <span class="string">&quot;&lt;|Bot|&gt;:&#123;robot&#125;&lt;eoa&gt;\n&quot;</span></span><br><span class="line">cur_query_prompt = <span class="string">&quot;&lt;|User|&gt;:&#123;user&#125;&lt;eoh&gt;\n&lt;|Bot|&gt;:&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">combine_history</span>(<span class="params">prompt</span>):</span><br><span class="line">    messages = st.session_state.messages</span><br><span class="line">    total_prompt = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> message <span class="keyword">in</span> messages:</span><br><span class="line">        cur_content = message[<span class="string">&quot;content&quot;</span>]</span><br><span class="line">        <span class="keyword">if</span> message[<span class="string">&quot;role&quot;</span>] == <span class="string">&quot;user&quot;</span>:</span><br><span class="line">            cur_prompt = user_prompt.replace(<span class="string">&quot;&#123;user&#125;&quot;</span>, cur_content)</span><br><span class="line">        <span class="keyword">elif</span> message[<span class="string">&quot;role&quot;</span>] == <span class="string">&quot;robot&quot;</span>:</span><br><span class="line">            cur_prompt = robot_prompt.replace(<span class="string">&quot;&#123;robot&#125;&quot;</span>, cur_content)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> RuntimeError</span><br><span class="line">        total_prompt += cur_prompt</span><br><span class="line">    total_prompt = total_prompt + cur_query_prompt.replace(<span class="string">&quot;&#123;user&#125;&quot;</span>, prompt)</span><br><span class="line">    <span class="keyword">return</span> total_prompt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="comment"># torch.cuda.empty_cache()</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;load model begin.&quot;</span>)</span><br><span class="line">    model, tokenizer = load_model()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;load model end.&quot;</span>)</span><br><span class="line"></span><br><span class="line">    user_avator = <span class="string">&quot;doc/imgs/user.png&quot;</span></span><br><span class="line">    robot_avator = <span class="string">&quot;doc/imgs/robot.png&quot;</span></span><br><span class="line"></span><br><span class="line">    st.title(<span class="string">&quot;InternLM-Chat-7B&quot;</span>)</span><br><span class="line"></span><br><span class="line">    generation_config = prepare_generation_config()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Initialize chat history</span></span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;messages&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> st.session_state:</span><br><span class="line">        st.session_state.messages = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Display chat messages from history on app rerun</span></span><br><span class="line">    <span class="keyword">for</span> message <span class="keyword">in</span> st.session_state.messages:</span><br><span class="line">        <span class="keyword">with</span> st.chat_message(message[<span class="string">&quot;role&quot;</span>], avatar=message.get(<span class="string">&quot;avatar&quot;</span>)):</span><br><span class="line">            st.markdown(message[<span class="string">&quot;content&quot;</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Accept user input</span></span><br><span class="line">    <span class="keyword">if</span> prompt := st.chat_input(<span class="string">&quot;What is up?&quot;</span>):</span><br><span class="line">        <span class="comment"># Display user message in chat message container</span></span><br><span class="line">        <span class="keyword">with</span> st.chat_message(<span class="string">&quot;user&quot;</span>, avatar=user_avator):</span><br><span class="line">            st.markdown(prompt)</span><br><span class="line">        real_prompt = combine_history(prompt)</span><br><span class="line">        <span class="comment"># Add user message to chat history</span></span><br><span class="line">        st.session_state.messages.append(&#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>, <span class="string">&quot;content&quot;</span>: prompt, <span class="string">&quot;avatar&quot;</span>: user_avator&#125;)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">with</span> st.chat_message(<span class="string">&quot;robot&quot;</span>, avatar=robot_avator):</span><br><span class="line">            message_placeholder = st.empty()</span><br><span class="line">            <span class="keyword">for</span> cur_response <span class="keyword">in</span> generate_interactive(</span><br><span class="line">                model=model,</span><br><span class="line">                tokenizer=tokenizer,</span><br><span class="line">                prompt=real_prompt,</span><br><span class="line">                additional_eos_token_id=<span class="number">103028</span>,</span><br><span class="line">                **asdict(generation_config),</span><br><span class="line">            ):</span><br><span class="line">                <span class="comment"># Display robot response in chat message container</span></span><br><span class="line">                message_placeholder.markdown(cur_response + <span class="string">&quot;▌&quot;</span>)</span><br><span class="line">            message_placeholder.markdown(cur_response)</span><br><span class="line">        <span class="comment"># Add robot response to chat history</span></span><br><span class="line">        st.session_state.messages.append(&#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;robot&quot;</span>, <span class="string">&quot;content&quot;</span>: cur_response, <span class="string">&quot;avatar&quot;</span>: robot_avator&#125;)</span><br><span class="line">        torch.cuda.empty_cache()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<pre><code>Writing /root/code/InternLM/web_demo_user.py
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os, sys</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%cd /root/code/InternLM/</span><br><span class="line">!HF_ENDPOINT=https://hf-mirror.com &#123;os.path.join(sys.exec_prefix, <span class="string">&#x27;bin/streamlit&#x27;</span>)&#125;  run web_demo.py --server.address <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> --server.port <span class="number">6006</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/code/InternLM
+
+
+/root/.conda/envs/internlm-chat/lib/python3.10/site-packages/IPython/core/magics/osm.py:417: UserWarning: using dhist requires you to install the `pickleshare` library.
+  self.shell.db[&#39;dhist&#39;] = compress_dhist(dhist)[-100:]
+
+
+
+Collecting usage statistics. To deactivate, set browser.gatherUsageStats to False.
+
+You can now view your Streamlit app in your browser.
+
+URL: http://127.0.0.1:6006
+
+load model begin.
+Loading checkpoint shards: 100%|██████████████████| 8/8 [00:25&lt;00:00,  3.20s/it]
+/usr/local/lib/python3.8/dist-packages/huggingface_hub/file_download.py:983: UserWarning: Not enough free disk space to download the file. The expected file size is: 0.00 MB. The target location /root/.cache/huggingface/hub only has 0.00 MB free disk space.
+  warnings.warn(
+/usr/local/lib/python3.8/dist-packages/huggingface_hub/file_download.py:983: UserWarning: Not enough free disk space to download the file. The expected file size is: 0.00 MB. The target location /root/.cache/huggingface/hub/models--internlm--internlm-chat-7b/blobs only has 0.00 MB free disk space.
+  warnings.warn(
+tokenizer_config.json: 343B [00:00, 31.9kB/s]
+/usr/local/lib/python3.8/dist-packages/huggingface_hub/file_download.py:983: UserWarning: Not enough free disk space to download the file. The expected file size is: 0.01 MB. The target location /root/.cache/huggingface/hub only has 0.00 MB free disk space.
+  warnings.warn(
+/usr/local/lib/python3.8/dist-packages/huggingface_hub/file_download.py:983: UserWarning: Not enough free disk space to download the file. The expected file size is: 0.01 MB. The target location /root/.cache/huggingface/hub/models--internlm--internlm-chat-7b/blobs only has 0.00 MB free disk space.
+  warnings.warn(
+tokenization_internlm.py: 8.95kB [00:00, 35.6MB/s]
+A new version of the following files was downloaded from https://huggingface.co/internlm/internlm-chat-7b:
+- tokenization_internlm.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+/usr/local/lib/python3.8/dist-packages/huggingface_hub/file_download.py:983: UserWarning: Not enough free disk space to download the file. The expected file size is: 1.66 MB. The target location /root/.cache/huggingface/hub only has 0.00 MB free disk space.
+  warnings.warn(
+/usr/local/lib/python3.8/dist-packages/huggingface_hub/file_download.py:983: UserWarning: Not enough free disk space to download the file. The expected file size is: 1.66 MB. The target location /root/.cache/huggingface/hub/models--internlm--internlm-chat-7b/blobs only has 0.00 MB free disk space.
+  warnings.warn(
+tokenizer.model: 100%|█████████████████████| 1.66M/1.66M [00:00&lt;00:00, 2.92MB/s]
+special_tokens_map.json: 95.0B [00:00, 18.2kB/s]
+load model end.
+load model begin.
+load model end.
+load model begin.
+load model end.
+^C
+Stopping...
+</code></pre>
+<p>上面运行成功后，需要利用SSH把远程服务器的6006端口映射到本地的某个端口（这里设为6006），这里的SSH端口根据开发机创建时动态开启的端口的不同而不同，我这里是 33449</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 本地机器运行，需要把本地的公钥添加到个人服务器账号上</span></span><br><span class="line">ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 33449</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/llm/internlm-chat-7b.png?raw=true"></p>
+<h1 id="Lagent-智能体工具调用"><a href="#Lagent-智能体工具调用" class="headerlink" title="Lagent 智能体工具调用"></a>Lagent 智能体工具调用</h1><p>Lagent 是一个轻量级、开源的基于大语言模型的智能体（agent）框架，支持用户快速地将一个大语言模型转变为多种类型的智能体，并提供了一些典型工具为大语言模型赋能。通过 Lagent 框架可以更好的发挥 InternLM 的全部性能。</p>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>同上一个 InternLM-Chat-7B 智能对话的环境</p>
+<h2 id="下载模型-1"><a href="#下载模型-1" class="headerlink" title="下载模型"></a>下载模型</h2><p>同上一个 InternLM-Chat-7B 智能对话的模型</p>
+<h2 id="Lagent-安装"><a href="#Lagent-安装" class="headerlink" title="Lagent 安装"></a>Lagent 安装</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%cd /root/code</span><br><span class="line">!git clone https://gitee.com/internlm/lagent.git</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/code
+Cloning into &#39;lagent&#39;...
+remote: Enumerating objects: 414, done.
+remote: Counting objects: 100% (414/414), done.
+remote: Compressing objects: 100% (188/188), done.
+remote: Total 414 (delta 197), reused 414 (delta 197), pack-reused 0
+Receiving objects: 100% (414/414), 214.97 KiB | 306.00 KiB/s, done.
+Resolving deltas: 100% (197/197), done.
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%cd /root/code/lagent</span><br><span class="line">!git checkout 511b03889010c4811b1701abb153e02b8e94fb5e <span class="comment"># 尽量保证和教程commit版本一致</span></span><br><span class="line">%pip install -e . <span class="comment"># 源码安装</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/code/lagent
+Note: switching to &#39;511b03889010c4811b1701abb153e02b8e94fb5e&#39;.
+
+You are in &#39;detached HEAD&#39; state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c &lt;new-branch-name&gt;
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 511b038 update header-logo (#72)
+</code></pre>
+<h2 id="推理"><a href="#推理" class="headerlink" title="推理"></a>推理</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /root/code/lagent/examples/react_web_demo_user.py</span><br><span class="line"><span class="keyword">import</span> copy</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> streamlit <span class="keyword">as</span> st</span><br><span class="line"><span class="keyword">from</span> streamlit.logger <span class="keyword">import</span> get_logger</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> lagent.actions <span class="keyword">import</span> ActionExecutor, GoogleSearch, PythonInterpreter</span><br><span class="line"><span class="keyword">from</span> lagent.agents.react <span class="keyword">import</span> ReAct</span><br><span class="line"><span class="keyword">from</span> lagent.llms <span class="keyword">import</span> GPTAPI</span><br><span class="line"><span class="keyword">from</span> lagent.llms.huggingface <span class="keyword">import</span> HFTransformerCasualLM</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SessionState</span>:</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">init_state</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Initialize session state variables.&quot;&quot;&quot;</span></span><br><span class="line">        st.session_state[<span class="string">&#x27;assistant&#x27;</span>] = []</span><br><span class="line">        st.session_state[<span class="string">&#x27;user&#x27;</span>] = []</span><br><span class="line"></span><br><span class="line">        <span class="comment">#action_list = [PythonInterpreter(), GoogleSearch()]</span></span><br><span class="line">        action_list = [PythonInterpreter()]</span><br><span class="line">        st.session_state[<span class="string">&#x27;plugin_map&#x27;</span>] = &#123;</span><br><span class="line">            action.name: action</span><br><span class="line">            <span class="keyword">for</span> action <span class="keyword">in</span> action_list</span><br><span class="line">        &#125;</span><br><span class="line">        st.session_state[<span class="string">&#x27;model_map&#x27;</span>] = &#123;&#125;</span><br><span class="line">        st.session_state[<span class="string">&#x27;model_selected&#x27;</span>] = <span class="literal">None</span></span><br><span class="line">        st.session_state[<span class="string">&#x27;plugin_actions&#x27;</span>] = <span class="built_in">set</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">clear_state</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Clear the existing session state.&quot;&quot;&quot;</span></span><br><span class="line">        st.session_state[<span class="string">&#x27;assistant&#x27;</span>] = []</span><br><span class="line">        st.session_state[<span class="string">&#x27;user&#x27;</span>] = []</span><br><span class="line">        st.session_state[<span class="string">&#x27;model_selected&#x27;</span>] = <span class="literal">None</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;chatbot&#x27;</span> <span class="keyword">in</span> st.session_state:</span><br><span class="line">            st.session_state[<span class="string">&#x27;chatbot&#x27;</span>]._session_history = []</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">StreamlitUI</span>:</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, session_state: SessionState</span>):</span><br><span class="line">        self.init_streamlit()</span><br><span class="line">        self.session_state = session_state</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">init_streamlit</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Initialize Streamlit&#x27;s UI settings.&quot;&quot;&quot;</span></span><br><span class="line">        st.set_page_config(</span><br><span class="line">            layout=<span class="string">&#x27;wide&#x27;</span>,</span><br><span class="line">            page_title=<span class="string">&#x27;lagent-web&#x27;</span>,</span><br><span class="line">            page_icon=<span class="string">&#x27;./docs/imgs/lagent_icon.png&#x27;</span>)</span><br><span class="line">        <span class="comment"># st.header(&#x27;:robot_face: :blue[Lagent] Web Demo &#x27;, divider=&#x27;rainbow&#x27;)</span></span><br><span class="line">        st.sidebar.title(<span class="string">&#x27;模型控制&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">setup_sidebar</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Setup the sidebar for model and plugin selection.&quot;&quot;&quot;</span></span><br><span class="line">        model_name = st.sidebar.selectbox(</span><br><span class="line">            <span class="string">&#x27;模型选择：&#x27;</span>, options=[<span class="string">&#x27;gpt-3.5-turbo&#x27;</span>,<span class="string">&#x27;internlm&#x27;</span>])</span><br><span class="line">        <span class="keyword">if</span> model_name != st.session_state[<span class="string">&#x27;model_selected&#x27;</span>]:</span><br><span class="line">            model = self.init_model(model_name)</span><br><span class="line">            self.session_state.clear_state()</span><br><span class="line">            st.session_state[<span class="string">&#x27;model_selected&#x27;</span>] = model_name</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;chatbot&#x27;</span> <span class="keyword">in</span> st.session_state:</span><br><span class="line">                <span class="keyword">del</span> st.session_state[<span class="string">&#x27;chatbot&#x27;</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            model = st.session_state[<span class="string">&#x27;model_map&#x27;</span>][model_name]</span><br><span class="line"></span><br><span class="line">        plugin_name = st.sidebar.multiselect(</span><br><span class="line">            <span class="string">&#x27;插件选择&#x27;</span>,</span><br><span class="line">            options=<span class="built_in">list</span>(st.session_state[<span class="string">&#x27;plugin_map&#x27;</span>].keys()),</span><br><span class="line">            default=[<span class="built_in">list</span>(st.session_state[<span class="string">&#x27;plugin_map&#x27;</span>].keys())[<span class="number">0</span>]],</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        plugin_action = [</span><br><span class="line">            st.session_state[<span class="string">&#x27;plugin_map&#x27;</span>][name] <span class="keyword">for</span> name <span class="keyword">in</span> plugin_name</span><br><span class="line">        ]</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;chatbot&#x27;</span> <span class="keyword">in</span> st.session_state:</span><br><span class="line">            st.session_state[<span class="string">&#x27;chatbot&#x27;</span>]._action_executor = ActionExecutor(</span><br><span class="line">                actions=plugin_action)</span><br><span class="line">        <span class="keyword">if</span> st.sidebar.button(<span class="string">&#x27;清空对话&#x27;</span>, key=<span class="string">&#x27;clear&#x27;</span>):</span><br><span class="line">            self.session_state.clear_state()</span><br><span class="line">        uploaded_file = st.sidebar.file_uploader(</span><br><span class="line">            <span class="string">&#x27;上传文件&#x27;</span>, <span class="built_in">type</span>=[<span class="string">&#x27;png&#x27;</span>, <span class="string">&#x27;jpg&#x27;</span>, <span class="string">&#x27;jpeg&#x27;</span>, <span class="string">&#x27;mp4&#x27;</span>, <span class="string">&#x27;mp3&#x27;</span>, <span class="string">&#x27;wav&#x27;</span>])</span><br><span class="line">        <span class="keyword">return</span> model_name, model, plugin_action, uploaded_file</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">init_model</span>(<span class="params">self, option</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Initialize the model based on the selected option.&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> option <span class="keyword">not</span> <span class="keyword">in</span> st.session_state[<span class="string">&#x27;model_map&#x27;</span>]:</span><br><span class="line">            <span class="keyword">if</span> option.startswith(<span class="string">&#x27;gpt&#x27;</span>):</span><br><span class="line">                st.session_state[<span class="string">&#x27;model_map&#x27;</span>][option] = GPTAPI(</span><br><span class="line">                    model_type=option)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                st.session_state[<span class="string">&#x27;model_map&#x27;</span>][option] = HFTransformerCasualLM(</span><br><span class="line">                    <span class="string">&#x27;/root/model/Shanghai_AI_Laboratory/internlm-chat-7b&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> st.session_state[<span class="string">&#x27;model_map&#x27;</span>][option]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">initialize_chatbot</span>(<span class="params">self, model, plugin_action</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Initialize the chatbot with the given model and plugin actions.&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> ReAct(</span><br><span class="line">            llm=model, action_executor=ActionExecutor(actions=plugin_action))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">render_user</span>(<span class="params">self, prompt: <span class="built_in">str</span></span>):</span><br><span class="line">        <span class="keyword">with</span> st.chat_message(<span class="string">&#x27;user&#x27;</span>):</span><br><span class="line">            st.markdown(prompt)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">render_assistant</span>(<span class="params">self, agent_return</span>):</span><br><span class="line">        <span class="keyword">with</span> st.chat_message(<span class="string">&#x27;assistant&#x27;</span>):</span><br><span class="line">            <span class="keyword">for</span> action <span class="keyword">in</span> agent_return.actions:</span><br><span class="line">                <span class="keyword">if</span> (action):</span><br><span class="line">                    self.render_action(action)</span><br><span class="line">            st.markdown(agent_return.response)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">render_action</span>(<span class="params">self, action</span>):</span><br><span class="line">        <span class="keyword">with</span> st.expander(action.<span class="built_in">type</span>, expanded=<span class="literal">True</span>):</span><br><span class="line">            st.markdown(</span><br><span class="line">                <span class="string">&quot;&lt;p style=&#x27;text-align: left;display:flex;&#x27;&gt; &lt;span style=&#x27;font-size:14px;font-weight:600;width:70px;text-align-last: justify;&#x27;&gt;插    件&lt;/span&gt;&lt;span style=&#x27;width:14px;text-align:left;display:block;&#x27;&gt;:&lt;/span&gt;&lt;span style=&#x27;flex:1;&#x27;&gt;&quot;</span>  <span class="comment"># noqa E501</span></span><br><span class="line">                + action.<span class="built_in">type</span> + <span class="string">&#x27;&lt;/span&gt;&lt;/p&gt;&#x27;</span>,</span><br><span class="line">                unsafe_allow_html=<span class="literal">True</span>)</span><br><span class="line">            st.markdown(</span><br><span class="line">                <span class="string">&quot;&lt;p style=&#x27;text-align: left;display:flex;&#x27;&gt; &lt;span style=&#x27;font-size:14px;font-weight:600;width:70px;text-align-last: justify;&#x27;&gt;思考步骤&lt;/span&gt;&lt;span style=&#x27;width:14px;text-align:left;display:block;&#x27;&gt;:&lt;/span&gt;&lt;span style=&#x27;flex:1;&#x27;&gt;&quot;</span>  <span class="comment"># noqa E501</span></span><br><span class="line">                + action.thought + <span class="string">&#x27;&lt;/span&gt;&lt;/p&gt;&#x27;</span>,</span><br><span class="line">                unsafe_allow_html=<span class="literal">True</span>)</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">isinstance</span>(action.args, <span class="built_in">dict</span>) <span class="keyword">and</span> <span class="string">&#x27;text&#x27;</span> <span class="keyword">in</span> action.args):</span><br><span class="line">                st.markdown(</span><br><span class="line">                    <span class="string">&quot;&lt;p style=&#x27;text-align: left;display:flex;&#x27;&gt;&lt;span style=&#x27;font-size:14px;font-weight:600;width:70px;text-align-last: justify;&#x27;&gt; 执行内容&lt;/span&gt;&lt;span style=&#x27;width:14px;text-align:left;display:block;&#x27;&gt;:&lt;/span&gt;&lt;/p&gt;&quot;</span>,  <span class="comment"># noqa E501</span></span><br><span class="line">                    unsafe_allow_html=<span class="literal">True</span>)</span><br><span class="line">                st.markdown(action.args[<span class="string">&#x27;text&#x27;</span>])</span><br><span class="line">            self.render_action_results(action)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">render_action_results</span>(<span class="params">self, action</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Render the results of action, including text, images, videos, and</span></span><br><span class="line"><span class="string">        audios.&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">isinstance</span>(action.result, <span class="built_in">dict</span>)):</span><br><span class="line">            st.markdown(</span><br><span class="line">                <span class="string">&quot;&lt;p style=&#x27;text-align: left;display:flex;&#x27;&gt;&lt;span style=&#x27;font-size:14px;font-weight:600;width:70px;text-align-last: justify;&#x27;&gt; 执行结果&lt;/span&gt;&lt;span style=&#x27;width:14px;text-align:left;display:block;&#x27;&gt;:&lt;/span&gt;&lt;/p&gt;&quot;</span>,  <span class="comment"># noqa E501</span></span><br><span class="line">                unsafe_allow_html=<span class="literal">True</span>)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;text&#x27;</span> <span class="keyword">in</span> action.result:</span><br><span class="line">                st.markdown(</span><br><span class="line">                    <span class="string">&quot;&lt;p style=&#x27;text-align: left;&#x27;&gt;&quot;</span> + action.result[<span class="string">&#x27;text&#x27;</span>] +</span><br><span class="line">                    <span class="string">&#x27;&lt;/p&gt;&#x27;</span>,</span><br><span class="line">                    unsafe_allow_html=<span class="literal">True</span>)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;image&#x27;</span> <span class="keyword">in</span> action.result:</span><br><span class="line">                image_path = action.result[<span class="string">&#x27;image&#x27;</span>]</span><br><span class="line">                image_data = <span class="built_in">open</span>(image_path, <span class="string">&#x27;rb&#x27;</span>).read()</span><br><span class="line">                st.image(image_data, caption=<span class="string">&#x27;Generated Image&#x27;</span>)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;video&#x27;</span> <span class="keyword">in</span> action.result:</span><br><span class="line">                video_data = action.result[<span class="string">&#x27;video&#x27;</span>]</span><br><span class="line">                video_data = <span class="built_in">open</span>(video_data, <span class="string">&#x27;rb&#x27;</span>).read()</span><br><span class="line">                st.video(video_data)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;audio&#x27;</span> <span class="keyword">in</span> action.result:</span><br><span class="line">                audio_data = action.result[<span class="string">&#x27;audio&#x27;</span>]</span><br><span class="line">                audio_data = <span class="built_in">open</span>(audio_data, <span class="string">&#x27;rb&#x27;</span>).read()</span><br><span class="line">                st.audio(audio_data)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    logger = get_logger(__name__)</span><br><span class="line">    <span class="comment"># Initialize Streamlit UI and setup sidebar</span></span><br><span class="line">    <span class="keyword">if</span> <span class="string">&#x27;ui&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> st.session_state:</span><br><span class="line">        session_state = SessionState()</span><br><span class="line">        session_state.init_state()</span><br><span class="line">        st.session_state[<span class="string">&#x27;ui&#x27;</span>] = StreamlitUI(session_state)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        st.set_page_config(</span><br><span class="line">            layout=<span class="string">&#x27;wide&#x27;</span>,</span><br><span class="line">            page_title=<span class="string">&#x27;lagent-web&#x27;</span>,</span><br><span class="line">            page_icon=<span class="string">&#x27;./docs/imgs/lagent_icon.png&#x27;</span>)</span><br><span class="line">        <span class="comment"># st.header(&#x27;:robot_face: :blue[Lagent] Web Demo &#x27;, divider=&#x27;rainbow&#x27;)</span></span><br><span class="line">    model_name, model, plugin_action, uploaded_file = st.session_state[</span><br><span class="line">        <span class="string">&#x27;ui&#x27;</span>].setup_sidebar()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Initialize chatbot if it is not already initialized</span></span><br><span class="line">    <span class="comment"># or if the model has changed</span></span><br><span class="line">    <span class="keyword">if</span> <span class="string">&#x27;chatbot&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> st.session_state <span class="keyword">or</span> model != st.session_state[</span><br><span class="line">            <span class="string">&#x27;chatbot&#x27;</span>]._llm:</span><br><span class="line">        st.session_state[<span class="string">&#x27;chatbot&#x27;</span>] = st.session_state[</span><br><span class="line">            <span class="string">&#x27;ui&#x27;</span>].initialize_chatbot(model, plugin_action)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> prompt, agent_return <span class="keyword">in</span> <span class="built_in">zip</span>(st.session_state[<span class="string">&#x27;user&#x27;</span>],</span><br><span class="line">                                    st.session_state[<span class="string">&#x27;assistant&#x27;</span>]):</span><br><span class="line">        st.session_state[<span class="string">&#x27;ui&#x27;</span>].render_user(prompt)</span><br><span class="line">        st.session_state[<span class="string">&#x27;ui&#x27;</span>].render_assistant(agent_return)</span><br><span class="line">    <span class="comment"># User input form at the bottom (this part will be at the bottom)</span></span><br><span class="line">    <span class="comment"># with st.form(key=&#x27;my_form&#x27;, clear_on_submit=True):</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> user_input := st.chat_input(<span class="string">&#x27;&#x27;</span>):</span><br><span class="line">        st.session_state[<span class="string">&#x27;ui&#x27;</span>].render_user(user_input)</span><br><span class="line">        st.session_state[<span class="string">&#x27;user&#x27;</span>].append(user_input)</span><br><span class="line">        <span class="comment"># Add file uploader to sidebar</span></span><br><span class="line">        <span class="keyword">if</span> uploaded_file:</span><br><span class="line">            file_bytes = uploaded_file.read()</span><br><span class="line">            file_type = uploaded_file.<span class="built_in">type</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;image&#x27;</span> <span class="keyword">in</span> file_type:</span><br><span class="line">                st.image(file_bytes, caption=<span class="string">&#x27;Uploaded Image&#x27;</span>)</span><br><span class="line">            <span class="keyword">elif</span> <span class="string">&#x27;video&#x27;</span> <span class="keyword">in</span> file_type:</span><br><span class="line">                st.video(file_bytes, caption=<span class="string">&#x27;Uploaded Video&#x27;</span>)</span><br><span class="line">            <span class="keyword">elif</span> <span class="string">&#x27;audio&#x27;</span> <span class="keyword">in</span> file_type:</span><br><span class="line">                st.audio(file_bytes, caption=<span class="string">&#x27;Uploaded Audio&#x27;</span>)</span><br><span class="line">            <span class="comment"># Save the file to a temporary location and get the path</span></span><br><span class="line">            file_path = os.path.join(root_dir, uploaded_file.name)</span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> tmpfile:</span><br><span class="line">                tmpfile.write(file_bytes)</span><br><span class="line">            st.write(<span class="string">f&#x27;File saved at: <span class="subst">&#123;file_path&#125;</span>&#x27;</span>)</span><br><span class="line">            user_input = <span class="string">&#x27;我上传了一个图像，路径为: &#123;file_path&#125;. &#123;user_input&#125;&#x27;</span>.<span class="built_in">format</span>(</span><br><span class="line">                file_path=file_path, user_input=user_input)</span><br><span class="line">        agent_return = st.session_state[<span class="string">&#x27;chatbot&#x27;</span>].chat(user_input)</span><br><span class="line">        st.session_state[<span class="string">&#x27;assistant&#x27;</span>].append(copy.deepcopy(agent_return))</span><br><span class="line">        logger.info(agent_return.inner_steps)</span><br><span class="line">        st.session_state[<span class="string">&#x27;ui&#x27;</span>].render_assistant(agent_return)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</span><br><span class="line">    root_dir = os.path.join(root_dir, <span class="string">&#x27;tmp_dir&#x27;</span>)</span><br><span class="line">    os.makedirs(root_dir, exist_ok=<span class="literal">True</span>)</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<pre><code>Writing /root/code/lagent/examples/react_web_demo_user.py
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys, os</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!HF_ENDPOINT=https://hf-mirror.com &#123;os.path.join(sys.exec_prefix, <span class="string">&#x27;bin/streamlit&#x27;</span>)&#125; run /root/code/lagent/examples/react_web_demo_user.py --server.address <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> --server.port <span class="number">6006</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>Collecting usage statistics. To deactivate, set browser.gatherUsageStats to False.
+
+
+You can now view your Streamlit app in your browser.
+
+URL: http://127.0.0.1:6006
+
+
+  A new version of Streamlit is available.
+
+  See what&#39;s new at https://discuss.streamlit.io/c/announcements
+
+  Enter the following command to upgrade:
+  $pip install streamlit --upgrade
+
+Loading checkpoint shards: 100%|██████████████████| 8/8 [00:14&lt;00:00,  1.83s/it]
+2024-01-06 15:44:48.261 [&#123;&#39;role&#39;: &#39;user&#39;, &#39;content&#39;: &#39;你好&#39;&#125;, &#123;&#39;role&#39;: &#39;assistant&#39;, &#39;content&#39;: &#39;Thought: 你好，有什么我可以帮助你的吗？\nAction: PythonInterpreter\nAction Input: def solution():\n    answer = &quot;你好&quot;\n    return answer&#39;&#125;, &#123;&#39;role&#39;: &#39;system&#39;, &#39;content&#39;: &#39;Response:你好\n&#39;&#125;, &#123;&#39;role&#39;: &#39;assistant&#39;, &#39;content&#39;: &#39;Thought: 我已经收到了你的消息，你需要我做什么？\nAction: PythonInterpreter\nAction Input: def solution():\n    answer = &quot;你好&quot;\n    return answer&#39;&#125;, &#123;&#39;role&#39;: &#39;system&#39;, &#39;content&#39;: &#39;Response:你好\n&#39;&#125;, &#123;&#39;role&#39;: &#39;assistant&#39;, &#39;content&#39;: &#39;Thought: 我已经收到了你的消息，但是你的消息中没有提供任何需要我帮助的问题或指令。请重新发送你的问题或指令，我会尽力帮助你。\nAction: PythonInterpreter\nAction Input: def solution():\n    answer = &quot;你好&quot;\n    return answer&#39;&#125;, &#123;&#39;role&#39;: &#39;system&#39;, &#39;content&#39;: &#39;Response:你好\n&#39;&#125;, &#123;&#39;role&#39;: &#39;assistant&#39;, &#39;content&#39;: &#39;Thought: 我已经收到了你的消息，但是你的消息中没有提供任何需要我帮助的问题或指令。请重新发送你的问题或指令，我会尽力帮助你。\nAction: PythonInterpreter\nAction Input: def solution():\n    answer = &quot;你好&quot;\n    return answer&#39;&#125;, &#123;&#39;role&#39;: &#39;system&#39;, &#39;content&#39;: &#39;Response:你好\n&#39;&#125;]
+2024-01-06 15:45:52.619 [&#123;&#39;role&#39;: &#39;user&#39;, &#39;content&#39;: &#39;帮我求解：4x + 3y = 7; x + y = 2，x 和 y 分别等于多少&#39;&#125;, &#123;&#39;role&#39;: &#39;assistant&#39;, &#39;content&#39;: &#39;Thought: 这是一道方程求解题，需要用到求解器Solver来求解这个方程组。\nAction: PythonInterpreter\nAction Input: def solution():\n\tfrom sympy import symbols, Eq, solve, E, E\n\tx = symbols(&quot;x&quot;, real=True)\n\ty = symbols(&quot;y&quot;, real=True)\n\tresult = solve([Eq(4*x + 3*y, 7), Eq(x + y, 2)], [x, y], dict=True)\n\treturn result&#39;&#125;, &#123;&#39;role&#39;: &#39;system&#39;, &#39;content&#39;: &#39;Response:[&#123;x: 1, y: 1&#125;]\n&#39;&#125;, &#123;&#39;role&#39;: &#39;assistant&#39;, &#39;content&#39;: &#39;Thought: Base on the result of the code, the answer is:\nFinal Answer: 根据求解器的计算结果，x 的值为 1，y 的值为 1。&#39;&#125;]
+^C
+ Stopping...
+</code></pre>
+<p>上面运行成功后，需要利用SSH把远程服务器的6006端口映射到本地的某个端口（这里设为6006），这里的SSH端口根据开发机创建时动态开启的端口的不同而不同，我这里是 33449</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 本地机器运行，需要把本地的公钥添加到个人服务器账号上</span></span><br><span class="line">ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 33449</span><br></pre></td></tr></table></figure>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/llm/lagent.png?raw=true"></p>
+<h1 id="浦语·灵笔图文理解创作"><a href="#浦语·灵笔图文理解创作" class="headerlink" title="浦语·灵笔图文理解创作"></a>浦语·灵笔图文理解创作</h1><p>internlm-xcomposer-7b 模型部署一个图文理解创作</p>
+<h2 id="环境准备-1"><a href="#环境准备-1" class="headerlink" title="环境准备"></a>环境准备</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基本环境使用与 第一部分相同的，另外，需要安装特定的几个依赖包</span></span><br><span class="line">%pip install transformers==<span class="number">4.33</span><span class="number">.1</span> timm==<span class="number">0.4</span><span class="number">.12</span> sentencepiece==<span class="number">0.1</span><span class="number">.99</span> gradio==<span class="number">3.44</span><span class="number">.4</span> markdown2==<span class="number">2.4</span><span class="number">.10</span> xlsxwriter==<span class="number">3.1</span><span class="number">.2</span> einops accelerate</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="模型下载"><a href="#模型下载" class="headerlink" title="模型下载"></a>模型下载</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%mkdir -p /root/model/Shanghai_AI_Laboratory</span><br><span class="line">%cp -r /root/share/temp/model_repos/internlm-xcomposer-7b /root/model/Shanghai_AI_Laboratory</span><br></pre></td></tr></table></figure>
+
+<h2 id="推理-1"><a href="#推理-1" class="headerlink" title="推理"></a>推理</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">%cd /root/code</span><br><span class="line">!git clone https://gitee.com/internlm/InternLM-XComposer.git</span><br><span class="line">%cd /root/code/InternLM-XComposer</span><br><span class="line">!git checkout 3e8c79051a1356b9c388a6447867355c0634932d  <span class="comment"># 最好保证和教程的 commit 版本一致</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/code
+Cloning into &#39;InternLM-XComposer&#39;...
+
+
+/root/.conda/envs/internlm-chat/lib/python3.10/site-packages/IPython/core/magics/osm.py:417: UserWarning: using dhist requires you to install the `pickleshare` library.
+  self.shell.db[&#39;dhist&#39;] = compress_dhist(dhist)[-100:]
+
+
+remote: Enumerating objects: 680, done.
+remote: Counting objects: 100% (680/680), done.
+remote: Compressing objects: 100% (273/273), done.
+remote: Total 680 (delta 361), reused 680 (delta 361), pack-reused 0
+Receiving objects: 100% (680/680), 10.74 MiB | 8.78 MiB/s, done.
+Resolving deltas: 100% (361/361), done.
+/root/code/InternLM-XComposer
+Note: switching to &#39;3e8c79051a1356b9c388a6447867355c0634932d&#39;.
+
+You are in &#39;detached HEAD&#39; state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c &lt;new-branch-name&gt;
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 3e8c790 add polar in readme
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">%cd /root/code/InternLM-XComposer</span><br><span class="line">!&#123;sys.executable&#125; examples/web_demo.py  \</span><br><span class="line">    --folder /root/model/Shanghai_AI_Laboratory/internlm-xcomposer-7b \</span><br><span class="line">    --num_gpus <span class="number">1</span> \</span><br><span class="line">    --port <span class="number">6006</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/code/InternLM-XComposer
+
+
+/root/.conda/envs/internlm-chat/lib/python3.10/site-packages/IPython/core/magics/osm.py:417: UserWarning: using dhist requires you to install the `pickleshare` library.
+  self.shell.db[&#39;dhist&#39;] = compress_dhist(dhist)[-100:]
+
+
+Init VIT ... Done
+Init Perceive Sampler ... Done
+Init InternLM ... Done
+Loading checkpoint shards: 100%|██████████████████| 4/4 [00:25&lt;00:00,  6.37s/it]
+ load model done:  &lt;class &#39;transformers_modules.internlm-xcomposer-7b.modeling_InternLM_XComposer.InternLMXComposerForCausalLM&#39;&gt;
+/root/code/InternLM-XComposer/examples/web_demo.py:1068: GradioDeprecationWarning: The `style` method is deprecated. Please set these arguments in the constructor instead.
+  chat_textbox = gr.Textbox(
+Running on local URL:  http://0.0.0.0:6006
+init
+
+Could not create share link. Missing file: /root/.conda/envs/internlm-chat/lib/python3.10/site-packages/gradio/frpc_linux_amd64_v0.2. 
+
+Please check your internet connection. This can happen if your antivirus software blocks the download of this file. You can install manually by following these steps: 
+
+1. Download this file: https://cdn-media.huggingface.co/frpc-gradio-0.2/frpc_linux_amd64
+2. Rename the downloaded file to: frpc_linux_amd64_v0.2
+3. Move the file to this location: /root/.conda/envs/internlm-chat/lib/python3.10/site-packages/gradio
+&lt;object object at 0x7efdf06ec340&gt;
+郁金香（学名：Tulipa gesneriana L.）是百合科郁金香属植物，又名洋荷花、草麝香等。原产于地中海沿岸以及西亚和南西伯利亚的半干旱或高寒地区。荷兰人最早将郁金香作为观赏花卉；16世纪中叶，郁金香被引入中国；17世纪传入欧洲各国。
+
+  
+
+郁金香花色丰富，有红、橙、黄、紫、白、黑、双色及镶边等多种颜色，而且同一植株上可呈现不同色彩的花朵。花朵硕大艳丽，富丽堂皇，芳香四溢，给人以庄重、华贵、富丽之感。它不仅具有很高的观赏价值，而且还有较高的经济作物品种开发利用价值。
+
+&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;
+郁金香（学名：Tulipa gesneriana L.）是百合科郁金香属植物，又名洋荷花、草麝香等。原产于地中海沿岸以及西亚和南西伯利亚的半干旱或高寒地区。荷兰人最早将郁金香作为观赏花卉；16世纪中叶，郁金香被引入中国；17世纪传入欧洲各国。
+郁金香花色丰富，有红、橙、黄、紫、白、黑、双色及镶边等多种颜色，而且同一植株上可呈现不同色彩的花朵。花朵硕大艳丽，富丽堂皇，芳香四溢，给人以庄重、华贵、富丽之感。它不仅具有很高的观赏价值，而且还有较高的经济作物品种开发利用价值。
+&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;
+适合插入图像的行是&lt;Seg0&gt;, &lt;Seg2&gt;.
+[0, 2]
+郁金香的花朵，颜色丰富多样。
+郁金香的花朵，花朵硕大艳丽。
+&#123;0: &#39;郁金香的花朵，颜色丰富多样。&#39;, 2: &#39;郁金香的花朵，花朵硕大艳丽。&#39;&#125;
+&#123;0: &#39;郁金香的花朵，颜色丰富多样。&#39;, 2: &#39;郁金香的花朵，花朵硕大艳丽。&#39;&#125;
+https://static.openxlab.org.cn/lingbi/jpg-images/105d05c6bc63e3f446c715f10b1c5bb349e09c1e2860fa2d510d0aabde193a1a.jpg
+download image with url
+image downloaded
+https://static.openxlab.org.cn/lingbi/jpg-images/11eba488365ed9c830601ab473788c82b6fda279d05c2485227ee8cb089b2f51.jpg
+download image with url
+image downloaded
+model_select_image
+0 郁金香（学名：Tulipa gesneriana L.）是百合科郁金香属植物，又名洋荷花、草麝香等。原产于地中海沿岸以及西亚和南西伯利亚的半干旱或高寒地区。荷兰人最早将郁金香作为观赏花卉；16世纪中叶，郁金香被引入中国；17世纪传入欧洲各国。
+&lt;div align=&quot;center&quot;&gt; &lt;img src=&quot;file=articles/如何培育郁金香/temp_1000_0.png&quot; width = 500/&gt; &lt;/div&gt;
+1 郁金香花色丰富，有红、橙、黄、紫、白、黑、双色及镶边等多种颜色，而且同一植株上可呈现不同色彩的花朵。花朵硕大艳丽，富丽堂皇，芳香四溢，给人以庄重、华贵、富丽之感。它不仅具有很高的观赏价值，而且还有较高的经济作物品种开发利用价值。
+2 &lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;&lt;TOKENS_UNUSED_1&gt;
+&lt;div align=&quot;center&quot;&gt; &lt;img src=&quot;file=articles/如何培育郁金香/temp_1002_2.png&quot; width = 500/&gt; &lt;/div&gt;
+^C
+Keyboard interruption in main thread... closing server.
+</code></pre>
+<p>上面运行成功后，需要利用SSH把远程服务器的6006端口映射到本地的某个端口（这里设为6006），这里的SSH端口根据开发机创建时动态开启的端口的不同而不同，我这里是 34000</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 本地机器运行，需要把本地的公钥添加到个人服务器账号上</span></span><br><span class="line">ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 34000</span><br></pre></td></tr></table></figure>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/llm/internlm-xcomposer.png?raw=true"></p>
+<h1 id="从-hugging-face-下载-InternLM-20b-的-config-json"><a href="#从-hugging-face-下载-InternLM-20b-的-config-json" class="headerlink" title="从 hugging face 下载 InternLM-20b 的 config.json"></a>从 hugging face 下载 InternLM-20b 的 config.json</h1><p>熟悉 hugging face 下载功能，使用 huggingface_hub python 包，下载 InternLM-20B 的 config.json 文件到本地（需截图下载过程）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%pip install -U huggingface_hub</span><br></pre></td></tr></table></figure>
+
+<pre><code>Looking in indexes: https://pypi.tuna.tsinghua.edu.cn/simple
+Requirement already satisfied: huggingface_hub in /root/.conda/envs/internlm-chat/lib/python3.10/site-packages (0.20.2)
+Requirement already satisfied: filelock in /root/.conda/envs/internlm-chat/lib/python3.10/site-packages (from huggingface_hub) (3.13.1)
+Requirement already satisfied: fsspec&gt;=2023.5.0 in /root/.conda/envs/internlm-chat/lib/python3.10/site-packages (from huggingface_hub) (2023.12.2)
+Requirement already satisfied: requests in /root/.conda/envs/internlm-chat/lib/python3.10/site-packages (from huggingface_hub) (2.31.0)
+Requirement already satisfied: tqdm&gt;=4.42.1 in /root/.conda/envs/internlm-chat/lib/python3.10/site-packages (from huggingface_hub) (4.66.1)
+Requirement already satisfied: pyyaml&gt;=5.1 in /root/.conda/envs/internlm-chat/lib/python3.10/site-packages (from huggingface_hub) (6.0.1)
+Requirement already satisfied: typing-extensions&gt;=3.7.4.3 in /root/.conda/envs/internlm-chat/lib/python3.10/site-packages (from huggingface_hub) (4.9.0)
+Requirement already satisfied: packaging&gt;=20.9 in /root/.conda/envs/internlm-chat/lib/python3.10/site-packages (from huggingface_hub) (23.2)
+Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in /root/.conda/envs/internlm-chat/lib/python3.10/site-packages (from requests-&gt;huggingface_hub) (2.0.4)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in /root/.conda/envs/internlm-chat/lib/python3.10/site-packages (from requests-&gt;huggingface_hub) (3.4)
+Requirement already satisfied: urllib3&lt;3,&gt;=1.21.1 in /root/.conda/envs/internlm-chat/lib/python3.10/site-packages (from requests-&gt;huggingface_hub) (1.26.18)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /root/.conda/envs/internlm-chat/lib/python3.10/site-packages (from requests-&gt;huggingface_hub) (2023.11.17)
+WARNING: Running pip as the &#39;root&#39; user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+Note: you may need to restart the kernel to use updated packages.
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys, os</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!HF_ENDPOINT=https://hf-mirror.com &#123;os.path.join(sys.exec_prefix, <span class="string">&#x27;bin/huggingface-cli&#x27;</span>)&#125; download --resume-download internlm/internlm-20b config.json --local-<span class="built_in">dir</span> .</span><br></pre></td></tr></table></figure>
+
+<pre><code>Consider using `hf_transfer` for faster downloads. This solution comes with some limitations. See https://huggingface.co/docs/huggingface_hub/hf_transfer for more details.
+./config.json
+</code></pre>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/llm/huggingface-hub.png?raw=true"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;./config.json&#x27;</span>, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> jf:</span><br><span class="line">    config = json.load(jf)</span><br><span class="line">config</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>&#123;&#39;architectures&#39;: [&#39;InternLMForCausalLM&#39;],
+ &#39;auto_map&#39;: &#123;&#39;AutoConfig&#39;: &#39;configuration_internlm.InternLMConfig&#39;,
+  &#39;AutoModel&#39;: &#39;modeling_internlm.InternLMForCausalLM&#39;,
+  &#39;AutoModelForCausalLM&#39;: &#39;modeling_internlm.InternLMForCausalLM&#39;&#125;,
+ &#39;bias&#39;: False,
+ &#39;bos_token_id&#39;: 1,
+ &#39;eos_token_id&#39;: 2,
+ &#39;hidden_act&#39;: &#39;silu&#39;,
+ &#39;hidden_size&#39;: 5120,
+ &#39;initializer_range&#39;: 0.02,
+ &#39;intermediate_size&#39;: 13824,
+ &#39;max_position_embeddings&#39;: 4096,
+ &#39;model_type&#39;: &#39;internlm&#39;,
+ &#39;num_attention_heads&#39;: 40,
+ &#39;num_hidden_layers&#39;: 60,
+ &#39;num_key_value_heads&#39;: 40,
+ &#39;pad_token_id&#39;: 2,
+ &#39;pretraining_tp&#39;: 1,
+ &#39;rms_norm_eps&#39;: 1e-06,
+ &#39;rope_scaling&#39;: None,
+ &#39;rope_theta&#39;: 10000.0,
+ &#39;tie_word_embeddings&#39;: False,
+ &#39;torch_dtype&#39;: &#39;bfloat16&#39;,
+ &#39;transformers_version&#39;: &#39;4.33.1&#39;,
+ &#39;use_cache&#39;: True,
+ &#39;vocab_size&#39;: 103168,
+ &#39;rotary&#39;: &#123;&#39;base&#39;: 10000, &#39;type&#39;: &#39;dynamic&#39;&#125;&#125;
+</code></pre>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/blob/main/helloworld/hello_world.md">轻松玩转书生·浦语大模型趣味 Demo</a></li>
+<li><a target="_blank" rel="noopener" href="https://studio.intern-ai.org.cn/">InternStudio</a></li>
+<li><a target="_blank" rel="noopener" href="https://hf-mirror.com/">Huggingface 镜像站及其使用说明</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2024/01/06/ai-internlm-useage/">https://xujinzh.github.io/2024/01/06/ai-internlm-useage/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ai/">ai</a><a class="post-meta__tags" href="/tags/llm/">llm</a><a class="post-meta__tags" href="/tags/internlm/">internlm</a><a class="post-meta__tags" href="/tags/openmmlab/">openmmlab</a></div><div class="post_share"><div class="social-share" data-image="/img/c12.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/01/08/ai-Interlm-langchain-RAG/" title="基于 InternLM 和 LangChain 搭建私人知识库"><img class="cover" src="/img/c5.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">基于 InternLM 和 LangChain 搭建私人知识库</div></div></a></div><div class="next-post pull-right"><a href="/2024/01/05/ubuntu-18-04-install-glibc2-28/" title="Ubuntu 18.04 上安装 glibc 2.28 支持 QT6"><img class="cover" src="/img/c11.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Ubuntu 18.04 上安装 glibc 2.28 支持 QT6</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/01/08/ai-Interlm-langchain-RAG/" title="基于 InternLM 和 LangChain 搭建私人知识库"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-08</div><div class="title">基于 InternLM 和 LangChain 搭建私人知识库</div></div></a></div><div><a href="/2024/01/03/ai-internlm-intro/" title="书生·浦语大模型介绍"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-03</div><div class="title">书生·浦语大模型介绍</div></div></a></div><div><a href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img class="cover" src="/img/c30.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-13</div><div class="title">基于 LMDeploy 的大模型量化和部署</div></div></a></div><div><a href="/2024/01/12/ai-internlm-xtuner-finetune/" title="XTuner 大模型训练"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-12</div><div class="title">XTuner 大模型训练</div></div></a></div><div><a href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img class="cover" src="/img/c21.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-12</div><div class="title">利用 XTuner 训练书生·浦语私人大模型助手</div></div></a></div><div><a href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img class="cover" src="/img/c9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-21</div><div class="title">基于 OpenCompass 的大模型评测</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#InternLM-Chat-7B-%E6%99%BA%E8%83%BD%E5%AF%B9%E8%AF%9D"><span class="toc-number">1.</span> <span class="toc-text">InternLM-Chat-7B 智能对话</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.2.</span> <span class="toc-text">下载模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%87%86%E5%A4%87"><span class="toc-number">1.3.</span> <span class="toc-text">代码准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%88%E7%AB%AF%E8%BF%90%E8%A1%8C"><span class="toc-number">1.4.</span> <span class="toc-text">终端运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB-%E7%AB%AF%E8%BF%90%E8%A1%8C"><span class="toc-number">1.5.</span> <span class="toc-text">WEB 端运行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Lagent-%E6%99%BA%E8%83%BD%E4%BD%93%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">Lagent 智能体工具调用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">2.1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E6%A8%A1%E5%9E%8B-1"><span class="toc-number">2.2.</span> <span class="toc-text">下载模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lagent-%E5%AE%89%E8%A3%85"><span class="toc-number">2.3.</span> <span class="toc-text">Lagent 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E7%90%86"><span class="toc-number">2.4.</span> <span class="toc-text">推理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%A6%E8%AF%AD%C2%B7%E7%81%B5%E7%AC%94%E5%9B%BE%E6%96%87%E7%90%86%E8%A7%A3%E5%88%9B%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">浦语·灵笔图文理解创作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87-1"><span class="toc-number">3.1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E4%B8%8B%E8%BD%BD"><span class="toc-number">3.2.</span> <span class="toc-text">模型下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E7%90%86-1"><span class="toc-number">3.3.</span> <span class="toc-text">推理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8E-hugging-face-%E4%B8%8B%E8%BD%BD-InternLM-20b-%E7%9A%84-config-json"><span class="toc-number">4.</span> <span class="toc-text">从 hugging face 下载 InternLM-20b 的 config.json</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">5.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '9d1595b9415492ea4bed1241078f54ce',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

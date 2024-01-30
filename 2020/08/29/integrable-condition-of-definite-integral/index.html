@@ -1,0 +1,302 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>定积分的可积条件 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="定积分的可积条件就是研究函数满足什么条件下可进行积分（充分性），函数可积分会有什么性质（必要性），以及可积函数的充分必要条件等。 关于函数$f(x)$在闭区间$[a,b]$上的积分总结一句话就是：连续必可积，可积必有界。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="定积分的可积条件">
+<meta property="og:url" content="https://xujinzh.github.io/2020/08/29/integrable-condition-of-definite-integral/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="定积分的可积条件就是研究函数满足什么条件下可进行积分（充分性），函数可积分会有什么性质（必要性），以及可积函数的充分必要条件等。 关于函数$f(x)$在闭区间$[a,b]$上的积分总结一句话就是：连续必可积，可积必有界。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c16.jpg">
+<meta property="article:published_time" content="2020-08-29T01:57:10.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.096Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="maths">
+<meta property="article:tag" content="definite integral">
+<meta property="article:tag" content="integral">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c16.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2020/08/29/integrable-condition-of-definite-integral/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '定积分的可积条件',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">定积分的可积条件</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-08-29T01:57:10.000Z" title="发表于 2020-08-29 09:57:10">2020-08-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.096Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/maths/">maths</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/maths/mathematical-analysis/">mathematical analysis</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="定积分的可积条件"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>定积分的可积条件就是研究函数满足什么条件下可进行积分（充分性），函数可积分会有什么性质（必要性），以及可积函数的充分必要条件等。</p>
+<p><strong>关于函数$f(x)$在闭区间$[a,b]$上的积分总结一句话就是：连续必可积，可积必有界。</strong></p>
+<span id="more"></span>
+
+<h1 id="可积的必要条件"><a href="#可积的必要条件" class="headerlink" title="可积的必要条件"></a>可积的必要条件</h1><p>在介绍可积的必要条件之前，首先引入有界（无界）函数$f(x)$的定义。</p>
+<h2 id="有界函数和无界函数"><a href="#有界函数和无界函数" class="headerlink" title="有界函数和无界函数"></a>有界函数和无界函数</h2><p>定义	设函数$f(x)$的定义域为$D$，如果存在一个常数$M(L)$，使得$\forall x \in D$，都有<br>$$<br>f(x)\leq M (f(x)\geq L).<br>$$<br>则称$f(x)$在$D$内有上（下）界的函数，数$M(L)$称为$f(x)$在$D$内的一个上（下）界。</p>
+<p>定义	设函数$f(x), x\in D$，如果存在一个正数$K&gt;0$，使得$\forall x \in D$，都有<br>$$<br>\left \vert f(x) \right \vert \leq K,<br>$$<br>那么称$f(x)$在$D$内是有界函数；否则，称$f(x)$是无界函数。</p>
+<p><em>如果 $f(x)$ 在 $D$ 内既有上界又有下界，则称$f(x)$在$D$内是有界函数</em></p>
+<p><em>函数$f(x)$在$D$内有界当且仅当数集$f(D)$是有界集，即$\forall f(x) \in f(D), L \leq f(x) \leq M$, 其中$M,L$是常数，分别称为$f(D)$的一个上界和一个下界.</em></p>
+<p>定义	函数$f(x), x \in D$是无界函数当且仅当$\forall M &gt; 0, \exists x \in D$，使得$\left \vert f(x) \right \vert &gt; M$. </p>
+<p>有了有界和无界函数的定义，我们就可以来研究函数可积的必要条件了。</p>
+<h2 id="可积的必要条件-1"><a href="#可积的必要条件-1" class="headerlink" title="可积的必要条件"></a>可积的必要条件</h2><p>定理 9.2	若函数$f(x)$在$[a,b]$上可积，则$f(x)$在$[a,b]$上必定有界。</p>
+<p>证明	用反证法。若$f(x)$在$[a,b]$上无界，则对于$[a,b]$的任一分割$T$，必存在属于$T$的某个小区间$\Delta_k$，$f(x)$在$\Delta_k$上无界。在$i \neq k$的各个小区间$\Delta_i$上任意取定$\xi_i$，并记<br>$$<br>G &#x3D; \left \vert \sum_{i \neq k} f(\xi_i) \Delta x_i \right \vert.<br>$$<br>现对任意大的正数$M$，由于$f(x)$在$\Delta_k$上无界，故存在$\xi_k \in \Delta_k$，使得<br>$$<br>\left \vert f(\xi_k) \right \vert &gt; \frac{M + G}{\Delta x_k}.<br>$$<br>于是有<br>$$<br>\left \vert \sum^n_{i&#x3D;1} f(\xi_i) \Delta x_i \right \vert \geq \left \vert f(\xi_k) \Delta x_k \right \vert - \left \vert \sum_{i \neq k} f(\xi_i) \Delta x_i \right \vert &gt; \frac{M + G}{\Delta x_k} \cdot \Delta x_k - G &#x3D; M.<br>$$<br>由此可见，对于无论多小的$|T|$，按上述方法选取点集${\xi_i}$时，总能使积分和的绝对值大于任何预先给出的正数，这与$f(x)$在$[a,b]$上可积相矛盾。</p>
+<p><strong>该定理指出，任何可积函数一定是有界函数，但是，反过来不一定成立。</strong></p>
+<p>例如，如下的狄利克雷函数<br>$$<br>D(x) &#x3D;<br>\begin{cases}<br>  1, x \in Q \\<br>  0, x \in Q^C.<br>\end{cases}<br>$$<br>显然该函数是有界的，因为 $\left \vert D(x) \right \vert \leq 1, x \in [0, 1]$ . 但是，根据定积分的定义，无论分割多么细密，都可以只选取有理点进行积分或者只选取无理点进行积分，当选取有理点积分时，积分值等于1，当选取无理点积分时，积分值等于0.因此不可积。</p>
+<p><strong>因此，有界是可积的必要条件。所以，当以后假设函数是可积函数时，默认指明函数是有界函数。</strong></p>
+<h1 id="可积的充要条件"><a href="#可积的充要条件" class="headerlink" title="可积的充要条件"></a>可积的充要条件</h1><p>要判断一个函数是否可积不能依靠必要条件（有界），当然，仅仅使用充分条件（连续）又有些太强，毕竟不连续函数比连续函数多得多，就好比无理数比有理数多一样。但是，根据定积分的定义来判断，又相对比较麻烦，所以，需要找到一个新的方法来判断一个函数到底是可积还是不可积。现假设函数$f(x)$在$[a,b]$上可积（必有界），来找到其充分必要条件。</p>
+<p>设$T&#x3D;{\Delta_i | i &#x3D; 1, 2, \cdots, n}$ 为对$[a, b]$ 的任一分割。由于$f(x)$在$[a,b]$上有界，它在每个$\Delta_i$上存在上、下确界：<br>$$<br>M_i &#x3D; \sup_{x \in \Delta_i} f(x), m_i &#x3D; \inf_{x \in \Delta_i} f(x), i &#x3D; 1, 2, \cdots, n.<br>$$<br>作和<br>$$<br>S(T) &#x3D; \sum^n_{i&#x3D;1} M_i \Delta x_i, s(T) &#x3D; \sum^n_{i&#x3D;1} m_i \Delta x_i,<br>$$<br>分别称为$f$ 关于分割$T$ 的上和与下和（或称为达布上和与达布下和，统称达布和）。</p>
+<p>任给$\xi_i \in \Delta_i, i &#x3D; 1, 2, \cdots, n$，显然有<br>$$<br>s(T) \leq \sum^n_{i&#x3D;1}f(\xi_i) \Delta x_i \leq S(T).<br>$$<br>与积分和相比较，达布和只与分割$T$有关，而与点集${\xi_i}$ 无关，根据上面不等式，就能通过讨论上和与下和当 $| T | \to 0$时的极限来揭示$f$在$[a,b]$上是否可积。</p>
+<p>定理9.3	（可积准则）	函数$f$在$[a,b]$上可积的充要条件是：任给$\varepsilon &gt; 0$，总存在相应的一个分割$T$，使得<br>$$<br>S(T) - s(T) &lt; \varepsilon.<br>$$<br>设 $\omega_i &#x3D; M_i - m_i$，称为$f$在$\Delta_i$ 上的振幅，有必要时也记为 $\omega^f_i$，由于<br>$$<br>S(T) - s(T) &#x3D; \sum^n_{i&#x3D;1} \omega_i \Delta x_i&#x3D;\sum_T \omega_i \Delta x_i.<br>$$<br>定理可重述为：</p>
+<p>定理9.4	函数$f$在$[a,b]$上可积的充要条件是任给$\varepsilon &gt; 0$，总存在相应的某一分割$T$，使得<br>$$<br>\sum_T \omega_i \Delta x_i &lt; \varepsilon.<br>$$<br>几何意义：若$f$在$[a,b]$上可积，则达布上和与达布下和在图像上所围成的一系列小矩形面积之和可以达到任意小，只要分割充分地细；反之亦然。</p>
+<h1 id="可积函数类（可积的充分条件）"><a href="#可积函数类（可积的充分条件）" class="headerlink" title="可积函数类（可积的充分条件）"></a>可积函数类（可积的充分条件）</h1><p>定理9.4	若$f$为$[a,b]$上的连续函数，则$f$在$[a,b]$上可积。</p>
+<p>定理9.5	若$f$是区间$[a,b]$上只有有限个间断点的有界函数，则$f$在$[a,b]$上可积。</p>
+<p>定理9.6	若$f$是区间$[a,b]$上的单调函数，则$f$在$[a,b]$上可积。</p>
+<p>例题	黎曼函数<br>$$<br>f(x) &#x3D;<br>\begin{cases}<br>\frac{1}{q}, x&#x3D;\frac{p}{q}, p, q 互素, q &gt; p, \\<br>0, x &#x3D; 0, 1 以及 (0, 1) 内的无理数<br>\end{cases}<br>$$<br>在区间$[0,1]$上可积，且<br>$$<br>\int^1_0 f(x) \mathrm{d}x &#x3D; 0.<br>$$<br>例题	若$T^{\prime}$是$T$增加若干个分点后所得的分割，则<br>$$<br>\sum_{T^\prime} \omega^{\prime}_i \Delta x^{\prime}_i \leq \sum_T \omega_i \Delta x_i.<br>$$<br>例题	若$f$在$[a,b]$上可积，$[\alpha, \beta] \subset [a,b]$，则$f$在$[\alpha, \beta]$上也可积。</p>
+<p>例题	设$f,g$均为定义在$[a,b]$上的有界函数，仅在有限个点处$f(x) \neq g(x)$，则 $f,g$ 均在$[a,b]$上可积，且$\int^b_a f(x) \mathrm{d}x &#x3D; \int^b_a g(x) \mathrm{d}x.$</p>
+<p>例题	设$f$在$[a,b]$上有界，${a_n} \subset [a,b], \lim_{n \to \infty} a_n &#x3D; c$，若$f$ 在$[a,b]$上只有$a_n(n&#x3D;1,2,\cdots)$为其间断点，则$f$在$[a,b]$上可积。</p>
+<p>例题	设函数$f$在$[a,b]$上有定义，且对于任给的$\varepsilon &gt; 0$，存在$[a,b]$上的可积函数$g$，使得<br>$$<br>|f(x) - g(x)| &lt; \varepsilon, x \in [a, b].<br>$$<br>则$f$在$[a,b]$上可积。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2020/08/29/integrable-condition-of-definite-integral/">https://xujinzh.github.io/2020/08/29/integrable-condition-of-definite-integral/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/maths/">maths</a><a class="post-meta__tags" href="/tags/definite-integral/">definite integral</a><a class="post-meta__tags" href="/tags/integral/">integral</a></div><div class="post_share"><div class="social-share" data-image="/img/c16.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/09/01/colab-with-local-jupyter-notebook/" title="Colab 使用本地 Jupyter Notebook 内核运行时"><img class="cover" src="/img/c29.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Colab 使用本地 Jupyter Notebook 内核运行时</div></div></a></div><div class="next-post pull-right"><a href="/2020/08/28/hexo-error-maths-cardinality/" title="Hexo 生成错误问题"><img class="cover" src="/img/c17.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Hexo 生成错误问题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/10/10/area-of-plane-figure/" title="利用定积分求平面图形的面积"><img class="cover" src="/img/c20.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-10-10</div><div class="title">利用定积分求平面图形的面积</div></div></a></div><div><a href="/2020/09/19/basic-theorem-of-calculus-and-calculation-of-definite-integral/" title="微积分基本定理和定积分计算"><img class="cover" src="/img/c9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-09-19</div><div class="title">微积分基本定理和定积分计算</div></div></a></div><div><a href="/2020/09/27/supplement-to-integrability-theory/" title="可积性理论补叙"><img class="cover" src="/img/c29.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-09-27</div><div class="title">可积性理论补叙</div></div></a></div><div><a href="/2020/10/17/definite-integral-calculate-volume/" title="由平行截面面积求体积"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-10-17</div><div class="title">由平行截面面积求体积</div></div></a></div><div><a href="/2020/07/27/definite-integral/" title="定积分定义"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-27</div><div class="title">定积分定义</div></div></a></div><div><a href="/2020/03/24/exchange-and-partial-integral/" title="换元积分和分部积分"><img class="cover" src="/img/c15.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-24</div><div class="title">换元积分和分部积分</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%AF%E7%A7%AF%E7%9A%84%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">可积的必要条件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E7%95%8C%E5%87%BD%E6%95%B0%E5%92%8C%E6%97%A0%E7%95%8C%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.</span> <span class="toc-text">有界函数和无界函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E7%A7%AF%E7%9A%84%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6-1"><span class="toc-number">1.2.</span> <span class="toc-text">可积的必要条件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%AF%E7%A7%AF%E7%9A%84%E5%85%85%E8%A6%81%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">可积的充要条件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%AF%E7%A7%AF%E5%87%BD%E6%95%B0%E7%B1%BB%EF%BC%88%E5%8F%AF%E7%A7%AF%E7%9A%84%E5%85%85%E5%88%86%E6%9D%A1%E4%BB%B6%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">可积函数类（可积的充分条件）</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '58182f47b3e635d22dfb73a50c0db260',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

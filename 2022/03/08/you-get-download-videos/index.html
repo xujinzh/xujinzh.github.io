@@ -1,0 +1,862 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>you-get 下载视频的方法 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="you-get 能够方便的下载很多网站上面的视频&#x2F;音频&#x2F;图片，如 bilibili 等，特别是能够下载整个视频集所有视频。下面介绍如何使用它下载视频。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="you-get 下载视频的方法">
+<meta property="og:url" content="https://xujinzh.github.io/2022/03/08/you-get-download-videos/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="you-get 能够方便的下载很多网站上面的视频&#x2F;音频&#x2F;图片，如 bilibili 等，特别是能够下载整个视频集所有视频。下面介绍如何使用它下载视频。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c27.jpg">
+<meta property="article:published_time" content="2022-03-08T15:33:58.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.108Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="video">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c27.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2022/03/08/you-get-download-videos/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'you-get 下载视频的方法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">you-get 下载视频的方法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-08T15:33:58.000Z" title="发表于 2022-03-08 23:33:58">2022-03-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.108Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/computer-science/">computer science</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="you-get 下载视频的方法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>you-get 能够方便的下载很多网站上面的视频&#x2F;音频&#x2F;图片，如 bilibili 等，特别是能够下载整个视频集所有视频。下面介绍如何使用它下载视频。</p>
+<span id="more"></span>
+
+<h1 id="安装-you-get"><a href="#安装-you-get" class="headerlink" title="安装 you-get"></a>安装 you-get</h1><p>you-get 官网地址: <a target="_blank" rel="noopener" href="https://you-get.org/">https://you-get.org/</a>. 推荐的下载方法是通过 pip 安装，pip 作为 python 的包管理工具，非常方便下载各种 python 包，you-get 就是其中一个。建议安装 pip 可以使用 <a target="_blank" rel="noopener" href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a>。假设 miniconda 已经安装，且安装好了pip 包管理工具，那么如下一条命令便可以安装 you-get：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install you-get</span><br></pre></td></tr></table></figure>
+
+<p>如果是 Mac 系统，也可以使用如下命令安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install you-get</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用-you-get"><a href="#使用-you-get" class="headerlink" title="使用 you-get"></a>使用 you-get</h1><h2 id="查看视频信息"><a href="#查看视频信息" class="headerlink" title="查看视频信息"></a>查看视频信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">you-get -i https://www.bilibili.com/video/BV1oW411w7Gc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果如下</span></span><br><span class="line">site:                Bilibili</span><br><span class="line">title:               2018俄罗斯世界杯主题曲</span><br><span class="line">streams:             <span class="comment"># Available quality and codecs</span></span><br><span class="line">    [ DASH ] ____________________________________</span><br><span class="line">    - format:        dash-flv480</span><br><span class="line">      container:     mp4</span><br><span class="line">      quality:       清晰 480P</span><br><span class="line">      size:          22.6 MiB (23743204 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=dash-flv480 [URL]</span></span><br><span class="line"></span><br><span class="line">    - format:        dash-flv720</span><br><span class="line">      container:     mp4</span><br><span class="line">      quality:       高清 720P</span><br><span class="line">      size:          22.6 MiB (23709899 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=dash-flv720 [URL]</span></span><br><span class="line"></span><br><span class="line">    - format:        dash-flv360</span><br><span class="line">      container:     mp4</span><br><span class="line">      quality:       流畅 360P</span><br><span class="line">      size:          11.5 MiB (12022486 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=dash-flv360 [URL]</span></span><br><span class="line"></span><br><span class="line">    [ DEFAULT ] _________________________________</span><br><span class="line">    - format:        flv720</span><br><span class="line">      container:     flv</span><br><span class="line">      quality:       高清 720P</span><br><span class="line">      size:          22.8 MiB (23896119 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=flv720 [URL]</span></span><br><span class="line"></span><br><span class="line">    - format:        flv480</span><br><span class="line">      container:     flv</span><br><span class="line">      quality:       清晰 480P</span><br><span class="line">      size:          22.5 MiB (23641056 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=flv480 [URL]</span></span><br><span class="line"></span><br><span class="line">    - format:        flv360</span><br><span class="line">      container:     flv</span><br><span class="line">      quality:       流畅 360P</span><br><span class="line">      size:          11.6 MiB (12117112 bytes)</span><br><span class="line">    <span class="comment"># download-with: you-get --format=flv360 [URL]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="下载单个视频"><a href="#下载单个视频" class="headerlink" title="下载单个视频"></a>下载单个视频</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认下载视频信息中第一个</span></span><br><span class="line">you-get https://www.bilibili.com/video/BV1oW411w7Gc</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载指定的格式视频"><a href="#下载指定的格式视频" class="headerlink" title="下载指定的格式视频"></a>下载指定的格式视频</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用如下的方法下载视频信息中指定的一个</span></span><br><span class="line">you-get --format=dash-flv720 https://www.bilibili.com/video/BV1oW411w7Gc</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载图片"><a href="#下载图片" class="headerlink" title="下载图片"></a>下载图片</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">you-get https://stallman.org/rms.jpg</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载到特定目录并重命名视频"><a href="#下载到特定目录并重命名视频" class="headerlink" title="下载到特定目录并重命名视频"></a>下载到特定目录并重命名视频</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># --output-dir/-o 保存目录</span></span><br><span class="line"><span class="comment"># --output-filename/-O 重命名视频文件</span></span><br><span class="line">you-get -o ~/Videos -O 2018.mp4 https://www.bilibili.com/video/BV1oW411w7Gc</span><br></pre></td></tr></table></figure>
+
+<h2 id="代理下载视频"><a href="#代理下载视频" class="headerlink" title="代理下载视频"></a>代理下载视频</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此命令参考官网</span></span><br><span class="line">you-get -x 127.0.0.1:8087 <span class="string">&#x27;https://www.youtube.com/watch?v=jNQXAC9IVRw&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="下载到视频播放器"><a href="#下载到视频播放器" class="headerlink" title="下载到视频播放器"></a>下载到视频播放器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 边下载边播放</span></span><br><span class="line">you-get -p vlc https://www.bilibili.com/video/BV1oW411w7Gc</span><br><span class="line">you-get -p chromium https://www.bilibili.com/video/BV1oW411w7Gc</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载视频集"><a href="#下载视频集" class="headerlink" title="下载视频集"></a>下载视频集</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">you-get --playlist https://www.bilibili.com/video/BV1Sv411r7vd\?p\=1</span><br></pre></td></tr></table></figure>
+
+<h1 id="支持的网站"><a href="#支持的网站" class="headerlink" title="支持的网站"></a>支持的网站</h1><p>从官网获取</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="left"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Site</td>
+<td align="left">URL</td>
+<td align="center">Videos?</td>
+<td align="center">Images?</td>
+<td align="center">Audios?</td>
+</tr>
+<tr>
+<td align="center"><strong>YouTube</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.youtube.com/">https://www.youtube.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>Twitter</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://twitter.com/">https://twitter.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">VK</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://vk.com/">http://vk.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Vine</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://vine.co/">https://vine.co/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Vimeo</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://vimeo.com/">https://vimeo.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Veoh</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.veoh.com/">http://www.veoh.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>Tumblr</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.tumblr.com/">https://www.tumblr.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">TED</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.ted.com/">http://www.ted.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">SoundCloud</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://soundcloud.com/">https://soundcloud.com/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">SHOWROOM</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.showroom-live.com/">https://www.showroom-live.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Pinterest</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.pinterest.com/">https://www.pinterest.com/</a></td>
+<td align="center"></td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">MTV81</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.mtv81.com/">http://www.mtv81.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Mixcloud</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.mixcloud.com/">https://www.mixcloud.com/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">Metacafe</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.metacafe.com/">http://www.metacafe.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Magisto</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.magisto.com/">http://www.magisto.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Khan Academy</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.khanacademy.org/">https://www.khanacademy.org/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Internet Archive</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://archive.org/">https://archive.org/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>Instagram</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://instagram.com/">https://instagram.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">InfoQ</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.infoq.com/presentations/">http://www.infoq.com/presentations/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Imgur</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://imgur.com/">http://imgur.com/</a></td>
+<td align="center"></td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Heavy Music Archive</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.heavy-music.ru/">http://www.heavy-music.ru/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">Freesound</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.freesound.org/">http://www.freesound.org/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">Flickr</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.flickr.com/">https://www.flickr.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">FC2 Video</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://video.fc2.com/">http://video.fc2.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Facebook</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.facebook.com/">https://www.facebook.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">eHow</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.ehow.com/">http://www.ehow.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Dailymotion</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.dailymotion.com/">http://www.dailymotion.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Coub</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://coub.com/">http://coub.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">CBS</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.cbs.com/">http://www.cbs.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Bandcamp</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://bandcamp.com/">http://bandcamp.com/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">AliveThai</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://alive.in.th/">http://alive.in.th/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">interest.me</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://ch.interest.me/tvn">http://ch.interest.me/tvn</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>755 ナナゴーゴー</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://7gogo.jp/">http://7gogo.jp/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>niconico ニコニコ動画</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.nicovideo.jp/">http://www.nicovideo.jp/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>163 网易视频 网易云音乐</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://v.163.com/">http://v.163.com/</a> <a target="_blank" rel="noopener" href="https://music.163.com/">http://music.163.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">56网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.56.com/">http://www.56.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>AcFun</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.acfun.cn/">http://www.acfun.cn/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>Baidu 百度贴吧</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://tieba.baidu.com/">http://tieba.baidu.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">爆米花网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.baomihua.com/">http://www.baomihua.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>bilibili 哔哩哔哩</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.bilibili.com/">http://www.bilibili.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">豆瓣</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.douban.com/">http://www.douban.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">斗鱼</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.douyutv.com/">http://www.douyutv.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">凤凰视频</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://v.ifeng.com/">http://v.ifeng.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">风行网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.fun.tv/">http://www.fun.tv/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">iQIYI 爱奇艺</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.iqiyi.com/">http://www.iqiyi.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">激动网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.joy.cn/">http://www.joy.cn/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">酷6网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.ku6.com/">http://www.ku6.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">酷狗音乐</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.kugou.com/">http://www.kugou.com/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">酷我音乐</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.kuwo.cn/">http://www.kuwo.cn/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">乐视网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.le.com/">http://www.le.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">荔枝FM</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.lizhi.fm/">http://www.lizhi.fm/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">懒人听书</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.lrts.me/">http://www.lrts.me/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">秒拍</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.miaopai.com/">http://www.miaopai.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">MioMio弹幕网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.miomio.tv/">http://www.miomio.tv/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">MissEvan 猫耳FM</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.missevan.com/">http://www.missevan.com/</a></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">痞客邦</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.pixnet.net/">https://www.pixnet.net/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">PPTV聚力</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.pptv.com/">http://www.pptv.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">齐鲁网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://v.iqilu.com/">http://v.iqilu.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">QQ 腾讯视频</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://v.qq.com/">http://v.qq.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">企鹅直播</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://live.qq.com/">http://live.qq.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Sina 新浪视频 微博秒拍视频</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://video.sina.com.cn/">http://video.sina.com.cn/</a> <a target="_blank" rel="noopener" href="https://video.weibo.com/">http://video.weibo.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Sohu 搜狐视频</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://tv.sohu.com/">http://tv.sohu.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>Tudou 土豆</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.tudou.com/">http://www.tudou.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">阳光卫视</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.isuntv.com/">http://www.isuntv.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>Youku 优酷</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.youku.com/">http://www.youku.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">战旗TV</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.zhanqi.tv/lives">http://www.zhanqi.tv/lives</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">央视网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.cntv.cn/">http://www.cntv.cn/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Naver 네이버</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://tvcast.naver.com/">http://tvcast.naver.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">芒果TV</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.mgtv.com/">http://www.mgtv.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">火猫TV</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.huomao.com/">http://www.huomao.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">阳光宽频网</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://www.365yg.com/">http://www.365yg.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">西瓜视频</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.ixigua.com/">https://www.ixigua.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">新片场</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.xinpianchang.com/">https://www.xinpianchang.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">快手</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.kuaishou.com/">https://www.kuaishou.com/</a></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">抖音</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.douyin.com/">https://www.douyin.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">TikTok</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.tiktok.com/">https://www.tiktok.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">中国体育(TV)</td>
+<td align="left"><a target="_blank" rel="noopener" href="http://v.zhibo.tv/">http://v.zhibo.tv/</a> <a target="_blank" rel="noopener" href="http://video.zhibo.tv/">http://video.zhibo.tv/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">知乎</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.zhihu.com/">https://www.zhihu.com/</a></td>
+<td align="center">✓</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2022/03/08/you-get-download-videos/">https://xujinzh.github.io/2022/03/08/you-get-download-videos/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/video/">video</a></div><div class="post_share"><div class="social-share" data-image="/img/c27.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/03/17/opencv-object-tracking-implementation/" title="OpenCV 目标跟踪实现"><img class="cover" src="/img/c7.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">OpenCV 目标跟踪实现</div></div></a></div><div class="next-post pull-right"><a href="/2022/03/08/autossh-keep-ssh-alive/" title="使用 autossh 保持 ssh 连接"><img class="cover" src="/img/c30.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">使用 autossh 保持 ssh 连接</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/02/19/ffmpeg-video-processing/" title="FFmpeg 视频处理等相关"><img class="cover" src="/img/c27.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-19</div><div class="title">FFmpeg 视频处理等相关</div></div></a></div><div><a href="/2022/03/24/python-opencv-video-info/" title="使用 python 的 opencv 获取视频信息"><img class="cover" src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-24</div><div class="title">使用 python 的 opencv 获取视频信息</div></div></a></div><div><a href="/2020/07/11/youtube-dl/" title="youtube-dl 下载视频方法"><img class="cover" src="/img/c10.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-11</div><div class="title">youtube-dl 下载视频方法</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-you-get"><span class="toc-number">1.</span> <span class="toc-text">安装 you-get</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-you-get"><span class="toc-number">2.</span> <span class="toc-text">使用 you-get</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%A7%86%E9%A2%91%E4%BF%A1%E6%81%AF"><span class="toc-number">2.1.</span> <span class="toc-text">查看视频信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%8D%95%E4%B8%AA%E8%A7%86%E9%A2%91"><span class="toc-number">2.2.</span> <span class="toc-text">下载单个视频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E6%8C%87%E5%AE%9A%E7%9A%84%E6%A0%BC%E5%BC%8F%E8%A7%86%E9%A2%91"><span class="toc-number">2.3.</span> <span class="toc-text">下载指定的格式视频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%9B%BE%E7%89%87"><span class="toc-number">2.4.</span> <span class="toc-text">下载图片</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%88%B0%E7%89%B9%E5%AE%9A%E7%9B%AE%E5%BD%95%E5%B9%B6%E9%87%8D%E5%91%BD%E5%90%8D%E8%A7%86%E9%A2%91"><span class="toc-number">2.5.</span> <span class="toc-text">下载到特定目录并重命名视频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%90%86%E4%B8%8B%E8%BD%BD%E8%A7%86%E9%A2%91"><span class="toc-number">2.6.</span> <span class="toc-text">代理下载视频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%88%B0%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E5%99%A8"><span class="toc-number">2.7.</span> <span class="toc-text">下载到视频播放器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E8%A7%86%E9%A2%91%E9%9B%86"><span class="toc-number">2.8.</span> <span class="toc-text">下载视频集</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%94%AF%E6%8C%81%E7%9A%84%E7%BD%91%E7%AB%99"><span class="toc-number">3.</span> <span class="toc-text">支持的网站</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '61e0737070f8f5f041ffa146746aecf5',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

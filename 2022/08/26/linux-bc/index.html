@@ -1,0 +1,393 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Linux 上计算器编程语言 bc | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="bc 用于基本计算器(basic calculator)（通常称为台式计算器(bench calculator)），是“一种任意精度的计算器语言”，其语法类似于 C 编程语言。bc 通常用作数学脚本语言或交互式数学 shell.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 上计算器编程语言 bc">
+<meta property="og:url" content="https://xujinzh.github.io/2022/08/26/linux-bc/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="bc 用于基本计算器(basic calculator)（通常称为台式计算器(bench calculator)），是“一种任意精度的计算器语言”，其语法类似于 C 编程语言。bc 通常用作数学脚本语言或交互式数学 shell.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c8.jpg">
+<meta property="article:published_time" content="2022-08-26T03:04:37.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.100Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="bc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c8.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2022/08/26/linux-bc/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux 上计算器编程语言 bc',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Linux 上计算器编程语言 bc</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-08-26T03:04:37.000Z" title="发表于 2022-08-26 11:04:37">2022-08-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.100Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/linux/">linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux 上计算器编程语言 bc"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p><code>bc</code> 用于基本计算器(basic calculator)（通常称为台式计算器(bench calculator)），是“一种任意精度的计算器语言”，其语法类似于 C 编程语言。<code>bc</code> 通常用作数学脚本语言或交互式数学 shell.</p>
+<span id="more"></span>
+
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Debian/Ubuntu</span></span><br><span class="line">sudo apt install bc	</span><br><span class="line"></span><br><span class="line"><span class="comment"># RHEL/CentOS</span></span><br><span class="line">sudo yum install bc	</span><br><span class="line"></span><br><span class="line"><span class="comment"># Fedora 22+</span></span><br><span class="line">sudo dnf install bc	</span><br></pre></td></tr></table></figure>
+
+<h1 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h1><p>使用下面命令查看 <code>bc</code> 基本用法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man bc</span><br></pre></td></tr></table></figure>
+
+<p>使用下面命令查看 <code>bc</code> 常用帮助：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bc -h</span><br></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">usage: bc [options] [file ...]</span><br><span class="line">  -h  --help         print this usage and exit</span><br><span class="line">  -i  --interactive  force interactive mode</span><br><span class="line">  -l  --mathlib      use the predefined math routines</span><br><span class="line">  -q  --quiet        don&#x27;t print initial banner</span><br><span class="line">  -s  --standard     non-standard bc constructs are errors</span><br><span class="line">  -w  --warn         warn about non-standard bc constructs</span><br><span class="line">  -v  --version      print version information and exit</span><br></pre></td></tr></table></figure>
+
+<p>基本使用：<br>直接在终端输入 <code>bc</code>，即可以交互式方式进行数学计算:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bc</span><br></pre></td></tr></table></figure>
+<p>退出交换模式，请输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">quit</span><br></pre></td></tr></table></figure>
+<p>打开交换终端时导入数学模块(mathlib)，方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bc -l</span><br></pre></td></tr></table></figure>
+<p>使用此方法可以调用常用数学方法，如计算圆周率：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ bc -l</span><br><span class="line">bc 1.07.1</span><br><span class="line">Copyright 1991-1994, 1997, 1998, 2000, 2004, 2006, 2008, 2012-2017 Free Software Foundation, Inc.</span><br><span class="line">This is free software with ABSOLUTELY NO WARRANTY.</span><br><span class="line">For details <span class="built_in">type</span> `warranty<span class="string">&#x27;.</span></span><br><span class="line"><span class="string">4 * a(1)</span></span><br><span class="line"><span class="string">3.14159265358979323844</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：导入数学模块后默认保留小数点 20 位；不导入数学模块时默认保留小数点 0 位。见如下示例：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不导入数学模块</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;3/2&quot;</span> | bc</span><br><span class="line">1</span><br><span class="line"><span class="comment"># 导入数学模块</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;3/2&quot;</span> | bc -l</span><br><span class="line">1.50000000000000000000</span><br><span class="line"><span class="comment"># 只有导入数学模块采用调用反正切(arctangent)函数：a(x)</span></span><br><span class="line"><span class="comment"># scale 变量表示设置精度(小数点后有效位数)为 10000，默认是 20</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;scale=10000;4*a(1)&quot;</span> | bc -l</span><br><span class="line">3.141592653589793238462643383279502884197169399375105820974944592307\</span><br><span class="line">81640628620899862803482534211706798214808651328230664709384460955058\</span><br><span class="line">22317253594081284811174502841027019385211055596446229489549303819644\</span><br><span class="line">28810975665933446128475648233786783165271201909145648566923460348610\</span><br><span class="line">45432664821339360726024914127372458700660631558817488152092096282925\</span><br><span class="line">40917153643678925903600113305305488204665213841469519415116094330572\</span><br><span class="line">70365759591953092186117381932611793105118548074462379962749567351885\</span><br><span class="line">75272489122793818301194912983367336244065664308602139494639522473719\</span><br><span class="line">07021798609437027705392171762931767523846748184676694051320005681271\</span><br><span class="line">45263560827785771342757789609173637178721468440901224953430146549585\</span><br><span class="line">37105079227968925892354201995611212902196086403441815981362977477130\</span><br><span class="line">99605187072113499999983729780499510597317328160963185950244594553469\</span><br><span class="line">08302642522308253344685035261931188171010003137838752886587533208381\</span><br><span class="line">42061717766914730359825349042875546873115956286388235378759375195778\</span><br><span class="line">18577805321712268066130019278766111959092164201989380952572010654858\</span><br><span class="line">63278865936153381827968230301952035301852968995773622599413891249721\</span><br><span class="line">77528347913151557485724245415069595082953311686172785588907509838175\</span><br><span class="line">46374649393192550604009277016711390098488240128583616035637076601047\</span><br><span class="line">10181942955596198946767837449448255379774726847104047534646208046684\</span><br><span class="line">25906949129331367702898915210475216205696602405803815019351125338243\</span><br><span class="line">00355876402474964732639141992726042699227967823547816360093417216412\</span><br><span class="line">19924586315030286182974555706749838505494588586926995690927210797509\</span><br><span class="line">30295532116534498720275596023648066549911988183479775356636980742654\</span><br><span class="line">25278625518184175746728909777727938000816470600161452491921732172147\</span><br><span class="line">72350141441973568548161361157352552133475741849468438523323907394143\</span><br><span class="line">33454776241686251898356948556209921922218427255025425688767179049460\</span><br><span class="line">16534668049886272327917860857843838279679766814541009538837863609506\</span><br><span class="line">80064225125205117392984896084128488626945604241965285022210661186306\</span><br><span class="line">74427862203919494504712371378696095636437191728746776465757396241389\</span><br><span class="line">08658326459958133904780275900994657640789512694683983525957098258226\</span><br><span class="line">20522489407726719478268482601476990902640136394437455305068203496252\</span><br><span class="line">45174939965143142980919065925093722169646151570985838741059788595977\</span><br><span class="line">29754989301617539284681382686838689427741559918559252459539594310499\</span><br><span class="line">72524680845987273644695848653836736222626099124608051243884390451244\</span><br><span class="line">13654976278079771569143599770012961608944169486855584840635342207222\</span><br><span class="line">58284886481584560285060168427394522674676788952521385225499546667278\</span><br><span class="line">23986456596116354886230577456498035593634568174324112515076069479451\</span><br><span class="line">09659609402522887971089314566913686722874894056010150330861792868092\</span><br><span class="line">08747609178249385890097149096759852613655497818931297848216829989487\</span><br><span class="line">22658804857564014270477555132379641451523746234364542858444795265867\</span><br><span class="line">82105114135473573952311342716610213596953623144295248493718711014576\</span><br><span class="line">54035902799344037420073105785390621983874478084784896833214457138687\</span><br><span class="line">51943506430218453191048481005370614680674919278191197939952061419663\</span><br><span class="line">42875444064374512371819217999839101591956181467514269123974894090718\</span><br><span class="line">64942319615679452080951465502252316038819301420937621378559566389377\</span><br><span class="line">87083039069792077346722182562599661501421503068038447734549202605414\</span><br><span class="line">66592520149744285073251866600213243408819071048633173464965145390579\</span><br><span class="line">62685610055081066587969981635747363840525714591028970641401109712062\</span><br><span class="line">80439039759515677157700420337869936007230558763176359421873125147120\</span><br><span class="line">53292819182618612586732157919841484882916447060957527069572209175671\</span><br><span class="line">16722910981690915280173506712748583222871835209353965725121083579151\</span><br><span class="line">36988209144421006751033467110314126711136990865851639831501970165151\</span><br><span class="line">16851714376576183515565088490998985998238734552833163550764791853589\</span><br><span class="line">32261854896321329330898570642046752590709154814165498594616371802709\</span><br><span class="line">81994309924488957571282890592323326097299712084433573265489382391193\</span><br><span class="line">25974636673058360414281388303203824903758985243744170291327656180937\</span><br><span class="line">73444030707469211201913020330380197621101100449293215160842444859637\</span><br><span class="line">66983895228684783123552658213144957685726243344189303968642624341077\</span><br><span class="line">32269780280731891544110104468232527162010526522721116603966655730925\</span><br><span class="line">47110557853763466820653109896526918620564769312570586356620185581007\</span><br><span class="line">29360659876486117910453348850346113657686753249441668039626579787718\</span><br><span class="line">55608455296541266540853061434443185867697514566140680070023787765913\</span><br><span class="line">44017127494704205622305389945613140711270004078547332699390814546646\</span><br><span class="line">45880797270826683063432858785698305235808933065757406795457163775254\</span><br><span class="line">20211495576158140025012622859413021647155097925923099079654737612551\</span><br><span class="line">76567513575178296664547791745011299614890304639947132962107340437518\</span><br><span class="line">95735961458901938971311179042978285647503203198691514028708085990480\</span><br><span class="line">10941214722131794764777262241425485454033215718530614228813758504306\</span><br><span class="line">33217518297986622371721591607716692547487389866549494501146540628433\</span><br><span class="line">66393790039769265672146385306736096571209180763832716641627488880078\</span><br><span class="line">69256029022847210403172118608204190004229661711963779213375751149595\</span><br><span class="line">01566049631862947265473642523081770367515906735023507283540567040386\</span><br><span class="line">74351362222477158915049530984448933309634087807693259939780541934144\</span><br><span class="line">73774418426312986080998886874132604721569516239658645730216315981931\</span><br><span class="line">95167353812974167729478672422924654366800980676928238280689964004824\</span><br><span class="line">35403701416314965897940924323789690706977942236250822168895738379862\</span><br><span class="line">30015937764716512289357860158816175578297352334460428151262720373431\</span><br><span class="line">46531977774160319906655418763979293344195215413418994854447345673831\</span><br><span class="line">62499341913181480927777103863877343177207545654532207770921201905166\</span><br><span class="line">09628049092636019759882816133231666365286193266863360627356763035447\</span><br><span class="line">76280350450777235547105859548702790814356240145171806246436267945612\</span><br><span class="line">75318134078330336254232783944975382437205835311477119926063813346776\</span><br><span class="line">87969597030983391307710987040859133746414428227726346594704745878477\</span><br><span class="line">87201927715280731767907707157213444730605700733492436931138350493163\</span><br><span class="line">12840425121925651798069411352801314701304781643788518529092854520116\</span><br><span class="line">58393419656213491434159562586586557055269049652098580338507224264829\</span><br><span class="line">39728584783163057777560688876446248246857926039535277348030480290058\</span><br><span class="line">76075825104747091643961362676044925627420420832085661190625454337213\</span><br><span class="line">15359584506877246029016187667952406163425225771954291629919306455377\</span><br><span class="line">99140373404328752628889639958794757291746426357455254079091451357111\</span><br><span class="line">36941091193932519107602082520261879853188770584297259167781314969900\</span><br><span class="line">90192116971737278476847268608490033770242429165130050051683233643503\</span><br><span class="line">89517029893922334517220138128069650117844087451960121228599371623130\</span><br><span class="line">17114448464090389064495444006198690754851602632750529834918740786680\</span><br><span class="line">88183385102283345085048608250393021332197155184306354550076682829493\</span><br><span class="line">04137765527939751754613953984683393638304746119966538581538420568533\</span><br><span class="line">86218672523340283087112328278921250771262946322956398989893582116745\</span><br><span class="line">62701021835646220134967151881909730381198004973407239610368540664319\</span><br><span class="line">39509790190699639552453005450580685501956730229219139339185680344903\</span><br><span class="line">98205955100226353536192041994745538593810234395544959778377902374216\</span><br><span class="line">17271117236434354394782218185286240851400666044332588856986705431547\</span><br><span class="line">06965747458550332323342107301545940516553790686627333799585115625784\</span><br><span class="line">32298827372319898757141595781119635833005940873068121602876496286744\</span><br><span class="line">60477464915995054973742562690104903778198683593814657412680492564879\</span><br><span class="line">85561453723478673303904688383436346553794986419270563872931748723320\</span><br><span class="line">83760112302991136793862708943879936201629515413371424892830722012690\</span><br><span class="line">14754668476535761647737946752004907571555278196536213239264061601363\</span><br><span class="line">58155907422020203187277605277219005561484255518792530343513984425322\</span><br><span class="line">34157623361064250639049750086562710953591946589751413103482276930624\</span><br><span class="line">74353632569160781547818115284366795706110861533150445212747392454494\</span><br><span class="line">54236828860613408414863776700961207151249140430272538607648236341433\</span><br><span class="line">46235189757664521641376796903149501910857598442391986291642193994907\</span><br><span class="line">23623464684411739403265918404437805133389452574239950829659122850855\</span><br><span class="line">58215725031071257012668302402929525220118726767562204154205161841634\</span><br><span class="line">84756516999811614101002996078386909291603028840026910414079288621507\</span><br><span class="line">84245167090870006992821206604183718065355672525325675328612910424877\</span><br><span class="line">61825829765157959847035622262934860034158722980534989650226291748788\</span><br><span class="line">20273420922224533985626476691490556284250391275771028402799806636582\</span><br><span class="line">54889264880254566101729670266407655904290994568150652653053718294127\</span><br><span class="line">03369313785178609040708667114965583434347693385781711386455873678123\</span><br><span class="line">01458768712660348913909562009939361031029161615288138437909904231747\</span><br><span class="line">33639480457593149314052976347574811935670911013775172100803155902485\</span><br><span class="line">30906692037671922033229094334676851422144773793937517034436619910403\</span><br><span class="line">37511173547191855046449026365512816228824462575916333039107225383742\</span><br><span class="line">18214088350865739177150968288747826569959957449066175834413752239709\</span><br><span class="line">68340800535598491754173818839994469748676265516582765848358845314277\</span><br><span class="line">56879002909517028352971634456212964043523117600665101241200659755851\</span><br><span class="line">27617858382920419748442360800719304576189323492292796501987518721272\</span><br><span class="line">67507981255470958904556357921221033346697499235630254947802490114195\</span><br><span class="line">21238281530911407907386025152274299581807247162591668545133312394804\</span><br><span class="line">94707911915326734302824418604142636395480004480026704962482017928964\</span><br><span class="line">76697583183271314251702969234889627668440323260927524960357996469256\</span><br><span class="line">50493681836090032380929345958897069536534940603402166544375589004563\</span><br><span class="line">28822505452556405644824651518754711962184439658253375438856909411303\</span><br><span class="line">15095261793780029741207665147939425902989695946995565761218656196733\</span><br><span class="line">78623625612521632086286922210327488921865436480229678070576561514463\</span><br><span class="line">20469279068212073883778142335628236089632080682224680122482611771858\</span><br><span class="line">96381409183903673672220888321513755600372798394004152970028783076670\</span><br><span class="line">94447456013455641725437090697939612257142989467154357846878861444581\</span><br><span class="line">23145935719849225284716050492212424701412147805734551050080190869960\</span><br><span class="line">33027634787081081754501193071412233908663938339529425786905076431006\</span><br><span class="line">38351983438934159613185434754649556978103829309716465143840700707360\</span><br><span class="line">41123735998434522516105070270562352660127648483084076118301305279320\</span><br><span class="line">54274628654036036745328651057065874882256981579367897669742205750596\</span><br><span class="line">83440869735020141020672358502007245225632651341055924019027421624843\</span><br><span class="line">91403599895353945909440704691209140938700126456001623742880210927645\</span><br><span class="line">79310657922955249887275846101264836999892256959688159205600101655256\</span><br><span class="line">375676</span><br></pre></td></tr></table></figure>
+
+<p><code>bc</code> 支持以下功能：</p>
+<ol>
+<li>算术运算；</li>
+<li>递增或递减运算；</li>
+<li>赋值运算；</li>
+<li>比较或关系运算；</li>
+<li>逻辑或布尔运算；</li>
+<li>数学函数；</li>
+<li>条件语句；</li>
+<li>迭代语句。</li>
+</ol>
+<h1 id="数字"><a href="#数字" class="headerlink" title="数字"></a>数字</h1><p><code>bc</code> 中最基本的元素是数字，任意精度的数字。所有数字都以十进制表示和计算。每一个数字都有两个属性，分别是 <code>length</code> 和 <code>scale</code>，<code>length</code> 表示数字中所有字母的个数（包括整数位、小数位，但不包括小数点），<code>scale</code> 只表示小数位的个数。示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ bc -q</span><br><span class="line">a = 3.21</span><br><span class="line">length(a)</span><br><span class="line">3</span><br><span class="line">scale(a)</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<h1 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h1><p><code>bc</code> 作为一门编程语言，必定会有注释要求。单号注释使用 <code>#</code>，多行注释使用 <code>/*</code> 和 <code>*/</code>，示例如下：<br>未赋值的变量使用时，默认赋值为 0.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ bc -q</span><br><span class="line"><span class="comment"># a = 3</span></span><br><span class="line">a</span><br><span class="line">0</span><br><span class="line">b = 3</span><br><span class="line">b</span><br><span class="line">3</span><br><span class="line">/* a = 2</span><br><span class="line">b = 2</span><br><span class="line">*/</span><br><span class="line">a</span><br><span class="line">0</span><br><span class="line">b</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<h1 id="进制转换"><a href="#进制转换" class="headerlink" title="进制转换"></a>进制转换</h1><p><code>bc</code> 作为 Linux 系统的计算器，支持进度转换，转换范围从 2 到 16 都支持。<code>ibase</code>表示输入数字的进制，<code>obase</code>表示输出数字的进制。输入数字包含字符 0-9 和 A-F，必须大写，小写表示变量符号。默认 <code>ibase=10;obase=10</code>，示例如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ bc -q</span><br><span class="line">11</span><br><span class="line">11</span><br><span class="line">ibase=2</span><br><span class="line">11</span><br><span class="line">3</span><br><span class="line">ibase=10000  <span class="comment"># 注意因为上面已经设置成2进制输入，所以 16 必须用二进制 10000 表示</span></span><br><span class="line">11</span><br><span class="line">17</span><br><span class="line">ibase=A;obase=8 <span class="comment"># 此时输入是16进制，设置为十进制用 A 表示</span></span><br><span class="line">9</span><br><span class="line">11</span><br><span class="line">ibase=8;obase=9</span><br><span class="line">11</span><br><span class="line">10</span><br></pre></td></tr></table></figure>
+<p><strong>特别注意：设置进制时，之前的设置会影响当前的设置，当一次设置调用时，建议先设置 obase，示例如下：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意，默认输入输出都是十进制</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;obase=10;ibase=2;11&quot;</span> | bc</span><br><span class="line">3</span><br><span class="line"><span class="comment"># 此时 10 已经被 ibase=2 认为时二进制的 10，即输出也是二进制</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;ibase=2;obase=10;11&quot;</span> | bc</span><br><span class="line">11</span><br></pre></td></tr></table></figure>
+
+<p>除了 0-9 和 A-F 外，其他字母 G-Z 也有默认值，分别依次累加。如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ bc -q</span><br><span class="line">A</span><br><span class="line">10</span><br><span class="line">f <span class="comment"># 必须大写</span></span><br><span class="line">0</span><br><span class="line">F</span><br><span class="line">15</span><br><span class="line">G <span class="comment"># 延续 F 依次累加 1</span></span><br><span class="line">16</span><br><span class="line">H</span><br><span class="line">17</span><br><span class="line">X</span><br><span class="line">33</span><br><span class="line">Y</span><br><span class="line">34</span><br><span class="line">Z <span class="comment"># 直到 Z</span></span><br><span class="line">35</span><br></pre></td></tr></table></figure>
+
+<h1 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h1><h2 id="基本表达式"><a href="#基本表达式" class="headerlink" title="基本表达式"></a>基本表达式</h2><ol>
+<li><code>- expr</code> 取相反数</li>
+<li><code>++ var</code> 变量 var 累加 1，返回结果是 var</li>
+<li><code>-- var</code> 变量 var 减少 1，返回结果是 var</li>
+<li><code>var ++</code> 变量 var 累加 1，返回结果是累加 1 前的 var</li>
+<li><code>var --</code> 变量 var 减少 1，返回结果是减少 1 前的 var</li>
+<li><code>expr + expr</code> 两项求和</li>
+<li><code>expr - expr</code> 两项求差</li>
+<li><code>expr * expr</code> 两项相乘</li>
+<li><code>expr / expr</code> 两项相除</li>
+<li><code>expr % expr</code> 两相求余数 The result of the expression is the “remainder” and it is computed in the following way. To compute a%b, first a&#x2F;b is computed to scale digits. That result is used to compute a-(a&#x2F;b)*b to the scale of the maximum of scale+scale(b) and scale(a). If scale is set to zero and both expressions are integers this expression is the integer remainder function.</li>
+<li><code>expr ^ expr</code> 两相求幂 The result of the expression is the value of the first raised to the second. The second expression must be an integer. (If the second expression is not an integer, a warning is generated and the expression is truncated to get an integer value.) The scale of the result is scale if the exponent is negative. If the exponent is positive the scale of the result is the minimum of the scale of the first expression times the value of the exponent and the maximum of scale and the scale of the first expression. (e.g. scale(a^b) &#x3D; min(scale(a)*b, max(scale, scale(a))).) It should be noted that expr^0 will always return the value of 1.</li>
+<li><code>( expr )</code> 改变运算顺序</li>
+<li><code>var = expr</code> 变量赋值</li>
+<li><code>var &lt;op&gt;= expr</code> This is equivalent to “var &#x3D; var <op> expr” with the exception that the “var” part is evaluated only once. This can make a difference if “var” is an array.</li>
+</ol>
+<h2 id="关系表达式"><a href="#关系表达式" class="headerlink" title="关系表达式"></a>关系表达式</h2><ol>
+<li><code>expr1 &lt; expr2</code> The result is 1 if expr1 is strictly less than expr2.</li>
+<li><code>expr1 &lt;= expr2</code> The result is 1 if expr1 is less than or equal to expr2.</li>
+<li><code>expr1 &gt; expr2</code> The result is 1 if expr1 is strictly greater than expr2.</li>
+<li><code>expr1 &gt;= expr2</code> The result is 1 if expr1 is greater than or equal to expr2.</li>
+<li><code>expr1 == expr2</code> The result is 1 if expr1 is equal to expr2.</li>
+<li><code>expr1 != expr2</code> The result is 1 if expr1 is not equal to expr2.</li>
+</ol>
+<h2 id="布尔表达式"><a href="#布尔表达式" class="headerlink" title="布尔表达式"></a>布尔表达式</h2><ol>
+<li><code>!expr</code> The result is 1 if expr is 0.</li>
+<li><code>expr &amp;&amp; expr</code> The result is 1 if both expressions are non-zero.</li>
+<li><code>expr || expr</code> The result is 1 if either expression is non-zero.</li>
+</ol>
+<h2 id="表达式优先级"><a href="#表达式优先级" class="headerlink" title="表达式优先级"></a>表达式优先级</h2><p>从上往下优先级递增</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">||</span><br><span class="line">&amp;&amp;</span><br><span class="line">!</span><br><span class="line">关系表达式</span><br><span class="line">赋值表达式</span><br><span class="line">+, -</span><br><span class="line">*, /, %</span><br><span class="line">^</span><br><span class="line">-</span><br><span class="line">++, --</span><br></pre></td></tr></table></figure>
+
+<h2 id="特殊表达式"><a href="#特殊表达式" class="headerlink" title="特殊表达式"></a>特殊表达式</h2><ol>
+<li><code>length(var)</code> 获取有效位长度</li>
+<li><code>read()</code>  读取值</li>
+<li><code>scale(var)</code> 获取小数点后有效位长度</li>
+<li><code>sqrt(expr)</code> 求平方根</li>
+</ol>
+<h2 id="数学库"><a href="#数学库" class="headerlink" title="数学库"></a>数学库</h2><p><code>bc -l</code> 能够调用数学库，且保留精度默认设置为 scale&#x3D;20，常见数学公式如下：</p>
+<ol>
+<li><code>s(x)</code><br>The sine of x, x is in radians.</li>
+<li><code>c(x)</code><br>The cosine of x, x is in radians.</li>
+<li><code>a(x)</code><br>The arctangent of x, arctangent returns radians.</li>
+<li><code>l(x)</code><br>The natural logarithm of x.</li>
+<li><code>e(x)</code><br>The exponential function of raising e to the value x.</li>
+<li><code>j(n, x)</code><br>The bessel function of integer order n of x.</li>
+</ol>
+<h2 id="复杂表达式"><a href="#复杂表达式" class="headerlink" title="复杂表达式"></a>复杂表达式</h2><ol>
+<li><code>print</code> list<br>The print statement (an extension) provides another method of output. The list is a list of strings and expressions separated by commas. Each string or expression is printed in the order of the list. No terminating newline is printed. Expressions are evaluated and their value is printed and assigned to the variable last. Strings in the print statement are printed to the output and may contain special characters. Special characters start with the backslash character (\e). The special characters recognized by bc are “a” (alert or bell), “b” (backspace), “f” (form feed), “n” (newline), “r” (carriage return), “q” (double quote), “t” (tab), and “\e” (backslash). Any other character following the backslash will be ignored.</li>
+<li><code>&#123; statement_list &#125;</code><br>This is the compound statement. It allows multiple statements to be grouped together for execution.</li>
+<li><code>if ( expression ) statement1 [else statement2]</code><br>The if statement evaluates the expression and executes statement1 or statement2 depending on the value of the expression. If the expression is non-zero, statement1 is executed. If statement2 is present and the value of the expression is 0, then statement2 is executed. (The else clause is an extension.)</li>
+<li><code>while ( expression ) statement</code><br>The while statement will execute the statement while the expression is non-zero. It evaluates the expression before each execution of the statement. Termination of the loop is caused by a zero expression value or the execution of a break statement.</li>
+<li><code>for ( [expression1] ; [expression2] ; [expression3] ) statement</code><br>The for statement controls repeated execution of the statement. Expression1 is evaluated before the loop. Expression2 is evaluated before each execution of the statement. If it is non-zero, the statement is evaluated. If it is zero, the loop is terminated. After each execution of the statement, expression3 is evaluated before the reevaluation of expression2. If expression1 or expression3 are missing, nothing is evaluated at the point they would be evaluated. If expression2 is missing, it is the same as substituting the value 1 for expression2. (The optional expressions are an extension. POSIX bc requires all three expressions.) The following is equivalent code for the for statement:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">expression1;</span><br><span class="line"><span class="keyword">while</span> (expression2) &#123;</span><br><span class="line">statement;</span><br><span class="line">expression3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><code>break</code><br>This statement causes a forced exit of the most recent enclosing while statement or for statement.<br>continue<br>The continue statement (an extension) causes the most recent enclosing for statement to start the next iteration.</li>
+<li><code>halt</code><br>The halt statement (an extension) is an executed statement that causes the bc processor to quit only when it is executed. For example, “if (0 &#x3D;&#x3D; 1) halt” will not cause bc to terminate because the halt is not executed.</li>
+<li><code>return</code><br>Return the value 0 from a function. (See section Functions.)</li>
+<li><code>return ( expression )</code><br>Return the value of the expression from a function. (See section Functions.) As an extension, the parenthesis are not required.</li>
+</ol>
+<h2 id="自定义函数"><a href="#自定义函数" class="headerlink" title="自定义函数"></a>自定义函数</h2><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">define name ( parameters ) &#123; newline</span><br><span class="line">    auto<span class="built_in">_</span>list   statement<span class="built_in">_</span>list &#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">define d(n) &#123; return (2*n); &#125;</span><br><span class="line"><span class="params">#</span> 或者</span><br><span class="line">define d(n)</span><br><span class="line">       &#123; return (2*n); &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ bc -q</span><br><span class="line">define m2(n) &#123;<span class="built_in">return</span> (2*n);&#125;</span><br><span class="line">m2(3)</span><br><span class="line">6</span><br><span class="line">m2(9)</span><br><span class="line">18</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://www.gnu.org/software/bc/manual/html_mono/bc.html#SEC2">an arbitrary precision calculator language</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/bc-command-linux-examples/">bc command in Linux with examples</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014636245/article/details/82916203">Shell中计算模块 bc的使用</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Strengthennn/article/details/121319126">Linux下使用bc进行计算公式</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2022/08/26/linux-bc/">https://xujinzh.github.io/2022/08/26/linux-bc/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a><a class="post-meta__tags" href="/tags/bc/">bc</a></div><div class="post_share"><div class="social-share" data-image="/img/c8.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/09/07/linux-hardware-info/" title="查看 Linux 硬件信息"><img class="cover" src="/img/c23.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">查看 Linux 硬件信息</div></div></a></div><div class="next-post pull-right"><a href="/2022/08/23/neofetch-linux-info/" title="使用 neofetch 查看 Linux 系统基本信息"><img class="cover" src="/img/c20.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">使用 neofetch 查看 Linux 系统基本信息</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/11/06/auto-email-server-ip/" title="服务器开机或IP改变自动发送通知邮件"><img class="cover" src="/img/c17.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-06</div><div class="title">服务器开机或IP改变自动发送通知邮件</div></div></a></div><div><a href="/2021/11/29/auto-email-server-shutdown/" title="服务器关机自动发送通知邮件"><img class="cover" src="/img/c2.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-29</div><div class="title">服务器关机自动发送通知邮件</div></div></a></div><div><a href="/2020/06/12/auto-start-command-in-linux/" title="Linux 系统中的开机自启命令简单介绍"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-12</div><div class="title">Linux 系统中的开机自启命令简单介绍</div></div></a></div><div><a href="/2021/09/06/awk-command-language/" title="Linux 中的 awk 命令"><img class="cover" src="/img/c28.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-06</div><div class="title">Linux 中的 awk 命令</div></div></a></div><div><a href="/2022/10/29/build-official-python3-11/" title="Ubuntu 上编译安装官网 Python"><img class="cover" src="/img/c11.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-29</div><div class="title">Ubuntu 上编译安装官网 Python</div></div></a></div><div><a href="/2022/08/04/cat-service-eof/" title="Linux 中 EOF 内容转义"><img class="cover" src="/img/c18.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-04</div><div class="title">Linux 中 EOF 内容转义</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">基本用法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E5%AD%97"><span class="toc-number">3.</span> <span class="toc-text">数字</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E9%87%8A"><span class="toc-number">4.</span> <span class="toc-text">注释</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2"><span class="toc-number">5.</span> <span class="toc-text">进制转换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">6.</span> <span class="toc-text">表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">6.1.</span> <span class="toc-text">基本表达式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">6.2.</span> <span class="toc-text">关系表达式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%83%E5%B0%94%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">6.3.</span> <span class="toc-text">布尔表达式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-number">6.4.</span> <span class="toc-text">表达式优先级</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">6.5.</span> <span class="toc-text">特殊表达式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%E5%BA%93"><span class="toc-number">6.6.</span> <span class="toc-text">数学库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E6%9D%82%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">6.7.</span> <span class="toc-text">复杂表达式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0"><span class="toc-number">6.8.</span> <span class="toc-text">自定义函数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">7.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'f6100ccd03389c537a2cd7aeb20581a6',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

@@ -1,0 +1,468 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Python 中命令行解析模块 argparse 的使用 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="熟悉 Linux 命令行的用户享受着对于不同命令指定不同参数的遍历，如 ls，表示打印当前目录下内容，而使用 ls &#x2F;home 能够打印目录 &#x2F;home 下的内容。这增加了 Linux 命令的使用范围，提高了用户体验。同样，在 Python 中也有类似的功能模块，那就是内置模块argparse， 其不仅能够自定义解析命令行参数（从 sys.argv 中解析这些参数），还能够解析 JSON 文件。本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 中命令行解析模块 argparse 的使用">
+<meta property="og:url" content="https://xujinzh.github.io/2022/11/22/python-argparse-useage/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="熟悉 Linux 命令行的用户享受着对于不同命令指定不同参数的遍历，如 ls，表示打印当前目录下内容，而使用 ls &#x2F;home 能够打印目录 &#x2F;home 下的内容。这增加了 Linux 命令的使用范围，提高了用户体验。同样，在 Python 中也有类似的功能模块，那就是内置模块argparse， 其不仅能够自定义解析命令行参数（从 sys.argv 中解析这些参数），还能够解析 JSON 文件。本">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c27.jpg">
+<meta property="article:published_time" content="2022-11-22T01:05:18.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.100Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="argparse">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c27.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2022/11/22/python-argparse-useage/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Python 中命令行解析模块 argparse 的使用',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Python 中命令行解析模块 argparse 的使用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-22T01:05:18.000Z" title="发表于 2022-11-22 09:05:18">2022-11-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.100Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/python/">python</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>12分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Python 中命令行解析模块 argparse 的使用"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>熟悉 Linux 命令行的用户享受着对于不同命令指定不同参数的遍历，如 <code>ls</code>，表示打印当前目录下内容，而使用 <code>ls /home</code> 能够打印目录 <code>/home</code> 下的内容。这增加了 Linux 命令的使用范围，提高了用户体验。同样，在 Python 中也有类似的功能模块，那就是内置模块<code>argparse</code>， 其不仅能够自定义解析命令行参数（从 sys.argv 中解析这些参数），还能够解析 JSON 文件。本篇所有命令都是在 jupyter 中演示。</p>
+<span id="more"></span>
+
+<h1 id="基本步骤"><a href="#基本步骤" class="headerlink" title="基本步骤"></a>基本步骤</h1><p>使用 <code>argparse</code> 常用步骤：</p>
+<blockquote>
+<ol>
+<li><code>import argparse</code>  # 导入模块；</li>
+<li><code>parser = argparse.ArgumentParser(prog=&quot;工程名&quot;, description=&quot;自定义描述信息&quot;)</code>  # 实例化一个解析器，在 jupyter 中使用 <code>argparse.ArgumentParser?</code> 可查看更详细的参数内容；</li>
+<li><code>parser.add_argument(&quot;-x&quot;, &quot;--var_x&quot;, type=int, help=&quot;传入自变量&quot;)</code>  # 添加想要解析的命令行(可选)参数 <code>var_x</code>(例子)及配置，下面会对个配置进行详解。该步骤可重复添加多个不同的参数；</li>
+<li><code>args = parser.parse_args()</code>  # 解析参数；</li>
+<li><code>args.__dict__.update(d)</code>  # 使用字典 <code>d</code> 更新参数；</li>
+<li><code>args.var_x</code>   # 打印或使用某个参数；</li>
+</ol>
+</blockquote>
+<p>命令行调用例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用户自定义参数 var_x 的值，运行 main.py，得到结果</span></span><br><span class="line">python main.py --var_x <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的步骤中，用户可灵活使用步骤 3 自定义解析参数，下面进行详细解释。</p>
+<h1 id="add-argument-配置"><a href="#add-argument-配置" class="headerlink" title="add_argument 配置"></a>add_argument 配置</h1><p>在上面步骤 3 中，用户可自定义添加待解析的参数以及该参数的配置，如取值类型、取值范围、默认值、参数帮助信息等。常用的配置如下：</p>
+<table>
+<thead>
+<tr>
+<th align="left">配置项名</th>
+<th>描述</th>
+<th align="left">取值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>name or flags</code></td>
+<td>一个命令或者一个选项字符串的列表，例如位置参数 <code>var_x</code> 或者可选参数 <code>-f</code>, <code>--foo</code></td>
+<td align="left">字符串</td>
+</tr>
+<tr>
+<td align="left"><code>action</code></td>
+<td>指定如何处理该参数</td>
+<td align="left"><code>&#39;store&#39;</code>, <code>&#39;store_const&#39;</code>, <code>&#39;store_true&#39;</code>, <code>&#39;append&#39;</code>, <code>&#39;append_const&#39;</code>, <code>&#39;count&#39;</code>, <code>&#39;help&#39;</code>, <code>&#39;version&#39;</code></td>
+</tr>
+<tr>
+<td align="left"><code>choices</code></td>
+<td>将参数取值限制在特定范围内</td>
+<td align="left">如 <code>[1, 2]</code>、<code>range(10)</code> 或其他容器对象</td>
+</tr>
+<tr>
+<td align="left"><code>const</code></td>
+<td>存储一个常量值</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>default</code></td>
+<td>当参数在命令行为指定值时使用的默认值</td>
+<td align="left">默认为 <code>None</code></td>
+</tr>
+<tr>
+<td align="left"><code>dest</code></td>
+<td>指定结果命名空间(namespace)中使用的属性名称</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>help</code></td>
+<td>参数的帮助信息</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>metavar</code></td>
+<td>参数的备用显示名称，如帮助中所示</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>nargs</code></td>
+<td>参数可以使用的次数</td>
+<td align="left"><code>int</code>，<code>&#39;?&#39;</code>，<code>&#39;*&#39;</code>，<code>&#39;+&#39;</code> 或 <code>argparse.REMAINDER</code></td>
+</tr>
+<tr>
+<td align="left"><code>required</code></td>
+<td>指示参数是必需的还是可选的</td>
+<td align="left"><code>True</code> 或 <code>False</code></td>
+</tr>
+<tr>
+<td align="left"><code>type</code></td>
+<td>自动将参数转换为给定类型</td>
+<td align="left"><code>int</code>，<code>float</code>，<code>argparse.FileType(&#39;w&#39;)</code> 或 可调用函数</td>
+</tr>
+</tbody></table>
+<h2 id="name-or-flags"><a href="#name-or-flags" class="headerlink" title="name or flags"></a>name or flags</h2><p><code>add_argument()</code> 方法必须知道是否需要可选参数（如 <code>-x</code> 或 <code>--var_x</code>）或位置参数（如 <code>var_x</code>）。因此，传递给 <code>add_argument()</code> 的第一个参数必须是一系列标志或一个简单的参数名称。</p>
+<p>可选参数创建方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parser.add_argument(<span class="string">&#x27;-x&#x27;</span>, <span class="string">&#x27;--var_x&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>位置参数创建方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parser.add_argument(<span class="string">&#x27;var_x&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>可选参数在命令行解析时，必须指定可选参数的名字，位置参数则是按照添加 <code>add_argument</code> 的位置依次赋值，当遇到可选参数时自动跳过。如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /workspace/hello/t.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">t</span>():</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&quot;python argparser&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;x&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;-z&quot;</span>, <span class="string">&quot;--var_z&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;y&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    parser = t()</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;x: &quot;</span>, args.x)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;z: &quot;</span>, args.var_z)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;y: &quot;</span>, args.y)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">%%bash</span><br><span class="line">cd /workspace/hello/</span><br><span class="line">python t.py <span class="number">1</span> -z <span class="number">2</span> <span class="number">3</span></span><br><span class="line"><span class="comment"># python t.py 1 --var_z 2 3</span></span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x:  <span class="number">1</span></span><br><span class="line">z:  <span class="number">2</span></span><br><span class="line">y:  <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="action"><a href="#action" class="headerlink" title="action"></a>action</h2><p><code>ArgumentParser</code> 对象将命令行参数与动作相关联。这些动作可以做与它们相关联的命令行参数的任何事，尽管大多数动作只是简单的向 <code>parse_args()</code> 返回的对象上添加属性。<code>action</code> 命名参数指定了这个命令行参数应当如何处理。常用的动作有: <code>&#39;store&#39;, &#39;store_const&#39;, &#39;store_true&#39;, &#39;append&#39;, &#39;append_const&#39;, &#39;count&#39;, &#39;help&#39;, &#39;version&#39;, &#39;extend&#39;</code>。</p>
+<p>这里只针对 <code>store_true</code> 进行演示，其他参见：<a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/argparse.html#module-argparse">argparse</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /workspace/hello/t.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">t</span>():</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&quot;python argparser&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;-v&quot;</span>, <span class="string">&quot;--verbose&quot;</span>, action=<span class="string">&quot;store_true&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    parser = t()</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="keyword">if</span> args.verbose:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;long logs&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;short logs&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%%bash</span><br><span class="line">cd /workspace/hello/</span><br><span class="line">python t.py --verbose</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">long logs</span><br></pre></td></tr></table></figure>
+<p>如果不指定，则赋值 <code>false</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%%bash</span><br><span class="line">cd /workspace/hello/</span><br><span class="line">python t.py</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">short</span> logs</span><br></pre></td></tr></table></figure>
+
+<h2 id="choices"><a href="#choices" class="headerlink" title="choices"></a>choices</h2><p>命令行赋值时，只有取值在 <code>choices</code> 中的才通过。例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /workspace/hello/t.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">t</span>():</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&quot;python argparser&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;-x&quot;</span>, <span class="string">&quot;--var_x&quot;</span>, choices=[<span class="string">&quot;0a&quot;</span>, <span class="string">&quot;0b&quot;</span>, <span class="string">&quot;0c&quot;</span>])</span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    parser = t()</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="built_in">print</span>(args.var_x)</span><br></pre></td></tr></table></figure>
+<p>运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%%bash</span><br><span class="line">cd /workspace/hello/</span><br><span class="line">python t.py -x 0a</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0a</span><br></pre></td></tr></table></figure>
+<p>如果取值不在 choices 中则报错。</p>
+<h2 id="const"><a href="#const" class="headerlink" title="const"></a>const</h2><p>不常用</p>
+<h2 id="default"><a href="#default" class="headerlink" title="default"></a>default</h2><p>有时候，一些参数在命令行赋值时常被忽略，如果这些参数有 <code>default</code> 默认值，则不会导致程序运行中出错。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /workspace/hello/t.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">t</span>():</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&quot;python argparser&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-x&#x27;</span>, <span class="string">&quot;--var_x&quot;</span>, default=<span class="number">42</span>)</span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    parser = t()</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="built_in">print</span>(args.var_x)</span><br></pre></td></tr></table></figure>
+<p>运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%%bash</span><br><span class="line">cd /workspace/hello/</span><br><span class="line">python t.py</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">42</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="dest"><a href="#dest" class="headerlink" title="dest"></a>dest</h2><p>定义参数在代码中的新名称。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /workspace/hello/t.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">t</span>():</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&quot;python argparser&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;-x&quot;</span>, <span class="string">&quot;--var_x&quot;</span>, dest=<span class="string">&quot;varX&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    parser = t()</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="built_in">print</span>(args.varX)  <span class="comment"># 调用时使用区别于命令行显示的变量名</span></span><br></pre></td></tr></table></figure>
+<p>运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%%bash</span><br><span class="line">cd /workspace/hello/</span><br><span class="line">python t.py -x <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="help"><a href="#help" class="headerlink" title="help"></a>help</h2><p>显示参数的帮助信息。当用户请求帮助时（在命令行使用 <code>-h</code> 或 <code>--help</code> 的方式）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /workspace/hello/t.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">t</span>():</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&quot;python argparser&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;-x&quot;</span>, <span class="string">&quot;--var_x&quot;</span>, <span class="built_in">help</span>=<span class="string">&quot;自变量 x 的值&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    parser = t()</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="built_in">print</span>(args.var_x)</span><br></pre></td></tr></table></figure>
+<p>运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%%bash</span><br><span class="line">cd /workspace/hello/</span><br><span class="line">python t.py -h</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">usage: t.py [-h] [-x VAR_X]</span><br><span class="line"></span><br><span class="line">python argparser</span><br><span class="line"></span><br><span class="line">options:</span><br><span class="line">  -h, --<span class="built_in">help</span>            show this <span class="built_in">help</span> message <span class="keyword">and</span> exit</span><br><span class="line">  -x VAR_X, --var_x VAR_X    自变量 x 的值</span><br></pre></td></tr></table></figure>
+
+<h2 id="metavar"><a href="#metavar" class="headerlink" title="metavar"></a>metavar</h2><p>在 <code>help</code> 一节中可以发现打印的帮助信息，变量名都是大写，使用参数 <code>metavar</code> 可以指定打印时变量名。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /workspace/hello/t.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">t</span>():</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&quot;python argparser&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;-x&quot;</span>, <span class="string">&quot;--var_x&quot;</span>, metavar=<span class="string">&#x27;var-x&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    parser = t()</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="built_in">print</span>(args.var_x)</span><br></pre></td></tr></table></figure>
+<p>运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%%bash</span><br><span class="line">cd /workspace/hello/</span><br><span class="line">python t.py -h</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">usage: t.py [-h] [-x var-x]</span><br><span class="line"></span><br><span class="line">python argparser</span><br><span class="line"></span><br><span class="line">options:</span><br><span class="line">  -h, --<span class="built_in">help</span>            show this <span class="built_in">help</span> message <span class="keyword">and</span> exit</span><br><span class="line">  -x var-x, --var_x var-x</span><br></pre></td></tr></table></figure>
+
+<h2 id="nargs"><a href="#nargs" class="headerlink" title="nargs"></a>nargs</h2><p>在 <code>add_argument()</code> 方法中如果不添加 <code>nargs</code> 参数，则默认在命令行中可选或位置参数的后面值作为参数的取值，如果增加 <code>nargs</code>，则命令可选或位置参数后的 <code>nargs</code> 个值作为一个列表元素赋值给参数。nargs 支持的值有：</p>
+<blockquote>
+<ol>
+<li>N # 一个整数</li>
+<li>‘?’</li>
+<li>‘+’ # 匹配参数后面至少一个值，可匹配多个值</li>
+<li>‘*’ # 匹配参数后面至少0个值，可匹配多个值</li>
+</ol>
+</blockquote>
+<p>更多请参考：<a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/argparse.html#module-argparse">argparse</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /workspace/hello/t.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">t</span>():</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&quot;python argparser&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;-x&quot;</span>, <span class="string">&quot;--var_x&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;-t&quot;</span>, <span class="string">&quot;--theta&quot;</span>, nargs=<span class="number">2</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;-g&quot;</span>, <span class="string">&quot;--gamma&quot;</span>, nargs=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    parser = t()</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;var_x: &quot;</span>, args.var_x)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;theta: &quot;</span>, args.theta)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;gamma: &quot;</span>, args.gamma)</span><br></pre></td></tr></table></figure>
+<p>运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%%bash</span><br><span class="line">cd /workspace/hello/</span><br><span class="line">python t.py -x <span class="number">1</span> -t <span class="number">30</span> <span class="number">60</span> -g <span class="number">0.5</span></span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var_x:  <span class="number">1</span></span><br><span class="line">theta:  [<span class="string">&#x27;30&#x27;</span>, <span class="string">&#x27;60&#x27;</span>]</span><br><span class="line">gamma:  [<span class="string">&#x27;0.5&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<h2 id="required"><a href="#required" class="headerlink" title="required"></a>required</h2><p>通常，<code>argparse</code> 模块会认为 <code>-f</code> 和 <code>--bar</code> 等旗标是指明 可选的 参数，它们总是可以在命令行中被忽略。 要让一个选项成为 必需的，则可以将 <code>True</code> 作为 <code>required=</code> 关键字参数传给 <code>add_argument()</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /workspace/hello/t.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">t</span>():</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&quot;python argparser&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;-x&quot;</span>, <span class="string">&quot;--var_x&quot;</span>, required=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    parser = t()</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;var_x: &quot;</span>, args.var_x)</span><br></pre></td></tr></table></figure>
+<p>运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%%bash</span><br><span class="line">cd /workspace/hello/</span><br><span class="line">python t.py -x <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var_x:  <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>如果在命令行不指定参数则会报错，即使增加了 <code>default</code> 参数也会报错。</p>
+<h2 id="type"><a href="#type" class="headerlink" title="type"></a>type</h2><p>默认情况下，解析器会将命令行解析的值作为字符串赋值给参数，通过指定 type 可以将解析为指定类型的值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /workspace/hello/t.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">t</span>():</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&quot;python argparser&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;count&quot;</span>, <span class="built_in">type</span>=<span class="built_in">int</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;distance&quot;</span>, <span class="built_in">type</span>=<span class="built_in">float</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;street&quot;</span>, <span class="built_in">type</span>=<span class="built_in">ascii</span>, <span class="built_in">help</span>=<span class="string">&quot;ascii 码字符&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;code_point&quot;</span>, <span class="built_in">type</span>=<span class="built_in">ord</span>, <span class="built_in">help</span>=<span class="string">&quot;单个字符&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    parser = t()</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;count: &quot;</span>, args.count)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;distance: &quot;</span>, args.distance)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;street: &quot;</span>, args.street)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;code_point: &quot;</span>, args.code_point)</span><br></pre></td></tr></table></figure>
+<p>运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%%bash</span><br><span class="line">cd /workspace/hello/</span><br><span class="line">python t.py <span class="number">1</span> <span class="number">2.0</span> <span class="string">&#x27;a&#x27;</span> <span class="string">&#x27;天&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">count:  <span class="number">1</span></span><br><span class="line">distance:  <span class="number">2.0</span></span><br><span class="line">street:  <span class="string">&#x27;a&#x27;</span></span><br><span class="line">code_point:  <span class="number">22825</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="解析-JSON"><a href="#解析-JSON" class="headerlink" title="解析 JSON"></a>解析 JSON</h1><p>有时候，一个工程有多个开发人员开发，每个子模块都有自定义的参数，常常将参数记录在 JSON 中，使用时直接从 JSON 中读取参数的取值即可。</p>
+<h2 id="读取-JSON"><a href="#读取-JSON" class="headerlink" title="读取 JSON"></a>读取 JSON</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /workspace/hello/t.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> os, json</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">parse_json</span>(<span class="params">json_file</span>):</span><br><span class="line">    </span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&quot;python argparser&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> json_file <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> os.path.exists(json_file):</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(json_file, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> jf:</span><br><span class="line">            parser.__dict__.update(json.load(jf))</span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="comment"># 把参数写入JSON</span></span><br><span class="line">    d = &#123;<span class="string">&#x27;a&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;b&#x27;</span>: <span class="number">2</span>&#125;</span><br><span class="line">    json_file = <span class="string">&#x27;t.json&#x27;</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(json_file, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> jf:</span><br><span class="line">        json.dump(d, jf)</span><br><span class="line">    <span class="comment"># 从JSON中读取参数</span></span><br><span class="line">    args = parse_json(json_file)</span><br><span class="line">    <span class="built_in">print</span>(args)</span><br><span class="line">    <span class="built_in">print</span>(args.a)</span><br><span class="line">    <span class="built_in">print</span>(args.b)</span><br></pre></td></tr></table></figure>
+<p>运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%%bash</span><br><span class="line">cd /workspace/hello/</span><br><span class="line">python t.py</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ArgumentParser(prog=<span class="string">&#x27;t.py&#x27;</span>, usage=<span class="literal">None</span>, description=<span class="string">&#x27;python argparser&#x27;</span>, formatter_class=&lt;<span class="keyword">class</span> <span class="string">&#x27;argparse.HelpFormatter&#x27;</span>&gt;, conflict_handler=<span class="string">&#x27;error&#x27;</span>, add_help=<span class="literal">True</span>)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="JSON-更新参数"><a href="#JSON-更新参数" class="headerlink" title="JSON 更新参数"></a>JSON 更新参数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">%%writefile /workspace/hello/t.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">parse_json</span>(<span class="params">json_file</span>):</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&quot;python argparser&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> json_file <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> os.path.exists(json_file):</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(json_file, <span class="string">&quot;r&quot;</span>) <span class="keyword">as</span> jf:</span><br><span class="line">            parser.__dict__.update(json.load(jf))</span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">update_parse</span>(<span class="params">args, json_file</span>):</span><br><span class="line">    <span class="keyword">if</span> json_file <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> os.path.exists(json_file):</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(json_file, <span class="string">&quot;r&quot;</span>) <span class="keyword">as</span> jf:</span><br><span class="line">            args.__dict__.update(json.load(jf))</span><br><span class="line">    <span class="keyword">return</span> args</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="comment"># 把参数1写入JSON</span></span><br><span class="line">    d1 = &#123;<span class="string">&quot;a&quot;</span>: <span class="number">1</span>, <span class="string">&quot;b&quot;</span>: <span class="number">2</span>&#125;</span><br><span class="line">    json_file = <span class="string">&quot;t.json&quot;</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(json_file, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> jf:</span><br><span class="line">        json.dump(d1, jf)</span><br><span class="line">    <span class="comment"># 把参数2写入JSON</span></span><br><span class="line">    d2 = &#123;<span class="string">&quot;a&quot;</span>: <span class="number">10</span>, <span class="string">&quot;b&quot;</span>: <span class="number">20</span>&#125;</span><br><span class="line">    json_file_new = <span class="string">&quot;t-new.json&quot;</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(json_file_new, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> jf:</span><br><span class="line">        json.dump(d2, jf)</span><br><span class="line">    <span class="comment"># 从JSON中读取参数</span></span><br><span class="line">    args = parse_json(json_file)</span><br><span class="line">    <span class="built_in">print</span>(args)</span><br><span class="line">    <span class="built_in">print</span>(args.a)</span><br><span class="line">    <span class="built_in">print</span>(args.b)</span><br><span class="line">    args = update_parse(args, json_file_new)</span><br><span class="line">    <span class="built_in">print</span>(args)</span><br><span class="line">    <span class="built_in">print</span>(args.a)</span><br><span class="line">    <span class="built_in">print</span>(args.b)</span><br></pre></td></tr></table></figure>
+<p>运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%%bash</span><br><span class="line">cd /workspace/hello/</span><br><span class="line">python t.py</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ArgumentParser(prog=<span class="string">&#x27;t.py&#x27;</span>, usage=<span class="literal">None</span>, description=<span class="string">&#x27;python argparser&#x27;</span>, formatter_class=&lt;<span class="keyword">class</span> <span class="string">&#x27;argparse.HelpFormatter&#x27;</span>&gt;, conflict_handler=<span class="string">&#x27;error&#x27;</span>, add_help=<span class="literal">True</span>)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line">ArgumentParser(prog=<span class="string">&#x27;t.py&#x27;</span>, usage=<span class="literal">None</span>, description=<span class="string">&#x27;python argparser&#x27;</span>, formatter_class=&lt;<span class="keyword">class</span> <span class="string">&#x27;argparse.HelpFormatter&#x27;</span>&gt;, conflict_handler=<span class="string">&#x27;error&#x27;</span>, add_help=<span class="literal">True</span>)</span><br><span class="line"><span class="number">10</span></span><br><span class="line"><span class="number">20</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h1><ol>
+<li>添加参数时可以用 <code>-</code>，但是使用该参数时需要替换为 <code>_</code>，如： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line">parser = argparse.ArgumentParser(description=<span class="string">&#x27;test&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;--seed-test&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">72</span>, <span class="built_in">help</span>=<span class="string">&#x27;Random seed.&#x27;</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="built_in">print</span>(args)</span><br><span class="line">    <span class="built_in">print</span>(args.seed_test)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/argparse.html#module-argparse">argparse — 命令行选项、参数和子命令解析器</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/howto/argparse.html">Argparse 教程</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/56922793">argparse模块用法实例详解</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2022/11/22/python-argparse-useage/">https://xujinzh.github.io/2022/11/22/python-argparse-useage/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a><a class="post-meta__tags" href="/tags/argparse/">argparse</a></div><div class="post_share"><div class="social-share" data-image="/img/c27.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/11/23/linux-test-port-is-opened/" title="测试 Linux 某个端口是否打开"><img class="cover" src="/img/c30.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">测试 Linux 某个端口是否打开</div></div></a></div><div class="next-post pull-right"><a href="/2022/11/18/linux-xargs/" title="linux 中 xargs 命令"><img class="cover" src="/img/c7.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">linux 中 xargs 命令</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2019/12/21/Python-deepcopy-copy/" title="Python 中 deepcopy, copy, 赋值的区别"><img class="cover" src="/img/c26.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-21</div><div class="title">Python 中 deepcopy, copy, 赋值的区别</div></div></a></div><div><a href="/2023/08/28/ai-stable-diffusion-webui/" title="用于文生图的 AI 模型 Stable Diffusion 的部署"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-28</div><div class="title">用于文生图的 AI 模型 Stable Diffusion 的部署</div></div></a></div><div><a href="/2022/07/04/anaconda-pip-offline-install-whl/" title="通过 pip 离线安装 whl、tar.gz 到 anaconda"><img class="cover" src="/img/c19.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-04</div><div class="title">通过 pip 离线安装 whl、tar.gz 到 anaconda</div></div></a></div><div><a href="/2021/11/06/auto-email-server-ip/" title="服务器开机或IP改变自动发送通知邮件"><img class="cover" src="/img/c17.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-06</div><div class="title">服务器开机或IP改变自动发送通知邮件</div></div></a></div><div><a href="/2021/11/29/auto-email-server-shutdown/" title="服务器关机自动发送通知邮件"><img class="cover" src="/img/c2.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-29</div><div class="title">服务器关机自动发送通知邮件</div></div></a></div><div><a href="/2022/10/29/build-official-python3-11/" title="Ubuntu 上编译安装官网 Python"><img class="cover" src="/img/c11.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-29</div><div class="title">Ubuntu 上编译安装官网 Python</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.</span> <span class="toc-text">基本步骤</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#add-argument-%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">add_argument 配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#name-or-flags"><span class="toc-number">2.1.</span> <span class="toc-text">name or flags</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#action"><span class="toc-number">2.2.</span> <span class="toc-text">action</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#choices"><span class="toc-number">2.3.</span> <span class="toc-text">choices</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#const"><span class="toc-number">2.4.</span> <span class="toc-text">const</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#default"><span class="toc-number">2.5.</span> <span class="toc-text">default</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dest"><span class="toc-number">2.6.</span> <span class="toc-text">dest</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#help"><span class="toc-number">2.7.</span> <span class="toc-text">help</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#metavar"><span class="toc-number">2.8.</span> <span class="toc-text">metavar</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nargs"><span class="toc-number">2.9.</span> <span class="toc-text">nargs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#required"><span class="toc-number">2.10.</span> <span class="toc-text">required</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#type"><span class="toc-number">2.11.</span> <span class="toc-text">type</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90-JSON"><span class="toc-number">3.</span> <span class="toc-text">解析 JSON</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96-JSON"><span class="toc-number">3.1.</span> <span class="toc-text">读取 JSON</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JSON-%E6%9B%B4%E6%96%B0%E5%8F%82%E6%95%B0"><span class="toc-number">3.2.</span> <span class="toc-text">JSON 更新参数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-number">4.</span> <span class="toc-text">注意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">5.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '51166d13b17a9583770e2b14bfd79384',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

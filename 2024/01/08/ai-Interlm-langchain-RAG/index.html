@@ -1,0 +1,542 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>基于 InternLM 和 LangChain 搭建私人知识库 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本篇介绍基于 InternLM 和 LangChain 搭建私人知识库。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于 InternLM 和 LangChain 搭建私人知识库">
+<meta property="og:url" content="https://xujinzh.github.io/2024/01/08/ai-Interlm-langchain-RAG/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="本篇介绍基于 InternLM 和 LangChain 搭建私人知识库。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c5.jpeg">
+<meta property="article:published_time" content="2024-01-08T15:33:33.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.088Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="internlm">
+<meta property="article:tag" content="openmmlab">
+<meta property="article:tag" content="langchain">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c5.jpeg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2024/01/08/ai-Interlm-langchain-RAG/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '基于 InternLM 和 LangChain 搭建私人知识库',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">基于 InternLM 和 LangChain 搭建私人知识库</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-01-08T15:33:33.000Z" title="发表于 2024-01-08 23:33:33">2024-01-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.088Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/deep-learning/">deep learning</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>21分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="基于 InternLM 和 LangChain 搭建私人知识库"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>本篇介绍基于 InternLM 和 LangChain 搭建私人知识库。</p>
+<span id="more"></span>
+
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">!conda create --name internlm_langchain --clone=/root/share/conda_envs/internlm-base</span><br><span class="line">!/root/.conda/envs/internlm_langchain/<span class="built_in">bin</span>/python -m pip install ipykernel ipywidgets</span><br><span class="line">!/root/.conda/envs/internlm_langchain/<span class="built_in">bin</span>/python -m ipykernel install --user --name internlm_langchain --display-name internlm_langchain</span><br><span class="line"></span><br><span class="line"><span class="comment"># refresh web and use new kernel internlm_langchain</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 升级pip</span></span><br><span class="line">%pip install -q --upgrade pip</span><br><span class="line"></span><br><span class="line">%pip install -q modelscope==<span class="number">1.9</span><span class="number">.5</span> transformers==<span class="number">4.35</span><span class="number">.2</span> streamlit==<span class="number">1.24</span><span class="number">.0</span> sentencepiece==<span class="number">0.1</span><span class="number">.99</span> accelerate==<span class="number">0.24</span><span class="number">.1</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%pip install -q langchain==<span class="number">0.0</span><span class="number">.292</span> gradio==<span class="number">4.4</span><span class="number">.0</span> chromadb==<span class="number">0.4</span><span class="number">.15</span> sentence-transformers==<span class="number">2.2</span><span class="number">.2</span> unstructured==<span class="number">0.10</span><span class="number">.30</span> markdown==<span class="number">3.3</span><span class="number">.7</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%pip install -q -U huggingface_hub</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="模型和NLTK-相关资源下载"><a href="#模型和NLTK-相关资源下载" class="headerlink" title="模型和NLTK 相关资源下载"></a>模型和NLTK 相关资源下载</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%mkdir -p /root/data/model/Shanghai_AI_Laboratory</span><br><span class="line">%cp -r /root/share/temp/model_repos/internlm-chat-7b /root/data/model/Shanghai_AI_Laboratory/internlm-chat-7b</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys, os</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置环境变量</span></span><br><span class="line">os.environ[<span class="string">&#x27;HF_ENDPOINT&#x27;</span>] = <span class="string">&#x27;https://hf-mirror.com&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载模型</span></span><br><span class="line">os.system(<span class="string">f&#x27;<span class="subst">&#123;os.path.join(sys.exec_prefix, <span class="string">&quot;bin/huggingface-cli&quot;</span>)&#125;</span> download --resume-download sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 --local-dir /root/data/model/sentence-transformer&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%cd /root</span><br><span class="line">!git clone https://gitee.com/yzy0612/nltk_data.git  --branch gh-pages</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root
+Cloning into &#39;nltk_data&#39;...
+
+
+/root/.conda/envs/internlm_langchain/lib/python3.10/site-packages/IPython/core/magics/osm.py:417: UserWarning: using dhist requires you to install the `pickleshare` library.
+  self.shell.db[&#39;dhist&#39;] = compress_dhist(dhist)[-100:]
+
+
+remote: Enumerating objects: 1692, done.
+remote: Counting objects: 100% (1692/1692), done.
+remote: Compressing objects: 100% (775/775), done.
+remote: Total 1692 (delta 909), reused 1692 (delta 909), pack-reused 0
+Receiving objects: 100% (1692/1692), 952.80 MiB | 5.84 MiB/s, done.
+Resolving deltas: 100% (909/909), done.
+Updating files: 100% (244/244), done.
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%cd nltk_data</span><br><span class="line">%mv packages/*  ./</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/nltk_data
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%cd tokenizers</span><br><span class="line">!unzip punkt.<span class="built_in">zip</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/nltk_data/tokenizers
+Archive:  punkt.zip
+   creating: punkt/
+  inflating: punkt/greek.pickle      
+  inflating: punkt/estonian.pickle   
+  inflating: punkt/turkish.pickle    
+  inflating: punkt/polish.pickle     
+   creating: punkt/PY3/
+  inflating: punkt/PY3/greek.pickle  
+  inflating: punkt/PY3/estonian.pickle  
+  inflating: punkt/PY3/turkish.pickle  
+  inflating: punkt/PY3/polish.pickle  
+  inflating: punkt/PY3/russian.pickle  
+  inflating: punkt/PY3/czech.pickle  
+  inflating: punkt/PY3/portuguese.pickle  
+  inflating: punkt/PY3/README        
+  inflating: punkt/PY3/dutch.pickle  
+  inflating: punkt/PY3/norwegian.pickle  
+  inflating: punkt/PY3/slovene.pickle  
+  inflating: punkt/PY3/english.pickle  
+  inflating: punkt/PY3/danish.pickle  
+  inflating: punkt/PY3/finnish.pickle  
+  inflating: punkt/PY3/swedish.pickle  
+  inflating: punkt/PY3/spanish.pickle  
+  inflating: punkt/PY3/german.pickle  
+  inflating: punkt/PY3/italian.pickle  
+  inflating: punkt/PY3/french.pickle  
+  inflating: punkt/russian.pickle    
+  inflating: punkt/czech.pickle      
+  inflating: punkt/portuguese.pickle  
+  inflating: punkt/README            
+  inflating: punkt/dutch.pickle      
+  inflating: punkt/norwegian.pickle  
+  inflating: punkt/slovene.pickle    
+  inflating: punkt/english.pickle    
+  inflating: punkt/danish.pickle     
+  inflating: punkt/finnish.pickle    
+  inflating: punkt/swedish.pickle    
+  inflating: punkt/spanish.pickle    
+  inflating: punkt/german.pickle     
+  inflating: punkt/italian.pickle    
+  inflating: punkt/french.pickle     
+  inflating: punkt/.DS_Store         
+  inflating: punkt/PY3/malayalam.pickle  
+  inflating: punkt/malayalam.pickle  
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%cd ../taggers</span><br><span class="line">!unzip averaged_perceptron_tagger.<span class="built_in">zip</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/nltk_data/taggers
+Archive:  averaged_perceptron_tagger.zip
+   creating: averaged_perceptron_tagger/
+  inflating: averaged_perceptron_tagger/averaged_perceptron_tagger.pickle  
+</code></pre>
+<h2 id="项目代码下载"><a href="#项目代码下载" class="headerlink" title="项目代码下载"></a>项目代码下载</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%cd /root/data</span><br><span class="line">!git clone https://github.com/InternLM/tutorial</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/data
+Cloning into &#39;tutorial&#39;...
+remote: Enumerating objects: 352, done.
+remote: Counting objects: 100% (202/202), done.
+remote: Compressing objects: 100% (127/127), done.
+remote: Total 352 (delta 117), reused 136 (delta 74), pack-reused 150
+Receiving objects: 100% (352/352), 11.28 MiB | 8.07 MiB/s, done.
+Resolving deltas: 100% (142/142), done.
+</code></pre>
+<h2 id="知识库搭建"><a href="#知识库搭建" class="headerlink" title="知识库搭建"></a>知识库搭建</h2><h3 id="数据收集"><a href="#数据收集" class="headerlink" title="数据收集"></a>数据收集</h3><p>为语料处理方便，我们将选用上海人工智能实验室开源的一系列大模型工具开源仓库作为语料库来源，仓库中所有的 markdown、txt 文件作为示例语料库。注意，也可以选用其中的代码文件加入到知识库中，但需要针对代码文件格式进行额外处理（因为代码文件对逻辑联系要求较高，且规范性较强，在分割时最好基于代码模块进行分割再加入向量数据库）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入到数据库盘</span></span><br><span class="line">%cd /root/data</span><br><span class="line"><span class="comment"># clone 上述开源仓库</span></span><br><span class="line">!git clone https://gitee.com/<span class="built_in">open</span>-compass/opencompass.git</span><br><span class="line">!git clone https://gitee.com/InternLM/lmdeploy.git</span><br><span class="line">!git clone https://gitee.com/InternLM/xtuner.git</span><br><span class="line">!git clone https://gitee.com/InternLM/InternLM-XComposer.git</span><br><span class="line">!git clone https://gitee.com/InternLM/lagent.git</span><br><span class="line">!git clone https://gitee.com/InternLM/InternLM.git</span><br></pre></td></tr></table></figure>
+
+<pre><code>/root/data
+Cloning into &#39;opencompass&#39;...
+remote: Enumerating objects: 4843, done.
+remote: Total 4843 (delta 0), reused 0 (delta 0), pack-reused 4843
+Receiving objects: 100% (4843/4843), 1.48 MiB | 1.39 MiB/s, done.
+Resolving deltas: 100% (2941/2941), done.
+Updating files: 100% (1154/1154), done.
+Cloning into &#39;lmdeploy&#39;...
+remote: Enumerating objects: 4485, done.
+remote: Counting objects: 100% (4485/4485), done.
+remote: Compressing objects: 100% (1494/1494), done.
+remote: Total 4485 (delta 2914), reused 4485 (delta 2914), pack-reused 0
+Receiving objects: 100% (4485/4485), 2.23 MiB | 1.34 MiB/s, done.
+Resolving deltas: 100% (2914/2914), done.
+Updating files: 100% (455/455), done.
+Cloning into &#39;xtuner&#39;...
+remote: Enumerating objects: 3735, done.
+remote: Counting objects: 100% (1150/1150), done.
+remote: Compressing objects: 100% (252/252), done.
+remote: Total 3735 (delta 920), reused 1106 (delta 895), pack-reused 2585
+Receiving objects: 100% (3735/3735), 742.80 KiB | 864.00 KiB/s, done.
+Resolving deltas: 100% (2741/2741), done.
+Updating files: 100% (450/450), done.
+Cloning into &#39;InternLM-XComposer&#39;...
+remote: Enumerating objects: 680, done.
+remote: Counting objects: 100% (680/680), done.
+remote: Compressing objects: 100% (273/273), done.
+remote: Total 680 (delta 361), reused 680 (delta 361), pack-reused 0
+Receiving objects: 100% (680/680), 10.74 MiB | 2.61 MiB/s, done.
+Resolving deltas: 100% (361/361), done.
+Cloning into &#39;lagent&#39;...
+remote: Enumerating objects: 414, done.
+remote: Counting objects: 100% (414/414), done.
+remote: Compressing objects: 100% (188/188), done.
+remote: Total 414 (delta 197), reused 414 (delta 197), pack-reused 0
+Receiving objects: 100% (414/414), 214.97 KiB | 974.00 KiB/s, done.
+Resolving deltas: 100% (197/197), done.
+Cloning into &#39;InternLM&#39;...
+remote: Enumerating objects: 2604, done.
+remote: Counting objects: 100% (592/592), done.
+remote: Compressing objects: 100% (264/264), done.
+remote: Total 2604 (delta 324), reused 581 (delta 318), pack-reused 2012
+Receiving objects: 100% (2604/2604), 4.87 MiB | 1.69 MiB/s, done.
+Resolving deltas: 100% (1608/1608), done.
+</code></pre>
+<p>首先将上述仓库中所有满足条件的文件路径找出来，我们定义一个函数，该函数将递归指定文件夹路径，返回其中所有满足条件（即后缀名为 .md 或者 .txt 的文件）的文件路径：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_files</span>(<span class="params">dir_path</span>):</span><br><span class="line">    <span class="comment"># args：dir_path，目标文件夹路径</span></span><br><span class="line">    file_list = []</span><br><span class="line">    <span class="keyword">for</span> filepath, dirnames, filenames <span class="keyword">in</span> os.walk(dir_path):</span><br><span class="line">        <span class="comment"># os.walk 函数将递归遍历指定文件夹</span></span><br><span class="line">        <span class="keyword">for</span> filename <span class="keyword">in</span> filenames:</span><br><span class="line">            <span class="comment"># 通过后缀名判断文件类型是否满足要求</span></span><br><span class="line">            <span class="keyword">if</span> filename.endswith(<span class="string">&quot;.md&quot;</span>):</span><br><span class="line">                <span class="comment"># 如果满足要求，将其绝对路径加入到结果列表</span></span><br><span class="line">                file_list.append(os.path.join(filepath, filename))</span><br><span class="line">            <span class="keyword">elif</span> filename.endswith(<span class="string">&quot;.txt&quot;</span>):</span><br><span class="line">                file_list.append(os.path.join(filepath, filename))</span><br><span class="line">    <span class="keyword">return</span> file_list</span><br></pre></td></tr></table></figure>
+
+<h3 id="加载数据"><a href="#加载数据" class="headerlink" title="加载数据"></a>加载数据</h3><p>得到所有目标文件路径之后，我们可以使用 LangChain 提供的 FileLoader 对象来加载目标文件，得到由目标文件解析出的纯文本内容。由于不同类型的文件需要对应不同的 FileLoader，我们判断目标文件类型，并针对性调用对应类型的 FileLoader，同时，调用 FileLoader 对象的 load 方法来得到加载之后的纯文本对象：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"><span class="keyword">from</span> langchain.document_loaders <span class="keyword">import</span> UnstructuredFileLoader</span><br><span class="line"><span class="keyword">from</span> langchain.document_loaders <span class="keyword">import</span> UnstructuredMarkdownLoader</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_text</span>(<span class="params">dir_path</span>):</span><br><span class="line">    <span class="comment"># args：dir_path，目标文件夹路径</span></span><br><span class="line">    <span class="comment"># 首先调用上文定义的函数得到目标文件路径列表</span></span><br><span class="line">    file_lst = get_files(dir_path)</span><br><span class="line">    <span class="comment"># docs 存放加载之后的纯文本对象，docs 为一个纯文本对象对应的列表</span></span><br><span class="line">    docs = []</span><br><span class="line">    <span class="comment"># 遍历所有目标文件</span></span><br><span class="line">    <span class="keyword">for</span> one_file <span class="keyword">in</span> tqdm(file_lst):</span><br><span class="line">        file_type = one_file.split(<span class="string">&#x27;.&#x27;</span>)[-<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">if</span> file_type == <span class="string">&#x27;md&#x27;</span>:</span><br><span class="line">            loader = UnstructuredMarkdownLoader(one_file)</span><br><span class="line">        <span class="keyword">elif</span> file_type == <span class="string">&#x27;txt&#x27;</span>:</span><br><span class="line">            loader = UnstructuredFileLoader(one_file)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 如果是不符合条件的文件，直接跳过</span></span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        docs.extend(loader.load())</span><br><span class="line">    <span class="keyword">return</span> docs </span><br></pre></td></tr></table></figure>
+
+<h3 id="构建向量数据库"><a href="#构建向量数据库" class="headerlink" title="构建向量数据库"></a>构建向量数据库</h3><p>得到该列表之后，我们就可以将它引入到 LangChain 框架中构建向量数据库。由纯文本对象构建向量数据库，我们需要先对文本进行分块，接着对文本块进行向量化。</p>
+<p>LangChain 提供了多种文本分块工具，此处我们使用字符串递归分割器，并选择分块大小为 500，块重叠长度为 150（由于篇幅限制，此处没有展示切割效果，学习者可以自行尝试一下，想要深入学习 LangChain 文本分块可以参考教程 《LangChain - Chat With Your Data》：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> RecursiveCharacterTextSplitter</span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标文件夹</span></span><br><span class="line">tar_dir = [</span><br><span class="line">    <span class="string">&quot;/root/data/InternLM&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/root/data/InternLM-XComposer&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/root/data/lagent&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/root/data/lmdeploy&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/root/data/opencompass&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/root/data/xtuner&quot;</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载目标文件</span></span><br><span class="line">docs = []</span><br><span class="line"><span class="keyword">for</span> dir_path <span class="keyword">in</span> tar_dir:</span><br><span class="line">    docs.extend(get_text(dir_path))</span><br><span class="line"></span><br><span class="line">text_splitter = RecursiveCharacterTextSplitter(chunk_size=<span class="number">500</span>, chunk_overlap=<span class="number">150</span>)</span><br><span class="line">split_docs = text_splitter.split_documents(docs)</span><br></pre></td></tr></table></figure>
+
+<pre><code>  0%|          | 0/25 [00:00&lt;?, ?it/s]/root/.conda/envs/internlm_langchain/lib/python3.10/site-packages/unstructured/documents/html.py:498: FutureWarning: The behavior of this method will change in future versions. Use specific &#39;len(elem)&#39; or &#39;elem is not None&#39; test instead.
+  rows = body.findall(&quot;tr&quot;) if body else []
+ 40%|████      | 10/25 [00:28&lt;00:23,  1.56s/it]/root/.conda/envs/internlm_langchain/lib/python3.10/site-packages/unstructured/documents/html.py:498: FutureWarning: The behavior of this method will change in future versions. Use specific &#39;len(elem)&#39; or &#39;elem is not None&#39; test instead.
+  rows = body.findall(&quot;tr&quot;) if body else []
+100%|██████████| 25/25 [00:28&lt;00:00,  1.16s/it]
+100%|██████████| 9/9 [00:00&lt;00:00, 19.51it/s]
+100%|██████████| 18/18 [00:00&lt;00:00, 34.18it/s]
+100%|██████████| 72/72 [00:02&lt;00:00, 24.73it/s]
+100%|██████████| 113/113 [00:05&lt;00:00, 18.85it/s]
+100%|██████████| 26/26 [00:01&lt;00:00, 18.29it/s]
+</code></pre>
+<p>接着我们选用开源词向量模型 Sentence Transformer 来进行文本向量化。LangChain 提供了直接引入 HuggingFace 开源社区中的模型进行向量化的接口：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.embeddings.huggingface <span class="keyword">import</span> HuggingFaceEmbeddings</span><br><span class="line"></span><br><span class="line">embeddings = HuggingFaceEmbeddings(model_name=<span class="string">&quot;/root/data/model/sentence-transformer&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>同时，考虑到 Chroma 是目前最常用的入门数据库，我们选择 Chroma 作为向量数据库，基于上文分块后的文档以及加载的开源向量化模型，将语料加载到指定路径下的向量数据库：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.vectorstores <span class="keyword">import</span> Chroma</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义持久化路径</span></span><br><span class="line">persist_directory = <span class="string">&#x27;data_base/vector_db/chroma&#x27;</span></span><br><span class="line"><span class="comment"># 加载数据库</span></span><br><span class="line">vectordb = Chroma.from_documents(</span><br><span class="line">    documents=split_docs,</span><br><span class="line">    embedding=embeddings,</span><br><span class="line">    persist_directory=persist_directory  <span class="comment"># 允许我们将persist_directory目录保存到磁盘上</span></span><br><span class="line">)</span><br><span class="line"><span class="comment"># 将加载的向量数据库持久化到磁盘上</span></span><br><span class="line">vectordb.persist()</span><br></pre></td></tr></table></figure>
+
+<p>可以在 &#x2F;root&#x2F;data 下新建一个 demo目录，将该脚本和后续脚本均放在该目录下运行。运行上述脚本，即可在本地构建已持久化的向量数据库，后续直接导入该数据库即可，无需重复构建。</p>
+<h2 id="InternLM-接入-LangChain"><a href="#InternLM-接入-LangChain" class="headerlink" title="InternLM 接入 LangChain"></a>InternLM 接入 LangChain</h2><p>为便捷构建 LLM 应用，我们需要基于本地部署的 InternLM，继承 LangChain 的 LLM 类自定义一个 InternLM LLM 子类，从而实现将 InternLM 接入到 LangChain 框架中。完成 LangChain 的自定义 LLM 子类之后，可以以完全一致的方式调用 LangChain 的接口，而无需考虑底层模型调用的不一致。</p>
+<p>基于本地部署的 InternLM 自定义 LLM 类并不复杂，我们只需从 LangChain.llms.base.LLM 类继承一个子类，并重写构造函数与 _call 函数即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.llms.base <span class="keyword">import</span> LLM</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Any</span>, <span class="type">List</span>, <span class="type">Optional</span></span><br><span class="line"><span class="keyword">from</span> langchain.callbacks.manager <span class="keyword">import</span> CallbackManagerForLLMRun</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer, AutoModelForCausalLM</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">InternLM_LLM</span>(<span class="title class_ inherited__">LLM</span>):</span><br><span class="line">    <span class="comment"># 基于本地 InternLM 自定义 LLM 类</span></span><br><span class="line">    tokenizer : AutoTokenizer = <span class="literal">None</span></span><br><span class="line">    model: AutoModelForCausalLM = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, model_path :<span class="built_in">str</span></span>):</span><br><span class="line">        <span class="comment"># model_path: InternLM 模型路径</span></span><br><span class="line">        <span class="comment"># 从本地初始化模型</span></span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;正在从本地加载模型...&quot;</span>)</span><br><span class="line">        self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=<span class="literal">True</span>)</span><br><span class="line">        self.model = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=<span class="literal">True</span>).to(torch.bfloat16).cuda()</span><br><span class="line">        self.model = self.model.<span class="built_in">eval</span>()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;完成本地模型的加载&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_call</span>(<span class="params">self, prompt : <span class="built_in">str</span>, stop: <span class="type">Optional</span>[<span class="type">List</span>[<span class="built_in">str</span>]] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">                run_manager: <span class="type">Optional</span>[CallbackManagerForLLMRun] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">                **kwargs: <span class="type">Any</span></span>):</span><br><span class="line">        <span class="comment"># 重写调用函数</span></span><br><span class="line">        system_prompt = <span class="string">&quot;&quot;&quot;You are an AI assistant whose name is InternLM (书生·浦语).</span></span><br><span class="line"><span class="string">        - InternLM (书生·浦语) is a conversational language model that is developed by Shanghai AI Laboratory (上海人工智能实验室). It is designed to be helpful, honest, and harmless.</span></span><br><span class="line"><span class="string">        - InternLM (书生·浦语) can understand and communicate fluently in the language chosen by the user such as English and 中文.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        </span><br><span class="line">        messages = [(system_prompt, <span class="string">&#x27;&#x27;</span>)]</span><br><span class="line">        response, history = self.model.chat(self.tokenizer, prompt , history=messages)</span><br><span class="line">        <span class="keyword">return</span> response</span><br><span class="line">        </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_llm_type</span>(<span class="params">self</span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;InternLM&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>在上述类定义中，我们分别重写了构造函数和 _call 函数：对于构造函数，我们在对象实例化的一开始加载本地部署的 InternLM 模型，从而避免每一次调用都需要重新加载模型带来的时间过长；_call 函数是 LLM 类的核心函数，LangChain 会调用该函数来调用 LLM，在该函数中，我们调用已实例化模型的 chat 方法，从而实现对模型的调用并返回调用结果。</p>
+<h2 id="构建检索问答链"><a href="#构建检索问答链" class="headerlink" title="构建检索问答链"></a>构建检索问答链</h2><p>LangChain 通过提供检索问答链对象来实现对于 RAG 全流程的封装。所谓检索问答链，即通过一个对象完成检索增强问答（即RAG）的全流程，针对 RAG 的更多概念，我们会在视频内容中讲解，也欢迎读者查阅该教程来进一步了解：《<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/llm-universe/tree/main">LLM Universe</a>》。我们可以调用一个 LangChain 提供的 RetrievalQA 对象，通过初始化时填入已构建的数据库和自定义 LLM 作为参数，来简便地完成检索增强问答的全流程，LangChain 会自动完成基于用户提问进行检索、获取相关文档、拼接为合适的 Prompt 并交给 LLM 问答的全部流程。</p>
+<h3 id="加载向量数据库"><a href="#加载向量数据库" class="headerlink" title="加载向量数据库"></a>加载向量数据库</h3><p>首先我们需要将上文构建的向量数据库导入进来，我们可以直接通过 Chroma 以及上文定义的词向量模型来加载已构建的数据库：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.vectorstores <span class="keyword">import</span> Chroma</span><br><span class="line"><span class="keyword">from</span> langchain.embeddings.huggingface <span class="keyword">import</span> HuggingFaceEmbeddings</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义 Embeddings</span></span><br><span class="line">embeddings = HuggingFaceEmbeddings(model_name=<span class="string">&quot;/root/data/model/sentence-transformer&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 向量数据库持久化路径</span></span><br><span class="line">persist_directory = <span class="string">&#x27;data_base/vector_db/chroma&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载数据库</span></span><br><span class="line">vectordb = Chroma(</span><br><span class="line">    persist_directory=persist_directory, </span><br><span class="line">    embedding_function=embeddings</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>上述代码得到的 vectordb 对象即为我们已构建的向量数据库对象，该对象可以针对用户的 query 进行语义向量检索，得到与用户提问相关的知识片段。</p>
+<h3 id="实例化自定义-LLM-与-Prompt-Template"><a href="#实例化自定义-LLM-与-Prompt-Template" class="headerlink" title="实例化自定义 LLM 与 Prompt Template"></a>实例化自定义 LLM 与 Prompt Template</h3><p>接着，我们实例化一个基于 InternLM 自定义的 LLM 对象：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">llm = InternLM_LLM(model_path = <span class="string">&quot;/root/data/model/Shanghai_AI_Laboratory/internlm-chat-7b&quot;</span>)</span><br><span class="line">llm.predict(<span class="string">&quot;你是谁&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<pre><code>正在从本地加载模型...
+
+
+
+Loading checkpoint shards:   0%|          | 0/8 [00:00&lt;?, ?it/s]
+
+
+完成本地模型的加载
+
+
+
+
+
+&#39;我是一个语言模型，我的名字是书生·浦语。我来自上海人工智能实验室。我可以回答各种问题，包括日常生活、历史、文化、科技、艺术、政治等各种话题。如果您有任何问题，欢迎随时问我。&#39;
+</code></pre>
+<p>构建检索问答链，还需要构建一个 Prompt Template，该 Template 其实基于一个带变量的字符串，在检索之后，LangChain 会将检索到的相关文档片段填入到 Template 的变量中，从而实现带知识的 Prompt 构建。我们可以基于 LangChain 的 Template 基类来实例化这样一个 Template 对象：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.prompts <span class="keyword">import</span> PromptTemplate</span><br><span class="line"></span><br><span class="line"><span class="comment"># 我们所构造的 Prompt 模板</span></span><br><span class="line">template = <span class="string">&quot;&quot;&quot;使用以下上下文来回答用户的问题。如果你不知道答案，就说你不知道。总是使用中文回答。</span></span><br><span class="line"><span class="string">问题: &#123;question&#125;</span></span><br><span class="line"><span class="string">可参考的上下文：</span></span><br><span class="line"><span class="string">···</span></span><br><span class="line"><span class="string">&#123;context&#125;</span></span><br><span class="line"><span class="string">···</span></span><br><span class="line"><span class="string">如果给定的上下文无法让你做出回答，请回答你不知道。</span></span><br><span class="line"><span class="string">有用的回答:&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用 LangChain 的方法来实例化一个 Template 对象，该对象包含了 context 和 question 两个变量，在实际调用时，这两个变量会被检索到的文档片段和用户提问填充</span></span><br><span class="line">QA_CHAIN_PROMPT = PromptTemplate(input_variables=[<span class="string">&quot;context&quot;</span>,<span class="string">&quot;question&quot;</span>],template=template)</span><br></pre></td></tr></table></figure>
+
+<h3 id="构建检索问答链-1"><a href="#构建检索问答链-1" class="headerlink" title="构建检索问答链"></a>构建检索问答链</h3><p>最后，可以调用 LangChain 提供的检索问答链构造函数，基于我们的自定义 LLM、Prompt Template 和向量知识库来构建一个基于 InternLM 的检索问答链：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> RetrievalQA</span><br><span class="line"></span><br><span class="line">qa_chain = RetrievalQA.from_chain_type(llm,retriever=vectordb.as_retriever(),return_source_documents=<span class="literal">True</span>,chain_type_kwargs=&#123;<span class="string">&quot;prompt&quot;</span>:QA_CHAIN_PROMPT&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>得到的 qa_chain 对象即可以实现我们的核心功能，即基于 InternLM 模型的专业知识库助手。我们可以对比该检索问答链和纯 LLM 的问答效果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检索问答链回答效果</span></span><br><span class="line">question = <span class="string">&quot;什么是InternLM&quot;</span></span><br><span class="line">result = qa_chain(&#123;<span class="string">&quot;query&quot;</span>: question&#125;)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;检索问答链回答 question 的结果：&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(result[<span class="string">&quot;result&quot;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 仅 LLM 回答效果</span></span><br><span class="line">result_2 = llm(question)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;大模型回答 question 的结果：&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(result_2)</span><br></pre></td></tr></table></figure>
+
+<pre><code>检索问答链回答 question 的结果：
+根据您提供的问题，InternLM是一个开源的轻量级训练框架，旨在支持大模型训练，而无需大量的依赖。它支持在拥有数千个GPU的大型集群上进行预训练，并在单个GPU上进行微调，同时实现了卓越的性能优化。在1024个GPU上训练时，InternLM可以实现近90%的加速效率。
+
+InternLM团队已经发布了两个开源的预训练模型：InternLM-7B和InternLM-20B。更新包括InternLM-20B发布和InternLM-7B-Chat v1.1发布，后者增加了代码解释器和函数调用能力。InternLM模型的特点包括：
+
+1. 支持训练高质量的对话模型，实现强大的知识库和推理功能；
+2. 支持8k上下文窗口长，允许更长的输入序列和强大的推理能力；
+3. 提供灵活的通用工具，使用户能够创建自己的工作流程；
+4. 提供轻量级的学习框架，无需大量的依赖即可进行模型的前向学习和微调，并实现了卓越的性能优化。
+
+总的来说，InternLM是一个非常实用的工具，可以帮助用户高效地训练大模型，并支持各种常见的预训练模型。
+大模型回答 question 的结果：
+书生·浦语
+</code></pre>
+<h2 id="网页部署"><a href="#网页部署" class="headerlink" title="网页部署"></a>网页部署</h2><p>在完成上述核心功能后，我们可以基于 Gradio 框架将其部署到 Web 网页，从而搭建一个小型 Demo，便于测试与使用。</p>
+<p>我们首先将上文的代码内容封装为一个返回构建的检索问答链对象的函数，并在启动 Gradio 的第一时间调用该函数得到检索问答链对象，后续直接使用该对象进行问答对话，从而避免重复加载模型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.vectorstores <span class="keyword">import</span> Chroma</span><br><span class="line"><span class="keyword">from</span> langchain.embeddings.huggingface <span class="keyword">import</span> HuggingFaceEmbeddings</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> langchain.prompts <span class="keyword">import</span> PromptTemplate</span><br><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> RetrievalQA</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_chain</span>():</span><br><span class="line">    <span class="comment"># 加载问答链</span></span><br><span class="line">    <span class="comment"># 定义 Embeddings</span></span><br><span class="line">    embeddings = HuggingFaceEmbeddings(model_name=<span class="string">&quot;/root/data/model/sentence-transformer&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 向量数据库持久化路径</span></span><br><span class="line">    persist_directory = <span class="string">&#x27;data_base/vector_db/chroma&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 加载数据库</span></span><br><span class="line">    vectordb = Chroma(</span><br><span class="line">        persist_directory=persist_directory,  <span class="comment"># 允许我们将persist_directory目录保存到磁盘上</span></span><br><span class="line">        embedding_function=embeddings</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 加载自定义 LLM</span></span><br><span class="line">    llm = InternLM_LLM(model_path = <span class="string">&quot;/root/data/model/Shanghai_AI_Laboratory/internlm-chat-7b&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 定义一个 Prompt Template</span></span><br><span class="line">    template = <span class="string">&quot;&quot;&quot;使用以下上下文来回答最后的问题。如果你不知道答案，就说你不知道，不要试图编造答</span></span><br><span class="line"><span class="string">    案。尽量使答案简明扼要。总是在回答的最后说“谢谢你的提问！”。</span></span><br><span class="line"><span class="string">    &#123;context&#125;</span></span><br><span class="line"><span class="string">    问题: &#123;question&#125;</span></span><br><span class="line"><span class="string">    有用的回答:&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    QA_CHAIN_PROMPT = PromptTemplate(input_variables=[<span class="string">&quot;context&quot;</span>,<span class="string">&quot;question&quot;</span>],template=template)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 运行 chain</span></span><br><span class="line">    qa_chain = RetrievalQA.from_chain_type(llm,retriever=vectordb.as_retriever(),return_source_documents=<span class="literal">True</span>,chain_type_kwargs=&#123;<span class="string">&quot;prompt&quot;</span>:QA_CHAIN_PROMPT&#125;)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> qa_chain</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 接着我们定义一个类，该类负责加载并存储检索问答链，并响应 Web 界面里调用检索问答链进行回答的动作：</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Model_center</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    存储检索问答链的对象 </span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 构造函数，加载检索问答链</span></span><br><span class="line">        self.chain = load_chain()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">qa_chain_self_answer</span>(<span class="params">self, question: <span class="built_in">str</span>, chat_history: <span class="built_in">list</span> = []</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        调用问答链进行回答</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> question == <span class="literal">None</span> <span class="keyword">or</span> <span class="built_in">len</span>(question) &lt; <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span>, chat_history</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            chat_history.append(</span><br><span class="line">                (question, self.chain(&#123;<span class="string">&quot;query&quot;</span>: question&#125;)[<span class="string">&quot;result&quot;</span>]))</span><br><span class="line">            <span class="comment"># 将问答结果直接附加到问答历史中，Gradio 会将其展示出来</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span>, chat_history</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">return</span> e, chat_history</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 然后我们只需按照 Gradio 的框架使用方法，实例化一个 Web 界面并将点击动作绑定到上述类的回答方法即可：</span></span><br><span class="line"><span class="keyword">import</span> gradio <span class="keyword">as</span> gr</span><br><span class="line"></span><br><span class="line"><span class="comment"># 实例化核心功能对象</span></span><br><span class="line">model_center = Model_center()</span><br><span class="line"><span class="comment"># 创建一个 Web 界面</span></span><br><span class="line">block = gr.Blocks()</span><br><span class="line"><span class="keyword">with</span> block <span class="keyword">as</span> demo:</span><br><span class="line">    <span class="keyword">with</span> gr.Row(equal_height=<span class="literal">True</span>):   </span><br><span class="line">        <span class="keyword">with</span> gr.Column(scale=<span class="number">15</span>):</span><br><span class="line">            <span class="comment"># 展示的页面标题</span></span><br><span class="line">            gr.Markdown(<span class="string">&quot;&quot;&quot;&lt;h1&gt;&lt;center&gt;InternLM&lt;/center&gt;&lt;/h1&gt;</span></span><br><span class="line"><span class="string">                &lt;center&gt;书生浦语&lt;/center&gt;</span></span><br><span class="line"><span class="string">                &quot;&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> gr.Row():</span><br><span class="line">        <span class="keyword">with</span> gr.Column(scale=<span class="number">4</span>):</span><br><span class="line">            <span class="comment"># 创建一个聊天机器人对象</span></span><br><span class="line">            chatbot = gr.Chatbot(height=<span class="number">450</span>, show_copy_button=<span class="literal">True</span>)</span><br><span class="line">            <span class="comment"># 创建一个文本框组件，用于输入 prompt。</span></span><br><span class="line">            msg = gr.Textbox(label=<span class="string">&quot;Prompt/问题&quot;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">with</span> gr.Row():</span><br><span class="line">                <span class="comment"># 创建提交按钮。</span></span><br><span class="line">                db_wo_his_btn = gr.Button(<span class="string">&quot;Chat&quot;</span>)</span><br><span class="line">            <span class="keyword">with</span> gr.Row():</span><br><span class="line">                <span class="comment"># 创建一个清除按钮，用于清除聊天机器人组件的内容。</span></span><br><span class="line">                clear = gr.ClearButton(</span><br><span class="line">                    components=[chatbot], value=<span class="string">&quot;Clear console&quot;</span>)</span><br><span class="line">                </span><br><span class="line">        <span class="comment"># 设置按钮的点击事件。当点击时，调用上面定义的 qa_chain_self_answer 函数，并传入用户的消息和聊天历史记录，然后更新文本框和聊天机器人组件。</span></span><br><span class="line">        db_wo_his_btn.click(model_center.qa_chain_self_answer, inputs=[</span><br><span class="line">                            msg, chatbot], outputs=[msg, chatbot])</span><br><span class="line"></span><br><span class="line">    gr.Markdown(<span class="string">&quot;&quot;&quot;提醒：&lt;br&gt;</span></span><br><span class="line"><span class="string">    1. 初始化数据库时间可能较长，请耐心等待。</span></span><br><span class="line"><span class="string">    2. 使用中如果出现异常，将会在文本输入框进行展示，请不要惊慌。 &lt;br&gt;</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span>)</span><br><span class="line">gr.close_all()</span><br><span class="line"><span class="comment"># 直接启动</span></span><br><span class="line">demo.launch()</span><br></pre></td></tr></table></figure>
+
+<pre><code>正在从本地加载模型...
+
+
+
+Loading checkpoint shards:   0%|          | 0/8 [00:00&lt;?, ?it/s]
+
+
+完成本地模型的加载
+Running on local URL:  http://127.0.0.1:7860
+
+To create a public link, set `share=True` in `launch()`.
+</code></pre>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/llm/internlm-langchain.png?raw=true"></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/tree/main/langchain">GitHub: 基于 InternLM 和 LangChain 搭建你的知识库</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1sT4y1p71V/?vd_source=4acadc91badcfe90fc01a4758dd8f5fa">bilibili: 基于 InternLM 和 LangChain 搭建你的知识库</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2024/01/08/ai-Interlm-langchain-RAG/">https://xujinzh.github.io/2024/01/08/ai-Interlm-langchain-RAG/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ai/">ai</a><a class="post-meta__tags" href="/tags/llm/">llm</a><a class="post-meta__tags" href="/tags/internlm/">internlm</a><a class="post-meta__tags" href="/tags/openmmlab/">openmmlab</a><a class="post-meta__tags" href="/tags/langchain/">langchain</a></div><div class="post_share"><div class="social-share" data-image="/img/c5.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/01/12/ai-internlm-xtuner-finetune/" title="XTuner 大模型训练"><img class="cover" src="/img/c12.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">XTuner 大模型训练</div></div></a></div><div class="next-post pull-right"><a href="/2024/01/06/ai-internlm-useage/" title="书生·浦语大模型使用"><img class="cover" src="/img/c12.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">书生·浦语大模型使用</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img class="cover" src="/img/c30.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-13</div><div class="title">基于 LMDeploy 的大模型量化和部署</div></div></a></div><div><a href="/2024/01/03/ai-internlm-intro/" title="书生·浦语大模型介绍"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-03</div><div class="title">书生·浦语大模型介绍</div></div></a></div><div><a href="/2024/01/12/ai-internlm-xtuner-finetune/" title="XTuner 大模型训练"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-12</div><div class="title">XTuner 大模型训练</div></div></a></div><div><a href="/2024/01/06/ai-internlm-useage/" title="书生·浦语大模型使用"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-06</div><div class="title">书生·浦语大模型使用</div></div></a></div><div><a href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img class="cover" src="/img/c21.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-12</div><div class="title">利用 XTuner 训练书生·浦语私人大模型助手</div></div></a></div><div><a href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img class="cover" src="/img/c9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-21</div><div class="title">基于 OpenCompass 的大模型评测</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%92%8CNLTK-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%BA%90%E4%B8%8B%E8%BD%BD"><span class="toc-number">2.</span> <span class="toc-text">模型和NLTK 相关资源下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E4%BB%A3%E7%A0%81%E4%B8%8B%E8%BD%BD"><span class="toc-number">3.</span> <span class="toc-text">项目代码下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E5%BA%93%E6%90%AD%E5%BB%BA"><span class="toc-number">4.</span> <span class="toc-text">知识库搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%94%B6%E9%9B%86"><span class="toc-number">4.1.</span> <span class="toc-text">数据收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE"><span class="toc-number">4.2.</span> <span class="toc-text">加载数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">4.3.</span> <span class="toc-text">构建向量数据库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#InternLM-%E6%8E%A5%E5%85%A5-LangChain"><span class="toc-number">5.</span> <span class="toc-text">InternLM 接入 LangChain</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%A3%80%E7%B4%A2%E9%97%AE%E7%AD%94%E9%93%BE"><span class="toc-number">6.</span> <span class="toc-text">构建检索问答链</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">6.1.</span> <span class="toc-text">加载向量数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E5%8C%96%E8%87%AA%E5%AE%9A%E4%B9%89-LLM-%E4%B8%8E-Prompt-Template"><span class="toc-number">6.2.</span> <span class="toc-text">实例化自定义 LLM 与 Prompt Template</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%A3%80%E7%B4%A2%E9%97%AE%E7%AD%94%E9%93%BE-1"><span class="toc-number">6.3.</span> <span class="toc-text">构建检索问答链</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E9%A1%B5%E9%83%A8%E7%BD%B2"><span class="toc-number">7.</span> <span class="toc-text">网页部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">8.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'aff64bbf658a1fd243b20214bbc56cf2',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

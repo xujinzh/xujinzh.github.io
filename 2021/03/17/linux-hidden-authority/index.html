@@ -1,0 +1,333 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Linux 文件和目录的默认权限和特殊权限 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="对于 Linux 用户而言，当创建文件或目录时都会自动为该文件或目录分配权限，该权限就是默认权限。对于 Linux 文件和目录，除了具有默认权限外，还有特殊权限。默认权限和特殊权限在使用 Linux 系统时非常重要，特别是和团队开发时尤为重要。本篇就介绍一下如何查看和设置默认权限和特殊权限。以 Ubuntu 20.04 为例进行介绍。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 文件和目录的默认权限和特殊权限">
+<meta property="og:url" content="https://xujinzh.github.io/2021/03/17/linux-hidden-authority/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="对于 Linux 用户而言，当创建文件或目录时都会自动为该文件或目录分配权限，该权限就是默认权限。对于 Linux 文件和目录，除了具有默认权限外，还有特殊权限。默认权限和特殊权限在使用 Linux 系统时非常重要，特别是和团队开发时尤为重要。本篇就介绍一下如何查看和设置默认权限和特殊权限。以 Ubuntu 20.04 为例进行介绍。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c27.jpg">
+<meta property="article:published_time" content="2021-03-17T06:46:36.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.100Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="debian">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="centos">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c27.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2021/03/17/linux-hidden-authority/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux 文件和目录的默认权限和特殊权限',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Linux 文件和目录的默认权限和特殊权限</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-03-17T06:46:36.000Z" title="发表于 2021-03-17 14:46:36">2021-03-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.100Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/linux/">linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux 文件和目录的默认权限和特殊权限"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>对于 Linux 用户而言，当创建文件或目录时都会自动为该文件或目录分配权限，该权限就是默认权限。对于 Linux 文件和目录，除了具有默认权限外，还有特殊权限。默认权限和特殊权限在使用 Linux 系统时非常重要，特别是和团队开发时尤为重要。本篇就介绍一下如何查看和设置默认权限和特殊权限。以 Ubuntu 20.04 为例进行介绍。</p>
+<span id="more"></span>
+
+<h1 id="文件默认权限：umask"><a href="#文件默认权限：umask" class="headerlink" title="文件默认权限：umask"></a>文件默认权限：<strong>umask</strong></h1><p>查看用户的默认权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ <span class="built_in">umask</span></span><br><span class="line">002</span><br><span class="line">➜  ~ <span class="built_in">umask</span> -S</span><br><span class="line">u=rwx,g=rwx,o=rx</span><br></pre></td></tr></table></figure>
+
+<p>以 umask 显示的是数字，加上参数 -S (Symbolic) 显示的是字符。含义解释：文件权限有 r, w, x 三个，分别对应数字 4， 2， 1，002 表示创建文件、目录时剔除 w 写权限。如 umask -S 显示的是创建目录时的默认权限，从上面命令可以看到其他用户 o 缺少 w 写权限。值得注意的是，文件默认是没有可执行权限 x 的。即文件的默认最高权限是 -rw-rw-rw-，目录的默认最高权限是 drwxrwxrwx，因此，剔除 w 写权限时，用户新创建的文件的默认权限是 -rw-rw-r–，新创建的目录的默认权限是 drwxrwxr-x，如下示例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ <span class="built_in">touch</span> test1</span><br><span class="line">➜  ~ <span class="built_in">mkdir</span> test2</span><br><span class="line">➜  ~ <span class="built_in">ls</span> -ld <span class="built_in">test</span>[12]  <span class="comment"># -d 表示只显示目录本身，不显示它里面包含的内容；中括号表示中间有个指定的字符，而不是任意字符，任意字符用 *</span></span><br><span class="line">-rw-rw-r-- 1 jinzhongxu jinzhongxu    0 3月  17 15:30 test1</span><br><span class="line">drwxrwxr-x 2 jinzhongxu jinzhongxu 4096 3月  17 15:30 test2</span><br></pre></td></tr></table></figure>
+
+<p>如何修改用户的默认权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果想要用户创建的新文件或目录的群组和其他人没有写权限，可以设置如下，即剔除用户的写权限</span></span><br><span class="line"><span class="built_in">umask</span> 022</span><br></pre></td></tr></table></figure>
+
+<h1 id="文件特殊权限：SUID-SGID-SBIT"><a href="#文件特殊权限：SUID-SGID-SBIT" class="headerlink" title="文件特殊权限：SUID, SGID, SBIT"></a>文件特殊权限：<strong>SUID, SGID, SBIT</strong></h1><p>对于 Linux 系统中有一个目录 &#x2F;tmp 它的权限如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ <span class="built_in">ls</span> -ld /tmp</span><br><span class="line">drwxrwxrwt 12 root root 4096 3月  17 15:05 /tmp</span><br></pre></td></tr></table></figure>
+
+<p>可以看到它的权限中有一个 t，熟悉该目录的人应该知道，&#x2F;tmp 目录下我们可以自由创建内容，也可以查看别人在该目录下创建的文件和目录，但是，我们不能删除别人创建的文件和目录。同时，别人也不能删除我们自己创建的文件和目录。这一切都要归功于特殊权限。</p>
+<p>​	又如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ <span class="built_in">ls</span> -l /usr/bin/passwd</span><br><span class="line">-rwsr-xr-x 1 root root 68208 5月  28  2020 /usr/bin/passwd</span><br><span class="line">➜  ~ <span class="built_in">ls</span> -l /etc/shadow</span><br><span class="line">-rw-r----- 1 root shadow 1229 3月  14 21:38 /etc/shadow</span><br></pre></td></tr></table></figure>
+
+<p>在 &#x2F;etc&#x2F;shadow 中存储的是所有用户的密码，但只有 root 用户可以查看和修改。但是，有些人可能会疑惑了，明明自己可以修改自己用户的密码啊，使用 passwd 直接修改就可以了，不需要通知 root 进行修改。这是为什么呢？其实，这也要归功于 &#x2F;usr&#x2F;bin&#x2F;passwd 可执行文件特殊权限 s，那么这些特殊权限符号代表什么含义呢，如何进行设置呢？比如，使用 iftop 命令需要输入密码，如何不输入密码直接使用呢？</p>
+<h2 id="Set-UID"><a href="#Set-UID" class="headerlink" title="Set UID"></a>Set UID</h2><p>当 s 出现在文件拥有者的 x 权限上时，称为 Set UID，简称为 SUID 的特殊权限。关于该特殊权限有如下几个特点：</p>
+<ol>
+<li>SUID 权限仅对二进制程序有效，如 passwd, iftop；</li>
+<li>执行者对于该程序需要具有执行权限；</li>
+<li>本权限仅在执行该程序的过程中有效；</li>
+<li>执行者将具有该程序拥有者的权限；</li>
+</ol>
+<p>当普通用户使用 passwd 执行修改密码的时候，因为 passwd 拥有特殊权限，因此，普通用户能够使用该命令，且命令执行期间拥有 root 的权限修改 &#x2F;etc&#x2F;shadow 文件</p>
+<h2 id="Set-GID"><a href="#Set-GID" class="headerlink" title="Set GID"></a>Set GID</h2><p>当 s 出现在群组的 x 上时，称为 Set GID，简称为 SGID，它有如下特点：</p>
+<ol>
+<li>SGID 对二进制程序有用；</li>
+<li>程序执行者对于该程序来说，需具备 x 的权限；</li>
+<li>执行者在执行的过程中将会获得该程序群组的支持；</li>
+</ol>
+<h2 id="Sticky-Bit"><a href="#Sticky-Bit" class="headerlink" title="Sticky Bit"></a>Sticky Bit</h2><p>与 Set UID 和 Set GID 不同，Sticky Bit 只针对目录有效。简称为 SBIT，其对目录的作用是：</p>
+<ol>
+<li>当使用者对于此目录具有 w, x 权限时，即具有写入的权限；</li>
+<li>当使用者在该目录下创建文件或目录时，仅有自己与 root 才有权利删除该文件；</li>
+</ol>
+<p>举例来说，我们的 &#x2F;tmp 本身的权限是 drwxrwxrwt， 在这样的权限内容下，任何人都可以在 &#x2F;tmp 内新增、修改文件，但仅有该文件&#x2F;目录创建者与 root 能够删除自己的目录或文件。</p>
+<h2 id="设置特殊权限"><a href="#设置特殊权限" class="headerlink" title="设置特殊权限"></a>设置特殊权限</h2><p>和读写执行一样，特殊权限也对应有数字：</p>
+<ul>
+<li>4 为 SUID</li>
+<li>2 为 SGID</li>
+<li>1 为 SBIT</li>
+</ul>
+<p>如下示例进行特殊权限设置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ <span class="built_in">touch</span> <span class="built_in">test</span></span><br><span class="line">➜  ~ <span class="built_in">ls</span> -l <span class="built_in">test</span></span><br><span class="line">-rw-rw-r-- 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ <span class="built_in">chmod</span> 4664 <span class="built_in">test</span></span><br><span class="line">➜  ~ <span class="built_in">ls</span> -l <span class="built_in">test</span></span><br><span class="line">-rwSrw-r-- 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p>我们发现出现的是大 S，而不是小 s，这是为什么呢？因为文件 test 本身缺乏 x 可执行权限，所以增加特殊权限也为无法执行该文件，大 S 表示空，即无用的特殊权限。想要使用有用的特殊权限，需要我们的文件本身具有执行权限，如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ <span class="built_in">chmod</span> +x <span class="built_in">test</span></span><br><span class="line">➜  ~ <span class="built_in">ls</span> -l <span class="built_in">test</span></span><br><span class="line">-rwsrwxr-x 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ <span class="built_in">chmod</span> 6775 <span class="built_in">test</span></span><br><span class="line">➜  ~ <span class="built_in">ls</span> -l <span class="built_in">test</span></span><br><span class="line">-rwsrwsr-x 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br><span class="line">➜  ~ <span class="built_in">chmod</span> u+s,g+s,o+t <span class="built_in">test</span></span><br><span class="line">➜  ~ <span class="built_in">ls</span> -l <span class="built_in">test</span></span><br><span class="line">-rwsrwsr-t 1 jinzhongxu jinzhongxu 0 3月  17 16:02 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p>可见这样就给文件附加了特殊权限。</p>
+<p>再比如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> u+s /usr/sbin/iftop</span><br><span class="line">ll /usr/sbin/iftop</span><br><span class="line">	-rwsr-xr-x 1 root root 68408 9月   5  2019 /usr/sbin/iftop*</span><br><span class="line"><span class="comment"># 把 sbin 目录下的 iftop 软连接到 bin 下， 这样普通用户可以直接输入 iftop 访问</span></span><br><span class="line"><span class="built_in">ln</span> -s /usr/bin/iftop /usr/sbin/iftop</span><br></pre></td></tr></table></figure>
+
+<p>这样普通用户就不需要输入密码就可以使用命令 iftop 了。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>鸟哥的 LINUX 私房菜 基础学习篇（第四版）</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2021/03/17/linux-hidden-authority/">https://xujinzh.github.io/2021/03/17/linux-hidden-authority/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ubuntu/">ubuntu</a><a class="post-meta__tags" href="/tags/debian/">debian</a><a class="post-meta__tags" href="/tags/linux/">linux</a><a class="post-meta__tags" href="/tags/centos/">centos</a></div><div class="post_share"><div class="social-share" data-image="/img/c27.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/03/19/linux-crontab/" title="Linux 定时任务 crontab"><img class="cover" src="/img/c2.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Linux 定时任务 crontab</div></div></a></div><div class="next-post pull-right"><a href="/2021/02/20/jupyterhub/" title="利用 jupyterhub 搭建多用户 jupyterlab 开发环境"><img class="cover" src="/img/c1.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">利用 jupyterhub 搭建多用户 jupyterlab 开发环境</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/07/19/diff-between-mtime-ctime-atime/" title="Linux 中时间 mtime、ctime 和 atime 的区别"><img class="cover" src="/img/c30.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-19</div><div class="title">Linux 中时间 mtime、ctime 和 atime 的区别</div></div></a></div><div><a href="/2022/07/19/linux-find-usage/" title="Linux 中的 find 命令简单介绍"><img class="cover" src="/img/c16.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-19</div><div class="title">Linux 中的 find 命令简单介绍</div></div></a></div><div><a href="/2020/12/30/locale-linux-language/" title="在 Linux 上设置不同的语言和时区"><img class="cover" src="/img/c28.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-12-30</div><div class="title">在 Linux 上设置不同的语言和时区</div></div></a></div><div><a href="/2022/06/17/systemd-usage/" title="systemd 的使用"><img class="cover" src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-17</div><div class="title">systemd 的使用</div></div></a></div><div><a href="/2020/03/10/centos-htop/" title="htop 命令介绍"><img class="cover" src="/img/c18.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-10</div><div class="title">htop 命令介绍</div></div></a></div><div><a href="/2021/06/20/clear-linux-memory-cache/" title="清理 Linux 系统内存 Cache"><img class="cover" src="/img/c21.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-20</div><div class="title">清理 Linux 系统内存 Cache</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E9%BB%98%E8%AE%A4%E6%9D%83%E9%99%90%EF%BC%9Aumask"><span class="toc-number">1.</span> <span class="toc-text">文件默认权限：umask</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90%EF%BC%9ASUID-SGID-SBIT"><span class="toc-number">2.</span> <span class="toc-text">文件特殊权限：SUID, SGID, SBIT</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Set-UID"><span class="toc-number">2.1.</span> <span class="toc-text">Set UID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Set-GID"><span class="toc-number">2.2.</span> <span class="toc-text">Set GID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sticky-Bit"><span class="toc-number">2.3.</span> <span class="toc-text">Sticky Bit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90"><span class="toc-number">2.4.</span> <span class="toc-text">设置特殊权限</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">3.</span> <span class="toc-text">参考链接</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '94f917cb8f55a8dbf3cd056b7a7ab170',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

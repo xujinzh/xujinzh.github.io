@@ -1,0 +1,422 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>匈牙利匹配算法 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="匈牙利匹配算法（Hungarian Matching Algorithm)，也称为 Kuhn-Munkres 算法，是一个 $O\big(|V|^3\big)$ （$V$ 表示二分图的顶点集）算法，可用于在二分图中找到最大权重匹配，有时称为分配问题。匈牙利算法被文章 End-to-End Object Detection with Transformers 中提出 DETR 算法中所采用，用于匹配">
+<meta property="og:type" content="article">
+<meta property="og:title" content="匈牙利匹配算法">
+<meta property="og:url" content="https://xujinzh.github.io/2021/11/19/hungarian-matching-algorithm/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="匈牙利匹配算法（Hungarian Matching Algorithm)，也称为 Kuhn-Munkres 算法，是一个 $O\big(|V|^3\big)$ （$V$ 表示二分图的顶点集）算法，可用于在二分图中找到最大权重匹配，有时称为分配问题。匈牙利算法被文章 End-to-End Object Detection with Transformers 中提出 DETR 算法中所采用，用于匹配">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c12.jpg">
+<meta property="article:published_time" content="2021-11-19T01:33:36.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.096Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="hungarian">
+<meta property="article:tag" content="bipartite">
+<meta property="article:tag" content="graph">
+<meta property="article:tag" content="matrix">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c12.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2021/11/19/hungarian-matching-algorithm/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '匈牙利匹配算法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">匈牙利匹配算法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-19T01:33:36.000Z" title="发表于 2021-11-19 09:33:36">2021-11-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.096Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/object-tracking/">object tracking</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>12分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="匈牙利匹配算法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>匈牙利匹配算法（<strong>Hungarian Matching Algorithm</strong>)，也称为 Kuhn-Munkres 算法，是一个 $O\big(|V|^3\big)$ （$V$ 表示二分图的顶点集）算法，可用于在二分图中找到最大权重匹配，有时称为分配问题。匈牙利算法被文章 End-to-End Object Detection with Transformers 中提出 DETR 算法中所采用，用于匹配预测目标框与真实目标框。除此之外，该算法也在多目标跟踪、实例分割、多人3D位姿估计等领域中发挥作用。本篇对匈牙利算法进行简单讲解。</p>
+<span id="more"></span>
+
+<h1 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h1><p><strong>匈牙利算法</strong>是一种在<strong>多项式时间</strong>内求解<strong>任务分配问题</strong>的<strong>组合优化算法</strong>，并推动了后来的<strong>原始对偶方法</strong>。美国数学家<strong>哈罗德·库恩</strong>于 1955 年提出该算法。此算法之所以被称作匈牙利算法，是因为算法很大一部分是基于以前<strong>匈牙利</strong>数学家 Dénes Kőnig 和 Jenő Egerváry 的工作之上创建起来的。</p>
+<p><strong>詹姆士·芒克勒斯</strong>在 1957 年回顾了该算法，并发现（强）多项式时间的复杂度。此后该算法被称为 <strong>Kuhn–Munkres 算法</strong>或 <strong>Munkres 分配算法</strong>。原始算法的<strong>时间复杂度</strong>为 $O(|V|^4)$，但<strong>杰克·爱德蒙斯</strong>与<strong>卡普</strong>发现可以修改算法达到 $O(|V|^3)$运行时间，富泽也独立发现了这一点。<strong>L·R·福特</strong>和<strong>D·R·福尔克森</strong>将该方法推广到了一般运输问题。2006 年发现<strong>卡尔·雅可比</strong>在 19 世纪就解决了指派问题，该解法在他死后的 1890 年以拉丁文发表。</p>
+<h1 id="二分图"><a href="#二分图" class="headerlink" title="二分图"></a>二分图</h1><p>图 $G &#x3D; (V, E)$ 是二分的（bipartite），如果存在一个划分使得<br>$$<br>V &#x3D; X \cup Y, X \cap Y &#x3D; \emptyset, E \subseteq X \times Y.<br>$$<br>这里 $V$ 是顶点集，$E$ 是边集。换句话说，就是顶点集合分成两类，每类之间的顶点没有边相连接，只有不同顶点集合的点之间才可以有边相连接。</p>
+<p>匹配（matching）$M \subseteq E$ 是一个边集合，使得 $\forall v \in V$ 至多只属于 $M$ 中的一个边。匹配 $M$ 中边的个数称为匹配的大小，记作 $|M|$. 最大匹配（maximum matching）是一个匹配，使得任何其他匹配 $M^{\prime}$ 满足 $|M^{\prime}| \leq |M|$.</p>
+<p>顶点 $v$ 是匹配的，如果它是匹配 $M$ 的某个边的端点，否则，称为是自由的。</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/alternating-paths.png"></p>
+<p>如上图左图，$Y_2$, $Y_3$, $Y_4$, $Y_6$, $X_2$, $X_4$, $X_5$, $X_6$ 是匹配的，其他点是自由的。</p>
+<p>一个边集合 $P \subseteq E$ 是道路，如果 $P$ 中的所有边都连接在一起。一个道路是交替的，如果它的边交替取自 $M$ 和 $E-M$. 如上图右图，$Y_1$, $X_2$, $Y_2$, $X_4$, $Y_4$, $X_5$, $Y_3$, $X_3$ 是交替的。</p>
+<p>一个交替道路是增广交替道路，如果它的两个端点都是自由的。</p>
+<p>一个匹配 $M$ 是完美匹配，如果任意的顶点都是 $M$ 中的某个边的端点。</p>
+<p>对于加权二分图，就是每个边 $v&#x3D;(i,j)$ 都分配权重值 $w(i,j)$. 匹配 $M$ 的权值是其中所有边的权值和，即<br>$$<br>w(M) &#x3D; \sum_{e \in M} w(e).<br>$$<br>二分图匹配问题可以分为两种，一种是求解最大匹配，一种是求解最大权重匹配。第一种是不考虑边权重，只需要找到匹配 $M$ 使得匹配的大小 $|M|$ 最大。第二种是假设每条边的权重不是相同的，需要找到匹配 $M$ 使得匹配的权值 $w(M)$ 最大。其实，第一种可以看作是第二种的特殊情形，只需要把权重看作相同即可。因此，本篇以第二种为例进行介绍。</p>
+<p><strong>最大权重匹配一定是完美匹配。</strong></p>
+<p>一个二分图是完全的，如果两个顶点集合 $X$, $Y$ 中，任意的点 $x \in X (y \in Y)$ 都与 $y \in Y (x \in X)$ 中的点有边 $e \in E$ 相连。如果一个二分图不是完全的，可以考虑把它变成完全的，通过添加权重为 0 的边。当求解的是最大匹配问题时，添加权重为 inf 的边。</p>
+<p>二分图可以很容易地用邻接矩阵表示，其中边的权重是矩阵元素。从邻接矩阵的角度考虑图形对于匈牙利算法很有用。</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/matching-matrxi.png"></p>
+<h1 id="使用邻接矩阵的匈牙利算法"><a href="#使用邻接矩阵的匈牙利算法" class="headerlink" title="使用邻接矩阵的匈牙利算法"></a>使用邻接矩阵的匈牙利算法</h1><p>假设您想举办一个派对，并且您想要一位音乐家(musician)进行表演，一位厨师(chef)准备食物，以及在派对结束后进行清洁服务的清洁工(cleaner)。有 3 家公司提供这三种服务中的每一种，但一家公司一次只能提供一种服务（即 B 公司不能同时提供清洁工和厨师）。您正在决定应该从哪家公司购买每项服务，以最大限度地减少聚会的成本。你意识到这是分配问题的一个例子，并着手根据以下信息制作一个图表：</p>
+<table>
+<thead>
+<tr>
+<th>公司</th>
+<th>音乐家</th>
+<th>厨师</th>
+<th>清洁工</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>公司 A</td>
+<td>108</td>
+<td>125</td>
+<td>150</td>
+</tr>
+<tr>
+<td>公司 B</td>
+<td>150</td>
+<td>135</td>
+<td>175</td>
+</tr>
+<tr>
+<td>公司 C</td>
+<td>122</td>
+<td>148</td>
+<td>250</td>
+</tr>
+</tbody></table>
+<p>用二分图表示如下</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/matrix-bigraph-example.png"></p>
+<p>如何解决上面的最大权重匹配问题，可以考虑蛮力法，列举所有的可能组合，但是，当二分部越来越大时，这将是非常低效的。</p>
+<p>求二分图的最大权重匹配和最小权重匹配没有什么本质区别。对于二分图，只需要把权重系数用最大的减去所有边的权重，把二分图的最大权重匹配问题转化为求最小权重匹配。当考虑权重和最小时，我们称邻接矩阵是成本矩阵(cost matrix)；当考虑权重和最大时，我们称邻接矩阵是效益矩阵(profit matrix)。</p>
+<p>考虑到上述示例中的成本矩阵，匈牙利算法基于这一关键思想进行操作：如果在成本矩阵的任何一行或一列的所有条目中添加或减去一个数字，则为由此产生的成本矩阵也是原始成本矩阵的最佳匹配。</p>
+<p>如下算法将最小权重匹配问题转化为 0 匹配问题。即把寻找权重和最小的匹配转化为寻找权重和等于 0 的匹配。</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">匈牙利方法，针对 n x n 成本矩阵。</span><br><span class="line">1. 对于每一行，把所有元素减去该行中的最小元素。这将使每行中的最小元素等于 0；</span><br><span class="line">2. 对于每一列，把所有元素减去该列中的最小元素（可能取到上一次行操作得到的 0）。这将使每列中的最小元素等于 0；</span><br><span class="line">3. 画最少的线（行或列），使得覆盖所有的 0； </span><br><span class="line">4. 如果绘制了 n 条线，则得到了最佳的零匹配，算法完成。如果条数小于 n，则尚未达到最佳的零匹配，进入下一步； </span><br><span class="line">5. 找到未被任何线覆盖的最小元素。从未划掉的每一行中减去该元素，并将最小元素添加到划掉的每一列中（使得列中的最小元素仍然是 0 ）。然后，返回到步骤 3。</span><br></pre></td></tr></table></figure>
+
+<p>利用匈牙利算法求解上面的最小权重匹配问题。</p>
+<p>初始邻接矩阵：</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-1.png"></p>
+<p>每一行减去行最小元素：</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-2.png"></p>
+<p>每一列减去列最小元素：</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-3.png"></p>
+<p>画最少的线覆盖包含 0 的行和列：</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-4.png"></p>
+<p>发现共有两条线，分别是第一列和第二行，而 $2 &lt; 3$，所以，还需要继续进行约简。对没有覆盖的两行减去两行中的最小元素：</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-5.png"></p>
+<p>对覆盖的列加上刚刚减去的最小元素，使得列中的 0 恢复：</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-6.png"></p>
+<p>继续画线，用最少的线覆盖所有的 0：</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-7.png"></p>
+<p>画线个数 3 等于邻接矩阵的行数。所得的匹配是矩阵中的 0，它在每行和每列中只能取1个：</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-8.png"></p>
+<p>替换 0 为原始权重值：</p>
+<p><img src="https://raw.githubusercontent.com/xujinzh/archive/master/images/ot/hungarian/ex-matrix-9.png"></p>
+<p>匈牙利算法告诉我们最小的花费（407 &#x3D; 150 + 135 + 122）是请 A 公司的清洁工，B 公司的厨师，C 公司的音乐家。通过蛮力解法可以验证结果的正确性。</p>
+<h1 id="使用图的匈牙利算法"><a href="#使用图的匈牙利算法" class="headerlink" title="使用图的匈牙利算法"></a>使用图的匈牙利算法</h1><p>不使用邻接矩阵，直接使用二分图寻找最大权重匹配，需要对每个顶点定义标签值，称为可行标签（feasible labeling）.</p>
+<p>A <em>labeling</em> for graph $G &#x3D; (V, E)$ is a function $l: V \to \mathbb{R}$, such that:<br>$$<br>\forall (u, v) \in E: l(u) + l(v) \geq w(u, v).<br>$$<br>An <em>Equality Subgraph</em> is a subgraph $G_l &#x3D; (V, E_l)$ $ \subseteq$ $G &#x3D; (V, E)$, fixed on a labeling $l$, such that<br>$$<br>E_l &#x3D; \lbrace(u,v) \in E: l(u) + l(v) &#x3D; w(u,v)\rbrace.<br>$$</p>
+<h2 id="The-Kuhn-Munkres-Theorem"><a href="#The-Kuhn-Munkres-Theorem" class="headerlink" title="The Kuhn-Munkres Theorem"></a>The Kuhn-Munkres Theorem</h2><p>Given labeling $l$, if $M$ is a perfect matching on $G_l$, then $M$ is maximal-weight matching of $G$.</p>
+<ol>
+<li><p>Let $M^{\prime}$ be any perfect matching in $G$. By definition of a labeling function and since $M^{\prime}$ is perfect,<br>$$<br>w(M^{\prime}) &#x3D; \sum_{(u,v)\in M^{\prime}} w(u,v) \leq \sum_{(u,v)\in M^{\prime}} l(u) + l(v) &#x3D; \sum_{v\in V} l(v).<br>$$</p>
+</li>
+<li><p>This means: $\sum_{v\in V} l(v)$ is an upper bound for any perfect matching $M^{\prime}$ of $G$.</p>
+</li>
+<li><p>Now look at the weight of matching $M$:<br>$$<br>w(M) &#x3D; \sum_{(u,v)\in M} w(u,v) &#x3D; \sum_{(u,v)\in M} l(u) + l(v) &#x3D; \sum_{v\in V} l(v).<br>$$</p>
+</li>
+<li><p>we have that for all perfect matchings $M^{\prime}$ of $G$:<br>$$<br>w(M) \geq w(M^{\prime}).<br>$$</p>
+</li>
+</ol>
+<p>根据 Kuhn-Munkres 定理，找到最大权重分配的问题被简化为找到正确的标记函数和相应等价子图上的任何完美匹配。</p>
+<h2 id="The-Hungarian-Algorithm"><a href="#The-Hungarian-Algorithm" class="headerlink" title="The Hungarian Algorithm"></a>The Hungarian Algorithm</h2><p>算法思想：维护一个匹配的 $M$ 和等价图 $G_l$，从 $M &#x3D; \emptyset$ 和一个有效的 $l$ 开始。继续直到 $M$ 成为 $G_l$ 上的完美匹配。每一步：要么增加 $M$ 要么改进标签 $l \to l^{\prime}$.</p>
+<h3 id="Augment-the-matching-M"><a href="#Augment-the-matching-M" class="headerlink" title="Augment the matching $M$"></a>Augment the matching $M$</h3><p>Given labeling $l$, $G_l &#x3D; (V, E_l)$, some matching $M$ on $G_l$ , unmatched $u \in V, u \notin M$.</p>
+<ol>
+<li>A path is augmenting for $M$ on $G_l$ if it alternates between $E_l − M$ and $M$, and the first and last vertices of the path are un-matched in $M$. Keep track of an ”almost” augmenting path starting at $u$.</li>
+<li>If we can find an unmatched vertex $v$, then we create augmenting path $\alpha$ from $u$ to $v$. </li>
+<li>Flip the matching by replacing the edges in $M$ with the edges in the augmenting path that are in $E_l − M$. </li>
+<li>Since we start and end unmatched, this increases the size of the matching, $|M^{\prime}| &gt; |M|$.</li>
+</ol>
+<h3 id="Improve-the-labeling-l"><a href="#Improve-the-labeling-l" class="headerlink" title="Improve the labeling $l$"></a>Improve the labeling $l$</h3><ol>
+<li><p>$S\subseteq X$ and $T \subseteq Y$ s.t. $S,T$ represent the current “almost” augmenting alternating path between the matching $M$ and outside other edges in $E_l \to M$.</p>
+</li>
+<li><p>Let $N_l(S)$ be the neighbors to each node in $S$ along $E_l$. </p>
+<p>$$<br>N_l(S) &#x3D; \lbrace v | \forall u \in S: (u, v) \in E_l \rbrace.<br>$$</p>
+</li>
+<li><p>if $N_l(S)&#x3D;T$ we cannot increase the alternating path and augment, so we must improve the labeling.</p>
+</li>
+<li><p>compute:<br>$$<br>\delta_l &#x3D; \min_{u\in S, v \notin T} \lbrace l(u) + l(v) - w(u,v) \rbrace.<br>$$</p>
+</li>
+<li><p>improve $l \to l^{\prime}$:<br>$$<br>l^{\prime}(r) &#x3D;<br>\begin{cases}<br>l(r) - \delta_l &amp; \text{if} \ r \in S \\<br>l(r) + \delta_l &amp; \text{if} \ r \in T \\<br>l(r) &amp; \text{otherwise}.<br>\end{cases}<br>$$</p>
+</li>
+<li><p>claim: $l^{\prime}$ is a valid labeling and $E_l \subseteq E_{l^{\prime}}$.</p>
+</li>
+<li><p>proof follows by examining cases for all possibilities of membership of $u\in S$, $u \notin S$, $v \in T$, $v \notin T$.</p>
+</li>
+</ol>
+<h3 id="the-hungarian-algorithm"><a href="#the-hungarian-algorithm" class="headerlink" title="the hungarian algorithm"></a>the hungarian algorithm</h3><ol>
+<li><p>start with some matching $M$, and a valid labeling</p>
+<p>$$<br>l :&#x3D; \forall x \in X, y \in Y, l(y) &#x3D; 0, l(x) &#x3D; \max_{y^{\prime} \in Y }(w(x, y^{\prime})).<br>$$</p>
+</li>
+<li><p>do the following until $M$ is a perfect matching:</p>
+<p>(a). Look for augmenting path;</p>
+<p>(b). If a augmenting path does not exist, improve $l \to l^{\prime}$ and go to step (a).</p>
+</li>
+</ol>
+<h1 id="Python-执行匈牙利算法"><a href="#Python-执行匈牙利算法" class="headerlink" title="Python 执行匈牙利算法"></a>Python 执行匈牙利算法</h1><h2 id="scipy-optimize-linear-sum-assignment"><a href="#scipy-optimize-linear-sum-assignment" class="headerlink" title="scipy.optimize.linear_sum_assignment"></a>scipy.optimize.linear_sum_assignment</h2><p>scipy.optimize.linear_sum_assignment(cost_matrix, maximize&#x3D;False)</p>
+<p>cost_matrix 表示代价矩阵， maximize 表示求最小（False）还是最大（True）权重匹配</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy.optimize <span class="keyword">import</span> linear_sum_assignment</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此处的 0 不是表示边缺失。表示边缺失用 np.inf 来表示</span></span><br><span class="line">cost = np.array([[<span class="number">4</span>, <span class="number">1</span>, <span class="number">3</span>], [<span class="number">2</span>, <span class="number">0</span>, <span class="number">5</span>], [<span class="number">3</span>, <span class="number">2</span>, <span class="number">2</span>]])</span><br><span class="line"><span class="comment"># row_ind 是排序好的，col_ind 相对应</span></span><br><span class="line">row_ind, col_ind = linear_sum_assignment(cost)</span><br><span class="line"><span class="comment"># 表示第1，0，2列</span></span><br><span class="line">col_ind</span><br><span class="line">array([<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>])</span><br><span class="line"><span class="comment"># 最终得到完美匹配的权重和</span></span><br><span class="line">cost[row_ind, col_ind].<span class="built_in">sum</span>()</span><br><span class="line"><span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="scipy-sparse-csgraph-min-weight-full-bipartite-matching"><a href="#scipy-sparse-csgraph-min-weight-full-bipartite-matching" class="headerlink" title="scipy.sparse.csgraph.min_weight_full_bipartite_matching"></a>scipy.sparse.csgraph.min_weight_full_bipartite_matching</h2><p>scipy.sparse.csgraph.min_weight_full_bipartite_matching(biadjacency_matrix, maximize&#x3D;False)</p>
+<p>对于稀疏矩阵进行计算。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy.sparse <span class="keyword">import</span> csr_matrix</span><br><span class="line"><span class="keyword">from</span> scipy.sparse.csgraph <span class="keyword">import</span> min_weight_full_bipartite_matching</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此处的 0 表示边缺失，赋值 0 将其转化为完全图</span></span><br><span class="line"><span class="comment"># 所以，此处就是找最大匹配</span></span><br><span class="line">biadjacency_matrix = csr_matrix([[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>], [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>]])</span><br><span class="line">row_ind, col_ind = min_weight_full_bipartite_matching(biadjacency_matrix)</span><br><span class="line"><span class="built_in">print</span>(col_ind)</span><br><span class="line">[<span class="number">2</span> <span class="number">0</span> <span class="number">1</span>]</span><br><span class="line">biadjacency_matrix[row_ind, col_ind].<span class="built_in">sum</span>()</span><br><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="scipy-sparse-csgraph-maximum-bipartite-matching"><a href="#scipy-sparse-csgraph-maximum-bipartite-matching" class="headerlink" title="scipy.sparse.csgraph.maximum_bipartite_matching"></a>scipy.sparse.csgraph.maximum_bipartite_matching</h2><p>scipy.sparse.csgraph.maximum_bipartite_matching(graph, perm_type&#x3D;’row’)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy.sparse <span class="keyword">import</span> csr_matrix</span><br><span class="line"><span class="keyword">from</span> scipy.sparse.csgraph <span class="keyword">import</span> maximum_bipartite_matching</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此处的 0 表示边缺失，赋值 0 将其转化为完全图</span></span><br><span class="line"><span class="comment"># 所以，此处就是找最大匹配</span></span><br><span class="line">graph = csr_matrix([[<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>]])</span><br><span class="line">maximum_bipartite_matching(graph, perm_type=<span class="string">&#x27;column&#x27;</span>)</span><br><span class="line"><span class="comment"># 结果表示第0行的第2列，第1行的第0列</span></span><br><span class="line">array([<span class="number">2</span>, <span class="number">0</span>], dtype=int32)</span><br><span class="line"></span><br><span class="line">maximum_bipartite_matching(graph, perm_type=<span class="string">&#x27;row&#x27;</span>)</span><br><span class="line"><span class="comment"># 结果表示第0列的第1行，第1列没有，第2列的第0行</span></span><br><span class="line">array([ <span class="number">1</span>, -<span class="number">1</span>,  <span class="number">0</span>], dtype=int32)</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://www.cc.gatech.edu/~rpeng/18434_S15/hungarianAlgorithm.pdf">The Hungarian Algorithm for Weighted Bipartite Graphs</a></li>
+<li><a target="_blank" rel="noopener" href="https://brilliant.org/wiki/hungarian-matching/">Hungarian Maximum Matching Algorithm</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.columbia.edu/~cs2035/courses/ieor6614.S16/GolinAssignmentNotes.pdf">Bipartite Matching &amp; the Hungarian Method</a></li>
+<li><a target="_blank" rel="noopener" href="https://senyang-ml.github.io/2020/06/01/Bipartite-Matching-and-Hungarian-Algorithm/">Bipartite Matching and Hungarian Algorithm</a></li>
+<li><a target="_blank" rel="noopener" href="https://senyang-ml.github.io/2020/06/04/detr/">Detr</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.pythonf.cn/read/34325">超级细节！！！匈牙利算法流程和python程序实现！！！容易理解,详细,以及,Python,通俗易懂</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/your_answer/article/details/79160045">利用python解决指派问题（匈牙利算法）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013384984/article/details/90718287">匈牙利算法-看这篇绝对就够了！</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cxyxiaowu.com/874.html">五分钟小知识：什么是匈牙利算法</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2021/11/19/hungarian-matching-algorithm/">https://xujinzh.github.io/2021/11/19/hungarian-matching-algorithm/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/hungarian/">hungarian</a><a class="post-meta__tags" href="/tags/bipartite/">bipartite</a><a class="post-meta__tags" href="/tags/graph/">graph</a><a class="post-meta__tags" href="/tags/matrix/">matrix</a></div><div class="post_share"><div class="social-share" data-image="/img/c12.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/11/19/hexo-markdown-big-brace/" title="Hexo 大括号渲染"><img class="cover" src="/img/c30.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Hexo 大括号渲染</div></div></a></div><div class="next-post pull-right"><a href="/2021/11/11/deep-learning-normalization/" title="深度学习中常用的正则化"><img class="cover" src="/img/c18.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">深度学习中常用的正则化</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/11/24/markdown-matrix/" title="在 markdown 中书写矩阵"><img class="cover" src="/img/c16.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-11-24</div><div class="title">在 markdown 中书写矩阵</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2"><span class="toc-number">1.</span> <span class="toc-text">历史</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E5%88%86%E5%9B%BE"><span class="toc-number">2.</span> <span class="toc-text">二分图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5%E7%9A%84%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">使用邻接矩阵的匈牙利算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%9B%BE%E7%9A%84%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">使用图的匈牙利算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Kuhn-Munkres-Theorem"><span class="toc-number">4.1.</span> <span class="toc-text">The Kuhn-Munkres Theorem</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Hungarian-Algorithm"><span class="toc-number">4.2.</span> <span class="toc-text">The Hungarian Algorithm</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Augment-the-matching-M"><span class="toc-number">4.2.1.</span> <span class="toc-text">Augment the matching $M$</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Improve-the-labeling-l"><span class="toc-number">4.2.2.</span> <span class="toc-text">Improve the labeling $l$</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#the-hungarian-algorithm"><span class="toc-number">4.2.3.</span> <span class="toc-text">the hungarian algorithm</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E6%89%A7%E8%A1%8C%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95"><span class="toc-number">5.</span> <span class="toc-text">Python 执行匈牙利算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#scipy-optimize-linear-sum-assignment"><span class="toc-number">5.1.</span> <span class="toc-text">scipy.optimize.linear_sum_assignment</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#scipy-sparse-csgraph-min-weight-full-bipartite-matching"><span class="toc-number">5.2.</span> <span class="toc-text">scipy.sparse.csgraph.min_weight_full_bipartite_matching</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#scipy-sparse-csgraph-maximum-bipartite-matching"><span class="toc-number">5.3.</span> <span class="toc-text">scipy.sparse.csgraph.maximum_bipartite_matching</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '711854fd076daec20ebfddb03b78b9a7',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

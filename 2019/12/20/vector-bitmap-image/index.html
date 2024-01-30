@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>矢量图和位图 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="矢量图是由线段或曲线来描述图像，同时包含有色彩和位置信息; 位图是由像素点来描述图像，也称为点阵图;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="矢量图和位图">
+<meta property="og:url" content="https://xujinzh.github.io/2019/12/20/vector-bitmap-image/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="矢量图是由线段或曲线来描述图像，同时包含有色彩和位置信息; 位图是由像素点来描述图像，也称为点阵图;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c27.jpg">
+<meta property="article:published_time" content="2019-12-20T12:32:32.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.108Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="cv">
+<meta property="article:tag" content="image">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c27.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2019/12/20/vector-bitmap-image/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '矢量图和位图',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">矢量图和位图</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-12-20T12:32:32.000Z" title="发表于 2019-12-20 20:32:32">2019-12-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.108Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/computer-science/">computer science</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="矢量图和位图"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>矢量图是由线段或曲线来描述图像，同时包含有色彩和位置信息;</p>
+<p>位图是由像素点来描述图像，也称为点阵图;</p>
+<span id="more"></span>
+
+<h1 id="两者有什么特点："><a href="#两者有什么特点：" class="headerlink" title="两者有什么特点："></a>两者有什么特点：</h1><p>矢量图：可以无限放大或缩小，而不失真，一般体积或占用空间比较小；但，色彩丰富度不如位图；</p>
+<p>位图：色彩丰富，但放大后容易不清晰，一般体积比较大</p>
+<h1 id="两者常见的格式："><a href="#两者常见的格式：" class="headerlink" title="两者常见的格式："></a>两者常见的格式：</h1><p>矢量图： AdobeIllustrator的 <code>*.AI</code>、<code>*.EPS</code> 和 <code>*.SVG</code>、<code>*.EMF</code>、AutoCAD的 <code>*.dwg</code> 和 <code>*.dxf</code>、Corel DRAW 的 <code>*.cdr</code> 等；</p>
+<p>位图： <code>*.bmp</code>、<code>*.pcx</code>、<code>*.gif</code>、<code>*.jpg</code>、<code>*.tiff</code>、<code>*.png</code>、photoshop的 <code>*.psd</code> 等</p>
+<h2 id="位图"><a href="#位图" class="headerlink" title="位图"></a>位图</h2><h3 id="BMP"><a href="#BMP" class="headerlink" title="BMP"></a>BMP</h3><p>BMP (Bitmap) 是 DOS 和 WindowS 兼容计算机系统的标准 Windows 图像格式，其支持 RGB、索引颜色、灰度和位图颜色模式，但不支持 Alpha 通道。BMP 格式支持 1, 4, 24, 32 位的 RGB 位图，对图像信息不压缩，占用磁盘空间较大。</p>
+<h3 id="GIF"><a href="#GIF" class="headerlink" title="GIF"></a>GIF</h3><p>GIF (Graphics Interchange Format) 是一种点阵图像格式，专为主要出现在网络上的较基本图像所设计。每个像素占 8 bit，包含 256 中索引颜色，支持灰度模式。包含静态 GIF 和动态 GIF。占用空间小，背景可透明，可制作成动画。</p>
+<h3 id="JPG"><a href="#JPG" class="headerlink" title="JPG"></a>JPG</h3><p>JPEG (Joint Photographic Experts Group) 即联合图像专家组，是用于连续色调静态图像压缩的一种标准，文件后缀名为 jpg 或 jpeg，是最常用的图像文件格式。其是是一种针对照片影像而广泛使用的有损压缩标准方法。在目前图像格式中压缩率相对最高的。</p>
+<p>JPEG是一个压缩标准，又可分为标准 JPEG、渐进式 JPEG 和 JPEG2000 三种:</p>
+<ol>
+<li>标准 JPEG：以 24 位颜色存储单个光栅图像，是与平台无关的格式，支持最高级别的压缩，不过，这种压缩是有损耗的。此类型图片在网页下载时只能由上而下依序显示图片，直到图片资料全部下载完毕，才能看到全貌。</li>
+<li>渐进式 JPEG：渐进式 JPG 为标准 JPG 的改良格式，支持交错，可以在网页下载时，先呈现出图片的粗略外观后，再慢慢地呈现出完整的内容，渐进式 JPG 的文件比标准 JPG 的文件要来得小。</li>
+<li>JPEG2000：新一代的影像压缩法，压缩品质更好，其压缩率比标准 JPEG 高约 30％ 左右，同时支持有损和无损压缩。一个极其重要的特征在于它能实现渐进传输，即先传输图像的轮廓，然后逐步传输数据，让图像由朦胧到清晰显示。</li>
+</ol>
+<h3 id="TIFF"><a href="#TIFF" class="headerlink" title="TIFF"></a>TIFF</h3><p>TIFF (TagImage File Format) 是标签图像文件格式，主要用来存储包括照片和艺术图在内的图像。它最初由 Aldus 公司与微软公司一起为 PostScript 打印开发。TIFF 与 jpeg、png 一起成为流行的高位彩色图像格式。另外，TIFF格式还可加入作者、版权、备注以及自定义信息，存放多幅图像。</p>
+<h3 id="PNG"><a href="#PNG" class="headerlink" title="PNG"></a>PNG</h3><p>PNG 图片以任何颜色深度存储单个光栅图像。PNG 是与平台无关的格式。优点：PNG 支持高级别无损耗压缩。支持 alpha 通道透明度。PNG 支持伽玛校正。PNG 支持交错。PNG 受最新的 Web 浏览器支持。缺点：较旧的浏览器和程序可能不支持 PNG 文件。作为 Internet文件格式，与 JPEG 的有损耗压缩相比，PNG 提供的压缩量较少。作为 Internet 文件格式，PNG 对多图像文件或动画文件不提供任何支持</p>
+<h3 id="PSD"><a href="#PSD" class="headerlink" title="PSD"></a>PSD</h3><p>PSD (Photoshop Document) 是著名的 Adobe 公司的图像处理软件 Photoshop 的专用格式。这种格式可以存储 Photoshop 中所有的图层，通道、参考线、注解和颜色模式等信息。在保存图像时，若图像中包含有层，则一般都用 PSD 格式保存。</p>
+<h2 id="矢量图"><a href="#矢量图" class="headerlink" title="矢量图"></a>矢量图</h2><p>矢量图给出一些常用的格式描述。如 <code>*.AI</code>、<code>*.EPS</code> 和 <code>*.SVG</code>。</p>
+<h3 id="AI"><a href="#AI" class="headerlink" title="AI"></a>AI</h3><p>AI (Adobe Illustrator) 是用于向量图像的专属 Adobe 图像格式，作用是 1.卡通造型的设计；2.商业插画的绘制；3.设计 VI；4.设计 UI。与 PSD 文件相同，AI 文件也是一种分层文件，用户可以对图形内所存在的层进行操作，所不同的是 AI 格式文件是基于矢量输出，可在任何尺寸大小下按最高分辨率输出，而 PSD 文件是基于位图输出。与 AI 格式类似基于矢量输出的格式还有 EPS、WMF、CDR 等。</p>
+<h3 id="EPS"><a href="#EPS" class="headerlink" title="EPS"></a>EPS</h3><p>EPS (Encapsulated Post Script) 是 Illustrator CS5 和 Photoshop CS5 之间可交换的文件格式。EPS 文件是桌面印刷系统普遍使用的通用交换格式当中的一种综合格式。EPS 文件格式又被称为带有预视图象的 PS 格式，它是由一个 PostScript 语言的文本文件和一个（可选）低分辨率的由 PICT 或 TIFF 格式描述的代表像组成。EPS 文件就是包括文件头信息的 PostScript 文件，利用文件头信息可使其他应用程序将此文件嵌入文档。</p>
+<h3 id="SVG"><a href="#SVG" class="headerlink" title="SVG"></a>SVG</h3><p>SVG (Scalable Vector Graphics) 是一种基于可扩展标记语言（XML），用于描述二维矢量图形的图形格式。 SVG 由 W3C 制定，是一个开放标准。常用语图标、LOGO、插画、动画和界面元素、信息图表和数据可视化。能够编辑 SVG 的软件有：</p>
+<ul>
+<li>Pixso：资源社区收录了大量的SVG图标，可以应用于任何网站和其他项目，点击免费注册使用Pixso。</li>
+<li>Adobe Illustrator：用于创建和编辑矢量图形的程序，可以将adobe项目导出为 SVG 或多种光栅格式。</li>
+<li>Microsoft Visio：流程图、图表和信息图表制作工具。</li>
+<li>DRAW：矢量图形编辑器。</li>
+<li>GIMP（GNU Image Manipulation Program）：免费的开源图像编辑程序。</li>
+<li>Google Docs：可以把创建的绘图导出为SVG格式文件。</li>
+<li>Inkscape：免费的矢量绘图和文本工具。</li>
+</ul>
+<h1 id="两者常见使用场景："><a href="#两者常见使用场景：" class="headerlink" title="两者常见使用场景："></a>两者常见使用场景：</h1><p>矢量图：常用于图标、logo、标识等（ SVG适合于浏览器，EPS适合于LaTeX，EMF才适合Word ）</p>
+<p>位图：常用于打印或论文印刷（tif格式，虽体积大但基本不损失信息）、网络传播（jpeg格式和gif格式，压缩比高，体积小但损失信息，可用于一般资料保存；png格式，能够透明或半透明图像，比JPEG大但不适宜印刷）</p>
+<p>矢量图可以轻松转化为位图，但是位图转化为矢量图需要大量的计算（可通过网站<a href="https://zh.vectormagic.com/" target="_blank" rel="noreferrer noopener" aria-label="Vector Magic（在新窗口打开）">Vector Magic</a> 转换)</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/52047447">位图与矢量图的区别</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/STN_LCD/article/details/78629029">jpg 格式举例详解——非常详细</a></li>
+<li><a target="_blank" rel="noopener" href="https://pixso.cn/designskills/what-format-is-svg/">SVG是什么格式？终于有人讲明白了！</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2019/12/20/vector-bitmap-image/">https://xujinzh.github.io/2019/12/20/vector-bitmap-image/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/cv/">cv</a><a class="post-meta__tags" href="/tags/image/">image</a></div><div class="post_share"><div class="social-share" data-image="/img/c27.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019/12/20/ubuntu-installation-time/" title="如何查询 Ubuntu 系统安装时间"><img class="cover" src="/img/c23.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">如何查询 Ubuntu 系统安装时间</div></div></a></div><div class="next-post pull-right"><a href="/2019/12/20/windows10-diskpart/" title="安装 windows10 时出现无法创建分区"><img class="cover" src="/img/c11.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">安装 windows10 时出现无法创建分区</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/03/05/ai-cv-object-detection/" title="计算机视觉之目标检测"><img class="cover" src="/img/c11.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-05</div><div class="title">计算机视觉之目标检测</div></div></a></div><div><a href="/2020/08/24/classification-of-object-tracking/" title="目标跟踪算法的分类"><img class="cover" src="/img/c1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-08-24</div><div class="title">目标跟踪算法的分类</div></div></a></div><div><a href="/2021/08/02/cnn-flops/" title="CNN 模型计算力 FLOPs"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-02</div><div class="title">CNN 模型计算力 FLOPs</div></div></a></div><div><a href="/2022/08/04/color-model-cv/" title="色彩模型"><img class="cover" src="/img/c16.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-04</div><div class="title">色彩模型</div></div></a></div><div><a href="/2021/08/20/cv-ot-algorithms-intro/" title="视觉目标跟踪算法简介"><img class="cover" src="/img/c27.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-20</div><div class="title">视觉目标跟踪算法简介</div></div></a></div><div><a href="/2019/12/21/cv-sci/" title="计算机视觉方向顶级会议和顶级期刊"><img class="cover" src="/img/c6.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-21</div><div class="title">计算机视觉方向顶级会议和顶级期刊</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%A4%E8%80%85%E6%9C%89%E4%BB%80%E4%B9%88%E7%89%B9%E7%82%B9%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">两者有什么特点：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%A4%E8%80%85%E5%B8%B8%E8%A7%81%E7%9A%84%E6%A0%BC%E5%BC%8F%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">两者常见的格式：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%8D%E5%9B%BE"><span class="toc-number">2.1.</span> <span class="toc-text">位图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BMP"><span class="toc-number">2.1.1.</span> <span class="toc-text">BMP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GIF"><span class="toc-number">2.1.2.</span> <span class="toc-text">GIF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JPG"><span class="toc-number">2.1.3.</span> <span class="toc-text">JPG</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TIFF"><span class="toc-number">2.1.4.</span> <span class="toc-text">TIFF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PNG"><span class="toc-number">2.1.5.</span> <span class="toc-text">PNG</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PSD"><span class="toc-number">2.1.6.</span> <span class="toc-text">PSD</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A2%E9%87%8F%E5%9B%BE"><span class="toc-number">2.2.</span> <span class="toc-text">矢量图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AI"><span class="toc-number">2.2.1.</span> <span class="toc-text">AI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EPS"><span class="toc-number">2.2.2.</span> <span class="toc-text">EPS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SVG"><span class="toc-number">2.2.3.</span> <span class="toc-text">SVG</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%A4%E8%80%85%E5%B8%B8%E8%A7%81%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%9A"><span class="toc-number">3.</span> <span class="toc-text">两者常见使用场景：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">4.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'be9d8f17c2bb434b8fff0a802b37723d',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

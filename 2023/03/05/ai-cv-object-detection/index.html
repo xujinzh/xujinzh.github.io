@@ -1,0 +1,542 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>计算机视觉之目标检测 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="目标检测是计算机视觉的一项基本任务。它能够告诉我们一幅图像中有什么（可能有多个）物体和这些物体在什么位置，位置常使用矩形框的形式给出。本篇我们介绍深度学习类目标检测算法及算法评估方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机视觉之目标检测">
+<meta property="og:url" content="https://xujinzh.github.io/2023/03/05/ai-cv-object-detection/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="目标检测是计算机视觉的一项基本任务。它能够告诉我们一幅图像中有什么（可能有多个）物体和这些物体在什么位置，位置常使用矩形框的形式给出。本篇我们介绍深度学习类目标检测算法及算法评估方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c11.jpg">
+<meta property="article:published_time" content="2023-03-05T13:36:32.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.088Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="cv">
+<meta property="article:tag" content="object detection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c11.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2023/03/05/ai-cv-object-detection/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '计算机视觉之目标检测',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">计算机视觉之目标检测</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-03-05T13:36:32.000Z" title="发表于 2023-03-05 21:36:32">2023-03-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.088Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/object-detection/">object detection</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">6.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>20分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="计算机视觉之目标检测"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>目标检测是计算机视觉的一项基本任务。它能够告诉我们一幅图像中有什么（可能有多个）物体和这些物体在什么位置，位置常使用矩形框的形式给出。本篇我们介绍深度学习类目标检测算法及算法评估方法。</p>
+<span id="more"></span>
+
+<h1 id="目标检测算法分类"><a href="#目标检测算法分类" class="headerlink" title="目标检测算法分类"></a>目标检测算法分类</h1><p>目标检测算法发展至今已经有几十年，出现有多种类型的图像目标检测算法，包括</p>
+<ul>
+<li>两阶段目标检测算法<ol>
+<li>RCNN</li>
+<li>Fast RCNN</li>
+<li>Faster RCNN</li>
+</ol>
+</li>
+<li>单阶段目标检测算法<ol>
+<li>YOLO 系列</li>
+<li>SSD</li>
+<li>RetinaNet</li>
+<li>FCOS</li>
+</ol>
+</li>
+</ul>
+<p>为了处理不同尺度目标的情况，很多深度学习目标检测算法都是基于锚框的，为了提高检测速度又发展出无锚框的算法：</p>
+<ul>
+<li>有锚框算法<ol>
+<li>Faster RCNN</li>
+<li>YOLO v2&#x2F;v3</li>
+<li>SSD</li>
+<li>RetinaNet</li>
+</ol>
+</li>
+<li>无锚框算法<ol>
+<li>YOLO v1</li>
+<li>FCOS</li>
+</ol>
+</li>
+</ul>
+<p>注意，RCNN 和 Fast RCNN 因采用常规算法（而不是 CNN）进行区域提议，因此，没有设置锚框。</p>
+<h1 id="两阶段目标检测算法的基本思路"><a href="#两阶段目标检测算法的基本思路" class="headerlink" title="两阶段目标检测算法的基本思路"></a>两阶段目标检测算法的基本思路</h1><p>对一幅图像进行目标检测要求同时预测出图像中的物体及位置，最容易想到的方法是先将<strong>图片均匀分块</strong>，然后使用图像分类算法对每一块图片补丁或图像块进行分类，图片补丁在原图像上的位置作为物体的位置信息。这种方法预测的物体边界框比较粗糙，如一个物体在跨两个图片补丁时，物体尺寸大于或小于补丁尺寸时，都是边界框的预测都是不准确的。</p>
+<p>为了解决上面的物体跨补丁、固定尺寸导致的边界框粗糙问题，可以采用<strong>滑窗</strong>（Sliding Window）的思路。具体的使用不同尺寸、不同长宽比的矩形框窗口按照一定的步长（像素值）从图像左上角依次滑动取到图像的右下角。这样就可以得到很多个不同尺寸、不同长宽比的图片补丁，理论上原图片中的每个物体都能包含在这些图片补丁中。然后再对每一个图片补丁进行分类即可。或者固定窗口尺寸只采用不同长宽比，但是把原图像进行不同比例的缩放，即得到<strong>图像金字塔</strong>也可以获得理论上包含所有物体的图片补丁。这种方法也有缺点就是效率低，因为滑窗得到的图片补丁是很多的，对每一个图片补丁进行分类会很浪费时间和浪费计算资源，无法满足实时性的要求。</p>
+<p>为了解决滑窗的效率问题，可以先对图片补丁进行筛选。因为滑窗得到的图片补丁包含大量的窗口都落在不包含物体的边界区域或物体内部。常用的方法是<strong>区域提议（Region Proposal）</strong>，如 <em>Selective Search</em> 算法就是一种区域提议算法：使用贪心算法，将空间相邻且特征相似的图像块逐步合并到一起，形成可能包含物体的区域，称为提议区域或提议框。提议框的数量明显比滑窗得到的图片补丁少的多，然后使用这些提议框进行分类。使用提议框的边界坐标作为目标的物体的位置信息一般会有一些误差，此时，可通过一个回归分支进行位置信息预测，加上分类分支，整个模型是多任务学习模型。</p>
+<h2 id="RCNN"><a href="#RCNN" class="headerlink" title="RCNN"></a>RCNN</h2><p>RCNN 是两阶段目标检测算法。对于一幅图像，<strong>第一阶段</strong>经过区域提议找出可能包含物体的框，区域提议采用 Selective Search 算法，该算法快但可能不是非常准确。<strong>第二阶段</strong>对区域提议框进行缩放到统一的尺寸得到 warped region，对每一个 warped region 使用卷积神经网络（AlexNet）得到图像特征，然后每一个图像特征先通过分类头（SVM分类器）预测物体类别，后通过回归头预测边界框偏移量。这一步因为需要对所有 warped region 输入卷积神经网络进行预测，所以比较慢但是准确。</p>
+<p>对于第一阶段，区域提议是不需要学习参数的。第二阶段的卷积神经网络、分类分支和回归分支需要通过模型训练学习参数。学习时，训练顺序是先训练卷积神经网络，然后训练分类分支，最后训练回归分支，因此它不是端到端的、多任务学习。对于提议框 P &#x3D; $(p_x, p_y, p_h, p_w)$（这里 $p_x, p_y$表示提议框的中心坐标，$p_h, p_w$ 表示高和宽）和标注框 B &#x3D; $(b_x, b_y, b_h, b_w)$：</p>
+<ol>
+<li>如果 P 和 B 的重叠较大，那么分类目标值就是B的标注类别，回归目标值就是 P 相对于 B 的偏移量；</li>
+<li>如果 P 和 B 的重叠较小，那么分类目标值就是背景，回归分支不计算损失。<br>其中边界框的偏移量，即回归分支的预测目标为：<br>$$(t_x, t_y, t_h, t_w) &#x3D; (\frac{b_x - p_x}{p_w}, \frac{b_y - p_y}{p_h}, \log(\frac{b_w}{p_w}), \log(\frac{b_h}{p_h}))$$<br>前两个元素表示位置偏差基于边长归一化，后两个元素表示尺度比例的对数。编码后的偏移量既可以避免绝对数值过大或过小影响，又可以把他们的数值编码到一个比较容易预测的范围。</li>
+</ol>
+<p>两个矩形框的交并比 IOU 定义为它们的交集面积与并集面积的比值，是对两个矩形框重合度的衡量。</p>
+<p><strong>非极大值抑制</strong>（Non-Maximum Suppression，NMS）对于一个目标类，有时会得到多个预测框，每个预测框对应不同的置信度值。使用非极大值抑制算法，我们可以得到每个目标一个预测框：</p>
+<ul>
+<li><strong>输入</strong>：检测器产生的一系列检测框 P &#x3D; ${P_1, \cdots, P_n}$ 及对应的置信度 s &#x3D; ${s_1, \cdots, s_n}$，IOU 阈值 $t$</li>
+<li><strong>步骤</strong>:<ol>
+<li>初始化结果集 R &#x3D; $\emptyset$</li>
+<li>重复直至 P 为空集</li>
+</ol>
+<ul>
+<li>找出 P 中置信度最大的框 $P_i$ 并加入 R</li>
+<li>从 P 中删除 $P_i$ 以及与 $P_i$ 交并比大于 $t$ 的框</li>
+</ul>
+</li>
+<li><strong>输出</strong>： 结果集 R</li>
+</ul>
+<p>这里说一下为什么要用非极大值抑制。当我们知道一副图像中每一类（如人）的对象只有一个时，可以用该类预测置信度最高的那个目标框来表示该类对象。但是，通常情况下，一副图像中每一类的对象可能不止一个，比如一副图像中出现多个人（或人脸），此时，对于人（或人脸）的类别有多个预测框（和置信度），我们可以通过非极大值抑制算法找到该类每个对象的（局部）最大的检测框。</p>
+<h2 id="Fast-RCNN"><a href="#Fast-RCNN" class="headerlink" title="Fast RCNN"></a>Fast RCNN</h2><p>2014 年，针对 RCNN 中多个提议框都需要进行一次卷积神经网络导致模型推断速度慢的问题，提出了 RoI Pooling 方法（Region of Interest），把提议区域从图像移动到特征图上，这样只需要对整个图像进行一次卷积神经网络特征提取，把提议框通过 RoI Pooling 直接映射到特征图上，一次得到所有提议框的卷积后的特征。这大幅降低了计算量。</p>
+<p>对于图像上的提议框，通过简单的几何比例缩放把提议框映射到特征图上。然后通过 RoI Pooling 将提议框内不定尺寸的特征图变成固定尺寸。下面重点介绍 RoI Pooling:</p>
+<ol>
+<li>给定全图的特征图和一些列提议框（缩放到全图特征图上的提议框），将提议框区域按照宽、高均匀切分成固定数目的格子（常用 $7\times 7$）；</li>
+<li>对于每个格子，如果格子边界不在整数坐标，则膨胀至整数坐标；</li>
+<li>对于每个格子，通过 Max Pooling 得到格子的输出特征。</li>
+</ol>
+<p>这样通过 RoI Pooling 将任意尺寸的提议框映射到固定宽、高的提议特征图，同时保留图像特征。</p>
+<p>Fast RCNN 推断的基本流程是：</p>
+<ol>
+<li>使用 <em>Selective Search</em> 进行区域提议；</li>
+<li>原图通过 CNN 得到全图特征图；</li>
+<li>将原图上的提议框按照几何比例缩放到特征图上，几何比例是原图到 CNN 输出的特征图的比例；</li>
+<li>利用 RoI Pooling，将不同尺寸的特征图变换到相同大小；</li>
+<li>基于相同尺寸的特征图进行分类和回归。</li>
+</ol>
+<h2 id="Faster-RCNN"><a href="#Faster-RCNN" class="headerlink" title="Faster RCNN"></a>Faster RCNN</h2><p>2015 年，针对 Fast RCNN 中运行最慢的 Selective Search 区域提议模块，提出了基于卷积神经网络的 RPN (Region Proposal Network) 网络，产生区域提议，进一步提高了效率。</p>
+<p>RCNN 在推理时，一副图像大概需要 49 秒，当排除区域提议步骤时，大概需要 47 秒。Fast RCNN 在增加了 RoI Pooling 并将提议框特征共享主干网络后，一副图像的推理大概需要 2.3 秒，当排除区域提议步骤时，大概需要 0.32 秒。因此，依赖 Selective Search 产生区域提议框的步骤成为了 Fast RCNN 的速度瓶颈。在 Faster RCNN 中使用 CNN 代替 Selective Search 来产生提议框，并与检测器共享主干网络结构。</p>
+<p>RPN 就是用于在图中找到有物体的提议框，属于单类别（物体和背景）物体检测的问题。具体地：</p>
+<ol>
+<li>图像经过 CNN 主干网络得到全图特征图；</li>
+<li>设置锚框（在原图上设置不同大小的假想框，用不同检测头检测对应框中是否出现物体）来处理不同窗框比，不同大小的物体；</li>
+<li>使用检测头（轻量级的卷积核）在全图特征图上进行密集滑窗，产生区域提议（分类和边界框回归）；</li>
+<li>集合所有提议框，使用 NMS 得到最终的提议框特征。</li>
+</ol>
+<h2 id="Mask-RCNN"><a href="#Mask-RCNN" class="headerlink" title="Mask RCNN"></a>Mask RCNN</h2><p>2017 年针对 Fast RCNN 中提出的 RoI Pooling 回归效果差问题，提出了 RoI Align 提高边界框预测精度。同时，加入 Mask 分支，使得模型能够用于实例分割。</p>
+<p>RoI Pooling 对于非整数边界框（如对一个尺寸为 $20\times 20$ 的提议特征图按照宽、高均匀划分 7 等分得到一个 $7\times 7$ 的小矩形块，此时，20 无法整数 7，就会造成边界框不是在整数边界上）取整，产生位置偏差。Roi Align 为了保留空间精度，使用“非整数坐标”的特征。具体地，对于划分后的小矩形块，例如取该小矩形块中心点的像素值，中心点可能不在某个具体的（整数）像素或特征上，通过插值的方法可以获取到该中心点周围的四个点的双线性插值，表示该中心点的像素或特征值。</p>
+<p>RoI Align：</p>
+<ol>
+<li>将映射到全图特征图上的提议区域均匀切分成固定数目的格子（常用 $7\times 7$）;</li>
+<li>在每个格子中，均匀选取若干采样点，如 4 个；</li>
+<li>通过插值方法得到每个采样点处的精确特征；</li>
+<li>所有采样点做 Pooling，如 Max Pooling，Average Pooling，得到输出结果。</li>
+</ol>
+<p>RoI Align 比 RoI Pooling 在位置上更精细。</p>
+<h2 id="FPN"><a href="#FPN" class="headerlink" title="FPN"></a>FPN</h2><p>RCNN 类目标检测算法是只采用单级高层特征（通常是主干网络最后一层或倒数第二层）做预测，但是对于小目标检测效果不好。高层特征语义信息比较丰富，目标位置预测比较粗糙，低层特征语义信息较少，目标位置预测较准确。高层特征空间降采样率较大，容易造成小物体信息丢失。特征金字塔 FPN (Feature Pyramid Network) 通过融合底层和高层特征进行预测。具体地，</p>
+<ol>
+<li>一副图像经过主干网络产生多层次的特征；</li>
+<li>对最后一层特征进行上采样，使得空间分辨率与前一层特征相同，然后与前一层特征（经过 $1 \times 1$ 卷积核调整通道数）进行融合（各通道各位置像素值相加）；</li>
+<li>融合后的特征再重复步骤 2 的操作，得到特征金字塔。</li>
+</ol>
+<h1 id="单阶段目标检测算法的基本思路"><a href="#单阶段目标检测算法的基本思路" class="headerlink" title="单阶段目标检测算法的基本思路"></a>单阶段目标检测算法的基本思路</h1><p>在上面的两阶段目标检测算法中，除了图像经过主干网络进行全图特征图提取外主要分成 2 个部分，一部分是基于全图特征图采用不同尺度的锚框进行区域提议阶段，另一部分是基于提议的区域特征图进行区域识别检测阶段。本部分介绍单阶段目标检测算法，它没有区域提议阶段，直接基于全图特征图产生类别和边界框预测。因为缺少了提议阶段，其推理速度快，结构简单，易于在不同设备上部署。但多数情况下性能不如两阶段算法。</p>
+<p>常见的单阶段检测算法有 YOLO 系列（基于特征图直接回归边界框）、SSD (基于多尺度特征图与锚框)、RetinaNet (提出 Focal Loss，解决样本不均衡问题)、FCOS (多尺度特征图直接回归)</p>
+<h2 id="YOLO"><a href="#YOLO" class="headerlink" title="YOLO"></a>YOLO</h2><p>YOLO (You Only Look Once) 是 2015 年提出，是最早的单阶段算法之一，使用 DarkNet 结构的主干网络产生特征图，利用全连接层产生全部空间位置的预测结果，每个位置包含 $C$ 维（一个类别一个概率）分类概率和 $B$ 组边界框预测（每一个边界框包含 $x, y, w, h, score$），所以输出向量为 $5B + C$ 维（或通道）。</p>
+<p>具体地，将原图切分成 $S \times S$ 个大小的格子，对应预测特征图上 $S \times S$ 个像素的位置。如果原图上一个物体的中心落在某个格子内，则特征图上对应像素位置应给出该物体的类别和边界框的位置预测。其余位置应预测为背景类别，不关心边界框预测结果。预测特征图每一个像素为 $5B+C$ 维（或通道），包含 $B$ 个框和 $C$ 个类别预测。当类别预测为非背景时，边界框预测的 $x, y$ 为边界框中心点相对于格子边界的偏移量，$w, h$ 为边界框的相对原图大小，分数 $score$ 为预测框与真值框的 IOU 分数值。当类别预测为背景时，边界框不计算损失。</p>
+<p>YOLO 是一个多任务学习问题，其损失函数包含回归、分类计算，通过超参数 $\lambda$ 来控制权重分配。</p>
+<p>第一部分，当边界框需要产生类别（物体&#x2F;背景）预测时，计算 IOU 分数或置信度的回归损失：</p>
+
+$$
+L_1 =\sum_{i=0}^{S^2}\sum_{j=0}^B \mathbb{1}_{ij}^{obj}(C_i-\hat{C}_i)^2 + \lambda_{noobj}\sum_{i=0}^{S^2}\sum_{j=0}^B \mathbb{1}_{ij}^{noobj}(C_i - \hat{C}_i)^2,
+$$
+
+<p>第二部分，当边界框需要产生物体预测时，计算边界框坐标的回归损失：</p>
+
+$$
+L_2 = \lambda_{coord}\sum^{S^2}_{i=0}\sum^{B}_{j=0}\mathbb{1}^{obj}_{ij} [ (x_i - \hat{x}_i)^2 + (y_i - \hat{y}_i)^2] + \lambda_{coord}\sum^{S^2}_{i=0}\sum^{B}_{j=0}\mathbb{1}^{obj}_{ij} [ (\sqrt{w_i} - \sqrt{\hat{w}_i})^2 + (\sqrt{h_i} - \sqrt{\hat{h}_i})^2],
+$$
+
+<p>第三部分，当边界框需要产生物体预测时，计算 $C$ 个类别概率的回归损失：</p>
+
+$$
+L_3 = \sum^{S^2}_{i=0}\mathbb{1}^{obj}_{i}\sum_{c\in classes} (p_i(c) - \hat{p}_i(c) )^2,
+$$
+
+
+<p>整个模型的损失函数为：<br>$$<br>L &#x3D; L_1 + L_2 + L_3.<br>$$</p>
+<p>YOLO 的优点：</p>
+<ul>
+<li><p>快！在 Pascal VOC 数据集上，使用 DarkNet 结构可以达到实时的速度。使用相同的 VGG 可以达到 3 倍于 Faster RCNN 的速度：</p>
+<table>
+<thead>
+<tr>
+<th>检测算法</th>
+<th>主干网络</th>
+<th>训练集</th>
+<th>检测精度(mAP)</th>
+<th>检测速度(FPS)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Fast YOLO</td>
+<td>9层DarkNet</td>
+<td>VOC 2007 + 2012</td>
+<td>52.7</td>
+<td>155</td>
+</tr>
+<tr>
+<td>YOLO</td>
+<td>24层DarkNet</td>
+<td>VOC 2007 + 2012</td>
+<td>63.4</td>
+<td>45</td>
+</tr>
+<tr>
+<td>Faster RCNN VGG16</td>
+<td>VGG 16</td>
+<td>VOC 2007 + 2012</td>
+<td>73.2</td>
+<td>7</td>
+</tr>
+<tr>
+<td>YOLO VGG16</td>
+<td>VGG 16</td>
+<td>VOC 2007 + 2012</td>
+<td>66.4</td>
+<td>21</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<p>YOLO 的缺点：</p>
+<ul>
+<li>由于每个格子只能预测 1 个物体，因此对于重叠物体、尤其是大量重叠的小物体容易产生漏检；</li>
+<li>直接回归边界框难度大，回归误差较大。</li>
+</ul>
+<h2 id="YOLO-v2"><a href="#YOLO-v2" class="headerlink" title="YOLO v2"></a>YOLO v2</h2><p>针对 YOLO v1 的缺点，作者进行了模型改进，提出新的 DarkNet-19 结构的主干网络，加入 BN；同时，加入锚框，使用聚类方法设定锚框尺寸。</p>
+<h2 id="YOLO-v3"><a href="#YOLO-v3" class="headerlink" title="YOLO v3"></a>YOLO v3</h2><p>提出加入残差结构的主干网络 DarkNet-53；同时，加入类 FPN 结构，基于多尺度特征图预测。</p>
+<h2 id="SSD"><a href="#SSD" class="headerlink" title="SSD"></a>SSD</h2><p>主干网络采用 VGG 结构（只保留前 4 级卷积层） + 额外的卷积层，产生多尺度的特征图，每层特征图包含了不同尺度物体的信息。检测头是在每级特征图上，使用 $3\times 3$ 卷积层产生 $(c + 4)a$通道的预测图，共有 $a$ 个锚框，每个锚框预测 $c$ 个分类概率，$4$ 个边界框偏移量。</p>
+<p><img src="https://www.mdpi.com/animals/animals-09-00470/article_deploy/html/images/animals-09-00470-g005-550.jpg" alt="SSD 网络结构"></p>
+<p>训练时，首先产生正负样本：</p>
+<ol>
+<li>对于每个真值框，把它和交并比最大的锚框进行匹配；</li>
+<li>将剩余的每个锚框与交并比大于 0.5 的真值框进行匹配。</li>
+</ol>
+<p>一个真值框可匹配多个锚框</p>
+<p>然后，计算损失函数：</p>
+<ol>
+<li>匹配的锚框为正样本，计算分类和边界框回归损失；</li>
+<li>其余框为负样本，仅计算分类损失。</li>
+</ol>
+<p>上面锚框和真值框匹配容易造成正负样本不均衡问题，即锚框的数量远远大于真值框（数万 VS 数个），大量锚框为负样本。检测头中的分类器面临正负样本不均衡问题，容易使模型对背景预测产生偏向性。两阶段的区域提议会拒绝大量的负样本，<strong>在单阶段的过程中，因为没有该过程，需要专门处理样本不均衡问题</strong> ：</p>
+<ul>
+<li>YOLO 对正负样本的损失使用不同的权重；</li>
+<li>SSD 在训练过程中使用困难负样本挖掘（Hard Negative Mining）策略；</li>
+<li>（下面将会介绍的）RetinaNet 使用 Focal 损失函数。</li>
+</ul>
+<p>困难样本是分类器难以分类正确的样本，即损失比较大的样本。负样本是真值为背景的样本。困难负样本就是真值为背景，但分类器分类为前景，且置信度非常高的样本。这些样本可能是位于真值框附近，但 IOU 并不高的候选框，也可能是位于背景区域，但形状或纹理非常类似前景物体的候选框。</p>
+<p>困难负样本挖掘：</p>
+<ul>
+<li>为应对样本不均衡问题，SSD 在每次训练迭代中，仅选取分类损失最大的一部分负样本参与最终损失计算，正负样本比例保持在 1：3；</li>
+<li>困难负样本挖掘是一个动态的过程，分类器参数更新后，困难负样本也随之变化</li>
+</ul>
+<h2 id="RetinaNet"><a href="#RetinaNet" class="headerlink" title="RetinaNet"></a>RetinaNet</h2><p>针对样本不均衡问题，2017 年 提出的 RetinaNet 利用 Focal Loss 解决样本不均衡问题。Focal 损失函数可以让正、负、简单、困难样本产生相对均衡的损失，从而解决样本不均衡的问题。</p>
+<p>对于二分类交叉熵损失函数 CE Loss:<br>$$<br>CE(p, y) &#x3D; \begin{cases}<br>-\log(p), &amp; \text{if } y &#x3D; 1; \\<br>-\log(1-p), &amp; \text{otherwise}.<br>\end{cases}<br>$$<br>这里 $p$ 是模型输出的正类概率。为了简化公式，设 $p_t$ 为：<br>$$<br>p_t &#x3D; \begin{cases}<br>p, &amp; \text{if } y&#x3D;1;\\<br>1 - p, &amp; \text{otherwise}.<br>\end{cases}<br>$$<br>此时，损失函数可以改写成：<br>$$<br>CE(p_t) &#x3D; -\log{p_t}.<br>$$<br>Focal Loss 定义为：<br>$$<br>FL(p_t) &#x3D; -\alpha_t(1-p_t)^{\gamma}\log{p_t}.<br>$$</p>
+<p>对于正负样本不均衡，采用在损失函数中增加正样本的权重，减少负样本的权重的方法。具体地，引入加权因子 $\alpha \in [0, 1]$ 对正负样本的损失进行加权，定义：</p>
+
+$$
+\alpha_t = \begin{cases}
+\alpha, & \text{正样本}; \\
+1 - \alpha, & \text{负样本}.  
+\end{cases}
+$$
+
+
+<p>对于困难样本和简单样本不均衡，采用的方法是在交叉熵的基础上增加调节因子 $(1-p_t)^{\gamma}$ ，其中 $\gamma$ 是可调节的参数：</p>
+
+$$
+-(1-p_t)^{\gamma}\log p_t.
+$$
+
+<p>原理是：</p>
+<ul>
+<li>困难样本对应的 $p_t$ 接近 0， 调节因子对损失几乎没有影响；</li>
+<li>简单样本对应的 $p_t$ 大多落在 [0.6, 1.0] 区间，调节因子大幅降低损失；</li>
+<li>二者共同作用，简单样本的损失比重降低。</li>
+</ul>
+<p>综合起来，Focal 损失函数 $-\alpha_t(1-p_t)^{\gamma}\log p_t$ 通过 $\alpha$ 来调节正负样本的权重，$\gamma$ 来调节简单样本权重降低的速率。值得注意的是，不同数据集超参数 $\alpha, \gamma$ 是不同的，需要根据情况调整。</p>
+<p>基于 Focal  损失，单阶段检测模型 RetinaNet：</p>
+<ul>
+<li>使用 ResNet 作为主干网络，利用 FPN 参数多尺度特征图；</li>
+<li>在每级特征图上设置锚框</li>
+<li>有两个分支（分别为分类和边界框回归）、4 层卷积构成的检测头，针对每个锚框产生$K$类类别预测和 4 个边界框偏移量预测。</li>
+</ul>
+<h2 id="FCOS"><a href="#FCOS" class="headerlink" title="FCOS"></a>FCOS</h2><p>2019 年提出的 FCOS 既是单阶段目标检测算法又是一类<strong>无锚框</strong>目标检测算法。在基于锚框的目标检测算法（如 Faster RCNN, YOLO v2&#x2F;v3, RetianNet等）中，锚框引入了大量超参数（如锚框大小、锚框长宽比、匹配 IOU 阈值等），需要根据经验人工调整，同时锚框涉及较复杂的计算，如锚框与真值框的匹配等。相反地，无锚框算法尝试直接基于特征学习边界框的位置，不依赖锚框，从而降低模型复杂度。值得一提的是，虽然 YOLO v1 是无锚框算法，但由于提出时间较早，相关技术并不完善，性能不如基于锚框的算法。</p>
+<p>FCOS 通过主干网络与特征金字塔产生多尺度特征图，使用检测头在多级特征图上完成预测，对于每个位置，预测类别、边界框位置和中心度三组数值。它的基本规则是：</p>
+<ul>
+<li>如果特征图上某个位置（在原图上对应的位置）位于某个物体的边界框内部，则该位置的预测值应给出该物体的类别、边界框相对于该位置的偏移量、中心度（用于衡量预测框的优劣）；</li>
+<li>如果某个位置不在任何物体的边界框内部，分类为背景。</li>
+</ul>
+<p>对于重叠物体的处理：</p>
+<ul>
+<li>YOLO v1 直接回归边界框，但不能处理重叠物体；</li>
+<li>基于锚框的算法可以基于不同的锚框，产生不同目标物体的预测；</li>
+<li>FCOS 认为重叠物体尺度通常不同，有不同尺度的特征图给出对应目标物体的预测。小物体的预测基于低层次特征图给出；大物体的预测基于高层次特征图给出。但是，如果同层特征图中还有重叠，预测重叠物体中较小的那个。</li>
+</ul>
+<p>中心度（Center-ness）。FCOS 将所有框内的位置归类为正样本，这有助于产生更多正样本用于训练，但也会让分类器更容易在物体周围产生低质量预测框。因此，提出中心度的概念：</p>
+<ul>
+<li>每个位置额外预测一个中心度值，表示该预测框的位置优劣；</li>
+<li>推理阶段：$\text{置信度}=\sqrt{\text{中心度}\times \text{分类概率}}$.</li>
+</ul>
+<p>具体地，中心度定义为：</p>
+
+$$
+\text{centerness}^* = \sqrt{\frac{\min(l^*, r^*)}{\max(l^*, r^*)}\times \frac{\min(t^*, b^*)}{\max(t^*, b^*)}}
+$$
+
+<p>其中，$l^*, r^*, t^*, b^*$ 分别表示该特征点距离真实边界框的左、右、上、下在原图上的距离。</p>
+<p>中心度的几何意义是位置越靠近边界框中心越接近 1，越靠近边界越接近 0。</p>
+<p>FCOS 的损失函数：</p>
+<ol>
+<li>每个位置的分类损失 $L_{cls}(p_{x,y},c_{x,y}^*)$，使用 Focal loss;</li>
+<li>对于前景样本的边界框回归损失 $L_{reg}(t_{x,y},t_{x,y}^*)$，使用 IoU loss：$-\ln IoU$;</li>
+<li>对于前景样本的 Center-ness 值，因为介于 0-1 之间，使用 BCE loss.</li>
+</ol>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Vv411A7ZM">【OpenMMLab 公开课】目标检测与 MMDetection 上</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1bM4y1g7Hf">【OpenMMLab 公开课】目标检测与 MMDetection 下</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2023/03/05/ai-cv-object-detection/">https://xujinzh.github.io/2023/03/05/ai-cv-object-detection/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ai/">ai</a><a class="post-meta__tags" href="/tags/cv/">cv</a><a class="post-meta__tags" href="/tags/object-detection/">object detection</a></div><div class="post_share"><div class="social-share" data-image="/img/c11.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/03/22/hexo-display-maths-formula/" title="Hexo 框架下博文数学公式显示"><img class="cover" src="/img/c10.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Hexo 框架下博文数学公式显示</div></div></a></div><div class="next-post pull-right"><a href="/2023/03/04/linux-add-new-disk/" title="Linux 新增硬盘"><img class="cover" src="/img/c3.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux 新增硬盘</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/01/08/ai-Interlm-langchain-RAG/" title="基于 InternLM 和 LangChain 搭建私人知识库"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-08</div><div class="title">基于 InternLM 和 LangChain 搭建私人知识库</div></div></a></div><div><a href="/2024/01/03/ai-internlm-intro/" title="书生·浦语大模型介绍"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-03</div><div class="title">书生·浦语大模型介绍</div></div></a></div><div><a href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img class="cover" src="/img/c30.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-13</div><div class="title">基于 LMDeploy 的大模型量化和部署</div></div></a></div><div><a href="/2024/01/12/ai-internlm-xtuner-finetune/" title="XTuner 大模型训练"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-12</div><div class="title">XTuner 大模型训练</div></div></a></div><div><a href="/2024/01/06/ai-internlm-useage/" title="书生·浦语大模型使用"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-06</div><div class="title">书生·浦语大模型使用</div></div></a></div><div><a href="/2023/08/28/ai-stable-diffusion-webui/" title="用于文生图的 AI 模型 Stable Diffusion 的部署"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-28</div><div class="title">用于文生图的 AI 模型 Stable Diffusion 的部署</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95%E5%88%86%E7%B1%BB"><span class="toc-number">1.</span> <span class="toc-text">目标检测算法分类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%A4%E9%98%B6%E6%AE%B5%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">两阶段目标检测算法的基本思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RCNN"><span class="toc-number">2.1.</span> <span class="toc-text">RCNN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fast-RCNN"><span class="toc-number">2.2.</span> <span class="toc-text">Fast RCNN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Faster-RCNN"><span class="toc-number">2.3.</span> <span class="toc-text">Faster RCNN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mask-RCNN"><span class="toc-number">2.4.</span> <span class="toc-text">Mask RCNN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FPN"><span class="toc-number">2.5.</span> <span class="toc-text">FPN</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%95%E9%98%B6%E6%AE%B5%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">单阶段目标检测算法的基本思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#YOLO"><span class="toc-number">3.1.</span> <span class="toc-text">YOLO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#YOLO-v2"><span class="toc-number">3.2.</span> <span class="toc-text">YOLO v2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#YOLO-v3"><span class="toc-number">3.3.</span> <span class="toc-text">YOLO v3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSD"><span class="toc-number">3.4.</span> <span class="toc-text">SSD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RetinaNet"><span class="toc-number">3.5.</span> <span class="toc-text">RetinaNet</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FCOS"><span class="toc-number">3.6.</span> <span class="toc-text">FCOS</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">4.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'ddd54ee9b3e064405aac0be61f7b630b',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

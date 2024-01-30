@@ -1,0 +1,1035 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>PyTorch 迁移学习之模型结构修改和参数微调 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="PyTorch 迁移学习实例。使用 resnet 模型框架在 cifar10 数据集上进行模型迁移学习。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PyTorch 迁移学习之模型结构修改和参数微调">
+<meta property="og:url" content="https://xujinzh.github.io/2023/06/05/pytorch-fine-tuning-model/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="PyTorch 迁移学习实例。使用 resnet 模型框架在 cifar10 数据集上进行模型迁移学习。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c5.jpeg">
+<meta property="article:published_time" content="2023-06-05T14:05:17.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.104Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="pytorch">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c5.jpeg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2023/06/05/pytorch-fine-tuning-model/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PyTorch 迁移学习之模型结构修改和参数微调',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">PyTorch 迁移学习之模型结构修改和参数微调</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-06-05T14:05:17.000Z" title="发表于 2023-06-05 22:05:17">2023-06-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.104Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/python/">python</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">7.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>42分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="PyTorch 迁移学习之模型结构修改和参数微调"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>PyTorch 迁移学习实例。使用 resnet 模型框架在 cifar10 数据集上进行模型迁移学习。</p>
+<span id="more"></span>
+
+<h1 id="导入依赖包"><a href="#导入依赖包" class="headerlink" title="导入依赖包"></a>导入依赖包</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> copy</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">import</span> visdom</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader</span><br><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> datasets, models, transforms</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">torch.manual_seed(<span class="number">33</span>)</span><br><span class="line">device = torch.device(<span class="string">&quot;cuda&quot;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="数据读取与预处理操作"><a href="#数据读取与预处理操作" class="headerlink" title="数据读取与预处理操作"></a>数据读取与预处理操作</h1><p>数据结构数如下：</p>
+<p>$ tree -L 2 &#x2F;disk1&#x2F;datasets&#x2F;cifar10&#x2F;cifar10<br>&#x2F;disk1&#x2F;datasets&#x2F;cifar10&#x2F;cifar10<br>├── test<br>│   ├── airplane<br>│   ├── automobile<br>│   ├── bird<br>│   ├── cat<br>│   ├── deer<br>│   ├── dog<br>│   ├── frog<br>│   ├── horse<br>│   ├── ship<br>│   └── truck<br>└── train<br>    ├── airplane<br>    ├── automobile<br>    ├── bird<br>    ├── cat<br>    ├── deer<br>    ├── dog<br>    ├── frog<br>    ├── horse<br>    ├── ship<br>    └── truck</p>
+<p>22 directories, 0 files</p>
+<p>其中每个文件夹（如：&#x2F;disk1&#x2F;datasets&#x2F;cifar10&#x2F;cifar10&#x2F;train&#x2F;airplane）里面都是图片，类似：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">ls</span> -l /disk1/datasets/cifar10/cifar10/train/airplane | <span class="built_in">head</span> -n 5</span><br><span class="line">total 20000</span><br><span class="line">-rwxrwxr-x 1 jinzhongxu jinzhongxu 2063 3月   3 13:50 0001.png</span><br><span class="line">-rwxrwxr-x 1 jinzhongxu jinzhongxu 2169 3月   3 13:50 0002.png</span><br><span class="line">-rwxrwxr-x 1 jinzhongxu jinzhongxu 2237 3月   3 13:50 0003.png</span><br><span class="line">-rwxrwxr-x 1 jinzhongxu jinzhongxu 2104 3月   3 13:50 0004.png</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">data_dir = <span class="string">&quot;/workspace/disk1/datasets/cifar10/cifar10/&quot;</span></span><br><span class="line">datasets_category = [<span class="string">&quot;train&quot;</span>, <span class="string">&quot;test&quot;</span>]</span><br><span class="line">train_dir = os.path.join(data_dir, datasets_category[<span class="number">0</span>])</span><br><span class="line">test_dir = os.path.join(data_dir, datasets_category[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 数据输入模型前需要进行尺寸统一（都变为224x224），并进行一些数据增广和归一化</span></span><br><span class="line">mean_vec = [<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>]</span><br><span class="line">std_vec = [<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>]</span><br><span class="line"></span><br><span class="line">data_transforms = &#123;</span><br><span class="line">    datasets_category[<span class="number">0</span>]: transforms.Compose(</span><br><span class="line">        [</span><br><span class="line">            transforms.Resize(<span class="number">256</span>),</span><br><span class="line">            transforms.RandomRotation(<span class="number">45</span>),</span><br><span class="line">            transforms.Resize(<span class="number">224</span>),</span><br><span class="line">            transforms.RandomHorizontalFlip(p=<span class="number">0.5</span>),</span><br><span class="line">            transforms.RandomVerticalFlip(p=<span class="number">0.5</span>),</span><br><span class="line">            transforms.ColorJitter(</span><br><span class="line">                brightness=<span class="number">0.2</span>, contrast=<span class="number">0.1</span>, saturation=<span class="number">0.1</span>, hue=<span class="number">0.1</span></span><br><span class="line">            ),</span><br><span class="line">            transforms.RandomGrayscale(p=<span class="number">0.025</span>),</span><br><span class="line">            transforms.ToTensor(),</span><br><span class="line">            transforms.Normalize(mean_vec, std_vec),</span><br><span class="line">        ]</span><br><span class="line">    ),</span><br><span class="line">    datasets_category[<span class="number">1</span>]: transforms.Compose(</span><br><span class="line">        [</span><br><span class="line">            transforms.Resize(<span class="number">256</span>),</span><br><span class="line">            transforms.CenterCrop(<span class="number">224</span>),</span><br><span class="line">            transforms.ToTensor(),</span><br><span class="line">            transforms.Normalize(mean_vec, std_vec),</span><br><span class="line">        ]</span><br><span class="line">    ),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建数据迭代器</span></span><br><span class="line"></span><br><span class="line">batch_size = <span class="number">8</span></span><br><span class="line"></span><br><span class="line">image_datasets = &#123;</span><br><span class="line">    x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x])</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> datasets_category</span><br><span class="line">&#125;</span><br><span class="line">dataloaders = &#123;</span><br><span class="line">    x: DataLoader(image_datasets[x], batch_size=batch_size, shuffle=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> datasets_category</span><br><span class="line">&#125;</span><br><span class="line">dataset_sizes = &#123;x: <span class="built_in">len</span>(image_datasets[x]) <span class="keyword">for</span> x <span class="keyword">in</span> datasets_category&#125;</span><br><span class="line">class_names = image_datasets[datasets_category[<span class="number">0</span>]].classes</span><br><span class="line">class_names</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>[&#39;airplane&#39;,
+ &#39;automobile&#39;,
+ &#39;bird&#39;,
+ &#39;cat&#39;,
+ &#39;deer&#39;,
+ &#39;dog&#39;,
+ &#39;frog&#39;,
+ &#39;horse&#39;,
+ &#39;ship&#39;,
+ &#39;truck&#39;]
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">image_datasets</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>&#123;&#39;train&#39;: Dataset ImageFolder
+     Number of datapoints: 50000
+     Root location: /workspace/disk1/datasets/cifar10/cifar10/train
+     StandardTransform
+ Transform: Compose(
+                Resize(size=256, interpolation=bilinear, max_size=None, antialias=None)
+                RandomRotation(degrees=[-45.0, 45.0], interpolation=nearest, expand=False, fill=0)
+                Resize(size=224, interpolation=bilinear, max_size=None, antialias=None)
+                RandomHorizontalFlip(p=0.5)
+                RandomVerticalFlip(p=0.5)
+                ColorJitter(brightness=[0.8, 1.2], contrast=[0.9, 1.1], saturation=[0.9, 1.1], hue=[-0.1, 0.1])
+                RandomGrayscale(p=0.025)
+                ToTensor()
+                Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ),
+ &#39;test&#39;: Dataset ImageFolder
+     Number of datapoints: 10000
+     Root location: /workspace/disk1/datasets/cifar10/cifar10/test
+     StandardTransform
+ Transform: Compose(
+                Resize(size=256, interpolation=bilinear, max_size=None, antialias=None)
+                CenterCrop(size=(224, 224))
+                ToTensor()
+                Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            )&#125;
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把 tensor 图像转为 numpy 图像，需要从数据预处理操作中逆映射回来</span></span><br><span class="line"><span class="comment"># 注意 tensor 的数据需要转换成 numpy 格式，而且还需要还原回标准化的结果</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">im_convert</span>(<span class="params">tensor</span>):</span><br><span class="line">    image = tensor.to(<span class="string">&quot;cpu&quot;</span>).clone().detach()</span><br><span class="line">    image = image.numpy().squeeze()</span><br><span class="line">    image = image.transpose(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>)</span><br><span class="line">    image = image * np.array(mean_vec) + np.array(std_vec)</span><br><span class="line">    image = image.clip(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> image</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看一下测试数据集</span></span><br><span class="line">columns = <span class="number">4</span></span><br><span class="line">rows = <span class="number">2</span></span><br><span class="line">fig = plt.figure(figsize=(columns * <span class="number">5</span>, rows * <span class="number">5</span>))</span><br><span class="line"></span><br><span class="line">dataiter = <span class="built_in">iter</span>(dataloaders[<span class="string">&quot;test&quot;</span>])</span><br><span class="line">inputs, classes = dataiter.<span class="built_in">next</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> idx <span class="keyword">in</span> <span class="built_in">range</span>(columns * rows):</span><br><span class="line">    ax = fig.add_subplot(rows, columns, idx + <span class="number">1</span>, xticks=[], yticks=[])</span><br><span class="line">    ax.set_title(class_names[classes[idx]])</span><br><span class="line">    plt.imshow(im_convert(inputs[idx]))</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/pytorch/finetune/output_11_0.png?raw=true" alt="png"></p>
+<h1 id="模型加载和训练"><a href="#模型加载和训练" class="headerlink" title="模型加载和训练"></a>模型加载和训练</h1><h2 id="加载-models-中提供的模型，并且直接用训练好的权重当做初始化参数"><a href="#加载-models-中提供的模型，并且直接用训练好的权重当做初始化参数" class="headerlink" title="加载 models 中提供的模型，并且直接用训练好的权重当做初始化参数"></a>加载 models 中提供的模型，并且直接用训练好的权重当做初始化参数</h2><p>因为模型参数多，而且都是已经训练好的参数，在我们的小数据集上（cifar10），我们先使用 resnet 模型的卷积层部分作为特征提取器，改变最后的全连接层从1000类别改为我们这里的10类</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 resnet152 的模型结构</span></span><br><span class="line">models.resnet152()</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>ResNet(
+  (conv1): Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+  (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (maxpool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+  (layer1): Sequential(
+    (0): Bottleneck(
+      (conv1): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (downsample): Sequential(
+        (0): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): Bottleneck(
+      (conv1): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (2): Bottleneck(
+      (conv1): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+  )
+  (layer2): Sequential(
+    (0): Bottleneck(
+      (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (downsample): Sequential(
+        (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): Bottleneck(
+      (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (2): Bottleneck(
+      (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (3): Bottleneck(
+      (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (4): Bottleneck(
+      (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (5): Bottleneck(
+      (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (6): Bottleneck(
+      (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (7): Bottleneck(
+      (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+  )
+  (layer3): Sequential(
+    (0): Bottleneck(
+      (conv1): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (downsample): Sequential(
+        (0): Conv2d(512, 1024, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (2): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (3): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (4): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (5): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (6): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (7): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (8): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (9): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (10): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (11): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (12): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (13): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (14): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (15): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (16): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (17): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (18): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (19): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (20): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (21): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (22): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (23): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (24): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (25): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (26): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (27): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (28): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (29): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (30): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (31): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (32): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (33): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (34): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (35): Bottleneck(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+  )
+  (layer4): Sequential(
+    (0): Bottleneck(
+      (conv1): Conv2d(1024, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (downsample): Sequential(
+        (0): Conv2d(1024, 2048, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): Bottleneck(
+      (conv1): Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+    (2): Bottleneck(
+      (conv1): Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+    )
+  )
+  (avgpool): AdaptiveAvgPool2d(output_size=(1, 1))
+  (fc): Linear(in_features=2048, out_features=1000, bias=True)
+)
+</code></pre>
+<p>模型最后的全连接层的输出是1000类，需要更改为我们这里的10类</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">set_parameter_requires_grad</span>(<span class="params">model, feature_extract</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    如果只进行特征提取，则把模型的所有可学习参数‘冻结’，即参数不进行梯度传播</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> feature_extract:</span><br><span class="line">        <span class="keyword">for</span> param <span class="keyword">in</span> model.parameters():</span><br><span class="line">            param.requires_grad = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">initialize_model</span>(<span class="params">num_classes, feature_extract</span>):</span><br><span class="line">    model = models.resnet152(weights=models.ResNet152_Weights.IMAGENET1K_V1)</span><br><span class="line">    <span class="comment"># 是否冻结参数，如果固定，则只用来特征提取</span></span><br><span class="line">    set_parameter_requires_grad(model, feature_extract)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 更换最后的全连接层，改为10类输出</span></span><br><span class="line">    num_fc_infeature = model.fc.in_features</span><br><span class="line">    model.fc = nn.Sequential(</span><br><span class="line">        nn.Linear(num_fc_infeature, num_classes), nn.LogSoftmax(dim=<span class="number">1</span>)</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载预训练好的模型，并进行模型结构修改</span></span><br><span class="line">feature_extract = <span class="literal">True</span></span><br><span class="line">model = initialize_model(num_classes=<span class="number">10</span>, feature_extract=feature_extract)</span><br><span class="line">model = model.to(device)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 模型保存</span></span><br><span class="line">model_checkpoint = <span class="string">&quot;/workspace/disk1/datasets/models/checkpoint_feature_extract.pth&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否训练所有层</span></span><br><span class="line">params_to_update = model.parameters()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;需要训练的参数:&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> feature_extract:</span><br><span class="line">    params_to_update = []</span><br><span class="line">    <span class="keyword">for</span> name, param <span class="keyword">in</span> model.named_parameters():</span><br><span class="line">        <span class="keyword">if</span> param.requires_grad == <span class="literal">True</span>:</span><br><span class="line">            params_to_update.append(param)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;\t&quot;</span>, name)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">for</span> name, param <span class="keyword">in</span> model.named_parameters():</span><br><span class="line">        <span class="keyword">if</span> param.requires_grad == <span class="literal">True</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;\t&quot;</span>, name)</span><br></pre></td></tr></table></figure>
+
+<pre><code>需要训练的参数:
+     fc.0.weight
+     fc.0.bias
+</code></pre>
+<h2 id="优化器设置"><a href="#优化器设置" class="headerlink" title="优化器设置"></a>优化器设置</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">optimizer = optim.Adam(params_to_update, lr=<span class="number">1e-2</span>)</span><br><span class="line">scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=<span class="number">7</span>, gamma=<span class="number">0.1</span>)</span><br><span class="line">criterion = nn.NLLLoss()</span><br></pre></td></tr></table></figure>
+
+<h2 id="训练函数"><a href="#训练函数" class="headerlink" title="训练函数"></a>训练函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train_model</span>(<span class="params"></span></span><br><span class="line"><span class="params">    model,</span></span><br><span class="line"><span class="params">    dataloaders,</span></span><br><span class="line"><span class="params">    criterion,</span></span><br><span class="line"><span class="params">    optimizer,</span></span><br><span class="line"><span class="params">    num_epochs=<span class="number">25</span>,</span></span><br><span class="line"><span class="params">    model_checkpoint=<span class="literal">None</span>,</span></span><br><span class="line"><span class="params">    s=<span class="string">&quot;%Y年%m月%d日%H时%M分%S秒&quot;</span>,</span></span><br><span class="line"><span class="params"></span>):</span><br><span class="line"></span><br><span class="line">    best_acc = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    model.to(device)</span><br><span class="line"></span><br><span class="line">    train_acc_history = []</span><br><span class="line">    train_losses = []</span><br><span class="line">    test_acc_history = []</span><br><span class="line">    test_losses = []</span><br><span class="line"></span><br><span class="line">    LR = [optimizer.param_groups[<span class="number">0</span>][<span class="string">&quot;lr&quot;</span>]]</span><br><span class="line"></span><br><span class="line">    best_model_wts = copy.deepcopy(model.state_dict())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">        now = datetime.now().strftime(s)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;------<span class="subst">&#123;now&#125;</span>------&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;\033[1;34m Epoch <span class="subst">&#123;epoch+<span class="number">1</span>&#125;</span>/<span class="subst">&#123;num_epochs&#125;</span>\033[0m&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 先进行训练，然后再使用当前训练的模型进行测试</span></span><br><span class="line">        <span class="keyword">for</span> phase <span class="keyword">in</span> datasets_category:</span><br><span class="line">            <span class="keyword">if</span> phase == <span class="string">&quot;train&quot;</span>:</span><br><span class="line">                model.train()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                model.<span class="built_in">eval</span>()</span><br><span class="line"></span><br><span class="line">            running_loss = <span class="number">0.0</span></span><br><span class="line">            running_corrects = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 把所有数据都使用进行训练和测试</span></span><br><span class="line">            <span class="keyword">for</span> inputs, labels <span class="keyword">in</span> dataloaders[phase]:</span><br><span class="line">                inputs = inputs.to(device)</span><br><span class="line">                labels = labels.to(device)</span><br><span class="line">                <span class="comment"># 记得先把梯度清零</span></span><br><span class="line">                optimizer.zero_grad()</span><br><span class="line">                <span class="comment"># 只有训练的时候才计算和更新梯度</span></span><br><span class="line">                <span class="comment"># 如果是测试阶段，则不设置需要计算梯度，也不进行反向创博</span></span><br><span class="line">                <span class="keyword">with</span> torch.set_grad_enabled(phase == <span class="string">&quot;train&quot;</span>):  <span class="comment"># 训练阶段也进行正向传播计算</span></span><br><span class="line">                    outputs = model(inputs)</span><br><span class="line">                    loss = criterion(outputs, labels)</span><br><span class="line">                    _, preds = torch.<span class="built_in">max</span>(outputs, <span class="number">1</span>)  <span class="comment"># 返回大于1的值和索引，这里只需要索引信息</span></span><br><span class="line"></span><br><span class="line">                    <span class="comment"># 训练阶段更新权重，测试阶段则不进行反向传播</span></span><br><span class="line">                    <span class="keyword">if</span> phase == <span class="string">&quot;train&quot;</span>:</span><br><span class="line">                        loss.backward()</span><br><span class="line">                        optimizer.step()</span><br><span class="line">                <span class="comment"># 计算损失</span></span><br><span class="line">                running_loss += loss.item() * inputs.size(<span class="number">0</span>)</span><br><span class="line">                running_corrects += torch.<span class="built_in">sum</span>(preds == labels.data)</span><br><span class="line">            epoch_loss = running_loss / <span class="built_in">len</span>(dataloaders[phase].dataset)</span><br><span class="line">            epoch_acc = running_corrects.double() / <span class="built_in">len</span>(dataloaders[phase].dataset)</span><br><span class="line"></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;phase.upper()&#125;</span>阶段: Loss: <span class="subst">&#123;epoch_loss:<span class="number">.4</span>f&#125;</span>, Acc: <span class="subst">&#123;epoch_acc:<span class="number">.4</span>f&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 保存每一个 epoch 得到的最好模型</span></span><br><span class="line">            <span class="keyword">if</span> phase == <span class="string">&quot;test&quot;</span> <span class="keyword">and</span> epoch_acc &gt; best_acc:</span><br><span class="line">                best_acc = epoch_acc</span><br><span class="line">                best_model_wts = copy.deepcopy(model.state_dict())</span><br><span class="line">                state = &#123;</span><br><span class="line">                    <span class="string">&quot;state_dict&quot;</span>: model.state_dict(),</span><br><span class="line">                    <span class="string">&quot;best_acc&quot;</span>: best_acc,</span><br><span class="line">                    <span class="string">&quot;optimizer&quot;</span>: optimizer.state_dict(),</span><br><span class="line">                &#125;</span><br><span class="line">                torch.save(state, model_checkpoint)</span><br><span class="line">            <span class="keyword">if</span> phase == <span class="string">&quot;test&quot;</span>:</span><br><span class="line">                test_acc_history.append(epoch_acc)</span><br><span class="line">                test_losses.append(epoch_loss)</span><br><span class="line">                scheduler.step()</span><br><span class="line">            <span class="keyword">if</span> phase == <span class="string">&quot;train&quot;</span>:</span><br><span class="line">                train_acc_history.append(epoch_acc)</span><br><span class="line">                train_losses.append(epoch_loss)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;当前学习率: <span class="subst">&#123;optimizer.param_groups[<span class="number">0</span>][<span class="string">&#x27;lr&#x27;</span>]:<span class="number">.7</span>f&#125;</span>&quot;</span>)</span><br><span class="line">        LR.append(optimizer.param_groups[<span class="number">0</span>][<span class="string">&quot;lr&quot;</span>])</span><br><span class="line">        <span class="built_in">print</span>()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 训练完成</span></span><br><span class="line">    now = datetime.now().strftime(s)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;------<span class="subst">&#123;now&#125;</span>------&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;最好的测试准确率: <span class="subst">&#123;best_acc:<span class="number">.4</span>f&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 返回最好的模型</span></span><br><span class="line">    model.load_state_dict(best_model_wts)</span><br><span class="line">    <span class="keyword">return</span> model, test_acc_history, train_acc_history, test_losses, train_losses, LR</span><br></pre></td></tr></table></figure>
+
+<h2 id="开始训练"><a href="#开始训练" class="headerlink" title="开始训练"></a>开始训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">(</span><br><span class="line">    model,</span><br><span class="line">    test_acc_hisory,</span><br><span class="line">    train_acc_history,</span><br><span class="line">    test_losses,</span><br><span class="line">    train_losses,</span><br><span class="line">    LR,</span><br><span class="line">) = train_model(</span><br><span class="line">    model=model,</span><br><span class="line">    dataloaders=dataloaders,</span><br><span class="line">    criterion=criterion,</span><br><span class="line">    optimizer=optimizer,</span><br><span class="line">    num_epochs=<span class="number">15</span>,</span><br><span class="line">    model_checkpoint=model_checkpoint,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<pre><code>------2023年06月05日17时12分20秒------
+Epoch 1/15
+TRAIN阶段: Loss: 4.6413, Acc: 0.4249
+TEST阶段: Loss: 4.9549, Acc: 0.5378
+当前学习率: 0.0100000
+
+------2023年06月05日17时24分14秒------
+Epoch 2/15
+TRAIN阶段: Loss: 4.9278, Acc: 0.4649
+TEST阶段: Loss: 2.9911, Acc: 0.6334
+当前学习率: 0.0100000
+
+------2023年06月05日17时34分39秒------
+Epoch 3/15
+TRAIN阶段: Loss: 4.7944, Acc: 0.4789
+TEST阶段: Loss: 3.4556, Acc: 0.6442
+当前学习率: 0.0100000
+
+------2023年06月05日17时45分12秒------
+Epoch 4/15
+TRAIN阶段: Loss: 4.7750, Acc: 0.4890
+TEST阶段: Loss: 5.0836, Acc: 0.5772
+当前学习率: 0.0100000
+
+------2023年06月05日17时56分01秒------
+Epoch 5/15
+TRAIN阶段: Loss: 4.8759, Acc: 0.4900
+TEST阶段: Loss: 4.2777, Acc: 0.6108
+当前学习率: 0.0100000
+
+------2023年06月05日18时08分10秒------
+Epoch 6/15
+TRAIN阶段: Loss: 4.8280, Acc: 0.4937
+TEST阶段: Loss: 3.0909, Acc: 0.6849
+当前学习率: 0.0100000
+
+------2023年06月05日18时20分23秒------
+Epoch 7/15
+TRAIN阶段: Loss: 4.8318, Acc: 0.5012
+TEST阶段: Loss: 4.9785, Acc: 0.6307
+当前学习率: 0.0010000
+
+------2023年06月05日18时31分24秒------
+Epoch 8/15
+TRAIN阶段: Loss: 2.2879, Acc: 0.6079
+TEST阶段: Loss: 2.1652, Acc: 0.6859
+当前学习率: 0.0010000
+
+------2023年06月05日18时42分27秒------
+Epoch 9/15
+TRAIN阶段: Loss: 1.8844, Acc: 0.6099
+TEST阶段: Loss: 2.0901, Acc: 0.6730
+当前学习率: 0.0010000
+
+------2023年06月05日18时53分30秒------
+Epoch 10/15
+TRAIN阶段: Loss: 1.7233, Acc: 0.6075
+TEST阶段: Loss: 1.8010, Acc: 0.6860
+当前学习率: 0.0010000
+
+------2023年06月05日19时05分04秒------
+Epoch 11/15
+TRAIN阶段: Loss: 1.6624, Acc: 0.6058
+TEST阶段: Loss: 1.8861, Acc: 0.6624
+当前学习率: 0.0010000
+
+------2023年06月05日19时17分24秒------
+Epoch 12/15
+TRAIN阶段: Loss: 1.5827, Acc: 0.6117
+TEST阶段: Loss: 1.4209, Acc: 0.7079
+当前学习率: 0.0010000
+
+------2023年06月05日19时28分23秒------
+Epoch 13/15
+TRAIN阶段: Loss: 1.5545, Acc: 0.6092
+TEST阶段: Loss: 1.5516, Acc: 0.6871
+当前学习率: 0.0010000
+
+------2023年06月05日19时39分20秒------
+Epoch 14/15
+TRAIN阶段: Loss: 1.5086, Acc: 0.6097
+TEST阶段: Loss: 1.4248, Acc: 0.7011
+当前学习率: 0.0001000
+
+------2023年06月05日19时50分17秒------
+Epoch 15/15
+TRAIN阶段: Loss: 1.3143, Acc: 0.6375
+TEST阶段: Loss: 1.5627, Acc: 0.6778
+当前学习率: 0.0001000
+
+------2023年06月05日20时01分21秒------
+最好的测试准确率: 0.7079
+</code></pre>
+<h1 id="模型微调"><a href="#模型微调" class="headerlink" title="模型微调"></a>模型微调</h1><h2 id="再继续训练所有层"><a href="#再继续训练所有层" class="headerlink" title="再继续训练所有层"></a>再继续训练所有层</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">checkpoint = torch.load(model_checkpoint)</span><br><span class="line">model.load_state_dict(checkpoint[<span class="string">&quot;state_dict&quot;</span>])</span><br><span class="line">best_acc = checkpoint[<span class="string">&quot;best_acc&quot;</span>]</span><br><span class="line"><span class="comment"># optimizer.load_state_dict(checkpoint[&quot;optimizer&quot;])</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> param <span class="keyword">in</span> model.parameters():</span><br><span class="line">    param.requires_grad = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 再继续训练所有的参数，学习率调小一点</span></span><br><span class="line">optimizer = optim.Adam(model.parameters(), lr=<span class="number">1e-4</span>)</span><br><span class="line">scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=<span class="number">7</span>, gamma=<span class="number">0.1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 损失函数</span></span><br><span class="line">criterion = nn.NLLLoss()</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">model_checkpoint = <span class="string">&quot;/workspace/disk1/datasets/models/checkpoint_finetune.pth&quot;</span></span><br><span class="line">(</span><br><span class="line">    model,</span><br><span class="line">    test_acc_history,</span><br><span class="line">    train_acc_history,</span><br><span class="line">    test_losses,</span><br><span class="line">    train_losses,</span><br><span class="line">    LR,</span><br><span class="line">) = train_model(</span><br><span class="line">    model=model,</span><br><span class="line">    dataloaders=dataloaders,</span><br><span class="line">    criterion=criterion,</span><br><span class="line">    optimizer=optimizer,</span><br><span class="line">    num_epochs=<span class="number">5</span>,</span><br><span class="line">    model_checkpoint=model_checkpoint,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<pre><code>------2023年06月05日20时01分22秒------
+Epoch 1/5
+TRAIN阶段: Loss: 1.0279, Acc: 0.6982
+TEST阶段: Loss: 0.5613, Acc: 0.8083
+当前学习率: 0.0001000
+
+------2023年06月05日20时22分24秒------
+Epoch 2/5
+TRAIN阶段: Loss: 0.6405, Acc: 0.7801
+TEST阶段: Loss: 0.5291, Acc: 0.8192
+当前学习率: 0.0001000
+
+------2023年06月05日20时41分26秒------
+Epoch 3/5
+TRAIN阶段: Loss: 0.5285, Acc: 0.8168
+TEST阶段: Loss: 0.4542, Acc: 0.8421
+当前学习率: 0.0001000
+
+------2023年06月05日21时00分25秒------
+Epoch 4/5
+TRAIN阶段: Loss: 0.4517, Acc: 0.8451
+TEST阶段: Loss: 0.4239, Acc: 0.8558
+当前学习率: 0.0001000
+
+------2023年06月05日21时21分40秒------
+Epoch 5/5
+TRAIN阶段: Loss: 0.4008, Acc: 0.8616
+TEST阶段: Loss: 0.3450, Acc: 0.8820
+当前学习率: 0.0001000
+
+------2023年06月05日21时40分49秒------
+最好的测试准确率: 0.8820
+</code></pre>
+<h1 id="模型应用"><a href="#模型应用" class="headerlink" title="模型应用"></a>模型应用</h1><h2 id="加载训练好的模型"><a href="#加载训练好的模型" class="headerlink" title="加载训练好的模型"></a>加载训练好的模型</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">model = initialize_model(num_classes=<span class="number">10</span>, feature_extract=feature_extract)</span><br><span class="line"></span><br><span class="line">model = model.to(device)</span><br><span class="line">checkpoint = torch.load(model_checkpoint)</span><br><span class="line">best_acc = checkpoint[<span class="string">&quot;best_acc&quot;</span>]</span><br><span class="line">model.load_state_dict(checkpoint[<span class="string">&quot;state_dict&quot;</span>])</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>&lt;All keys matched successfully&gt;
+</code></pre>
+<h2 id="测试数据预处理"><a href="#测试数据预处理" class="headerlink" title="测试数据预处理"></a>测试数据预处理</h2><ul>
+<li>测试数据处理方法需要跟训练时一致</li>
+<li>crop 操作的目的是保证输入的大小一致</li>
+<li>标注化操作是必须的，使用与训练数据相同的mean、std，训练数据是在0-1归一化的，测试数据也需要归一化</li>
+<li>pytorch 中颜色通道是第一个维度，需要转换</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">preprocess_image</span>(<span class="params">image_path</span>):</span><br><span class="line">    img = Image.<span class="built_in">open</span>(image_path)</span><br><span class="line">    <span class="keyword">if</span> img.size[<span class="number">0</span>] &gt; img.size[<span class="number">1</span>]:</span><br><span class="line">        img.thumbnail((<span class="number">10000</span>, <span class="number">256</span>))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        img.thumbnail((<span class="number">256</span>, <span class="number">10000</span>))</span><br><span class="line">    <span class="comment"># crop</span></span><br><span class="line">    left_margin = (img.width - <span class="number">224</span>) / <span class="number">2</span></span><br><span class="line">    bottom_margin = (img.height - <span class="number">224</span>) / <span class="number">2</span></span><br><span class="line">    right_margin = left_margin + <span class="number">224</span></span><br><span class="line">    top_margin = bottom_margin + <span class="number">224</span></span><br><span class="line">    img = img.crop((left_margin, bottom_margin, right_margin, top_margin))</span><br><span class="line"></span><br><span class="line">    img = np.array(img) / <span class="number">255</span></span><br><span class="line">    mean = np.array(mean_vec)</span><br><span class="line">    std = np.array(std_vec)</span><br><span class="line">    img = (img - mean) / std</span><br><span class="line"></span><br><span class="line">    img = img.transpose((<span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">return</span> img</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">imshow</span>(<span class="params">image, ax=<span class="literal">None</span>, title=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="keyword">if</span> ax <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        fig, ax = plt.subplots()</span><br><span class="line">    image = np.array(image).transpose((<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">    mean = np.array(mean_vec)</span><br><span class="line">    std = np.array(std_vec)</span><br><span class="line">    image = std * image + mean</span><br><span class="line">    image = np.clip(image, <span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    ax.imshow(image)</span><br><span class="line">    ax.set_title(title)</span><br><span class="line">    <span class="keyword">return</span> ax</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">image_path = <span class="string">&quot;/workspace/disk1/datasets/cifar10/cifar10/train/airplane/0001.png&quot;</span></span><br><span class="line">img = preprocess_image(image_path)</span><br><span class="line">imshow(img)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>&lt;AxesSubplot:&gt;
+</code></pre>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/pytorch/finetune/output_33_1.png?raw=true" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">img.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(3, 224, 224)
+</code></pre>
+<h2 id="图像分类应用"><a href="#图像分类应用" class="headerlink" title="图像分类应用"></a>图像分类应用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 得到一个 batch 的测试数据</span></span><br><span class="line">dataiter = <span class="built_in">iter</span>(dataloaders[<span class="string">&quot;test&quot;</span>])</span><br><span class="line">images, labels = dataiter.<span class="built_in">next</span>()</span><br><span class="line"></span><br><span class="line">model.<span class="built_in">eval</span>()</span><br><span class="line">output = model(images.to(device))</span><br><span class="line"></span><br><span class="line"><span class="comment"># output 表示对一个 batch 中每一个数据得到其属于各个类别的可能性</span></span><br><span class="line">output.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>torch.Size([8, 10])
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">_, preds_tensor = torch.<span class="built_in">max</span>(output, <span class="number">1</span>)</span><br><span class="line">preds = (</span><br><span class="line">    np.squeeze(preds_tensor.numpy())</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> torch.cuda.is_available()</span><br><span class="line">    <span class="keyword">else</span> np.squeeze(preds_tensor.cpu().numpy())</span><br><span class="line">)</span><br><span class="line">preds</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>array([7, 5, 0, 3, 2, 9, 5, 9])
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">columns = <span class="number">4</span></span><br><span class="line">rows = <span class="number">2</span></span><br><span class="line">fig = plt.figure(figsize=(columns * <span class="number">5</span>, rows * <span class="number">5</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 图片 title 中为 &quot;预测值(ground truth)&quot;，当预测错误时，使用红色标识</span></span><br><span class="line"><span class="keyword">for</span> idx <span class="keyword">in</span> <span class="built_in">range</span>(columns * rows):</span><br><span class="line">    ax = fig.add_subplot(rows, columns, idx + <span class="number">1</span>, xticks=[], yticks=[])</span><br><span class="line">    plt.imshow(im_convert(images[idx]))</span><br><span class="line">    ax.set_title(</span><br><span class="line">        <span class="string">f&quot;<span class="subst">&#123;class_names[preds[idx]]&#125;</span> (<span class="subst">&#123;class_names[labels[idx].item()]&#125;</span>)&quot;</span>,</span><br><span class="line">        color=<span class="string">&quot;green&quot;</span> <span class="keyword">if</span> preds[idx] == labels[idx].item() <span class="keyword">else</span> <span class="string">&quot;red&quot;</span>,</span><br><span class="line">    )</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/pytorch/finetune/output_38_0.png?raw=true" alt="png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2023/06/05/pytorch-fine-tuning-model/">https://xujinzh.github.io/2023/06/05/pytorch-fine-tuning-model/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a><a class="post-meta__tags" href="/tags/pytorch/">pytorch</a></div><div class="post_share"><div class="social-share" data-image="/img/c5.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/06/30/linux-view-compressed-file/" title="Linux 查看压缩文件内容"><img class="cover" src="/img/c8.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Linux 查看压缩文件内容</div></div></a></div><div class="next-post pull-right"><a href="/2023/06/05/pytorch-model-save-and-retrain/" title="PyTorch 模型保存与再训练"><img class="cover" src="/img/c12.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">PyTorch 模型保存与再训练</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/08/02/cnn-flops/" title="CNN 模型计算力 FLOPs"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-02</div><div class="title">CNN 模型计算力 FLOPs</div></div></a></div><div><a href="/2023/02/24/code-mmclassification/" title="MMClassification 图像分类使用"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-24</div><div class="title">MMClassification 图像分类使用</div></div></a></div><div><a href="/2023/02/26/code-mmdetection/" title="MMDetection 目标检测使用"><img class="cover" src="/img/c20.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-26</div><div class="title">MMDetection 目标检测使用</div></div></a></div><div><a href="/2022/04/01/pytorch-cuda-visible-devices/" title="pytorch 中设置使用指定的 GPU"><img class="cover" src="/img/c15.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-01</div><div class="title">pytorch 中设置使用指定的 GPU</div></div></a></div><div><a href="/2023/02/01/pytorch-distributed/" title="pytorch 分布式训练"><img class="cover" src="/img/c18.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-01</div><div class="title">pytorch 分布式训练</div></div></a></div><div><a href="/2021/10/12/pytorch-dataset-dataloader/" title="PyTorch 中 Dataset 和 DataLoader 类的使用方法"><img class="cover" src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-12</div><div class="title">PyTorch 中 Dataset 和 DataLoader 类的使用方法</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="toc-number">1.</span> <span class="toc-text">导入依赖包</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E4%B8%8E%E9%A2%84%E5%A4%84%E7%90%86%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">数据读取与预处理操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%8A%A0%E8%BD%BD%E5%92%8C%E8%AE%AD%E7%BB%83"><span class="toc-number">3.</span> <span class="toc-text">模型加载和训练</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD-models-%E4%B8%AD%E6%8F%90%E4%BE%9B%E7%9A%84%E6%A8%A1%E5%9E%8B%EF%BC%8C%E5%B9%B6%E4%B8%94%E7%9B%B4%E6%8E%A5%E7%94%A8%E8%AE%AD%E7%BB%83%E5%A5%BD%E7%9A%84%E6%9D%83%E9%87%8D%E5%BD%93%E5%81%9A%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8F%82%E6%95%B0"><span class="toc-number">3.1.</span> <span class="toc-text">加载 models 中提供的模型，并且直接用训练好的权重当做初始化参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8%E8%AE%BE%E7%BD%AE"><span class="toc-number">3.2.</span> <span class="toc-text">优化器设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">训练函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E8%AE%AD%E7%BB%83"><span class="toc-number">3.4.</span> <span class="toc-text">开始训练</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83"><span class="toc-number">4.</span> <span class="toc-text">模型微调</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%8D%E7%BB%A7%E7%BB%AD%E8%AE%AD%E7%BB%83%E6%89%80%E6%9C%89%E5%B1%82"><span class="toc-number">4.1.</span> <span class="toc-text">再继续训练所有层</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8"><span class="toc-number">5.</span> <span class="toc-text">模型应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E8%AE%AD%E7%BB%83%E5%A5%BD%E7%9A%84%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.1.</span> <span class="toc-text">加载训练好的模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">5.2.</span> <span class="toc-text">测试数据预处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB%E5%BA%94%E7%94%A8"><span class="toc-number">5.3.</span> <span class="toc-text">图像分类应用</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'ab39faa403cb6c5f0007307fd61c2520',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

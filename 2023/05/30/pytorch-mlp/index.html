@@ -1,0 +1,768 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>PyTorch 多层感知机 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="PyTorch 多层感知机，数据集来自：nivedithabhandary&#x2F;HR-Analytics">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PyTorch 多层感知机">
+<meta property="og:url" content="https://xujinzh.github.io/2023/05/30/pytorch-mlp/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="PyTorch 多层感知机，数据集来自：nivedithabhandary&#x2F;HR-Analytics">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c24.jpg">
+<meta property="article:published_time" content="2023-05-30T09:01:17.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.104Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="pytorch">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c24.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2023/05/30/pytorch-mlp/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PyTorch 多层感知机',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">PyTorch 多层感知机</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-05-30T09:01:17.000Z" title="发表于 2023-05-30 17:01:17">2023-05-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.104Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/python/">python</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="PyTorch 多层感知机"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>PyTorch 多层感知机，数据集来自：<a target="_blank" rel="noopener" href="https://github.com/nivedithabhandary/HR-Analytics/blob/master/HR_comma_sep.csv">nivedithabhandary&#x2F;HR-Analytics</a></p>
+<span id="more"></span>
+
+<h1 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> TensorDataset</span><br><span class="line"></span><br><span class="line">torch.manual_seed(<span class="number">33</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>&lt;torch._C.Generator at 0x7fabe84e8e90&gt;
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path = <span class="string">&quot;/workspace/disk1/datasets/scalar/HR_comma_sep.csv&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data = pd.read_csv(path)</span><br><span class="line">data.head(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;
+</code></pre>
+<p></style></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>satisfaction_level</th>
+      <th>last_evaluation</th>
+      <th>number_project</th>
+      <th>average_montly_hours</th>
+      <th>time_spend_company</th>
+      <th>Work_accident</th>
+      <th>left</th>
+      <th>promotion_last_5years</th>
+      <th>sales</th>
+      <th>salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.38</td>
+      <td>0.53</td>
+      <td>2</td>
+      <td>157</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>sales</td>
+      <td>low</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.80</td>
+      <td>0.86</td>
+      <td>5</td>
+      <td>262</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>sales</td>
+      <td>medium</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.11</td>
+      <td>0.88</td>
+      <td>7</td>
+      <td>272</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>sales</td>
+      <td>medium</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data = data.rename(columns=&#123;<span class="string">&quot;sales&quot;</span>: <span class="string">&quot;part&quot;</span>&#125;)</span><br><span class="line"><span class="comment"># data.head(3)</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.info()</span><br></pre></td></tr></table></figure>
+
+<pre><code>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 14999 entries, 0 to 14998
+Data columns (total 10 columns):
+ #   Column                 Non-Null Count  Dtype  
+---  ------                 --------------  -----  
+ 0   satisfaction_level     14999 non-null  float64
+ 1   last_evaluation        14999 non-null  float64
+ 2   number_project         14999 non-null  int64  
+ 3   average_montly_hours   14999 non-null  int64  
+ 4   time_spend_company     14999 non-null  int64  
+ 5   Work_accident          14999 non-null  int64  
+ 6   left                   14999 non-null  int64  
+ 7   promotion_last_5years  14999 non-null  int64  
+ 8   part                   14999 non-null  object 
+ 9   salary                 14999 non-null  object 
+dtypes: float64(2), int64(6), object(2)
+memory usage: 1.1+ MB
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.part.unique()</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>array([&#39;sales&#39;, &#39;accounting&#39;, &#39;hr&#39;, &#39;technical&#39;, &#39;support&#39;, &#39;management&#39;,
+       &#39;IT&#39;, &#39;product_mng&#39;, &#39;marketing&#39;, &#39;RandD&#39;], dtype=object)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.salary.unique()</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>array([&#39;low&#39;, &#39;medium&#39;, &#39;high&#39;], dtype=object)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.groupby([<span class="string">&quot;salary&quot;</span>, <span class="string">&quot;part&quot;</span>]).size()</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>salary  part       
+high    IT               83
+        RandD            51
+        accounting       74
+        hr               45
+        management      225
+        marketing        80
+        product_mng      68
+        sales           269
+        support         141
+        technical       201
+low     IT              609
+        RandD           364
+        accounting      358
+        hr              335
+        management      180
+        marketing       402
+        product_mng     451
+        sales          2099
+        support        1146
+        technical      1372
+medium  IT              535
+        RandD           372
+        accounting      335
+        hr              359
+        management      225
+        marketing       376
+        product_mng     383
+        sales          1772
+        support         942
+        technical      1147
+dtype: int64
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">data = data.join(pd.get_dummies(data.salary))</span><br><span class="line"><span class="keyword">del</span> data[<span class="string">&quot;salary&quot;</span>]</span><br><span class="line">data = data.join(pd.get_dummies(data.part))</span><br><span class="line"><span class="keyword">del</span> data[<span class="string">&quot;part&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.head(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;
+</code></pre>
+<p></style></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>satisfaction_level</th>
+      <th>last_evaluation</th>
+      <th>number_project</th>
+      <th>average_montly_hours</th>
+      <th>time_spend_company</th>
+      <th>Work_accident</th>
+      <th>left</th>
+      <th>promotion_last_5years</th>
+      <th>high</th>
+      <th>low</th>
+      <th>...</th>
+      <th>IT</th>
+      <th>RandD</th>
+      <th>accounting</th>
+      <th>hr</th>
+      <th>management</th>
+      <th>marketing</th>
+      <th>product_mng</th>
+      <th>sales</th>
+      <th>support</th>
+      <th>technical</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.38</td>
+      <td>0.53</td>
+      <td>2</td>
+      <td>157</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.80</td>
+      <td>0.86</td>
+      <td>5</td>
+      <td>262</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.11</td>
+      <td>0.88</td>
+      <td>7</td>
+      <td>272</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 21 columns</p>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.columns</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>Index([&#39;satisfaction_level&#39;, &#39;last_evaluation&#39;, &#39;number_project&#39;,
+       &#39;average_montly_hours&#39;, &#39;time_spend_company&#39;, &#39;Work_accident&#39;, &#39;left&#39;,
+       &#39;promotion_last_5years&#39;, &#39;high&#39;, &#39;low&#39;, &#39;medium&#39;, &#39;IT&#39;, &#39;RandD&#39;,
+       &#39;accounting&#39;, &#39;hr&#39;, &#39;management&#39;, &#39;marketing&#39;, &#39;product_mng&#39;, &#39;sales&#39;,
+       &#39;support&#39;, &#39;technical&#39;],
+      dtype=&#39;object&#39;)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(14999, 21)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.left.unique()</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>array([1, 0])
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 数据不均衡</span></span><br><span class="line">data.left.value_counts()</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>0    11428
+1     3571
+Name: left, dtype: int64
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.left.value_counts() / <span class="built_in">len</span>(data)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>0    0.761917
+1    0.238083
+Name: left, dtype: float64
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">device = torch.device(<span class="string">&quot;cuda&quot;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Y_data = data.left.values.reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">X_data = data[[c <span class="keyword">for</span> c <span class="keyword">in</span> data.columns <span class="keyword">if</span> c != <span class="string">&quot;left&quot;</span>]].values</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 训练集和验证集划分</span></span><br><span class="line">X_train, X_test, Y_train, Y_test = train_test_split(</span><br><span class="line">    X_data, Y_data, train_size=<span class="number">0.8</span>, random_state=<span class="number">33</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">X_train_ = torch.from_numpy(X_train).<span class="built_in">type</span>(torch.<span class="built_in">float</span>).to(device)</span><br><span class="line">Y_train_ = torch.from_numpy(Y_train).<span class="built_in">type</span>(torch.<span class="built_in">float</span>).to(device)</span><br><span class="line">X_test_ = torch.from_numpy(X_test).<span class="built_in">type</span>(torch.<span class="built_in">float</span>).to(device)</span><br><span class="line">Y_test_ = torch.from_numpy(Y_test).<span class="built_in">type</span>(torch.<span class="built_in">float</span>).to(device)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HRdataset = TensorDataset(X_train_, Y_train_)</span><br></pre></td></tr></table></figure>
+
+<h1 id="创建模型"><a href="#创建模型" class="headerlink" title="创建模型"></a>创建模型</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> visdom</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn, optim</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MLPModel</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>(MLPModel, self).__init__()</span><br><span class="line">        self.linear_1 = nn.Linear(<span class="number">20</span>, <span class="number">64</span>)</span><br><span class="line">        self.linear_2 = nn.Linear(<span class="number">64</span>, <span class="number">64</span>)</span><br><span class="line">        self.linear_3 = nn.Linear(<span class="number">64</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, inputs</span>):</span><br><span class="line">        outputs = F.relu(self.linear_1(inputs))</span><br><span class="line">        outputs = F.relu(self.linear_2(outputs))</span><br><span class="line">        outputs = torch.sigmoid(self.linear_3(outputs))</span><br><span class="line">        <span class="keyword">return</span> outputs</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">model = MLPModel()</span><br><span class="line">model.to(device)</span><br><span class="line">model</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>MLPModel(
+  (linear_1): Linear(in_features=20, out_features=64, bias=True)
+  (linear_2): Linear(in_features=64, out_features=64, bias=True)
+  (linear_3): Linear(in_features=64, out_features=1, bias=True)
+)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">optimizer = optim.Adam(model.parameters(), lr=<span class="number">0.0001</span>)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loss_fn = nn.BCELoss()</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 pytorch 可视化模块 visdom 可视化训练损失变化情况</span></span><br><span class="line">viz = visdom.Visdom(</span><br><span class="line">    server=<span class="string">&quot;http://localhost&quot;</span>,</span><br><span class="line">    port=<span class="number">8097</span>,</span><br><span class="line">    base_url=<span class="string">&quot;/visdom&quot;</span>,</span><br><span class="line">    username=<span class="string">&quot;jinzhongxu&quot;</span>,</span><br><span class="line">    password=<span class="string">&quot;123123&quot;</span>,</span><br><span class="line">)</span><br><span class="line">win = <span class="string">&quot;Multilayer Perceptron loss&quot;</span></span><br><span class="line">opts = <span class="built_in">dict</span>(</span><br><span class="line">    title=<span class="string">&quot;train_losses&quot;</span>,</span><br><span class="line">    xlabel=<span class="string">&quot;epoch&quot;</span>,</span><br><span class="line">    ylabel=<span class="string">&quot;loss&quot;</span>,</span><br><span class="line">    markers=<span class="literal">True</span>,</span><br><span class="line">    legend=[</span><br><span class="line">        <span class="string">&quot;loss&quot;</span>,</span><br><span class="line">    ],</span><br><span class="line">)</span><br><span class="line">viz.line(</span><br><span class="line">    [</span><br><span class="line">        [</span><br><span class="line">            <span class="number">0.0</span>,</span><br><span class="line">        ]</span><br><span class="line">    ],</span><br><span class="line">    [<span class="number">0.0</span>],</span><br><span class="line">    win=win,</span><br><span class="line">    opts=opts,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<pre><code>Setting up a new session...
+
+
+
+
+
+&#39;Multilayer Perceptron loss&#39;
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">batch = <span class="number">64</span></span><br><span class="line">epochs = <span class="number">1000</span></span><br><span class="line"></span><br><span class="line">HRdataloader = DataLoader(HRdataset, batch_size=batch, shuffle=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(epochs):</span><br><span class="line">    <span class="keyword">for</span> x, y <span class="keyword">in</span> HRdataloader:</span><br><span class="line">        y_pred = model(x)</span><br><span class="line">        loss = loss_fn(y_pred, y)</span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line">    <span class="keyword">if</span> epoch % <span class="number">10</span> == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">            val_loss = loss_fn(model(X_test_), Y_test_).data.item()</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;epoch: <span class="subst">&#123;epoch&#125;</span>, loss:<span class="subst">&#123;val_loss&#125;</span>&quot;</span>)</span><br><span class="line">            viz.line(</span><br><span class="line">                [</span><br><span class="line">                    [</span><br><span class="line">                        val_loss,</span><br><span class="line">                    ]</span><br><span class="line">                ],</span><br><span class="line">                [epoch],</span><br><span class="line">                win=win,</span><br><span class="line">                update=<span class="string">&quot;append&quot;</span>,</span><br><span class="line">            )</span><br></pre></td></tr></table></figure>
+
+<pre><code>epoch: 0, loss:0.5702827572822571
+epoch: 10, loss:0.5380138754844666
+epoch: 20, loss:0.48325881361961365
+epoch: 30, loss:0.43280646204948425
+epoch: 40, loss:0.40077832341194153
+epoch: 50, loss:0.3730575442314148
+epoch: 60, loss:0.3515182137489319
+epoch: 70, loss:0.333321213722229
+epoch: 80, loss:0.3213912844657898
+epoch: 90, loss:0.3078565299510956
+epoch: 100, loss:0.3066919445991516
+epoch: 110, loss:0.28822797536849976
+epoch: 120, loss:0.2822719216346741
+epoch: 130, loss:0.2698499262332916
+epoch: 140, loss:0.2673708200454712
+epoch: 150, loss:0.2626533508300781
+epoch: 160, loss:0.25525325536727905
+epoch: 170, loss:0.25129374861717224
+epoch: 180, loss:0.2505483329296112
+epoch: 190, loss:0.23713809251785278
+epoch: 200, loss:0.24216558039188385
+epoch: 210, loss:0.22742848098278046
+epoch: 220, loss:0.2271704226732254
+epoch: 230, loss:0.2252519577741623
+epoch: 240, loss:0.2193305790424347
+epoch: 250, loss:0.21628950536251068
+epoch: 260, loss:0.2177349030971527
+epoch: 270, loss:0.2127998024225235
+epoch: 280, loss:0.21056963503360748
+epoch: 290, loss:0.2106262445449829
+epoch: 300, loss:0.2119056135416031
+epoch: 310, loss:0.21744157373905182
+epoch: 320, loss:0.2134646326303482
+epoch: 330, loss:0.20614351332187653
+epoch: 340, loss:0.21047110855579376
+epoch: 350, loss:0.20926110446453094
+epoch: 360, loss:0.21647755801677704
+epoch: 370, loss:0.21862877905368805
+epoch: 380, loss:0.20591312646865845
+epoch: 390, loss:0.2010645568370819
+epoch: 400, loss:0.2050144225358963
+epoch: 410, loss:0.1988362967967987
+epoch: 420, loss:0.2004001885652542
+epoch: 430, loss:0.1973736584186554
+epoch: 440, loss:0.22496183216571808
+epoch: 450, loss:0.19971159100532532
+epoch: 460, loss:0.19692614674568176
+epoch: 470, loss:0.19598537683486938
+epoch: 480, loss:0.1948203295469284
+epoch: 490, loss:0.19280420243740082
+epoch: 500, loss:0.19459198415279388
+epoch: 510, loss:0.19615624845027924
+epoch: 520, loss:0.19460928440093994
+epoch: 530, loss:0.19126252830028534
+epoch: 540, loss:0.1938866376876831
+epoch: 550, loss:0.19190427660942078
+epoch: 560, loss:0.18747270107269287
+epoch: 570, loss:0.18757325410842896
+epoch: 580, loss:0.1988757699728012
+epoch: 590, loss:0.19326147437095642
+epoch: 600, loss:0.20158174633979797
+epoch: 610, loss:0.18407107889652252
+epoch: 620, loss:0.1833522766828537
+epoch: 630, loss:0.18116755783557892
+epoch: 640, loss:0.1835246980190277
+epoch: 650, loss:0.18026278913021088
+epoch: 660, loss:0.1771889179944992
+epoch: 670, loss:0.1763589233160019
+epoch: 680, loss:0.17852289974689484
+epoch: 690, loss:0.17640434205532074
+epoch: 700, loss:0.17527474462985992
+epoch: 710, loss:0.18816079199314117
+epoch: 720, loss:0.17597466707229614
+epoch: 730, loss:0.17061764001846313
+epoch: 740, loss:0.1716785877943039
+epoch: 750, loss:0.16623708605766296
+epoch: 760, loss:0.16821976006031036
+epoch: 770, loss:0.163313090801239
+epoch: 780, loss:0.1642996072769165
+epoch: 790, loss:0.1681404858827591
+epoch: 800, loss:0.16040602326393127
+epoch: 810, loss:0.1622639298439026
+epoch: 820, loss:0.16376478970050812
+epoch: 830, loss:0.15491259098052979
+epoch: 840, loss:0.15919749438762665
+epoch: 850, loss:0.15590602159500122
+epoch: 860, loss:0.15480470657348633
+epoch: 870, loss:0.1528528481721878
+epoch: 880, loss:0.1514061689376831
+epoch: 890, loss:0.15681587159633636
+epoch: 900, loss:0.1545121818780899
+epoch: 910, loss:0.14895710349082947
+epoch: 920, loss:0.14539872109889984
+epoch: 930, loss:0.1600637137889862
+epoch: 940, loss:0.1435800939798355
+epoch: 950, loss:0.14283594489097595
+epoch: 960, loss:0.14213287830352783
+epoch: 970, loss:0.1424899399280548
+epoch: 980, loss:0.14058111608028412
+epoch: 990, loss:0.1395450234413147
+</code></pre>
+<p>训练模型在验证集上的损失<br><img src="https://github.com/xujinzh/archive/blob/master/images/pytorch/mlp/mlp-val-loss.png?raw=true" alt="png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2023/05/30/pytorch-mlp/">https://xujinzh.github.io/2023/05/30/pytorch-mlp/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a><a class="post-meta__tags" href="/tags/pytorch/">pytorch</a></div><div class="post_share"><div class="social-share" data-image="/img/c24.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/05/31/pytorch-mnist-classify/" title="PyTorch 进行 MNIST 图片分类"><img class="cover" src="/img/c25.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">PyTorch 进行 MNIST 图片分类</div></div></a></div><div class="next-post pull-right"><a href="/2023/05/30/pytorch-logistic-regression/" title="PyTorch 逻辑回归"><img class="cover" src="/img/c27.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">PyTorch 逻辑回归</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/08/02/cnn-flops/" title="CNN 模型计算力 FLOPs"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-02</div><div class="title">CNN 模型计算力 FLOPs</div></div></a></div><div><a href="/2023/02/24/code-mmclassification/" title="MMClassification 图像分类使用"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-24</div><div class="title">MMClassification 图像分类使用</div></div></a></div><div><a href="/2023/02/26/code-mmdetection/" title="MMDetection 目标检测使用"><img class="cover" src="/img/c20.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-26</div><div class="title">MMDetection 目标检测使用</div></div></a></div><div><a href="/2022/04/01/pytorch-cuda-visible-devices/" title="pytorch 中设置使用指定的 GPU"><img class="cover" src="/img/c15.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-01</div><div class="title">pytorch 中设置使用指定的 GPU</div></div></a></div><div><a href="/2023/02/01/pytorch-distributed/" title="pytorch 分布式训练"><img class="cover" src="/img/c18.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-01</div><div class="title">pytorch 分布式训练</div></div></a></div><div><a href="/2021/10/12/pytorch-dataset-dataloader/" title="PyTorch 中 Dataset 和 DataLoader 类的使用方法"><img class="cover" src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-12</div><div class="title">PyTorch 中 Dataset 和 DataLoader 类的使用方法</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">数据预处理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">创建模型</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '5125f8bce8d8e42ffad634aa87e62044',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

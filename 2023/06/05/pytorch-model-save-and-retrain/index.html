@@ -1,0 +1,709 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>PyTorch 模型保存与再训练 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="PyTorch 模型保存与再训练，基于 MNIST 数据集。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PyTorch 模型保存与再训练">
+<meta property="og:url" content="https://xujinzh.github.io/2023/06/05/pytorch-model-save-and-retrain/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="PyTorch 模型保存与再训练，基于 MNIST 数据集。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c12.jpg">
+<meta property="article:published_time" content="2023-06-05T09:05:17.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.104Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="pytorch">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c12.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2023/06/05/pytorch-model-save-and-retrain/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PyTorch 模型保存与再训练',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">PyTorch 模型保存与再训练</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-06-05T09:05:17.000Z" title="发表于 2023-06-05 17:05:17">2023-06-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.104Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/python/">python</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>24分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="PyTorch 模型保存与再训练"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>PyTorch 模型保存与再训练，基于 MNIST 数据集。</p>
+<span id="more"></span>
+
+<h1 id="导入依赖包"><a href="#导入依赖包" class="headerlink" title="导入依赖包"></a>导入依赖包</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader</span><br></pre></td></tr></table></figure>
+
+<h1 id="加载数据"><a href="#加载数据" class="headerlink" title="加载数据"></a>加载数据</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">n_epochs = <span class="number">10</span></span><br><span class="line">batch_size_train = <span class="number">128</span></span><br><span class="line">batch_size_test = <span class="number">1000</span></span><br><span class="line">learning_rate = <span class="number">0.01</span></span><br><span class="line">momentum = <span class="number">0.5</span></span><br><span class="line">log_interval = <span class="number">20</span></span><br><span class="line">torch.manual_seed(<span class="number">33</span>)</span><br><span class="line">device = torch.device(<span class="string">&quot;cuda:1&quot;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span>)</span><br><span class="line">device</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>device(type=&#39;cuda&#39;, index=1)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">transform = torchvision.transforms.Compose(</span><br><span class="line">    [</span><br><span class="line">        torchvision.transforms.ToTensor(),</span><br><span class="line">        torchvision.transforms.Normalize((<span class="number">0.1307</span>,), (<span class="number">0.3081</span>,)),</span><br><span class="line">    ]</span><br><span class="line">)</span><br><span class="line">train_data = torchvision.datasets.MNIST(</span><br><span class="line">    <span class="string">&quot;/workspace/disk1/datasets&quot;</span>,</span><br><span class="line">    train=<span class="literal">True</span>,</span><br><span class="line">    download=<span class="literal">True</span>,</span><br><span class="line">    transform=transform,</span><br><span class="line">)</span><br><span class="line">train_loader = torch.utils.data.DataLoader(</span><br><span class="line">    train_data,</span><br><span class="line">    batch_size=batch_size_train,</span><br><span class="line">    shuffle=<span class="literal">True</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">test_data = torchvision.datasets.MNIST(</span><br><span class="line">    <span class="string">&quot;/workspace/disk1/datasets/&quot;</span>,</span><br><span class="line">    train=<span class="literal">False</span>,</span><br><span class="line">    download=<span class="literal">True</span>,</span><br><span class="line">    transform=transform,</span><br><span class="line">)</span><br><span class="line">test_loader = torch.utils.data.DataLoader(</span><br><span class="line">    test_data,</span><br><span class="line">    batch_size=batch_size_test,</span><br><span class="line">    shuffle=<span class="literal">True</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">examples = <span class="built_in">enumerate</span>(test_loader)</span><br><span class="line">batch_idx, (example_data, example_targets) = <span class="built_in">next</span>(examples)</span><br><span class="line"><span class="comment"># print(example_targets)</span></span><br><span class="line"><span class="built_in">print</span>(example_data.shape)</span><br></pre></td></tr></table></figure>
+
+<pre><code>torch.Size([1000, 1, 28, 28])
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">fig = plt.figure()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">6</span>):</span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">3</span>, i + <span class="number">1</span>)</span><br><span class="line">    plt.tight_layout()</span><br><span class="line">    plt.imshow(example_data[i][<span class="number">0</span>], cmap=<span class="string">&quot;gray&quot;</span>, interpolation=<span class="string">&quot;none&quot;</span>)</span><br><span class="line">    plt.title(<span class="string">f&quot;Ground Truth: <span class="subst">&#123;example_targets[i]&#125;</span>&quot;</span>)</span><br><span class="line">    plt.xticks([])</span><br><span class="line">    plt.yticks([])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/pytorch/retrain/output_7_0.png?raw=true" alt="png"></p>
+<h1 id="构建模型和优化算法"><a href="#构建模型和优化算法" class="headerlink" title="构建模型和优化算法"></a>构建模型和优化算法</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Net</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>(Net, self).__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">1</span>, <span class="number">10</span>, kernel_size=<span class="number">5</span>)</span><br><span class="line">        self.conv2 = nn.Conv2d(<span class="number">10</span>, <span class="number">20</span>, kernel_size=<span class="number">5</span>)</span><br><span class="line">        self.conv2_drop = nn.Dropout2d()</span><br><span class="line">        self.fc1 = nn.Linear(<span class="number">320</span>, <span class="number">50</span>)</span><br><span class="line">        self.fc2 = nn.Linear(<span class="number">50</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = F.relu(F.max_pool2d(self.conv1(x), <span class="number">2</span>))</span><br><span class="line">        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), <span class="number">2</span>))</span><br><span class="line">        x = x.view(-<span class="number">1</span>, <span class="number">320</span>)</span><br><span class="line">        x = F.relu(self.fc1(x))</span><br><span class="line">        x = F.dropout(x, training=self.training)</span><br><span class="line">        x = F.log_softmax(self.fc2(x), dim=<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">network = Net().to(device)</span><br><span class="line">optimizer = optim.SGD(</span><br><span class="line">    network.parameters(),</span><br><span class="line">    lr=learning_rate,</span><br><span class="line">    momentum=momentum,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h1 id="模型训练与保存"><a href="#模型训练与保存" class="headerlink" title="模型训练与保存"></a>模型训练与保存</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">train_losses = []</span><br><span class="line">train_counter = []</span><br><span class="line">test_losses = []</span><br><span class="line">test_counter = [i * <span class="built_in">len</span>(train_loader.dataset) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n_epochs)]</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">epoch</span>):</span><br><span class="line">    network.train()</span><br><span class="line">    <span class="keyword">for</span> batch_idx, (data, target) <span class="keyword">in</span> <span class="built_in">enumerate</span>(train_loader):</span><br><span class="line">        data = data.to(device)</span><br><span class="line">        target = target.to(device)</span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        output = network(data)</span><br><span class="line">        loss = F.nll_loss(output, target)</span><br><span class="line">        loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line">        <span class="keyword">if</span> batch_idx % log_interval == <span class="number">0</span>:</span><br><span class="line">            <span class="built_in">print</span>(</span><br><span class="line">                <span class="string">f&quot;Train Epoch: <span class="subst">&#123;epoch&#125;</span> [<span class="subst">&#123;<span class="built_in">str</span>(batch_idx * <span class="built_in">len</span>(data)).zfill(<span class="number">5</span>)&#125;</span>/<span class="subst">&#123;<span class="built_in">len</span>(train_loader.dataset)&#125;</span> (<span class="subst">&#123;<span class="number">100.</span> * batch_idx/ <span class="built_in">len</span>(train_loader):<span class="number">.0</span>f&#125;</span>%)]\tLoss: <span class="subst">&#123;loss.item():<span class="number">.6</span>f&#125;</span>&quot;</span></span><br><span class="line">            )</span><br><span class="line">            train_losses.append(loss.item())</span><br><span class="line">            train_counter.append(</span><br><span class="line">                (batch_idx * <span class="number">64</span>) + ((epoch - <span class="number">1</span>) * <span class="built_in">len</span>(train_loader.dataset))</span><br><span class="line">            )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 保存当前批次的模型</span></span><br><span class="line">    model_checkpoint = <span class="string">f&quot;/workspace/disk1/datasets/models/mnist/model_epoch<span class="subst">&#123;epoch&#125;</span>.pth&quot;</span></span><br><span class="line">    optimizer_checkpoint = (</span><br><span class="line">        <span class="string">f&quot;/workspace/disk1/datasets/models/mnist/optimizer_epoch<span class="subst">&#123;epoch&#125;</span>.pth&quot;</span></span><br><span class="line">    )</span><br><span class="line">    latest_model = <span class="string">&quot;/workspace/disk1/datasets/models/mnist/model_latest.pth&quot;</span></span><br><span class="line">    latest_optimizer = <span class="string">&quot;/workspace/disk1/datasets/models/mnist/optimizer_latest.pth&quot;</span></span><br><span class="line"></span><br><span class="line">    torch.save(network.state_dict(), model_checkpoint)</span><br><span class="line">    torch.save(optimizer.state_dict(), optimizer_checkpoint)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> os.path.exists(latest_model):</span><br><span class="line">        os.remove(latest_model)</span><br><span class="line">    <span class="keyword">if</span> os.path.exists(latest_optimizer):</span><br><span class="line">        os.remove(latest_optimizer)</span><br><span class="line">    os.symlink(model_checkpoint, latest_model)</span><br><span class="line">    os.symlink(optimizer_checkpoint, latest_optimizer)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">test</span>():</span><br><span class="line">    network.<span class="built_in">eval</span>()</span><br><span class="line">    test_loss = <span class="number">0</span></span><br><span class="line">    correct = <span class="number">0</span></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> data, target <span class="keyword">in</span> test_loader:</span><br><span class="line">            data = data.to(device)</span><br><span class="line">            target = target.to(device)</span><br><span class="line">            output = network(data)</span><br><span class="line">            <span class="comment"># test_loss += F.nll_loss(output, target, size_average=False).item()</span></span><br><span class="line">            test_loss += F.nll_loss(output, target, reduction=<span class="string">&quot;sum&quot;</span>).item()</span><br><span class="line">            pred = output.data.<span class="built_in">max</span>(<span class="number">1</span>, keepdim=<span class="literal">True</span>)[<span class="number">1</span>]</span><br><span class="line">            correct += pred.eq(target.data.view_as(pred)).<span class="built_in">sum</span>()</span><br><span class="line">        test_loss /= <span class="built_in">len</span>(test_loader.dataset)</span><br><span class="line">        test_losses.append(test_loss)</span><br><span class="line">        <span class="built_in">print</span>(</span><br><span class="line">            <span class="string">f&quot;\nTest set: Avg. loss: <span class="subst">&#123;test_loss:<span class="number">.4</span>f&#125;</span>, Accuracy: <span class="subst">&#123;correct&#125;</span>/<span class="subst">&#123;<span class="built_in">len</span>(test_loader.dataset)&#125;</span> (<span class="subst">&#123;<span class="number">100.</span>*correct/<span class="built_in">len</span>(test_loader.dataset):<span class="number">.0</span>f&#125;</span>%)\n&quot;</span></span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n_epochs + <span class="number">1</span>):</span><br><span class="line">    train(epoch)</span><br><span class="line">    test()</span><br></pre></td></tr></table></figure>
+
+<pre><code>Train Epoch: 1 [00000/60000 (0%)]	Loss: 2.288714
+Train Epoch: 1 [02560/60000 (4%)]	Loss: 2.255195
+Train Epoch: 1 [05120/60000 (9%)]	Loss: 2.198278
+Train Epoch: 1 [07680/60000 (13%)]	Loss: 2.091046
+Train Epoch: 1 [10240/60000 (17%)]	Loss: 1.832017
+Train Epoch: 1 [12800/60000 (21%)]	Loss: 1.800682
+Train Epoch: 1 [15360/60000 (26%)]	Loss: 1.533700
+Train Epoch: 1 [17920/60000 (30%)]	Loss: 1.332488
+Train Epoch: 1 [20480/60000 (34%)]	Loss: 1.289864
+Train Epoch: 1 [23040/60000 (38%)]	Loss: 1.195423
+Train Epoch: 1 [25600/60000 (43%)]	Loss: 1.075095
+Train Epoch: 1 [28160/60000 (47%)]	Loss: 1.004397
+Train Epoch: 1 [30720/60000 (51%)]	Loss: 0.832168
+Train Epoch: 1 [33280/60000 (55%)]	Loss: 0.849826
+Train Epoch: 1 [35840/60000 (60%)]	Loss: 0.968393
+Train Epoch: 1 [38400/60000 (64%)]	Loss: 0.866699
+Train Epoch: 1 [40960/60000 (68%)]	Loss: 0.721661
+Train Epoch: 1 [43520/60000 (72%)]	Loss: 0.962982
+Train Epoch: 1 [46080/60000 (77%)]	Loss: 0.695050
+Train Epoch: 1 [48640/60000 (81%)]	Loss: 0.799360
+Train Epoch: 1 [51200/60000 (85%)]	Loss: 0.683803
+Train Epoch: 1 [53760/60000 (90%)]	Loss: 0.561625
+Train Epoch: 1 [56320/60000 (94%)]	Loss: 0.579419
+Train Epoch: 1 [58880/60000 (98%)]	Loss: 0.568427
+
+Test set: Avg. loss: 0.3283, Accuracy: 9096/10000 (91%)
+
+Train Epoch: 2 [00000/60000 (0%)]	Loss: 0.781268
+Train Epoch: 2 [02560/60000 (4%)]	Loss: 0.679616
+Train Epoch: 2 [05120/60000 (9%)]	Loss: 0.572369
+Train Epoch: 2 [07680/60000 (13%)]	Loss: 0.638919
+Train Epoch: 2 [10240/60000 (17%)]	Loss: 0.721595
+Train Epoch: 2 [12800/60000 (21%)]	Loss: 0.723331
+Train Epoch: 2 [15360/60000 (26%)]	Loss: 0.604582
+Train Epoch: 2 [17920/60000 (30%)]	Loss: 0.689362
+Train Epoch: 2 [20480/60000 (34%)]	Loss: 0.548551
+Train Epoch: 2 [23040/60000 (38%)]	Loss: 0.650297
+Train Epoch: 2 [25600/60000 (43%)]	Loss: 0.506893
+Train Epoch: 2 [28160/60000 (47%)]	Loss: 0.581708
+Train Epoch: 2 [30720/60000 (51%)]	Loss: 0.557465
+Train Epoch: 2 [33280/60000 (55%)]	Loss: 0.461637
+Train Epoch: 2 [35840/60000 (60%)]	Loss: 0.619341
+Train Epoch: 2 [38400/60000 (64%)]	Loss: 0.464800
+Train Epoch: 2 [40960/60000 (68%)]	Loss: 0.473921
+Train Epoch: 2 [43520/60000 (72%)]	Loss: 0.567576
+Train Epoch: 2 [46080/60000 (77%)]	Loss: 0.447070
+Train Epoch: 2 [48640/60000 (81%)]	Loss: 0.503476
+Train Epoch: 2 [51200/60000 (85%)]	Loss: 0.500809
+Train Epoch: 2 [53760/60000 (90%)]	Loss: 0.553329
+Train Epoch: 2 [56320/60000 (94%)]	Loss: 0.504529
+Train Epoch: 2 [58880/60000 (98%)]	Loss: 0.457889
+
+Test set: Avg. loss: 0.2128, Accuracy: 9357/10000 (94%)
+
+Train Epoch: 3 [00000/60000 (0%)]	Loss: 0.369795
+Train Epoch: 3 [02560/60000 (4%)]	Loss: 0.414531
+Train Epoch: 3 [05120/60000 (9%)]	Loss: 0.604378
+Train Epoch: 3 [07680/60000 (13%)]	Loss: 0.426111
+Train Epoch: 3 [10240/60000 (17%)]	Loss: 0.492895
+Train Epoch: 3 [12800/60000 (21%)]	Loss: 0.393350
+Train Epoch: 3 [15360/60000 (26%)]	Loss: 0.555914
+Train Epoch: 3 [17920/60000 (30%)]	Loss: 0.476940
+Train Epoch: 3 [20480/60000 (34%)]	Loss: 0.430539
+Train Epoch: 3 [23040/60000 (38%)]	Loss: 0.571562
+Train Epoch: 3 [25600/60000 (43%)]	Loss: 0.488061
+Train Epoch: 3 [28160/60000 (47%)]	Loss: 0.598932
+Train Epoch: 3 [30720/60000 (51%)]	Loss: 0.417797
+Train Epoch: 3 [33280/60000 (55%)]	Loss: 0.486182
+Train Epoch: 3 [35840/60000 (60%)]	Loss: 0.375228
+Train Epoch: 3 [38400/60000 (64%)]	Loss: 0.384777
+Train Epoch: 3 [40960/60000 (68%)]	Loss: 0.428213
+Train Epoch: 3 [43520/60000 (72%)]	Loss: 0.443456
+Train Epoch: 3 [46080/60000 (77%)]	Loss: 0.308731
+Train Epoch: 3 [48640/60000 (81%)]	Loss: 0.347535
+Train Epoch: 3 [51200/60000 (85%)]	Loss: 0.439240
+Train Epoch: 3 [53760/60000 (90%)]	Loss: 0.460515
+Train Epoch: 3 [56320/60000 (94%)]	Loss: 0.521822
+Train Epoch: 3 [58880/60000 (98%)]	Loss: 0.451665
+
+Test set: Avg. loss: 0.1591, Accuracy: 9513/10000 (95%)
+
+Train Epoch: 4 [00000/60000 (0%)]	Loss: 0.510825
+Train Epoch: 4 [02560/60000 (4%)]	Loss: 0.279729
+Train Epoch: 4 [05120/60000 (9%)]	Loss: 0.333447
+Train Epoch: 4 [07680/60000 (13%)]	Loss: 0.434208
+Train Epoch: 4 [10240/60000 (17%)]	Loss: 0.516646
+Train Epoch: 4 [12800/60000 (21%)]	Loss: 0.339009
+Train Epoch: 4 [15360/60000 (26%)]	Loss: 0.342047
+Train Epoch: 4 [17920/60000 (30%)]	Loss: 0.315687
+Train Epoch: 4 [20480/60000 (34%)]	Loss: 0.365422
+Train Epoch: 4 [23040/60000 (38%)]	Loss: 0.408456
+Train Epoch: 4 [25600/60000 (43%)]	Loss: 0.512156
+Train Epoch: 4 [28160/60000 (47%)]	Loss: 0.246768
+Train Epoch: 4 [30720/60000 (51%)]	Loss: 0.254370
+Train Epoch: 4 [33280/60000 (55%)]	Loss: 0.403202
+Train Epoch: 4 [35840/60000 (60%)]	Loss: 0.364687
+Train Epoch: 4 [38400/60000 (64%)]	Loss: 0.313392
+Train Epoch: 4 [40960/60000 (68%)]	Loss: 0.256359
+Train Epoch: 4 [43520/60000 (72%)]	Loss: 0.306669
+Train Epoch: 4 [46080/60000 (77%)]	Loss: 0.459862
+Train Epoch: 4 [48640/60000 (81%)]	Loss: 0.227380
+Train Epoch: 4 [51200/60000 (85%)]	Loss: 0.368363
+Train Epoch: 4 [53760/60000 (90%)]	Loss: 0.329823
+Train Epoch: 4 [56320/60000 (94%)]	Loss: 0.304764
+Train Epoch: 4 [58880/60000 (98%)]	Loss: 0.288302
+
+Test set: Avg. loss: 0.1322, Accuracy: 9596/10000 (96%)
+
+Train Epoch: 5 [00000/60000 (0%)]	Loss: 0.247250
+Train Epoch: 5 [02560/60000 (4%)]	Loss: 0.383674
+Train Epoch: 5 [05120/60000 (9%)]	Loss: 0.315615
+Train Epoch: 5 [07680/60000 (13%)]	Loss: 0.259549
+Train Epoch: 5 [10240/60000 (17%)]	Loss: 0.322165
+Train Epoch: 5 [12800/60000 (21%)]	Loss: 0.474284
+Train Epoch: 5 [15360/60000 (26%)]	Loss: 0.254566
+Train Epoch: 5 [17920/60000 (30%)]	Loss: 0.466621
+Train Epoch: 5 [20480/60000 (34%)]	Loss: 0.320438
+Train Epoch: 5 [23040/60000 (38%)]	Loss: 0.316798
+Train Epoch: 5 [25600/60000 (43%)]	Loss: 0.192171
+Train Epoch: 5 [28160/60000 (47%)]	Loss: 0.478387
+Train Epoch: 5 [30720/60000 (51%)]	Loss: 0.346078
+Train Epoch: 5 [33280/60000 (55%)]	Loss: 0.315769
+Train Epoch: 5 [35840/60000 (60%)]	Loss: 0.284116
+Train Epoch: 5 [38400/60000 (64%)]	Loss: 0.354763
+Train Epoch: 5 [40960/60000 (68%)]	Loss: 0.369070
+Train Epoch: 5 [43520/60000 (72%)]	Loss: 0.233857
+Train Epoch: 5 [46080/60000 (77%)]	Loss: 0.222160
+Train Epoch: 5 [48640/60000 (81%)]	Loss: 0.325135
+Train Epoch: 5 [51200/60000 (85%)]	Loss: 0.226506
+Train Epoch: 5 [53760/60000 (90%)]	Loss: 0.407618
+Train Epoch: 5 [56320/60000 (94%)]	Loss: 0.359771
+Train Epoch: 5 [58880/60000 (98%)]	Loss: 0.290950
+
+Test set: Avg. loss: 0.1152, Accuracy: 9643/10000 (96%)
+
+Train Epoch: 6 [00000/60000 (0%)]	Loss: 0.371519
+Train Epoch: 6 [02560/60000 (4%)]	Loss: 0.294658
+Train Epoch: 6 [05120/60000 (9%)]	Loss: 0.195041
+Train Epoch: 6 [07680/60000 (13%)]	Loss: 0.247292
+Train Epoch: 6 [10240/60000 (17%)]	Loss: 0.307761
+Train Epoch: 6 [12800/60000 (21%)]	Loss: 0.183960
+Train Epoch: 6 [15360/60000 (26%)]	Loss: 0.255224
+Train Epoch: 6 [17920/60000 (30%)]	Loss: 0.564046
+Train Epoch: 6 [20480/60000 (34%)]	Loss: 0.217146
+Train Epoch: 6 [23040/60000 (38%)]	Loss: 0.364980
+Train Epoch: 6 [25600/60000 (43%)]	Loss: 0.237876
+Train Epoch: 6 [28160/60000 (47%)]	Loss: 0.344803
+Train Epoch: 6 [30720/60000 (51%)]	Loss: 0.347686
+Train Epoch: 6 [33280/60000 (55%)]	Loss: 0.197488
+Train Epoch: 6 [35840/60000 (60%)]	Loss: 0.346718
+Train Epoch: 6 [38400/60000 (64%)]	Loss: 0.256105
+Train Epoch: 6 [40960/60000 (68%)]	Loss: 0.211900
+Train Epoch: 6 [43520/60000 (72%)]	Loss: 0.264353
+Train Epoch: 6 [46080/60000 (77%)]	Loss: 0.339571
+Train Epoch: 6 [48640/60000 (81%)]	Loss: 0.198715
+Train Epoch: 6 [51200/60000 (85%)]	Loss: 0.335813
+Train Epoch: 6 [53760/60000 (90%)]	Loss: 0.244630
+Train Epoch: 6 [56320/60000 (94%)]	Loss: 0.260668
+Train Epoch: 6 [58880/60000 (98%)]	Loss: 0.281284
+
+Test set: Avg. loss: 0.1029, Accuracy: 9682/10000 (97%)
+
+Train Epoch: 7 [00000/60000 (0%)]	Loss: 0.259941
+Train Epoch: 7 [02560/60000 (4%)]	Loss: 0.353288
+Train Epoch: 7 [05120/60000 (9%)]	Loss: 0.345746
+Train Epoch: 7 [07680/60000 (13%)]	Loss: 0.263094
+Train Epoch: 7 [10240/60000 (17%)]	Loss: 0.370562
+Train Epoch: 7 [12800/60000 (21%)]	Loss: 0.184917
+Train Epoch: 7 [15360/60000 (26%)]	Loss: 0.358648
+Train Epoch: 7 [17920/60000 (30%)]	Loss: 0.358313
+Train Epoch: 7 [20480/60000 (34%)]	Loss: 0.455060
+Train Epoch: 7 [23040/60000 (38%)]	Loss: 0.157829
+Train Epoch: 7 [25600/60000 (43%)]	Loss: 0.255777
+Train Epoch: 7 [28160/60000 (47%)]	Loss: 0.296378
+Train Epoch: 7 [30720/60000 (51%)]	Loss: 0.220109
+Train Epoch: 7 [33280/60000 (55%)]	Loss: 0.207805
+Train Epoch: 7 [35840/60000 (60%)]	Loss: 0.333757
+Train Epoch: 7 [38400/60000 (64%)]	Loss: 0.351853
+Train Epoch: 7 [40960/60000 (68%)]	Loss: 0.225360
+Train Epoch: 7 [43520/60000 (72%)]	Loss: 0.220420
+Train Epoch: 7 [46080/60000 (77%)]	Loss: 0.281292
+Train Epoch: 7 [48640/60000 (81%)]	Loss: 0.224555
+Train Epoch: 7 [51200/60000 (85%)]	Loss: 0.300659
+Train Epoch: 7 [53760/60000 (90%)]	Loss: 0.155560
+Train Epoch: 7 [56320/60000 (94%)]	Loss: 0.322972
+Train Epoch: 7 [58880/60000 (98%)]	Loss: 0.189427
+
+Test set: Avg. loss: 0.0973, Accuracy: 9693/10000 (97%)
+
+Train Epoch: 8 [00000/60000 (0%)]	Loss: 0.237282
+Train Epoch: 8 [02560/60000 (4%)]	Loss: 0.205023
+Train Epoch: 8 [05120/60000 (9%)]	Loss: 0.178199
+Train Epoch: 8 [07680/60000 (13%)]	Loss: 0.335434
+Train Epoch: 8 [10240/60000 (17%)]	Loss: 0.274767
+Train Epoch: 8 [12800/60000 (21%)]	Loss: 0.170677
+Train Epoch: 8 [15360/60000 (26%)]	Loss: 0.401550
+Train Epoch: 8 [17920/60000 (30%)]	Loss: 0.360215
+Train Epoch: 8 [20480/60000 (34%)]	Loss: 0.329762
+Train Epoch: 8 [23040/60000 (38%)]	Loss: 0.311394
+Train Epoch: 8 [25600/60000 (43%)]	Loss: 0.187782
+Train Epoch: 8 [28160/60000 (47%)]	Loss: 0.242610
+Train Epoch: 8 [30720/60000 (51%)]	Loss: 0.327457
+Train Epoch: 8 [33280/60000 (55%)]	Loss: 0.249692
+Train Epoch: 8 [35840/60000 (60%)]	Loss: 0.325073
+Train Epoch: 8 [38400/60000 (64%)]	Loss: 0.210571
+Train Epoch: 8 [40960/60000 (68%)]	Loss: 0.244188
+Train Epoch: 8 [43520/60000 (72%)]	Loss: 0.258391
+Train Epoch: 8 [46080/60000 (77%)]	Loss: 0.228774
+Train Epoch: 8 [48640/60000 (81%)]	Loss: 0.253648
+Train Epoch: 8 [51200/60000 (85%)]	Loss: 0.387448
+Train Epoch: 8 [53760/60000 (90%)]	Loss: 0.223092
+Train Epoch: 8 [56320/60000 (94%)]	Loss: 0.155341
+Train Epoch: 8 [58880/60000 (98%)]	Loss: 0.233621
+
+Test set: Avg. loss: 0.0875, Accuracy: 9730/10000 (97%)
+
+Train Epoch: 9 [00000/60000 (0%)]	Loss: 0.356232
+Train Epoch: 9 [02560/60000 (4%)]	Loss: 0.228741
+Train Epoch: 9 [05120/60000 (9%)]	Loss: 0.237508
+Train Epoch: 9 [07680/60000 (13%)]	Loss: 0.200507
+Train Epoch: 9 [10240/60000 (17%)]	Loss: 0.180248
+Train Epoch: 9 [12800/60000 (21%)]	Loss: 0.316860
+Train Epoch: 9 [15360/60000 (26%)]	Loss: 0.251897
+Train Epoch: 9 [17920/60000 (30%)]	Loss: 0.341667
+Train Epoch: 9 [20480/60000 (34%)]	Loss: 0.256542
+Train Epoch: 9 [23040/60000 (38%)]	Loss: 0.272902
+Train Epoch: 9 [25600/60000 (43%)]	Loss: 0.207665
+Train Epoch: 9 [28160/60000 (47%)]	Loss: 0.134075
+Train Epoch: 9 [30720/60000 (51%)]	Loss: 0.198930
+Train Epoch: 9 [33280/60000 (55%)]	Loss: 0.218460
+Train Epoch: 9 [35840/60000 (60%)]	Loss: 0.372338
+Train Epoch: 9 [38400/60000 (64%)]	Loss: 0.207677
+Train Epoch: 9 [40960/60000 (68%)]	Loss: 0.274011
+Train Epoch: 9 [43520/60000 (72%)]	Loss: 0.158897
+Train Epoch: 9 [46080/60000 (77%)]	Loss: 0.236698
+Train Epoch: 9 [48640/60000 (81%)]	Loss: 0.238054
+Train Epoch: 9 [51200/60000 (85%)]	Loss: 0.264504
+Train Epoch: 9 [53760/60000 (90%)]	Loss: 0.246547
+Train Epoch: 9 [56320/60000 (94%)]	Loss: 0.181960
+Train Epoch: 9 [58880/60000 (98%)]	Loss: 0.182172
+
+Test set: Avg. loss: 0.0810, Accuracy: 9751/10000 (98%)
+
+Train Epoch: 10 [00000/60000 (0%)]	Loss: 0.223450
+Train Epoch: 10 [02560/60000 (4%)]	Loss: 0.146772
+Train Epoch: 10 [05120/60000 (9%)]	Loss: 0.448847
+Train Epoch: 10 [07680/60000 (13%)]	Loss: 0.192779
+Train Epoch: 10 [10240/60000 (17%)]	Loss: 0.180810
+Train Epoch: 10 [12800/60000 (21%)]	Loss: 0.256196
+Train Epoch: 10 [15360/60000 (26%)]	Loss: 0.248770
+Train Epoch: 10 [17920/60000 (30%)]	Loss: 0.243000
+Train Epoch: 10 [20480/60000 (34%)]	Loss: 0.274350
+Train Epoch: 10 [23040/60000 (38%)]	Loss: 0.256088
+Train Epoch: 10 [25600/60000 (43%)]	Loss: 0.326276
+Train Epoch: 10 [28160/60000 (47%)]	Loss: 0.192222
+Train Epoch: 10 [30720/60000 (51%)]	Loss: 0.163986
+Train Epoch: 10 [33280/60000 (55%)]	Loss: 0.261450
+Train Epoch: 10 [35840/60000 (60%)]	Loss: 0.263229
+Train Epoch: 10 [38400/60000 (64%)]	Loss: 0.278172
+Train Epoch: 10 [40960/60000 (68%)]	Loss: 0.245064
+Train Epoch: 10 [43520/60000 (72%)]	Loss: 0.298991
+Train Epoch: 10 [46080/60000 (77%)]	Loss: 0.334879
+Train Epoch: 10 [48640/60000 (81%)]	Loss: 0.306450
+Train Epoch: 10 [51200/60000 (85%)]	Loss: 0.208277
+Train Epoch: 10 [53760/60000 (90%)]	Loss: 0.211731
+Train Epoch: 10 [56320/60000 (94%)]	Loss: 0.186170
+Train Epoch: 10 [58880/60000 (98%)]	Loss: 0.219588
+
+Test set: Avg. loss: 0.0760, Accuracy: 9754/10000 (98%)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fig = plt.figure()</span><br><span class="line">plt.plot(train_counter, train_losses, color=<span class="string">&quot;blue&quot;</span>)</span><br><span class="line">plt.scatter(test_counter, test_losses, color=<span class="string">&quot;red&quot;</span>)</span><br><span class="line">plt.legend([<span class="string">&quot;Train Loss&quot;</span>, <span class="string">&quot;Test Loss&quot;</span>], loc=<span class="string">&quot;upper right&quot;</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;number of training examples seen&quot;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;negative log likelihood loss&quot;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/pytorch/retrain/output_16_0.png?raw=true" alt="png"></p>
+<h1 id="模型测试"><a href="#模型测试" class="headerlink" title="模型测试"></a>模型测试</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">examples = <span class="built_in">enumerate</span>(test_loader)</span><br><span class="line">batch_idx, (example_data, example_targets) = <span class="built_in">next</span>(examples)</span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    example_data = example_data.to(device)</span><br><span class="line">    output = network(example_data)</span><br><span class="line">fig = plt.figure()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">6</span>):</span><br><span class="line">    plt.subplot(<span class="number">2</span>, <span class="number">3</span>, i + <span class="number">1</span>)</span><br><span class="line">    plt.tight_layout()</span><br><span class="line">    plt.imshow(</span><br><span class="line">        example_data.detach().to(<span class="string">&quot;cpu&quot;</span>).numpy()[i][<span class="number">0</span>], cmap=<span class="string">&quot;gray&quot;</span>, interpolation=<span class="string">&quot;none&quot;</span></span><br><span class="line">    )</span><br><span class="line">    plt.title(<span class="string">f&quot;prediction: <span class="subst">&#123;output.data.<span class="built_in">max</span>(<span class="number">1</span>, keepdim=<span class="literal">True</span>)[<span class="number">1</span>][i].item()&#125;</span>&quot;</span>)</span><br><span class="line">    plt.xticks([])</span><br><span class="line">    plt.yticks([])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/pytorch/retrain/output_18_0.png?raw=true" alt="png"></p>
+<h1 id="模型再训练"><a href="#模型再训练" class="headerlink" title="模型再训练"></a>模型再训练</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">continued_network = Net()</span><br><span class="line">continued_optimizer = optim.SGD(</span><br><span class="line">    network.parameters(),</span><br><span class="line">    lr=learning_rate,</span><br><span class="line">    momentum=momentum,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">latest_model = <span class="string">&quot;/workspace/disk1/datasets/models/mnist/model_latest.pth&quot;</span></span><br><span class="line">latest_optimizer = <span class="string">&quot;/workspace/disk1/datasets/models/mnist/optimizer_latest.pth&quot;</span></span><br><span class="line"></span><br><span class="line">network_state_dict = torch.load(latest_model)</span><br><span class="line">continued_network.load_state_dict(network_state_dict)</span><br><span class="line">optimizer_state_dict = torch.load(latest_optimizer)</span><br><span class="line">continued_optimizer.load_state_dict(optimizer_state_dict)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">m = <span class="number">5</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n_epochs + <span class="number">1</span>, n_epochs + m):</span><br><span class="line">    test_counter.append(i * <span class="built_in">len</span>(train_loader.dataset))</span><br><span class="line">    train(i)</span><br><span class="line">    test()</span><br></pre></td></tr></table></figure>
+
+<pre><code>Train Epoch: 11 [00000/60000 (0%)]	Loss: 0.208258
+Train Epoch: 11 [02560/60000 (4%)]	Loss: 0.274365
+Train Epoch: 11 [05120/60000 (9%)]	Loss: 0.438731
+Train Epoch: 11 [07680/60000 (13%)]	Loss: 0.192449
+Train Epoch: 11 [10240/60000 (17%)]	Loss: 0.333653
+Train Epoch: 11 [12800/60000 (21%)]	Loss: 0.243886
+Train Epoch: 11 [15360/60000 (26%)]	Loss: 0.403167
+Train Epoch: 11 [17920/60000 (30%)]	Loss: 0.287619
+Train Epoch: 11 [20480/60000 (34%)]	Loss: 0.169019
+Train Epoch: 11 [23040/60000 (38%)]	Loss: 0.212516
+Train Epoch: 11 [25600/60000 (43%)]	Loss: 0.202806
+Train Epoch: 11 [28160/60000 (47%)]	Loss: 0.217581
+Train Epoch: 11 [30720/60000 (51%)]	Loss: 0.230557
+Train Epoch: 11 [33280/60000 (55%)]	Loss: 0.378703
+Train Epoch: 11 [35840/60000 (60%)]	Loss: 0.189265
+Train Epoch: 11 [38400/60000 (64%)]	Loss: 0.302335
+Train Epoch: 11 [40960/60000 (68%)]	Loss: 0.132773
+Train Epoch: 11 [43520/60000 (72%)]	Loss: 0.222291
+Train Epoch: 11 [46080/60000 (77%)]	Loss: 0.321381
+Train Epoch: 11 [48640/60000 (81%)]	Loss: 0.150813
+Train Epoch: 11 [51200/60000 (85%)]	Loss: 0.249176
+Train Epoch: 11 [53760/60000 (90%)]	Loss: 0.245743
+Train Epoch: 11 [56320/60000 (94%)]	Loss: 0.212701
+Train Epoch: 11 [58880/60000 (98%)]	Loss: 0.363840
+
+Test set: Avg. loss: 0.0722, Accuracy: 9776/10000 (98%)
+
+Train Epoch: 12 [00000/60000 (0%)]	Loss: 0.189078
+Train Epoch: 12 [02560/60000 (4%)]	Loss: 0.184256
+Train Epoch: 12 [05120/60000 (9%)]	Loss: 0.143418
+Train Epoch: 12 [07680/60000 (13%)]	Loss: 0.161733
+Train Epoch: 12 [10240/60000 (17%)]	Loss: 0.238975
+Train Epoch: 12 [12800/60000 (21%)]	Loss: 0.200676
+Train Epoch: 12 [15360/60000 (26%)]	Loss: 0.163866
+Train Epoch: 12 [17920/60000 (30%)]	Loss: 0.337974
+Train Epoch: 12 [20480/60000 (34%)]	Loss: 0.160897
+Train Epoch: 12 [23040/60000 (38%)]	Loss: 0.156017
+Train Epoch: 12 [25600/60000 (43%)]	Loss: 0.188498
+Train Epoch: 12 [28160/60000 (47%)]	Loss: 0.272446
+Train Epoch: 12 [30720/60000 (51%)]	Loss: 0.124439
+Train Epoch: 12 [33280/60000 (55%)]	Loss: 0.131949
+Train Epoch: 12 [35840/60000 (60%)]	Loss: 0.293010
+Train Epoch: 12 [38400/60000 (64%)]	Loss: 0.187551
+Train Epoch: 12 [40960/60000 (68%)]	Loss: 0.181151
+Train Epoch: 12 [43520/60000 (72%)]	Loss: 0.270526
+Train Epoch: 12 [46080/60000 (77%)]	Loss: 0.131309
+Train Epoch: 12 [48640/60000 (81%)]	Loss: 0.261624
+Train Epoch: 12 [51200/60000 (85%)]	Loss: 0.239715
+Train Epoch: 12 [53760/60000 (90%)]	Loss: 0.163549
+Train Epoch: 12 [56320/60000 (94%)]	Loss: 0.160421
+Train Epoch: 12 [58880/60000 (98%)]	Loss: 0.160318
+
+Test set: Avg. loss: 0.0687, Accuracy: 9787/10000 (98%)
+
+Train Epoch: 13 [00000/60000 (0%)]	Loss: 0.140241
+Train Epoch: 13 [02560/60000 (4%)]	Loss: 0.144069
+Train Epoch: 13 [05120/60000 (9%)]	Loss: 0.323135
+Train Epoch: 13 [07680/60000 (13%)]	Loss: 0.336287
+Train Epoch: 13 [10240/60000 (17%)]	Loss: 0.107315
+Train Epoch: 13 [12800/60000 (21%)]	Loss: 0.169032
+Train Epoch: 13 [15360/60000 (26%)]	Loss: 0.162337
+Train Epoch: 13 [17920/60000 (30%)]	Loss: 0.253107
+Train Epoch: 13 [20480/60000 (34%)]	Loss: 0.166370
+Train Epoch: 13 [23040/60000 (38%)]	Loss: 0.243374
+Train Epoch: 13 [25600/60000 (43%)]	Loss: 0.160263
+Train Epoch: 13 [28160/60000 (47%)]	Loss: 0.187129
+Train Epoch: 13 [30720/60000 (51%)]	Loss: 0.348670
+Train Epoch: 13 [33280/60000 (55%)]	Loss: 0.166424
+Train Epoch: 13 [35840/60000 (60%)]	Loss: 0.184487
+Train Epoch: 13 [38400/60000 (64%)]	Loss: 0.159097
+Train Epoch: 13 [40960/60000 (68%)]	Loss: 0.110388
+Train Epoch: 13 [43520/60000 (72%)]	Loss: 0.114675
+Train Epoch: 13 [46080/60000 (77%)]	Loss: 0.193499
+Train Epoch: 13 [48640/60000 (81%)]	Loss: 0.256665
+Train Epoch: 13 [51200/60000 (85%)]	Loss: 0.204359
+Train Epoch: 13 [53760/60000 (90%)]	Loss: 0.228794
+Train Epoch: 13 [56320/60000 (94%)]	Loss: 0.229143
+Train Epoch: 13 [58880/60000 (98%)]	Loss: 0.198778
+
+Test set: Avg. loss: 0.0659, Accuracy: 9792/10000 (98%)
+
+Train Epoch: 14 [00000/60000 (0%)]	Loss: 0.154132
+Train Epoch: 14 [02560/60000 (4%)]	Loss: 0.174841
+Train Epoch: 14 [05120/60000 (9%)]	Loss: 0.131765
+Train Epoch: 14 [07680/60000 (13%)]	Loss: 0.163187
+Train Epoch: 14 [10240/60000 (17%)]	Loss: 0.130205
+Train Epoch: 14 [12800/60000 (21%)]	Loss: 0.230511
+Train Epoch: 14 [15360/60000 (26%)]	Loss: 0.206032
+Train Epoch: 14 [17920/60000 (30%)]	Loss: 0.209682
+Train Epoch: 14 [20480/60000 (34%)]	Loss: 0.143732
+Train Epoch: 14 [23040/60000 (38%)]	Loss: 0.247467
+Train Epoch: 14 [25600/60000 (43%)]	Loss: 0.141316
+Train Epoch: 14 [28160/60000 (47%)]	Loss: 0.156982
+Train Epoch: 14 [30720/60000 (51%)]	Loss: 0.249250
+Train Epoch: 14 [33280/60000 (55%)]	Loss: 0.252457
+Train Epoch: 14 [35840/60000 (60%)]	Loss: 0.137284
+Train Epoch: 14 [38400/60000 (64%)]	Loss: 0.212023
+Train Epoch: 14 [40960/60000 (68%)]	Loss: 0.227320
+Train Epoch: 14 [43520/60000 (72%)]	Loss: 0.200754
+Train Epoch: 14 [46080/60000 (77%)]	Loss: 0.197454
+Train Epoch: 14 [48640/60000 (81%)]	Loss: 0.200271
+Train Epoch: 14 [51200/60000 (85%)]	Loss: 0.135254
+Train Epoch: 14 [53760/60000 (90%)]	Loss: 0.137874
+Train Epoch: 14 [56320/60000 (94%)]	Loss: 0.213711
+Train Epoch: 14 [58880/60000 (98%)]	Loss: 0.286362
+
+Test set: Avg. loss: 0.0631, Accuracy: 9794/10000 (98%)
+</code></pre>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/137571225">用PyTorch实现MNIST手写数字识别(非常详细)</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2023/06/05/pytorch-model-save-and-retrain/">https://xujinzh.github.io/2023/06/05/pytorch-model-save-and-retrain/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a><a class="post-meta__tags" href="/tags/pytorch/">pytorch</a></div><div class="post_share"><div class="social-share" data-image="/img/c12.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/06/05/pytorch-fine-tuning-model/" title="PyTorch 迁移学习之模型结构修改和参数微调"><img class="cover" src="/img/c5.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">PyTorch 迁移学习之模型结构修改和参数微调</div></div></a></div><div class="next-post pull-right"><a href="/2023/06/01/linux-permanently-delete-file-dir/" title="Linux 安全（永久）删除文件和文件夹"><img class="cover" src="/img/c21.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux 安全（永久）删除文件和文件夹</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/08/02/cnn-flops/" title="CNN 模型计算力 FLOPs"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-02</div><div class="title">CNN 模型计算力 FLOPs</div></div></a></div><div><a href="/2023/02/24/code-mmclassification/" title="MMClassification 图像分类使用"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-24</div><div class="title">MMClassification 图像分类使用</div></div></a></div><div><a href="/2023/02/26/code-mmdetection/" title="MMDetection 目标检测使用"><img class="cover" src="/img/c20.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-26</div><div class="title">MMDetection 目标检测使用</div></div></a></div><div><a href="/2022/04/01/pytorch-cuda-visible-devices/" title="pytorch 中设置使用指定的 GPU"><img class="cover" src="/img/c15.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-01</div><div class="title">pytorch 中设置使用指定的 GPU</div></div></a></div><div><a href="/2023/02/01/pytorch-distributed/" title="pytorch 分布式训练"><img class="cover" src="/img/c18.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-01</div><div class="title">pytorch 分布式训练</div></div></a></div><div><a href="/2021/10/12/pytorch-dataset-dataloader/" title="PyTorch 中 Dataset 和 DataLoader 类的使用方法"><img class="cover" src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-12</div><div class="title">PyTorch 中 Dataset 和 DataLoader 类的使用方法</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="toc-number">1.</span> <span class="toc-text">导入依赖包</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE"><span class="toc-number">2.</span> <span class="toc-text">加载数据</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%A8%A1%E5%9E%8B%E5%92%8C%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">构建模型和优化算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E4%BF%9D%E5%AD%98"><span class="toc-number">4.</span> <span class="toc-text">模型训练与保存</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E6%B5%8B%E8%AF%95"><span class="toc-number">5.</span> <span class="toc-text">模型测试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%86%8D%E8%AE%AD%E7%BB%83"><span class="toc-number">6.</span> <span class="toc-text">模型再训练</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">7.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '10539958478749da41c07a3a991604bf',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

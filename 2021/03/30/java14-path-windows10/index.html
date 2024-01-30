@@ -1,0 +1,299 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>在 Windows10 上配置 Java JDK 14 开发环境 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Java 是一种广泛使用的计算机编程语言，拥有跨平台、面向对象、泛型编程的特性，广泛应用于企业级 Web 应用开发和移动应用开发。任职于 Sun 微系统的詹姆斯·高斯林等人于1990年代初开发Java语言的雏形，最初被命名为 Oak，目标设置在家用电器等小型系统的编程语言，应用在电视机、电话、闹钟、烤面包机等家用电器的控制和通信。随着1990年代互联网的发展，Sun 公司看见 Oak 在互联网上应">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 Windows10 上配置 Java JDK 14 开发环境">
+<meta property="og:url" content="https://xujinzh.github.io/2021/03/30/java14-path-windows10/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="Java 是一种广泛使用的计算机编程语言，拥有跨平台、面向对象、泛型编程的特性，广泛应用于企业级 Web 应用开发和移动应用开发。任职于 Sun 微系统的詹姆斯·高斯林等人于1990年代初开发Java语言的雏形，最初被命名为 Oak，目标设置在家用电器等小型系统的编程语言，应用在电视机、电话、闹钟、烤面包机等家用电器的控制和通信。随着1990年代互联网的发展，Sun 公司看见 Oak 在互联网上应">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c5.jpeg">
+<meta property="article:published_time" content="2021-03-30T06:53:23.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.096Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="windows10">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c5.jpeg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2021/03/30/java14-path-windows10/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '在 Windows10 上配置 Java JDK 14 开发环境',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">在 Windows10 上配置 Java JDK 14 开发环境</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-03-30T06:53:23.000Z" title="发表于 2021-03-30 14:53:23">2021-03-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.096Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/java/">java</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="在 Windows10 上配置 Java JDK 14 开发环境"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>Java 是一种广泛使用的计算机编程语言，拥有跨平台、面向对象、泛型编程的特性，广泛应用于企业级 Web 应用开发和移动应用开发。任职于 Sun 微系统的詹姆斯·高斯林等人于1990年代初开发Java语言的雏形，最初被命名为 Oak，目标设置在家用电器等小型系统的编程语言，应用在电视机、电话、闹钟、烤面包机等家用电器的控制和通信。随着1990年代互联网的发展，Sun 公司看见 Oak 在互联网上应用的前景，于是改造了 Oak，于1995年5月以 Java 的名称正式发布。后来 Sun 公司被甲骨文公司并购，Java 也随之成为甲骨文公司的产品。Java 伴随着互联网的迅猛发展而发展，逐渐成为重要的网络编程语言。Java 编程语言的风格十分接近 C++ 语言。继承了 C++ 语言面向对象技术的核心，舍弃了容易引起错误的指针，以引用取代；移除了 C++ 中的运算符重载和多重继承特性，用接口取代；增加垃圾回收器功能。Java 不同于一般的编译语言或解释型语言。它首先将源代码编译成字节码，再依赖各种不同平台上的虚拟机来解释执行字节码，从而具有“一次编写，到处运行”的跨平台特性。现时，移动操作系统 Android 大部分的代码采用 Java 编程语言编程。</p>
+<p>总之，Java 编程语言是个简单、面向对象、分布式、解释性、健壮、安全与系统无关、可移植、高性能、多线程和动态的语言。下面介绍如何在 Windows10 上配置 Java JDK 14 的环境变量。</p>
+<span id="more"></span>
+
+<h1 id="下载-Java-JDK-14"><a href="#下载-Java-JDK-14" class="headerlink" title="下载 Java JDK 14"></a>下载 Java JDK 14</h1><h2 id="JDK"><a href="#JDK" class="headerlink" title="JDK"></a>JDK</h2><p>打开官网： <a target="_blank" rel="noopener" href="https://www.oracle.com/java/technologies/javase/jdk14-archive-downloads.html">https://www.oracle.com/java/technologies/javase/jdk14-archive-downloads.html</a></p>
+<p>下载需要的 Windows 版本。</p>
+<h2 id="MAVEN"><a href="#MAVEN" class="headerlink" title="MAVEN"></a>MAVEN</h2><p>在使用 Java 编写程序时，最习惯使用 Maven 进行工程构建与管理，因此，这里给出下载 Maven 的地址：<a target="_blank" rel="noopener" href="https://maven.apache.org/download.cgi#">https://maven.apache.org/download.cgi#</a></p>
+<h1 id="安装-Java-JDK-14"><a href="#安装-Java-JDK-14" class="headerlink" title="安装 Java JDK 14"></a>安装 Java JDK 14</h1><h2 id="JDK-1"><a href="#JDK-1" class="headerlink" title="JDK"></a>JDK</h2><p>直接点击安装，默认安装即可。在安装后，只有 jdk 而没有 JRE，这是与 Java 8 不同的。并且，在 lib 里面也没有 tools.jar</p>
+<h2 id="MAVEN-1"><a href="#MAVEN-1" class="headerlink" title="MAVEN"></a>MAVEN</h2><p>把 Maven 解压，复制到需要的目录下，如我这里是： C:\Program Files\apache-maven-3.6.3</p>
+<h1 id="配置-Java-环境"><a href="#配置-Java-环境" class="headerlink" title="配置 Java 环境"></a>配置 Java 环境</h1><h2 id="JDK-2"><a href="#JDK-2" class="headerlink" title="JDK"></a>JDK</h2><p>右键点击此电脑—》属性—》高级系统设置—》环境变量—》系统变量—》新建—》变量名写 “JAVA_HOME”—》变量值写Java JDK 14安装目录，我这里是“C:\Program Files\jdk-14.0.2” —》确定</p>
+<p>系统变量—》Path—》编辑—》新建—》%JAVA_HOME%\bin—》确定—》确定—》确定</p>
+<h2 id="MAVEN-2"><a href="#MAVEN-2" class="headerlink" title="MAVEN"></a>MAVEN</h2><p>Maven 的配置同 Java JDK</p>
+<h1 id="测试环境变量"><a href="#测试环境变量" class="headerlink" title="测试环境变量"></a>测试环境变量</h1><h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><p>win + r 打开运行，输入 <code>cmd</code>，打开命令行提示符，输入<code>java --version</code> 如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\jinzhongxu&gt;java --version</span><br><span class="line">java 14.0.2 2020-07-14</span><br><span class="line">Java(TM) SE Runtime Environment (build 14.0.2+12-46)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 14.0.2+12-46, mixed mode, sharing)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h2><p>win + r 打开运行，输入<code>cmd</code>，打开命令行提示符，输入 <code>mvn -v</code> 如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\jinzhongxu&gt;mvn -v</span><br><span class="line">Apache Maven 3.6.3 (cecedd343002696d0abb50b32b541b8a6ba2883f)</span><br><span class="line">Maven home: C:\Program Files\apache-maven-3.6.3\bin\..</span><br><span class="line">Java version: 14.0.2, vendor: Oracle Corporation, runtime: C:\Program Files\jdk-14.0.2</span><br><span class="line">Default locale: zh_CN, platform encoding: GBK</span><br><span class="line">OS name: <span class="string">&quot;windows 10&quot;</span>, version: <span class="string">&quot;10.0&quot;</span>, <span class="built_in">arch</span>: <span class="string">&quot;amd64&quot;</span>, family: <span class="string">&quot;windows&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Maven-镜像配置"><a href="#Maven-镜像配置" class="headerlink" title="Maven 镜像配置"></a>Maven 镜像配置</h1><p>因 Maven 默认镜像在国内下载限制，因此，建议更改为阿里云的镜像，方法如下：（建议修改 <strong>settings.xml</strong> 前先复制保持一份）</p>
+<p>打开文件 <strong>C:\Program Files\apache-maven-3.6.3\conf\settings.xml</strong>，编辑为如下：</p>
+<p>需要说明的是：建议把修改好的 settings.xml 拷贝到 C:\Users\jinzhongxu.m2 目录下一份。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- mirrors</span></span><br><span class="line"><span class="comment">   | This is a list of mirrors to be used in downloading artifacts from remote repositories.</span></span><br><span class="line"><span class="comment">   |</span></span><br><span class="line"><span class="comment">   | It works like this: a POM may declare a repository to use in resolving certain artifacts.</span></span><br><span class="line"><span class="comment">   | However, this repository may have problems with heavy traffic at times, so people have mirrored</span></span><br><span class="line"><span class="comment">   | it to several places.</span></span><br><span class="line"><span class="comment">   |</span></span><br><span class="line"><span class="comment">   | That repository definition will have a unique id, so we can create a mirror reference for that</span></span><br><span class="line"><span class="comment">   | repository, to be used as an alternate download site. The mirror site will be the preferred</span></span><br><span class="line"><span class="comment">   | server for that repository.</span></span><br><span class="line"><span class="comment">   |--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mirrors</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- mirror</span></span><br><span class="line"><span class="comment">     | Specifies a repository mirror site to use instead of a given repository. The repository that</span></span><br><span class="line"><span class="comment">     | this mirror serves has an ID that matches the mirrorOf element of this mirror. IDs are used</span></span><br><span class="line"><span class="comment">     | for inheritance and direct lookup purposes, and must be unique across the set of mirrors.</span></span><br><span class="line"><span class="comment">     |</span></span><br><span class="line"><span class="comment">    &lt;mirror&gt;</span></span><br><span class="line"><span class="comment">      &lt;id&gt;nexus-osc&lt;/id&gt;</span></span><br><span class="line"><span class="comment">      &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;</span></span><br><span class="line"><span class="comment">      &lt;name&gt;Nexus osc&lt;/name&gt;</span></span><br><span class="line"><span class="comment">      &lt;url&gt;http://maven.aliyun.com/nexus/content/repositories/central&lt;/url&gt;</span></span><br><span class="line"><span class="comment">    &lt;/mirror&gt;</span></span><br><span class="line"><span class="comment">     --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-osc<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>*<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus osc<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/repositories/central<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirrors</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- profile</span></span><br><span class="line"><span class="comment">     | Specifies a set of introductions to the build process, to be activated using one or more of the</span></span><br><span class="line"><span class="comment">     | mechanisms described above. For inheritance purposes, and to activate profiles via &lt;activatedProfiles/&gt;</span></span><br><span class="line"><span class="comment">     | or the command line, profiles have to have an ID that is unique.</span></span><br><span class="line"><span class="comment">     |</span></span><br><span class="line"><span class="comment">     | An encouraged best practice for profile identification is to use a consistent naming convention</span></span><br><span class="line"><span class="comment">     | for profiles, such as &#x27;env-dev&#x27;, &#x27;env-test&#x27;, &#x27;env-production&#x27;, &#x27;user-jdcasey&#x27;, &#x27;user-brett&#x27;, etc.</span></span><br><span class="line"><span class="comment">     | This will make it more intuitive to understand what the set of introduced profiles is attempting</span></span><br><span class="line"><span class="comment">     | to accomplish, particularly when you only have a list of profile id&#x27;s for debug.</span></span><br><span class="line"><span class="comment">     |</span></span><br><span class="line"><span class="comment">     | This profile example uses the JDK version to trigger activation, and provides a JDK-specific repo.</span></span><br><span class="line"><span class="comment">    &lt;profile&gt;</span></span><br><span class="line"><span class="comment">      &lt;id&gt;jdk-1.4&lt;/id&gt;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      &lt;activation&gt;</span></span><br><span class="line"><span class="comment">        &lt;jdk&gt;1.4&lt;/jdk&gt;</span></span><br><span class="line"><span class="comment">      &lt;/activation&gt;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      &lt;repositories&gt;</span></span><br><span class="line"><span class="comment">        &lt;repository&gt;</span></span><br><span class="line"><span class="comment">          &lt;id&gt;jdk14&lt;/id&gt;</span></span><br><span class="line"><span class="comment">          &lt;name&gt;Repository for JDK 1.4 builds&lt;/name&gt;</span></span><br><span class="line"><span class="comment">          &lt;url&gt;http://www.myhost.com/maven/jdk14&lt;/url&gt;</span></span><br><span class="line"><span class="comment">          &lt;layout&gt;default&lt;/layout&gt;</span></span><br><span class="line"><span class="comment">          &lt;snapshotPolicy&gt;always&lt;/snapshotPolicy&gt;</span></span><br><span class="line"><span class="comment">        &lt;/repository&gt;</span></span><br><span class="line"><span class="comment">      &lt;/repositories&gt;</span></span><br><span class="line"><span class="comment">    &lt;/profile&gt;</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">     | Here is another profile, activated by the system property &#x27;target-env&#x27; with a value of &#x27;dev&#x27;,</span></span><br><span class="line"><span class="comment">     | which provides a specific path to the Tomcat instance. To use this, your plugin configuration</span></span><br><span class="line"><span class="comment">     | might hypothetically look like:</span></span><br><span class="line"><span class="comment">     |</span></span><br><span class="line"><span class="comment">     | ...</span></span><br><span class="line"><span class="comment">     | &lt;plugin&gt;</span></span><br><span class="line"><span class="comment">     |   &lt;groupId&gt;org.myco.myplugins&lt;/groupId&gt;</span></span><br><span class="line"><span class="comment">     |   &lt;artifactId&gt;myplugin&lt;/artifactId&gt;</span></span><br><span class="line"><span class="comment">     |</span></span><br><span class="line"><span class="comment">     |   &lt;configuration&gt;</span></span><br><span class="line"><span class="comment">     |     &lt;tomcatLocation&gt;$&#123;tomcatPath&#125;&lt;/tomcatLocation&gt;</span></span><br><span class="line"><span class="comment">     |   &lt;/configuration&gt;</span></span><br><span class="line"><span class="comment">     | &lt;/plugin&gt;</span></span><br><span class="line"><span class="comment">     | ...</span></span><br><span class="line"><span class="comment">     |</span></span><br><span class="line"><span class="comment">     | <span class="doctag">NOTE:</span> If you just wanted to inject this configuration whenever someone set &#x27;target-env&#x27; to</span></span><br><span class="line"><span class="comment">     |       anything, you could just leave off the &lt;value/&gt; inside the activation-property.</span></span><br><span class="line"><span class="comment">     |</span></span><br><span class="line"><span class="comment">    &lt;profile&gt;</span></span><br><span class="line"><span class="comment">      &lt;id&gt;env-dev&lt;/id&gt;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      &lt;activation&gt;</span></span><br><span class="line"><span class="comment">        &lt;property&gt;</span></span><br><span class="line"><span class="comment">          &lt;name&gt;target-env&lt;/name&gt;</span></span><br><span class="line"><span class="comment">          &lt;value&gt;dev&lt;/value&gt;</span></span><br><span class="line"><span class="comment">        &lt;/property&gt;</span></span><br><span class="line"><span class="comment">      &lt;/activation&gt;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      &lt;properties&gt;</span></span><br><span class="line"><span class="comment">        &lt;tomcatPath&gt;/path/to/tomcat/instance&lt;/tomcatPath&gt;</span></span><br><span class="line"><span class="comment">      &lt;/properties&gt;</span></span><br><span class="line"><span class="comment">    &lt;/profile&gt;</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">id</span>&gt;</span>development<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">jdk</span>&gt;</span>14<span class="tag">&lt;/<span class="name">jdk</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>14<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>14<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.compilerVersion</span>&gt;</span>14<span class="tag">&lt;/<span class="name">maven.compiler.compilerVersion</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42583206/article/details/108375173">永久解决 Intellij idea 报错：Error : java 不支持发行版本5</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2021/03/30/java14-path-windows10/">https://xujinzh.github.io/2021/03/30/java14-path-windows10/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java/">java</a><a class="post-meta__tags" href="/tags/windows10/">windows10</a></div><div class="post_share"><div class="social-share" data-image="/img/c5.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/03/30/java-run-jar/" title="使用 Java 命令运行 jar 包"><img class="cover" src="/img/c25.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">使用 Java 命令运行 jar 包</div></div></a></div><div class="next-post pull-right"><a href="/2021/03/21/sudo-error/" title="因 sudoers 出错无法使用 sudo 的解决方法"><img class="cover" src="/img/c6.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">因 sudoers 出错无法使用 sudo 的解决方法</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/01/02/intellij-idea-build-jar/" title="使用intellij idea 编译项目到jar包"><img class="cover" src="/img/c9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-02</div><div class="title">使用intellij idea 编译项目到jar包</div></div></a></div><div><a href="/2022/01/03/java-print-multi-variables/" title="java 一条语句打印多个变量"><img class="cover" src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-03</div><div class="title">java 一条语句打印多个变量</div></div></a></div><div><a href="/2021/03/30/java-run-jar/" title="使用 Java 命令运行 jar 包"><img class="cover" src="/img/c25.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-30</div><div class="title">使用 Java 命令运行 jar 包</div></div></a></div><div><a href="/2023/08/21/mac-install-java-jdk/" title="Mac 安装 java 开发环境 jdk"><img class="cover" src="/img/c20.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-21</div><div class="title">Mac 安装 java 开发环境 jdk</div></div></a></div><div><a href="/2020/01/19/storm-jar-mvn-topology/" title="使用Maven打包jar包并提交到storm拓扑上运行"><img class="cover" src="/img/c11.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-19</div><div class="title">使用Maven打包jar包并提交到storm拓扑上运行</div></div></a></div><div><a href="/2021/04/19/stop-windows10-update/" title="关闭 Windows10 自动更新"><img class="cover" src="/img/c2.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-19</div><div class="title">关闭 Windows10 自动更新</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD-Java-JDK-14"><span class="toc-number">1.</span> <span class="toc-text">下载 Java JDK 14</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JDK"><span class="toc-number">1.1.</span> <span class="toc-text">JDK</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MAVEN"><span class="toc-number">1.2.</span> <span class="toc-text">MAVEN</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Java-JDK-14"><span class="toc-number">2.</span> <span class="toc-text">安装 Java JDK 14</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JDK-1"><span class="toc-number">2.1.</span> <span class="toc-text">JDK</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MAVEN-1"><span class="toc-number">2.2.</span> <span class="toc-text">MAVEN</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-Java-%E7%8E%AF%E5%A2%83"><span class="toc-number">3.</span> <span class="toc-text">配置 Java 环境</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JDK-2"><span class="toc-number">3.1.</span> <span class="toc-text">JDK</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MAVEN-2"><span class="toc-number">3.2.</span> <span class="toc-text">MAVEN</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">4.</span> <span class="toc-text">测试环境变量</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java"><span class="toc-number">4.1.</span> <span class="toc-text">Java</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven"><span class="toc-number">4.2.</span> <span class="toc-text">Maven</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Maven-%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE"><span class="toc-number">5.</span> <span class="toc-text">Maven 镜像配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '6114e9c50ea547ecad7d6554e4d80cc9',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

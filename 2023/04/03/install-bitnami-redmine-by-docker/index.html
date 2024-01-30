@@ -1,0 +1,337 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>通过 Docker 安装 bitnami redmine | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Redmine 是一个网页界面的项目管理与缺陷跟踪管理系统的自由及开放源代码软件工具，可以同时处理多个项目。它集成了项目管理所需的各项功能，包括日历、燃尽图和甘特图以协助可视化表现项目与时间限制，问题跟踪和版本控制。本篇介绍如何使用 Docker 安装 Redmine，以 Bitnami Redmine + Ubuntu18.04 为例，所有命令以普通用户运行，但需要 sudo 权限。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过 Docker 安装 bitnami redmine">
+<meta property="og:url" content="https://xujinzh.github.io/2023/04/03/install-bitnami-redmine-by-docker/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="Redmine 是一个网页界面的项目管理与缺陷跟踪管理系统的自由及开放源代码软件工具，可以同时处理多个项目。它集成了项目管理所需的各项功能，包括日历、燃尽图和甘特图以协助可视化表现项目与时间限制，问题跟踪和版本控制。本篇介绍如何使用 Docker 安装 Redmine，以 Bitnami Redmine + Ubuntu18.04 为例，所有命令以普通用户运行，但需要 sudo 权限。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c27.jpg">
+<meta property="article:published_time" content="2023-04-03T07:51:23.000Z">
+<meta property="article:modified_time" content="2024-01-30T15:35:56.096Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="redmine">
+<meta property="article:tag" content="bitnami">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c27.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2023/04/03/install-bitnami-redmine-by-docker/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '通过 Docker 安装 bitnami redmine',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-30 23:35:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">通过 Docker 安装 bitnami redmine</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-04-03T07:51:23.000Z" title="发表于 2023-04-03 15:51:23">2023-04-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-30T15:35:56.096Z" title="更新于 2024-01-30 23:35:56">2024-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/linux/">linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="通过 Docker 安装 bitnami redmine"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>Redmine 是一个网页界面的项目管理与缺陷跟踪管理系统的自由及开放源代码软件工具，可以同时处理多个项目。它集成了项目管理所需的各项功能，包括日历、燃尽图和甘特图以协助可视化表现项目与时间限制，问题跟踪和版本控制。本篇介绍如何使用 Docker 安装 Redmine，以 Bitnami Redmine + Ubuntu18.04 为例，所有命令以普通用户运行，但需要 sudo 权限。</p>
+<span id="more"></span>
+
+<h1 id="安装-docker"><a href="#安装-docker" class="headerlink" title="安装 docker"></a>安装 docker</h1><p>docker 和 docker-compose 的安装请参考我的另一篇博文：<a href="https://xujinzh.github.io/2020/11/05/docker-simple/">docker 简单介绍</a></p>
+<h1 id="安装-redmine"><a href="#安装-redmine" class="headerlink" title="安装 redmine"></a>安装 redmine</h1><p>我们这里使用 <a target="_blank" rel="noopener" href="https://hub.docker.com/r/bitnami/redmine/">bitnami&#x2F;redmine</a> 来安装 redmine。</p>
+<h2 id="下载-docker-compose-yml"><a href="#下载-docker-compose-yml" class="headerlink" title="下载 docker-compose.yml"></a>下载 docker-compose.yml</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">mkdir</span> /usr/local/redmine</span><br><span class="line">sudo <span class="built_in">chown</span> -R jinzhongxu /usr/local/redmine</span><br><span class="line"><span class="built_in">cd</span> /usr/local/redmine</span><br><span class="line">wget https://raw.githubusercontent.com/bitnami/containers/main/bitnami/redmine/docker-compose.yml</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置-docker-compose-yml"><a href="#配置-docker-compose-yml" class="headerlink" title="配置 docker-compose.yml"></a>配置 docker-compose.yml</h2><p>编辑配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">&#x27;2&#x27;</span></span><br><span class="line">services:</span><br><span class="line">  mariadb:</span><br><span class="line">    image: docker.io/bitnami/mariadb:10.6  <span class="comment"># 这里使用 mariadb 数据库</span></span><br><span class="line">    volumes:</span><br><span class="line">      - <span class="string">&#x27;/disk0/redmine/mariadb_data:/bitnami/mariadb&#x27;</span>  <span class="comment"># 把数据保存到宿主机</span></span><br><span class="line">    environment:</span><br><span class="line">      <span class="comment"># ALLOW_EMPTY_PASSWORD is recommended only for development.</span></span><br><span class="line">      - ALLOW_EMPTY_PASSWORD=<span class="built_in">yes</span></span><br><span class="line">      - MARIADB_PASSWORD=123456     <span class="comment"># 增加密码</span></span><br><span class="line">      - MARIADB_USER=bn_redmine</span><br><span class="line">      - MARIADB_DATABASE=bitnami_redmine</span><br><span class="line">  redmine:</span><br><span class="line">    image: docker.io/bitnami/redmine:5   <span class="comment"># 这里使用的 bitnami redmine </span></span><br><span class="line">    ports:</span><br><span class="line">      - <span class="string">&#x27;8300:3000&#x27;</span>   <span class="comment"># 这里把容器里的3000端口映射到宿主机的 8300 端口</span></span><br><span class="line">    volumes:</span><br><span class="line">      - <span class="string">&#x27;/disk0/redmine/redmine_data:/bitnami/redmine&#x27;</span>  <span class="comment"># 把数据保持到宿主机</span></span><br><span class="line">    depends_on:</span><br><span class="line">      - mariadb</span><br><span class="line">    environment:</span><br><span class="line">      <span class="comment"># ALLOW_EMPTY_PASSWORD is recommended only for development.</span></span><br><span class="line">      <span class="comment">#- ALLOW_EMPTY_PASSWORD=yes   # 关闭</span></span><br><span class="line">      - REDMINE_DATABASE_PASSWORD=123456   <span class="comment"># 增加密码</span></span><br><span class="line">      - REDMINE_DATABASE_HOST=mariadb</span><br><span class="line">      - REDMINE_DATABASE_PORT_NUMBER=3306</span><br><span class="line">      - REDMINE_DATABASE_USER=bn_redmine</span><br><span class="line">      - REDMINE_DATABASE_NAME=bitnami_redmine</span><br><span class="line">volumes:</span><br><span class="line">  mariadb_data:</span><br><span class="line">    driver: <span class="built_in">local</span></span><br><span class="line">  redmine_data:</span><br><span class="line">    driver: <span class="built_in">local</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h2><p>配置完成后，运行服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建数据保存路径</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /disk0/redmine</span><br><span class="line"><span class="comment"># 注意访问权限，权限不够会影响数据库运行</span></span><br><span class="line">sudo <span class="built_in">chmod</span> 777 /disk0/redmine</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /usr/local/redmine</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+<p>此时，访问链接：http:&#x2F;&#x2F;宿主机IP:8300 即可访问 redmine，默认管理员：user，密码：bitnami1，登录进去后可更改。</p>
+<h2 id="更新-baseurl"><a href="#更新-baseurl" class="headerlink" title="更新 baseurl"></a>更新 baseurl</h2><p>默认的登录连接路由指向 <code>/</code>，但有时我们希望它指向二级目录，如 <code>/redmine</code>，此时，访问链接: http:&#x2F;&#x2F;宿主机IP:8300&#x2F;redmine 可以访问 redmine. 方法如下：</p>
+<ol>
+<li><p>修改 <code>config/environment.rb</code>。进入 redmine 容器，然后在 <code>/opt/bitnami/redmine/config/environment.rb</code> 最底部增加如下内容：</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ActionController::Base.relative_url_root = RedmineApp::Application.routes.default_scope</span><br><span class="line">Redmine::Utils::relative_url_root = RedmineApp::Application.routes.default_scope</span><br><span class="line"></span><br><span class="line">ENV[<span class="string">&#x27;RAILS_RELATIVE_URL_ROOT&#x27;</span>] = <span class="string">&quot;/redmine&quot;</span></span><br><span class="line">Redmine::Utils::relative_url_root = ENV[<span class="string">&#x27;RAILS_RELATIVE_URL_ROOT&#x27;</span>]</span><br></pre></td></tr></table></figure></li>
+<li><p>修改 <code>config.ru</code>。进入 redmine 容器，然后在 <code>/opt/bitnami/redmine/config.ru</code> 里面的内容进行修改。把</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This file is used by Rack-based servers to start the application.</span></span><br><span class="line"></span><br><span class="line">require ::File.expand_path(<span class="string">&#x27;../config/environment&#x27;</span>,  __FILE__)</span><br><span class="line">run Rails.application</span><br></pre></td></tr></table></figure>
+<p> 改为</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This file is used by Rack-based servers to start the application.</span></span><br><span class="line"></span><br><span class="line">require ::File.expand_path(<span class="string">&#x27;../config/environment&#x27;</span>,  __FILE__)</span><br><span class="line">map ENV[<span class="string">&#x27;RAILS_RELATIVE_URL_ROOT&#x27;</span>] || <span class="string">&#x27;/&#x27;</span> <span class="keyword">do</span></span><br><span class="line">run Rails.application</span><br><span class="line">end</span><br></pre></td></tr></table></figure></li>
+<li><p>修改 <code>config/additional_environment.rb</code>。进入 redmine 容器，然后创建新文件 <code>/opt/bitnami/redmine/config/additional_environment.rb</code>，增加如下内容：</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config.relative_url_root = <span class="string">&#x27;/redmine&#x27;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>重启容器：</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意不要使用 docker-compose down，然后再 docker-compose up -d，这会清空现有容器，重新创建新容器</span></span><br><span class="line">docker-compose restart</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>此时，即可使用链接: http:&#x2F;&#x2F;宿主机IP:8300&#x2F;redmine 可以访问 redmine.</p>
+<p>但是，不小心使用 <code>docker-compose down</code> 命令就又会清空容器中修改的内容。可以如下解决：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把修改过的容器 commit 成镜像</span></span><br><span class="line">docker commit -a <span class="string">&quot;jinzhongxu&quot;</span> -m <span class="string">&quot;change base url to /redmine&quot;</span> redmine-redmine-1 bitnami/redmine:5_url_redmine</span><br><span class="line"><span class="comment"># 修改 docker-compose.yml，使用 commit 后的镜像</span></span><br><span class="line">vim /usr/local/redmine/docker-compose.yml</span><br></pre></td></tr></table></figure>
+<p>改为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">&#x27;2&#x27;</span></span><br><span class="line">services:</span><br><span class="line">  mariadb:</span><br><span class="line">    image: bitnami/mariadb:10.6</span><br><span class="line">    volumes:</span><br><span class="line">      - <span class="string">&#x27;/disk0/redmine/mariadb_data:/bitnami/mariadb&#x27;</span></span><br><span class="line">    environment:</span><br><span class="line">      <span class="comment"># ALLOW_EMPTY_PASSWORD is recommended only for development.</span></span><br><span class="line">      - ALLOW_EMPTY_PASSWORD=<span class="built_in">yes</span></span><br><span class="line">      - MARIADB_PASSWORD=123456</span><br><span class="line">      - MARIADB_USER=bn_redmine</span><br><span class="line">      - MARIADB_DATABASE=bitnami_redmine</span><br><span class="line">  redmine:</span><br><span class="line">    image: bitnami/redmine:5_url_redmine  <span class="comment"># 指定使用本地 commit 后的镜像</span></span><br><span class="line">    ports:</span><br><span class="line">      - <span class="string">&#x27;8300:3000&#x27;</span></span><br><span class="line">    volumes:</span><br><span class="line">      - <span class="string">&#x27;/disk0/redmine/redmine_data:/bitnami/redmine&#x27;</span></span><br><span class="line">    depends_on:</span><br><span class="line">      - mariadb</span><br><span class="line">    environment:</span><br><span class="line">      <span class="comment"># ALLOW_EMPTY_PASSWORD is recommended only for development.</span></span><br><span class="line">      <span class="comment">#- ALLOW_EMPTY_PASSWORD=yes</span></span><br><span class="line">      - REDMINE_DATABASE_PASSWORD=123456</span><br><span class="line">      - REDMINE_DATABASE_HOST=mariadb</span><br><span class="line">      - REDMINE_DATABASE_PORT_NUMBER=3306</span><br><span class="line">      - REDMINE_DATABASE_USER=bn_redmine</span><br><span class="line">      - REDMINE_DATABASE_NAME=bitnami_redmine</span><br><span class="line">volumes:</span><br><span class="line">  mariadb_data:</span><br><span class="line">    driver: <span class="built_in">local</span></span><br><span class="line">  redmine_data:</span><br><span class="line">    driver: <span class="built_in">local</span></span><br></pre></td></tr></table></figure>
+<p>此时，就可以放心的使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/redmine</span><br><span class="line">docker-compose down</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置邮箱"><a href="#配置邮箱" class="headerlink" title="配置邮箱"></a>配置邮箱</h2><p>因为数据我们保存到宿主机上，运行时挂载到容器上。因此，我们可以直接修改本地宿主机上的配置文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /disk0/redmine/redmine_data/config/configuration.yml</span><br></pre></td></tr></table></figure>
+<p>改为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">default:</span><br><span class="line">  <span class="comment"># Outgoing emails configuration</span></span><br><span class="line">  <span class="comment"># See the examples below and the Rails guide for more configuration options:</span></span><br><span class="line">  <span class="comment"># http://guides.rubyonrails.org/action_mailer_basics.html#action-mailer-configuration</span></span><br><span class="line">  email_delivery:</span><br><span class="line"></span><br><span class="line">  <span class="comment"># ==== Simple SMTP server at localhost</span></span><br><span class="line">  <span class="comment">#</span></span><br><span class="line">  <span class="comment">#  email_delivery:</span></span><br><span class="line">  <span class="comment">#    delivery_method: :smtp</span></span><br><span class="line">  <span class="comment">#    smtp_settings:</span></span><br><span class="line">  <span class="comment">#      address: &quot;localhost&quot;</span></span><br><span class="line">  <span class="comment">#      port: 25</span></span><br><span class="line">  <span class="comment">#</span></span><br><span class="line">  <span class="comment"># ==== SMTP server at example.com using LOGIN authentication and checking HELO for foo.com</span></span><br><span class="line">  <span class="comment">#</span></span><br><span class="line">  <span class="comment">#  email_delivery:</span></span><br><span class="line">      delivery_method: :smtp</span><br><span class="line">      smtp_settings:</span><br><span class="line">        address: <span class="string">&quot;smtp.163.com&quot;</span></span><br><span class="line">        port: 25</span><br><span class="line">        authentication: :login</span><br><span class="line">        domain: <span class="string">&#x27;163.com&#x27;</span></span><br><span class="line">        user_name: <span class="string">&#x27;xujinzhong@163.com&#x27;</span></span><br><span class="line">        password: <span class="string">&#x27;ABCDIWJSLSIEJSLS&#x27;</span>  <span class="comment"># 注意这里的密码是通过 163邮箱设置 pop3 获得的 16 位密钥</span></span><br></pre></td></tr></table></figure>
+<p><strong>注意，使用 QQ 邮箱可能导致邮箱无法使用，需要开启SSL，163邮箱默认都开放SSL。</strong></p>
+<p>重启：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/redmine</span><br><span class="line">docker-compose down</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>登录到 redmine 网站，打开：管理 —&gt; 配置 —&gt; 邮件通知 —&gt; 邮件发件人地址，填写上面配置的邮箱：<a href="mailto:&#x78;&#117;&#x6a;&#x69;&#110;&#122;&#104;&#111;&#x6e;&#103;&#64;&#x31;&#54;&#51;&#46;&#x63;&#x6f;&#x6d;">&#x78;&#117;&#x6a;&#x69;&#110;&#122;&#104;&#111;&#x6e;&#103;&#64;&#x31;&#54;&#51;&#46;&#x63;&#x6f;&#x6d;</a> —&gt; 保存 —&gt; 右下角: 发送测试邮件.</p>
+<h2 id="配置上传文件的大小"><a href="#配置上传文件的大小" class="headerlink" title="配置上传文件的大小"></a>配置上传文件的大小</h2><p>在 管理 —&gt; 配置 —&gt; 文件 —&gt; 附件大小限制和批量下载附近大小总计大小限制 —&gt; 保存。</p>
+<h2 id="插件安装"><a href="#插件安装" class="headerlink" title="插件安装"></a>插件安装</h2><p>redmine 插件严重依赖版本，不同版本的 redmine 适用的插件不同。安装前请先检查 redmine 版本信息。本篇以 redmine 5 为例。</p>
+<p>访问：<a target="_blank" rel="noopener" href="https://www.redmine.org/projects/redmine/wiki/Plugins">https://www.redmine.org/projects/redmine/wiki/Plugins</a> 获取插件安装方法。<br>访问：<a target="_blank" rel="noopener" href="https://www.redmine.org/plugins?utf8=%E2%9C%93&page=1&sort=&v=5.0">https://www.redmine.org/plugins?utf8=%E2%9C%93&amp;page=1&amp;sort=&amp;v=5.0</a> 获取适合版本 5 的所有插件。</p>
+<p>假设要安装的插件是：<a target="_blank" rel="noopener" href="https://www.redmine.org/plugins/redmine-x-lightbox2">Lightbox2 Plugin by RedmineX</a> ，进入官网 <a target="_blank" rel="noopener" href="https://www.redmine-x.com/redmine-lightbox2">https://www.redmine-x.com/redmine-lightbox2</a> ，注册下载压缩包，安装方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 把压缩包拷贝到插件目录</span></span><br><span class="line">7z x redminex-lightbox2-1-0-0_UNZIP_ME_FIRST.zip</span><br><span class="line"><span class="built_in">cp</span> -r redmine_x_lightbox2 /disk0/redmine/redmine_data/plugins</span><br><span class="line"><span class="comment"># 2. 进入容器，安装</span></span><br><span class="line">docker <span class="built_in">exec</span> -it redmine-redmine-1 bash</span><br><span class="line"><span class="built_in">cd</span> /opt/bitnami/redmine/</span><br><span class="line">bundle install</span><br><span class="line">bundle <span class="built_in">exec</span> rake redmine:plugins:migrate RAILS_ENV=production</span><br></pre></td></tr></table></figure>
+<p>重启 redmine。为了方便，可以像上面一样 commit 镜像。</p>
+<p>解决 PDF 预览问题：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it redmine-redmine-1 bash</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> /etc/ImageMagick-6/policy.xml /etc/ImageMagick-6/policy.xml.origin</span><br><span class="line">sed -i <span class="string">&#x27;s/^.*policy.*coder.*none.*PDF.*//&#x27;</span> /etc/ImageMagick-6/policy.xml</span><br></pre></td></tr></table></figure>
+<p>重启 redmine。为了方便，可以像上面一样 commit 镜像。</p>
+<p>解决 favicon 图标显示问题：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it redmine-redmine-1 bash</span><br><span class="line"></span><br><span class="line">apt update</span><br><span class="line">apt install wget curl -y</span><br></pre></td></tr></table></figure>
+<p>重启 redmine。为了方便，可以像上面一样 commit 镜像。</p>
+<h2 id="菜单字体大小"><a href="#菜单字体大小" class="headerlink" title="菜单字体大小"></a>菜单字体大小</h2><p>redmine 的菜单栏字体比较小，网页端没有提供修改字体的入口，需要手动修改网页 CSS，方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it redmine-redmine-1 bash</span><br><span class="line">vim /opt/bitnami/redmine/public/stylesheets/application.css</span><br><span class="line"></span><br><span class="line"><span class="comment"># 找到 body 的 font-size 修改为合适的大小</span></span><br><span class="line"><span class="comment"># 然后保存</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 必要时，可以把该容器 commit 成一个镜像，然后从新进行启动</span></span><br><span class="line">docker commit -a <span class="string">&quot;jinzhongxu&quot;</span> -m <span class="string">&quot;font size 16&quot;</span> redmine-redmine-1 bitnami/redmine:v5_font_size_16</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://hub.docker.com/r/bitnami/redmine/">bitnami&#x2F;redmine</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/keineahnung2345/article/details/118700529">將Redmine架在sub-URI</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2023/04/03/install-bitnami-redmine-by-docker/">https://xujinzh.github.io/2023/04/03/install-bitnami-redmine-by-docker/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/docker/">docker</a><a class="post-meta__tags" href="/tags/redmine/">redmine</a><a class="post-meta__tags" href="/tags/bitnami/">bitnami</a></div><div class="post_share"><div class="social-share" data-image="/img/c27.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/04/12/python-matplotlib-useage/" title="Python 可视化模块 Matplotlib 的使用"><img class="cover" src="/img/c20.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Python 可视化模块 Matplotlib 的使用</div></div></a></div><div class="next-post pull-right"><a href="/2023/03/29/latex-bibtex/" title="LaTex 参考文献"><img class="cover" src="/img/c6.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">LaTex 参考文献</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/05/29/install-bitnami-redmine/" title="bitnami redmine 的安装"><img class="cover" src="/img/c23.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-29</div><div class="title">bitnami redmine 的安装</div></div></a></div><div><a href="/2023/09/12/docker-gitlab/" title="docker 安装代码托管平台 gitlab"><img class="cover" src="/img/c6.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-12</div><div class="title">docker 安装代码托管平台 gitlab</div></div></a></div><div><a href="/2020/11/05/docker-simple/" title="docker 简单介绍"><img class="cover" src="/img/c28.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-11-05</div><div class="title">docker 简单介绍</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">384</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">296</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-docker"><span class="toc-number">1.</span> <span class="toc-text">安装 docker</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-redmine"><span class="toc-number">2.</span> <span class="toc-text">安装 redmine</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD-docker-compose-yml"><span class="toc-number">2.1.</span> <span class="toc-text">下载 docker-compose.yml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-docker-compose-yml"><span class="toc-number">2.2.</span> <span class="toc-text">配置 docker-compose.yml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E5%AE%B9%E5%99%A8"><span class="toc-number">2.3.</span> <span class="toc-text">启动容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0-baseurl"><span class="toc-number">2.4.</span> <span class="toc-text">更新 baseurl</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E9%82%AE%E7%AE%B1"><span class="toc-number">2.5.</span> <span class="toc-text">配置邮箱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E5%A4%A7%E5%B0%8F"><span class="toc-number">2.6.</span> <span class="toc-text">配置上传文件的大小</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85"><span class="toc-number">2.7.</span> <span class="toc-text">插件安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8F%9C%E5%8D%95%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F"><span class="toc-number">2.8.</span> <span class="toc-text">菜单字体大小</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">3.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep"><img src="/img/c22.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 三剑客 - 文本查找命令 grep"/></a><div class="content"><a class="title" href="/2024/01/27/linux-grep/" title="linux 三剑客 - 文本查找命令 grep">linux 三剑客 - 文本查找命令 grep</a><time datetime="2024-01-27T10:04:18.000Z" title="发表于 2024-01-27 18:04:18">2024-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 OpenCompass 的大模型评测"/></a><div class="content"><a class="title" href="/2024/01/21/ai-internlm-opencompass/" title="基于 OpenCompass 的大模型评测">基于 OpenCompass 的大模型评测</a><time datetime="2024-01-21T05:36:33.000Z" title="发表于 2024-01-21 13:36:33">2024-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 多进程使用单机多GPU加速推理"/></a><div class="content"><a class="title" href="/2024/01/17/python-torch-multi-gpu-py/" title="Python 多进程使用单机多GPU加速推理">Python 多进程使用单机多GPU加速推理</a><time datetime="2024-01-17T06:53:55.000Z" title="发表于 2024-01-17 14:53:55">2024-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于 LMDeploy 的大模型量化和部署"/></a><div class="content"><a class="title" href="/2024/01/13/ai-internlm-lmdeploy/" title="基于 LMDeploy 的大模型量化和部署">基于 LMDeploy 的大模型量化和部署</a><time datetime="2024-01-13T06:07:33.000Z" title="发表于 2024-01-13 14:07:33">2024-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 XTuner 训练书生·浦语私人大模型助手"/></a><div class="content"><a class="title" href="/2024/01/12/ai-internlm-personal-assistant-based-on-xtuner/" title="利用 XTuner 训练书生·浦语私人大模型助手">利用 XTuner 训练书生·浦语私人大模型助手</a><time datetime="2024-01-12T11:03:54.000Z" title="发表于 2024-01-12 19:03:54">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'd86d971ced9920748c6cb718bfaa00d9',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>
