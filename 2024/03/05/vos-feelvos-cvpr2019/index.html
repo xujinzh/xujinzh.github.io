@@ -5,14 +5,14 @@
 <meta property="og:site_name" content="J. Xu">
 <meta property="og:description" content="本篇介绍一篇发表在 CVPR 2019 上的半监督视频目标分割文章：FEELVOS: Fast End-to-End Embedding Learning for Video Object Segmentation. 一种简单而快速的方法，不依赖于微调。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://xujinzh.github.io/img/c19.jpg">
+<meta property="og:image" content="https://xujinzh.github.io/img/c18.jpg">
 <meta property="article:published_time" content="2024-03-05T08:14:48.000Z">
-<meta property="article:modified_time" content="2024-03-07T05:16:28.904Z">
+<meta property="article:modified_time" content="2024-03-07T08:48:43.211Z">
 <meta property="article:author" content="Jinzhong Xu">
 <meta property="article:tag" content="vos">
 <meta property="article:tag" content="feelvos">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://xujinzh.github.io/img/c19.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2024/03/05/vos-feelvos-cvpr2019/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c18.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2024/03/05/vos-feelvos-cvpr2019/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
   root: '/',
   algolia: undefined,
   localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
@@ -58,7 +58,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2024-03-07 13:16:28'
+  postUpdate: '2024-03-07 16:48:43'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -162,7 +162,7 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">390</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">302</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">26</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-03-05T08:14:48.000Z" title="发表于 2024-03-05 16:14:48">2024-03-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-03-07T05:16:28.904Z" title="更新于 2024-03-07 13:16:28">2024-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/video-object-segmentation/">video object segmentation</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>本篇介绍一篇发表在 CVPR 2019 上的半监督视频目标分割文章：FEELVOS: Fast End-to-End Embedding Learning for Video Object Segmentation. 一种简单而快速的方法，不依赖于微调。</p>
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">390</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">302</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">26</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-03-05T08:14:48.000Z" title="发表于 2024-03-05 16:14:48">2024-03-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-03-07T08:48:43.211Z" title="更新于 2024-03-07 16:48:43">2024-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/video-object-segmentation/">video object segmentation</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>27分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>本篇介绍一篇发表在 CVPR 2019 上的半监督视频目标分割文章：FEELVOS: Fast End-to-End Embedding Learning for Video Object Segmentation. 一种简单而快速的方法，不依赖于微调。</p>
 <span id="more"></span>
 
 <h1 id="文章资源"><a href="#文章资源" class="headerlink" title="文章资源"></a>文章资源</h1><ul>
@@ -249,7 +249,417 @@ $$
 <p>这里 $\mathcal{P}<em>{t-1,o}^p :&#x3D; \mathcal{P}</em>{t-1,o} \cap N(p)$ 表示 $t-1$ 帧中既属于目标 $o$ 又在 $p$ 邻域的所有像素集合。注意到，$L_{t,o}(p)$ 能够通过互相关（cross-correlation）进行高效地（efficiently）计算。实际中，发现使用局部前一帧匹配 $L_{t,o}(p)$ 具有更好的效果，且比全局前一帧匹配 $\hat{G}_{t,o}(p)$ 更有效率。</p>
 <p>上图 Figure 2，显示了局部匹配距离图的可视化示例。请注意，距离前一帧掩模太远的所有像素都被分配距离 1。由于前一帧和当前帧之间的运动很小，局部匹配会产生非常清晰且准确的距离图。</p>
 <h2 id="前一帧预测（Previous-Frame-Predictions）"><a href="#前一帧预测（Previous-Frame-Predictions）" class="headerlink" title="前一帧预测（Previous Frame Predictions）"></a>前一帧预测（Previous Frame Predictions）</h2><p>除了使用对前一帧的预测进行局部前一帧匹配之外，实践中发现使用前一帧的预测（即对象上的后验概率图）也很有帮助，也可以直接作为特征，提供附加提示（cue）。</p>
-<h2 id="动态分割头（Dynamic-Segmentation-Head）"><a href="#动态分割头（Dynamic-Segmentation-Head）" class="headerlink" title="动态分割头（Dynamic Segmentation Head）"></a>动态分割头（Dynamic Segmentation Head）</h2></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2024/03/05/vos-feelvos-cvpr2019/">https://xujinzh.github.io/2024/03/05/vos-feelvos-cvpr2019/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/vos/">vos</a><a class="post-meta__tags" href="/tags/feelvos/">feelvos</a></div><div class="post_share"><div class="social-share" data-image="/img/c19.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/03/04/vos-davis-eval/" title="Video Object Segmentation 评估指标"><img class="cover" src="/img/c27.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Video Object Segmentation 评估指标</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/03/04/vos-davis-eval/" title="Video Object Segmentation 评估指标"><img class="cover" src="/img/c27.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-04</div><div class="title">Video Object Segmentation 评估指标</div></div></a></div><div><a href="/2024/02/28/vos-stm-network-iccv2019/" title="Video Object Segmentation using Space-Time Memory Networks"><img class="cover" src="/img/c15.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-28</div><div class="title">Video Object Segmentation using Space-Time Memory Networks</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">390</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">302</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">26</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E8%B5%84%E6%BA%90"><span class="toc-number">1.</span> <span class="toc-text">文章资源</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">2.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%9C%E8%80%85"><span class="toc-number">3.</span> <span class="toc-text">作者</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">4.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87"><span class="toc-number">5.</span> <span class="toc-text">算法设计目标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1%E7%81%B5%E6%84%9F"><span class="toc-number">6.</span> <span class="toc-text">算法设计灵感</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">7.</span> <span class="toc-text">相关工作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%80%9F%E5%8A%A9%E5%88%9D%E5%A7%8B%E5%B8%A7%E5%BE%AE%E8%B0%83%E7%9A%84%E8%A7%86%E9%A2%91%E7%9B%AE%E6%A0%87%E5%88%86%E5%89%B2%E7%AE%97%E6%B3%95"><span class="toc-number">7.1.</span> <span class="toc-text">借助初始帧微调的视频目标分割算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B2%A1%E6%9C%89%E4%BD%BF%E7%94%A8%E5%88%9D%E5%A7%8B%E5%B8%A7%E5%BE%AE%E8%B0%83%E7%9A%84%E8%A7%86%E9%A2%91%E7%9B%AE%E6%A0%87%E5%88%86%E5%89%B2%E7%AE%97%E6%B3%95"><span class="toc-number">7.2.</span> <span class="toc-text">没有使用初始帧微调的视频目标分割算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E5%B5%8C%E5%85%A5%E5%AD%A6%E4%B9%A0%E3%80%82"><span class="toc-number">7.3.</span> <span class="toc-text">实例嵌入学习。</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#FEELVOS-%E6%96%B9%E6%B3%95"><span class="toc-number">8.</span> <span class="toc-text">FEELVOS 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0%EF%BC%88Overview%EF%BC%89"><span class="toc-number">8.1.</span> <span class="toc-text">概述（Overview）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%AD%E4%B9%89%E5%B5%8C%E5%85%A5%EF%BC%88Semantic-Embedding%EF%BC%89"><span class="toc-number">8.2.</span> <span class="toc-text">语义嵌入（Semantic Embedding）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%8C%B9%E9%85%8D%EF%BC%88Global-Matching%EF%BC%89"><span class="toc-number">8.3.</span> <span class="toc-text">全局匹配（Global Matching）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%89%8D%E4%B8%80%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E5%8C%B9%E9%85%8D%EF%BC%88Local-Previous-Frame-Matching%EF%BC%89"><span class="toc-number">8.4.</span> <span class="toc-text">使用前一帧的局部匹配（Local Previous Frame Matching）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E4%B8%80%E5%B8%A7%E9%A2%84%E6%B5%8B%EF%BC%88Previous-Frame-Predictions%EF%BC%89"><span class="toc-number">8.5.</span> <span class="toc-text">前一帧预测（Previous Frame Predictions）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%88%86%E5%89%B2%E5%A4%B4%EF%BC%88Dynamic-Segmentation-Head%EF%BC%89"><span class="toc-number">8.6.</span> <span class="toc-text">动态分割头（Dynamic Segmentation Head）</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/03/05/vos-feelvos-cvpr2019/" title="FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation"><img src="/img/c19.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation"/></a><div class="content"><a class="title" href="/2024/03/05/vos-feelvos-cvpr2019/" title="FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation">FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation</a><time datetime="2024-03-05T08:14:48.000Z" title="发表于 2024-03-05 16:14:48">2024-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/04/vos-davis-eval/" title="Video Object Segmentation 评估指标"><img src="/img/c27.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Video Object Segmentation 评估指标"/></a><div class="content"><a class="title" href="/2024/03/04/vos-davis-eval/" title="Video Object Segmentation 评估指标">Video Object Segmentation 评估指标</a><time datetime="2024-03-04T03:43:07.000Z" title="发表于 2024-03-04 11:43:07">2024-03-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/02/28/vos-stm-network-iccv2019/" title="Video Object Segmentation using Space-Time Memory Networks"><img src="/img/c15.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Video Object Segmentation using Space-Time Memory Networks"/></a><div class="content"><a class="title" href="/2024/02/28/vos-stm-network-iccv2019/" title="Video Object Segmentation using Space-Time Memory Networks">Video Object Segmentation using Space-Time Memory Networks</a><time datetime="2024-02-28T03:20:20.000Z" title="发表于 2024-02-28 11:20:20">2024-02-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/02/04/python-download-speedup/" title="利用 Python 加速下载大文件突破 IP 限速"><img src="/img/c16.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 Python 加速下载大文件突破 IP 限速"/></a><div class="content"><a class="title" href="/2024/02/04/python-download-speedup/" title="利用 Python 加速下载大文件突破 IP 限速">利用 Python 加速下载大文件突破 IP 限速</a><time datetime="2024-02-04T10:30:30.000Z" title="发表于 2024-02-04 18:30:30">2024-02-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/02/04/exec-cmd-by-bat-in-window/" title="Windows 中使用 bat 执行程序"><img src="/img/c25.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Windows 中使用 bat 执行程序"/></a><div class="content"><a class="title" href="/2024/02/04/exec-cmd-by-bat-in-window/" title="Windows 中使用 bat 执行程序">Windows 中使用 bat 执行程序</a><time datetime="2024-02-04T10:11:31.000Z" title="发表于 2024-02-04 18:11:31">2024-02-04</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+<h2 id="动态分割头（Dynamic-Segmentation-Head）"><a href="#动态分割头（Dynamic-Segmentation-Head）" class="headerlink" title="动态分割头（Dynamic Segmentation Head）"></a>动态分割头（Dynamic Segmentation Head）</h2><p>为了系统地、有效地处理可变数量的对象，文章提出了一个动态分割头，它为具有共享权重的每个对象动态实例化一次（见 Figure 3）。对象 $o$ 在时间 $t$ 的动态分割头的输入是 i) 全局匹配距离图 $G_{t,o}(·)$，ii) 局部匹配距离图 $L_{t,o}(·)$，iii) 对象 $o$ 的概率分布在时间 $t − 1$ 预测，以及 iv) 共享主干特征。动态分割头由几个卷积层组成，它对于一个对象提取一个一维 logits 特征图。请注意，动态分割头输入的 259 个维度中，不同对象之间只有三个不同，但，这三个维度在实践中提供了足够强大的线索，可以在与主干特征结合时产生准确的 logits。在为每个对象提取 logits 的一维特征图后，将它们堆叠在一起，在对象维度上应用 softmax，并应用交叉熵损失。</p>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/vos/feelvos/dynamic-segmentation-head.png?raw=true"></p>
+<p>分割头需要为每个对象运行一次，但大部分计算发生在提取共享主干特征时，这使得 FEELVOS 能够很好地扩展到多个对象。此外，算法甚至能够针对可变数量的对象进行端到端的多对象分割训练。这两个属性与许多最近的方法形成鲜明对比，例如 RGMP，RGMP 评估一个完整的网络，专为单对象分割而设计，针对每个对象一次并启发式地组合各个结果。</p>
+<h2 id="训练过程（Training-Procedure）"><a href="#训练过程（Training-Procedure）" class="headerlink" title="训练过程（Training Procedure）"></a>训练过程（Training Procedure）</h2><p>模型的训练过程设置的非常简单。对于每个训练步骤，首先随机选择一小批视频。对于每个视频，随机选择三帧：一帧作为参考帧，即它充当视频的第一帧，以及两个相邻帧，其中第一帧作为前一帧，第二帧作为要被分割的当前帧。仅将损失应用于当前帧。在训练中，使用前一帧的 ground-truth 进行局部匹配，并使用它来定义前一帧的预测，该预测是将对象所在的像素设置为 1，将所有其他对象设置为 0。请注意，训练过程比 RGMP 中使用的训练过程简单得多，后者需要合成数据生成以及随时间的反向传播。</p>
+<h2 id="推理（Inference）"><a href="#推理（Inference）" class="headerlink" title="推理（Inference）"></a>推理（Inference）</h2><p>FEELVOS 的推理非常简单，每帧仅需要一次前向传递。给定一个具有第一帧 ground-truth 的测试视频，首先提取第一帧的嵌入向量。然后，对视频进行逐帧分割，计算当前帧的嵌入向量，对第一帧应用全局匹配，对前一帧应用局部匹配，为每个对象运行动态分割头，并应用像素级 argmax 产生最终的分割。对于前一帧预测特征，使用前一帧预测的软概率图（soft probability map）。</p>
+<h2 id="实施细节（Implementation-Details）"><a href="#实施细节（Implementation-Details）" class="headerlink" title="实施细节（Implementation Details）"></a>实施细节（Implementation Details）</h2><p>使用 DeepLabv3+ 架构作为主干网络，它基于 Xception-65 架构，并应用深度可分离卷积、批量归一化、Atrous Spatial Pyramid Pooling，以及一个生成步长为 4 的特征的解码器模块。</p>
+<p>在此之上，添加一个由一个深度可分离卷积组成的嵌入层，即为每个通道单独执行一个 $3 \times 3$ 卷积，然后是一个 $1 \times 1$ 卷积，从而允许通道之间的交互。提取维度为 100 的嵌入向量。</p>
+<p>对于动态分割头，大的感受野很重要。在实践中，使用 4 个深度可分离的卷积层，维度为 256，深度卷积的内核大小为 $7 \times 7$，以及 ReLU 激活函数。在此之上，我们添加一个 $1 \times 1$ 卷积来提取 1 维的 logits。</p>
+<p>在训练期间计算所有像素对的距离以进行全局匹配的成本很高。在实践中，对第一帧中的参考像素集进行随机二次采样，使每个对象最多包含 1024 个像素，发现这对结果影响不大。</p>
+<p>对于局部匹配，使用 $k &#x3D; 15$ 的窗口大小应用于以步长 4 提取的嵌入向量。使用 DeepLabv3+ 的权重进行训练，该权重是在 ImageNet 和 COCO 上预先训练的。作为训练数据，使用 DAVIS 2017 训练集（60 个视频）和 YouTube-VOS 训练集（3471 个视频）。应用自举交叉熵损失（bootstrapped cross entropy），它仅考虑 $15%$ 最难的像素来计算损失。使用梯度下降法进行优化，动量为 0.9，学习率为 0.0007，执行 200,000 步，每个 GPU 的批量大小为 3 个视频（即 9 个图像），使用 16 个 Tesla P100 GPU。应用翻转（flipping）和缩放（scaling）作为数据增强，并将输入图像随机裁剪为 465 × 465 像素的大小。</p>
+<h1 id="实验（Experiments）"><a href="#实验（Experiments）" class="headerlink" title="实验（Experiments）"></a>实验（Experiments）</h1><p>训练后，网络在 DAVIS 2016 验证集、DAVIS 2017 验证和测试开发集以及 YouTube-Objects 数据集上进行评估。DAVIS 2016 验证集由 20 个视频组成，每个视频都有一个实例注释。DAVIS 2017 数据集包含 60 个带有多个注释实例的序列的训练集和一个验证集，该验证集将 DAVIS 2016 验证集扩展到总共 30 个带有多个注释实例的视频。DAVIS 2017 测试开发集还包含 30 个序列。 YouTube-Objects 数据集由 126 个视频组成，每个视频有一个实例的稀疏注释。</p>
+<p>采用 DAVIS 定义的评估措施。第一个评估标准是预测和真实分割掩模之间的平均交并比（mIoU, mean intersection-over-union），用 $\mathcal{J}$ 表示。第二个评估标准是轮廓精度 $\mathcal{F}$。最后，$\mathcal{J}$ &amp; $\mathcal{F}$ 是 $\mathcal{J}$ 和 $\mathcal{F}$ 的平均值。</p>
+<h2 id="主要结果（Main-Results）"><a href="#主要结果（Main-Results）" class="headerlink" title="主要结果（Main Results）"></a>主要结果（Main Results）</h2><p>下面两个表格将在 DAVIS 2017 验证和测试开发集上的结果与其他不采用微调的方法，以及采用微调的 PReMVOS 和 OnAVOS 方法进行了比较。注意 PML 在 DAVIS 2017 上未提供结果。</p>
+<p>DAVIS 2017 验证集的定量结果。 FT 表示微调，t&#x2F;s 表示每帧的时间（以秒为单位）。 $\dagger$：根据 DAVIS 2016 推断的时间，假设对象数量呈线性缩放。</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"></td>
+<td align="center">FT</td>
+<td align="center">$\mathcal{J}$</td>
+<td align="center">$\mathcal{F}$</td>
+<td align="center">$\mathcal{J}$ &amp; $\mathcal{F}$</td>
+<td align="center">t&#x2F;s</td>
+</tr>
+<tr>
+<td align="left">OSMN</td>
+<td align="center"></td>
+<td align="center">52.5</td>
+<td align="center">57.1</td>
+<td align="center">54.8</td>
+<td align="center">$0.28^{\dagger}$</td>
+</tr>
+<tr>
+<td align="left">FAVOS</td>
+<td align="center"></td>
+<td align="center">54.6</td>
+<td align="center">61.8</td>
+<td align="center">58.2</td>
+<td align="center">$1.2^{\dagger}$</td>
+</tr>
+<tr>
+<td align="left">VideoMatch</td>
+<td align="center"></td>
+<td align="center">56.5</td>
+<td align="center">68.2</td>
+<td align="center">62.4</td>
+<td align="center">0.35</td>
+</tr>
+<tr>
+<td align="left">RGMP</td>
+<td align="center"></td>
+<td align="center">64.8</td>
+<td align="center">68.6</td>
+<td align="center">66.7</td>
+<td align="center">$0.28^{\dagger}$</td>
+</tr>
+<tr>
+<td align="left">FEELVOS(-YTB-VOS)</td>
+<td align="center"></td>
+<td align="center">65.9</td>
+<td align="center">72.3</td>
+<td align="center">69.1</td>
+<td align="center">0.51</td>
+</tr>
+<tr>
+<td align="left">FEELVOS</td>
+<td align="center"></td>
+<td align="center"><strong>69.1</strong></td>
+<td align="center"><strong>74.0</strong></td>
+<td align="center"><strong>71.5</strong></td>
+<td align="center">0.51</td>
+</tr>
+<tr>
+<td align="left"><em>OnAVOS</em></td>
+<td align="center">$\surd$</td>
+<td align="center">61.0</td>
+<td align="center">66.1</td>
+<td align="center">63.6</td>
+<td align="center"><strong>26</strong></td>
+</tr>
+<tr>
+<td align="left"><em>PReMVOS</em></td>
+<td align="center">$\surd$</td>
+<td align="center"><strong>73.9</strong></td>
+<td align="center"><strong>81.7</strong></td>
+<td align="center"><strong>77.8</strong></td>
+<td align="center">37.6</td>
+</tr>
+</tbody></table>
+<p>DAVIS 2017 测试开发集的定量结果。FT 表示微调，t&#x2F;s 表示每帧的时间（以秒为单位）。$\dagger$：根据 DAVIS 2016 推断的时间，假设对象数量呈线性缩放。</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"></td>
+<td align="center">FT</td>
+<td align="center">$\mathcal{J}$</td>
+<td align="center">$\mathcal{F}$</td>
+<td align="center">$\mathcal{J}$ &amp; $\mathcal{F}$</td>
+<td align="center">t&#x2F;s</td>
+</tr>
+<tr>
+<td align="left">RGMP</td>
+<td align="center"></td>
+<td align="center">51.4</td>
+<td align="center">54.4</td>
+<td align="center">52.9</td>
+<td align="center">$0.42^{\dagger}$</td>
+</tr>
+<tr>
+<td align="left">FEELVOS(-YTB-VOS)</td>
+<td align="center"></td>
+<td align="center">51.2</td>
+<td align="center">57.5</td>
+<td align="center">54.4</td>
+<td align="center">0.54</td>
+</tr>
+<tr>
+<td align="left">FEELVOS</td>
+<td align="center"></td>
+<td align="center"><strong>55.2</strong></td>
+<td align="center"><strong>60.5</strong></td>
+<td align="center"><strong>57.8</strong></td>
+<td align="center">0.54</td>
+</tr>
+<tr>
+<td align="left"><em>OnAVOS</em></td>
+<td align="center">$\surd$</td>
+<td align="center">53.4</td>
+<td align="center">59.6</td>
+<td align="center">56.5</td>
+<td align="center"><strong>39</strong></td>
+</tr>
+<tr>
+<td align="left"><em>PReMVOS</em></td>
+<td align="center">$\surd$</td>
+<td align="center"><strong>67.5</strong></td>
+<td align="center"><strong>75.7</strong></td>
+<td align="center"><strong>71.6</strong></td>
+<td align="center">41.3</td>
+</tr>
+</tbody></table>
+<p>在验证集上，FEELVOS 在 mIoU $\mathcal{J}$ 和轮廓精度 $\mathcal{F}$ 方面均优于之前最好的非微调方法 RGMP。对于非微调方法，FEELVOS 通过 $\mathcal{J}$&amp;$\mathcal{F}$ 评分达到了新的最先进水平 71.5%，比 RGMP 高 4.8%，在不使用 YouTube-VOS 数据进行训练时高 2.4%（用 -YTB-VOS 表示没有使用 YouTube-VOS 数据集）。FEELVOS 的结果比严重依赖微调的 OnAVOS 的结果更强。然而，FEELVOS 无法与精心设计且速度缓慢的 PREMVOS 的结果相媲美。在 DAVIS 2017 测试开发集上，FEELVOS 的 $\mathcal{J}$&amp;$\mathcal{F}$ 得分为 57.8%，比 RGMP 的结果高出 4.9%。在这里，RGMP 和 FEELVOS 的运行时间几乎相同，因为 FEELVOS 的运行时间几乎独立于对象数量，并且测试开发集每个序列包含更多对象。</p>
+<p>下图显示了 FEELVOS 经过微调和未经微调的 $\mathcal{J}$&amp;$\mathcal{F}$ 分数和运行时间。可以看出，FEELVOS 以每帧 0.51 秒的运行时间实现了非常好的速度&#x2F;精度权衡。</p>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/vos/feelvos/quality-vs-timing.png?raw=true"></p>
+<p>下表显示了更简单的 DAVIS 2016 验证集的结果，该验证集每个序列仅注释一个对象实例。在这里，FEELVOS 的 $\mathcal{J}$&amp;$\mathcal{F}$ 得分为 81.7%，与 RGMP 的 81.8% 相当。然而，RGMP 严重依赖于模拟训练数据，而 FEELVOS 需要。如果没有模拟数据，RGMP 只能达到 $\mathcal{J}$&amp;$\mathcal{F}$ 的 68.8%。同样，FEELVOS 无法达到基于微调的方法的结果，但它实现了非常好的速度&#x2F;准确性权衡，并且仅使用单个神经网络。</p>
+<p>DAVIS 2016 验证集的定量结果。 FT 表示微调，t&#x2F;s 表示每帧的时间（以秒为单位）。</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"></td>
+<td align="center">FT</td>
+<td align="center">$\mathcal{J}$</td>
+<td align="center">$\mathcal{F}$</td>
+<td align="center">$\mathcal{J}$ &amp; $\mathcal{F}$</td>
+<td align="center">t&#x2F;s</td>
+</tr>
+<tr>
+<td align="left">OSMN</td>
+<td align="center"></td>
+<td align="center">74.0</td>
+<td align="center">-</td>
+<td align="center">-</td>
+<td align="center"><strong>0.14</strong></td>
+</tr>
+<tr>
+<td align="left">FAVOS</td>
+<td align="center"></td>
+<td align="center">77.9</td>
+<td align="center">76.0</td>
+<td align="center">77.0</td>
+<td align="center">0.6</td>
+</tr>
+<tr>
+<td align="left">PML</td>
+<td align="center"></td>
+<td align="center">75.5</td>
+<td align="center">79.3</td>
+<td align="center">77.4</td>
+<td align="center">0.28</td>
+</tr>
+<tr>
+<td align="left">VideoMatch</td>
+<td align="center"></td>
+<td align="center">81.0</td>
+<td align="center">80.8</td>
+<td align="center">80.9</td>
+<td align="center">0.32</td>
+</tr>
+<tr>
+<td align="left">RGMP(-sim.data)</td>
+<td align="center"></td>
+<td align="center">68.6</td>
+<td align="center">68.9</td>
+<td align="center">68.8</td>
+<td align="center"><strong>0.14</strong></td>
+</tr>
+<tr>
+<td align="left">RGMP</td>
+<td align="center"></td>
+<td align="center"><strong>81.5</strong></td>
+<td align="center">82.0</td>
+<td align="center"><strong>81.8</strong></td>
+<td align="center"><strong>0.14</strong></td>
+</tr>
+<tr>
+<td align="left">FEELVOS(-YTB-VOS)</td>
+<td align="center"></td>
+<td align="center">80.3</td>
+<td align="center"><strong>83.1</strong></td>
+<td align="center"><strong>81.7</strong></td>
+<td align="center">0.45</td>
+</tr>
+<tr>
+<td align="left">FEELVOS</td>
+<td align="center"></td>
+<td align="center">81.1</td>
+<td align="center">82.2</td>
+<td align="center"><strong>81.7</strong></td>
+<td align="center">0.45</td>
+</tr>
+<tr>
+<td align="left"><em>OnAVOS</em></td>
+<td align="center">$\surd$</td>
+<td align="center">85.7</td>
+<td align="center">84.2</td>
+<td align="center">85.0</td>
+<td align="center"><strong>13</strong></td>
+</tr>
+<tr>
+<td align="left"><em>PReMVOS</em></td>
+<td align="center">$\surd$</td>
+<td align="center">84.9</td>
+<td align="center"><strong>88.6</strong></td>
+<td align="center"><strong>86.8</strong></td>
+<td align="center">32.8</td>
+</tr>
+</tbody></table>
+<p>下表显示了 YouTube-Objects 上的结果。请注意，此数据集的评估协议并不总是一致，标有 * 的结果可能无法直接比较。FEELVOS 的 $\mathcal{J}$ 分数为 82.1%，甚至优于基于微调的方法 OSVOS 和 OnAVOS 的结果。</p>
+<p>YouTube-Objects 数据集上的定量结果。 FT 表示微调。 * 表示 YouTubeObjects 使用的评估协议不一致，例如有时第一帧会被忽略；标有 * 的结果可能无法直接比较。</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"></td>
+<td align="center">FT</td>
+<td align="center">$\mathcal{J}$</td>
+</tr>
+<tr>
+<td align="center">OSMN</td>
+<td align="center"></td>
+<td align="center">$69.0^*$</td>
+</tr>
+<tr>
+<td align="center">VideoMatch</td>
+<td align="center"></td>
+<td align="center">$79.7^*$</td>
+</tr>
+<tr>
+<td align="center">FEELVOS(-YTM-VOS)</td>
+<td align="center"></td>
+<td align="center">78.9</td>
+</tr>
+<tr>
+<td align="center">FEELVOS</td>
+<td align="center"></td>
+<td align="center"><strong>82.1</strong></td>
+</tr>
+<tr>
+<td align="center"><em>MaskTrack</em></td>
+<td align="center">$\surd$</td>
+<td align="center">77.7</td>
+</tr>
+<tr>
+<td align="center"><em>OSVOS</em></td>
+<td align="center">$\surd$</td>
+<td align="center">78.3</td>
+</tr>
+<tr>
+<td align="center"><em>OnAVOS</em></td>
+<td align="center">$\surd$</td>
+<td align="center"><strong>80.5</strong></td>
+</tr>
+</tbody></table>
+<h2 id="消融实验（Ablation-Study）"><a href="#消融实验（Ablation-Study）" class="headerlink" title="消融实验（Ablation Study）"></a>消融实验（Ablation Study）</h2><p>在下表中，分析了 FEELVOS 各个组件对 DAVIS 2017 验证集的影响。为简单起见，仅使用较小的 DAVIS 2017 训练集作为这些实验的训练数据。DAVIS 2017 上的消融研究。FF 和 PF 分别表示第一帧（First Frame）和前一帧（Previous Frame），GM 和 LM 表示全局匹配（Global Matching）和局部匹配（Local Matching）。PFP 表示使用先前帧预测（Previous Frame Predictions）作为动态分割头的输入。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>FF-GM</td>
+<td>PF-LM</td>
+<td>PF-GM</td>
+<td>PFP</td>
+<td>$\mathcal{J}$</td>
+<td>$\mathcal{F}$</td>
+<td>$\mathcal{J}$&amp;$\mathcal{F}$</td>
+</tr>
+<tr>
+<td>1</td>
+<td>$\surd$</td>
+<td>$\surd$</td>
+<td></td>
+<td>$\surd$</td>
+<td>65.9</td>
+<td>72.3</td>
+<td>69.1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>$\surd$</td>
+<td></td>
+<td>$\surd$</td>
+<td>$\surd$</td>
+<td>61.2</td>
+<td>67.3</td>
+<td>64.2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>$\surd$</td>
+<td></td>
+<td></td>
+<td>$\surd$</td>
+<td>49.9</td>
+<td>59.8</td>
+<td>54.9</td>
+</tr>
+<tr>
+<td>4</td>
+<td>$\surd$</td>
+<td></td>
+<td></td>
+<td></td>
+<td>47.3</td>
+<td>57.9</td>
+<td>52.6</td>
+</tr>
+<tr>
+<td>5</td>
+<td>$\surd$</td>
+<td>$\surd$</td>
+<td></td>
+<td></td>
+<td>60.4</td>
+<td>66.2</td>
+<td>63.3</td>
+</tr>
+<tr>
+<td>6</td>
+<td></td>
+<td>$\surd$</td>
+<td></td>
+<td>$\surd$</td>
+<td>53.8</td>
+<td>58.3</td>
+<td>56.1</td>
+</tr>
+</tbody></table>
+<p>第 1 行是提出的 FEELVOS，它使用第一帧全局匹配 (FF-GM)、前一帧局部匹配 (PF-LM) 和前一帧预测 (PFP​​) 作为动态分割头的输入。此设置的 $\mathcal{J}$&amp;$\mathcal{F}$ 得分为 69.1%。</p>
+<p>在第 2 行中，用前一帧全局匹配 (PF-GM) 替换前一帧局部匹配 (PF-LM)，这使结果显着降低了近 5% 至 64.2%，并显示了将前一帧匹配限制为本地窗口的有效性。</p>
+<p>在第 3 行中，完全禁用前一帧匹配。这里的结果甚至下降到 54.9%，这表明使用学习到的嵌入来匹配前一帧对于获得良好的结果极其重要。</p>
+<p>在第 4 行中，还禁用了使用前一帧预测 (PFP​​) 作为动态分割头的特征。在此设置中，每个帧都可以单独分段，并且仅使用全局匹配到第一帧的信息。在这种情况下，结果进一步恶化至 52.6%。</p>
+<p>在第 5 行中，再次使用前一帧局部匹配 (PF-LM)，但禁用前一帧预测 (PFP​​)。在这种情况下，结果为 63.3%，这比使用 PFP 但不使用 PF-LM 的第 3 行的结果要好得多。这表明，与仅使用前一帧预测作为特征相比，前一帧局部匹配是从前一帧传输信息的更有效方法。它还表明，随着时间的推移传递信息的两种方式是互补的，并且它们的组合是最有效的。</p>
+<p>在第 6 行中，使用 PF-LM 和 PFP，但禁用第一帧全局匹配（FF-GM）。这意味着第一帧信息仅用于初始化用于 PFLM 和 PFP 的掩模，而不再作为每一帧的明确指导。这里的结果与第 1 行相比恶化了 13%，这表明与第一帧的匹配对于获得良好的结果极其重要。</p>
+<p>总之，FEELVOS 的每个组件都是有用的，嵌入空间中与前一帧的匹配非常有效，并且所提出的局部前一帧匹配的性能明显优于与前一帧的全局匹配。</p>
+<h2 id="定性结果（Qualitative-Results）"><a href="#定性结果（Qualitative-Results）" class="headerlink" title="定性结果（Qualitative Results）"></a>定性结果（Qualitative Results）</h2><p>下图显示了 FEELVOS 在 DAVIS 2017 验证集和 YouTube-Objects 数据集上的定性结果。可以看出，在许多情况下，即使在柔道序列中的大运动或汽车的第一帧被截断等困难的情况下，FEELVOS 也能够产生准确的分割。在具有挑战性的鱼序列（第三行）中，FEELVOS 失去了一些鱼的踪迹，可能是因为它们的外观非常相似。在最后一行中，FEELVOS 无法分割猫背部的某些部分。这很可能是因为在第一帧中没有看到背面纹理。然而，之后，FEELVOS 能够从该错误中恢复。</p>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/vos/feelvos/qualitative-results.png?raw=true"></p>
+<h1 id="结论（Conclusion）"><a href="#结论（Conclusion）" class="headerlink" title="结论（Conclusion）"></a>结论（Conclusion）</h1><p>观察到 VOS 有很多强大的方法，但其中许多缺乏实际可用性。基于这一见解，定义了 VOS 实用方法应实现的几个设计目标。最重要的是，文章的方法是一种快速、简单的方法，但仍能取得良好的结果。为此，提出了 FEELVOS，它学习语义嵌入，以端到端的方式分割多个对象。FEELVOS 的关键组件是与视频第一帧的全局匹配和与前一帧的局部匹配。通过实验证明 FEELVOS 的每个组件都非常有效，并且在 DAVIS 2017 上为 VOS 取得了新的最先进结果，无需进行微调。总体而言，FEELVOS 是一种快速且实用的 VOS 方法，希望这项工作能够激发更多满足文章定义的设计标准的方法，并推进 VOS 中实用方法的最新技术水平。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2024/03/05/vos-feelvos-cvpr2019/">https://xujinzh.github.io/2024/03/05/vos-feelvos-cvpr2019/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/vos/">vos</a><a class="post-meta__tags" href="/tags/feelvos/">feelvos</a></div><div class="post_share"><div class="social-share" data-image="/img/c18.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/03/04/vos-davis-eval/" title="Video Object Segmentation 评估指标"><img class="cover" src="/img/c2.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Video Object Segmentation 评估指标</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/03/04/vos-davis-eval/" title="Video Object Segmentation 评估指标"><img class="cover" src="/img/c2.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-04</div><div class="title">Video Object Segmentation 评估指标</div></div></a></div><div><a href="/2024/02/28/vos-stm-network-iccv2019/" title="Video Object Segmentation using Space-Time Memory Networks"><img class="cover" src="/img/c4.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-28</div><div class="title">Video Object Segmentation using Space-Time Memory Networks</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">390</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">302</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">26</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E8%B5%84%E6%BA%90"><span class="toc-number">1.</span> <span class="toc-text">文章资源</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">2.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%9C%E8%80%85"><span class="toc-number">3.</span> <span class="toc-text">作者</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">4.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87"><span class="toc-number">5.</span> <span class="toc-text">算法设计目标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1%E7%81%B5%E6%84%9F"><span class="toc-number">6.</span> <span class="toc-text">算法设计灵感</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">7.</span> <span class="toc-text">相关工作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%80%9F%E5%8A%A9%E5%88%9D%E5%A7%8B%E5%B8%A7%E5%BE%AE%E8%B0%83%E7%9A%84%E8%A7%86%E9%A2%91%E7%9B%AE%E6%A0%87%E5%88%86%E5%89%B2%E7%AE%97%E6%B3%95"><span class="toc-number">7.1.</span> <span class="toc-text">借助初始帧微调的视频目标分割算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B2%A1%E6%9C%89%E4%BD%BF%E7%94%A8%E5%88%9D%E5%A7%8B%E5%B8%A7%E5%BE%AE%E8%B0%83%E7%9A%84%E8%A7%86%E9%A2%91%E7%9B%AE%E6%A0%87%E5%88%86%E5%89%B2%E7%AE%97%E6%B3%95"><span class="toc-number">7.2.</span> <span class="toc-text">没有使用初始帧微调的视频目标分割算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E5%B5%8C%E5%85%A5%E5%AD%A6%E4%B9%A0%E3%80%82"><span class="toc-number">7.3.</span> <span class="toc-text">实例嵌入学习。</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#FEELVOS-%E6%96%B9%E6%B3%95"><span class="toc-number">8.</span> <span class="toc-text">FEELVOS 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0%EF%BC%88Overview%EF%BC%89"><span class="toc-number">8.1.</span> <span class="toc-text">概述（Overview）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%AD%E4%B9%89%E5%B5%8C%E5%85%A5%EF%BC%88Semantic-Embedding%EF%BC%89"><span class="toc-number">8.2.</span> <span class="toc-text">语义嵌入（Semantic Embedding）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%8C%B9%E9%85%8D%EF%BC%88Global-Matching%EF%BC%89"><span class="toc-number">8.3.</span> <span class="toc-text">全局匹配（Global Matching）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%89%8D%E4%B8%80%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E5%8C%B9%E9%85%8D%EF%BC%88Local-Previous-Frame-Matching%EF%BC%89"><span class="toc-number">8.4.</span> <span class="toc-text">使用前一帧的局部匹配（Local Previous Frame Matching）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E4%B8%80%E5%B8%A7%E9%A2%84%E6%B5%8B%EF%BC%88Previous-Frame-Predictions%EF%BC%89"><span class="toc-number">8.5.</span> <span class="toc-text">前一帧预测（Previous Frame Predictions）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%88%86%E5%89%B2%E5%A4%B4%EF%BC%88Dynamic-Segmentation-Head%EF%BC%89"><span class="toc-number">8.6.</span> <span class="toc-text">动态分割头（Dynamic Segmentation Head）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B%EF%BC%88Training-Procedure%EF%BC%89"><span class="toc-number">8.7.</span> <span class="toc-text">训练过程（Training Procedure）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E7%90%86%EF%BC%88Inference%EF%BC%89"><span class="toc-number">8.8.</span> <span class="toc-text">推理（Inference）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%96%BD%E7%BB%86%E8%8A%82%EF%BC%88Implementation-Details%EF%BC%89"><span class="toc-number">8.9.</span> <span class="toc-text">实施细节（Implementation Details）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%EF%BC%88Experiments%EF%BC%89"><span class="toc-number">9.</span> <span class="toc-text">实验（Experiments）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E7%BB%93%E6%9E%9C%EF%BC%88Main-Results%EF%BC%89"><span class="toc-number">9.1.</span> <span class="toc-text">主要结果（Main Results）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C%EF%BC%88Ablation-Study%EF%BC%89"><span class="toc-number">9.2.</span> <span class="toc-text">消融实验（Ablation Study）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E6%80%A7%E7%BB%93%E6%9E%9C%EF%BC%88Qualitative-Results%EF%BC%89"><span class="toc-number">9.3.</span> <span class="toc-text">定性结果（Qualitative Results）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA%EF%BC%88Conclusion%EF%BC%89"><span class="toc-number">10.</span> <span class="toc-text">结论（Conclusion）</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/03/05/vos-feelvos-cvpr2019/" title="FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation"><img src="/img/c18.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation"/></a><div class="content"><a class="title" href="/2024/03/05/vos-feelvos-cvpr2019/" title="FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation">FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation</a><time datetime="2024-03-05T08:14:48.000Z" title="发表于 2024-03-05 16:14:48">2024-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/04/vos-davis-eval/" title="Video Object Segmentation 评估指标"><img src="/img/c2.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Video Object Segmentation 评估指标"/></a><div class="content"><a class="title" href="/2024/03/04/vos-davis-eval/" title="Video Object Segmentation 评估指标">Video Object Segmentation 评估指标</a><time datetime="2024-03-04T03:43:07.000Z" title="发表于 2024-03-04 11:43:07">2024-03-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/02/28/vos-stm-network-iccv2019/" title="Video Object Segmentation using Space-Time Memory Networks"><img src="/img/c4.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Video Object Segmentation using Space-Time Memory Networks"/></a><div class="content"><a class="title" href="/2024/02/28/vos-stm-network-iccv2019/" title="Video Object Segmentation using Space-Time Memory Networks">Video Object Segmentation using Space-Time Memory Networks</a><time datetime="2024-02-28T03:20:20.000Z" title="发表于 2024-02-28 11:20:20">2024-02-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/02/04/python-download-speedup/" title="利用 Python 加速下载大文件突破 IP 限速"><img src="/img/c17.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用 Python 加速下载大文件突破 IP 限速"/></a><div class="content"><a class="title" href="/2024/02/04/python-download-speedup/" title="利用 Python 加速下载大文件突破 IP 限速">利用 Python 加速下载大文件突破 IP 限速</a><time datetime="2024-02-04T10:30:30.000Z" title="发表于 2024-02-04 18:30:30">2024-02-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/02/04/exec-cmd-by-bat-in-window/" title="Windows 中使用 bat 执行程序"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Windows 中使用 bat 执行程序"/></a><div class="content"><a class="title" href="/2024/02/04/exec-cmd-by-bat-in-window/" title="Windows 中使用 bat 执行程序">Windows 中使用 bat 执行程序</a><time datetime="2024-02-04T10:11:31.000Z" title="发表于 2024-02-04 18:11:31">2024-02-04</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
   window.MathJax = {
     tex: {
       inlineMath: [ ['$','$'], ["\\(","\\)"]],
