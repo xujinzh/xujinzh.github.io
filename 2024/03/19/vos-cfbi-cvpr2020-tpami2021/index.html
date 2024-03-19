@@ -1,0 +1,379 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>CFBI+, Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本篇介绍发表在 CVPR 2020 和 TPAMI 2021 上的文章：Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration，基于多尺度的前景和背景整合的半监督视频目标分割方法。这篇文章是前篇 CFBI 的扩展与升级，增加了多尺度和空洞匹配到 CFBI。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CFBI+, Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration">
+<meta property="og:url" content="https://xujinzh.github.io/2024/03/19/vos-cfbi-cvpr2020-tpami2021/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="本篇介绍发表在 CVPR 2020 和 TPAMI 2021 上的文章：Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration，基于多尺度的前景和背景整合的半监督视频目标分割方法。这篇文章是前篇 CFBI 的扩展与升级，增加了多尺度和空洞匹配到 CFBI。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c12.jpg">
+<meta property="article:published_time" content="2024-03-19T06:24:50.000Z">
+<meta property="article:modified_time" content="2024-03-19T09:41:51.945Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="vos">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c12.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2024/03/19/vos-cfbi-cvpr2020-tpami2021/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'CFBI+, Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-19 17:41:51'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">393</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">302</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">26</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">CFBI+, Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-03-19T06:24:50.000Z" title="发表于 2024-03-19 14:24:50">2024-03-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-03-19T09:41:51.945Z" title="更新于 2024-03-19 17:41:51">2024-03-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/">research</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/research/video-object-segmentation/">video object segmentation</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>20分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="CFBI+, Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>本篇介绍发表在 CVPR 2020 和 TPAMI 2021 上的文章：Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration，基于多尺度的前景和背景整合的半监督视频目标分割方法。这篇文章是<a href="https://xujinzh.github.io/2024/03/18/vos-cfbi-eccv2020/">前篇 CFBI</a> 的扩展与升级，增加了多尺度和空洞匹配到 CFBI。</p>
+<span id="more"></span>
+
+<h1 id="文章资源"><a href="#文章资源" class="headerlink" title="文章资源"></a>文章资源</h1><ul>
+<li>预印本 (Preprint)：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2010.06349">arxiv</a></li>
+<li>正式发表版本 (Version of Record, VOR)：<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9435058">TPAMI 2021</a></li>
+<li>代码仓库：<a target="_blank" rel="noopener" href="https://github.com/z-x-yang/CFBI">github</a>，同 CFBI 仓库。</li>
+</ul>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>文章题目是 Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration，指明文章的应用领域是视频目标分割(Video Object Segmentation, VOS)，文章提出同时考虑多尺度的前景和背景信息（Foreground-Background Integration）来解决视频目标分割(VOS)任务。</p>
+<h1 id="作者"><a href="#作者" class="headerlink" title="作者"></a>作者</h1><p>文章作者分别是 Zongxin Yang, Yunchao Wei, Yi Yang。三位作者当时都是来自澳大利亚悉尼科技大学人工智能中心 ReLER，第一作者杨宗鑫博士当时在该学校攻读计算机科学的博士学位，导师是 Prof. Yi Yang. 投稿 CVPR 2020，DAVIS 2020 VOS 挑战赛第二名。</p>
+<p>TPAMI 2021 发表时，Zongxin Yang 和 Yi Yang 工作在浙江大学计算机科学与技术学院，Zonxin Yang 是博后，Yi Yang 是教授。Yunchao Wei 工作在北京交通大学信息科学研究所，是教授。</p>
+<h1 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h1><p>文章关注半监督 VOS，其目标是根据第一帧给出的对象掩码（ground-truth mask）在整个视频序列中分割特定对象。</p>
+<h1 id="创新点"><a href="#创新点" class="headerlink" title="创新点"></a>创新点</h1><p>基本框架同 CFBI，这里只介绍改进的点，更多关于 CFBI 的介绍，请查看我的另一篇博文：<a href="https://xujinzh.github.io/2024/03/18/vos-cfbi-eccv2020/">CFBI, Collaborative Video Object Segmentation by Foreground-Background Integration</a></p>
+<h2 id="多尺度匹配"><a href="#多尺度匹配" class="headerlink" title="多尺度匹配"></a>多尺度匹配</h2><p>高质量的匹配图对于 CFBI 生成具有清晰目标边界的准确预测至关重要，这是提高 VOS 性能的关键因素之一。然而，要实现精细且高分辨率的匹配图（例如，步长为 4），GPU 内存和时间成本都很高。直观上，有两种方法可以加速匹配过程。(1) 对低分辨率特征图进行匹配。虽然过程会轻量很多，但很容易错过很多物体细节。(2) 在保持使用高分辨率特征图的同时减少通道维度。计算量会随着通道维度线性减少，但特征图的代表性能力也会下降，导致匹配性能较差。</p>
+<p>最近的一些工作证明多尺度策略可以有效提高卷积网络的性能。作者认为此类策略也有利于匹配过程。因此，在 CFBI 中引入了一种高效的多尺度匹配结构，从而形成了一个更强大的框架，即 CFBI+。 CFBI+ 的概述如下图 5 所示。首先，CFBI+ 从主干中提取三个不同尺度的特征（S &#x3D; 4，8，16）。然后，使用特征金字塔网络（FPN）进一步融合从小尺度到大尺度的信息。之后，在每个尺度上进行CFBI 的所有匹配过程。每个尺度的输出将被发送到 CE 的每个相应阶段。</p>
+<p>具体来说，为了利用这两种加速匹配过程的优点并减轻它们的缺点，作者对不同尺度的特征图采用自适应匹配策略。CFBI+ 将通道维度从较大尺度到较小尺度逐步线性增加，从而减少了较大尺度匹配的计算量。同时，较小尺度下更丰富的语义信息可以成功弥补由于较大尺度下通道维度减少而导致的性能下降。这样，各种由粗到细的信息可以帮助 CFBI+ 获得更好的分割结果。</p>
+<p>此外，仅逐步线性增加通道维度不足以使多尺度匹配比单尺度匹配更有效，因为匹配过程的复杂性随着特征图分辨率的增加呈指数级增加。例如，$G_{T,o}(p)$在 S &#x3D; 4 尺度上的计算是 S &#x3D; 16 的 256 倍。因此，作者另外提出了一种空洞匹配 Atrous Matching（AM）策略来进一步节省匹配过程的计算和内存使用。引入 AM 有助于 CFBI+ 比 CFBI 更高效。</p>
+<h2 id="空洞匹配"><a href="#空洞匹配" class="headerlink" title="空洞匹配"></a>空洞匹配</h2><p>空洞匹配 (AM)算法是一种小波分解算法，在最近的一些卷积网络中发挥了关键作用。通过在采样时添加空间间隔，atrous 算法可以在保持相同分辨率的情况下减少计算量。直观上，空间上接近的像素总是共享相似的语义信息。因此，作者认为 atrous 算法在匹配过程中也是有效的。从参考像素中删除部分相似像素不会严重降低性能，但会节省大量计算成本。</p>
+<p>令 $q_{x,y}$ 为位置 $(x, y)$ 处的像素，令 $l$ 为空洞因子，将前景全局匹配推广为空洞形式，</p>
+
+$$
+G_o^l(p) = \min_{q\in\mathcal{P}_{1,o}^l} D(p, q),
+$$
+
+<p>这里</p>
+
+$$
+\mathcal{P}_{1,o}^l = \{ q_{x,y} \in \mathcal{P}_{1,o}, \forall x,y \in \{ l, 2l, 3l, \cdots\} \}
+$$
+
+<p>是一个 $l$-atrous 的像素集合。如下图6所示：</p>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/vos/cfbip/atrous-object-pixel-set.png?raw=true"></p>
+<p>令 $x_p, y_p$ 记作像素 $p$ 的位置，前景局部匹配的空洞形式是</p>
+
+$$
+L_{p}^l(p,k) = 
+\begin{cases}
+\min_{q\in\mathcal{P}_{T-1,o}^{l,p,k}}D(p,q) & \text{if} \quad \mathcal{P}_{T-1,o}^{l,p,k} \neq \emptyset \\
+1 & \text{otherwise},
+\end{cases}
+$$
+
+
+<p>这里</p>
+
+$$
+\mathcal{P}_{T-1,o}^{l,p,k} := \mathcal{P}_{T-1,o}\cap H^l(p,k),
+$$
+
+<p>和</p>
+
+$$
+H^l(p,k) = \{ q_{x,y} \in H(p,k), \forall x \in \{x_p, x_p  \pm, x_p \pm 2l, \cdots \}, y \in \{y_p, y_p \pm l, y_p \pm 2l, \cdots, \} \}
+$$
+
+<p>是 $l$-atrous 邻域集合。</p>
+<p>同样的方法，可以扩展公式 $ \bar{G}_o^l(p), \bar{L}_o^l(p,k), ML_o^l(p,K), \bar{ML}_o^l(p,K) $ 为空洞形式。由于参考像素约简到 $l^2$ 倍，空洞匹配的计算复杂度变为原来的 $\frac{1}{l^2}$。特别地，当 $l&#x3D;1$ 时，空洞匹配等于原始匹配，即 $G_o^{l=1}(p) \equiv G_o(p), L_o^{l=1}(p,k) \equiv L_o(p,k)$.</p>
+<p>在 CFBI+ 的最大匹配规模（S&#x3D;4）上，作者采用了 2-atrous 匹配过程，显着提高了 CFBI+ 的效率。值得注意的是，AM 是一种即插即用的算法，还可以提高 CFBI 在测试阶段的效率。</p>
+<h1 id="实施细节"><a href="#实施细节" class="headerlink" title="实施细节"></a>实施细节</h1><p>继 FEELVOS 之后，作者使用 DeepLabv3+ 架构作为 CFBI+ 网络的骨干。然而，主干网络基于扩张的 ResNet-101，而不是 Xception-65，以节省计算资源。在主干中应用批量归一化（BN），并在 ImageNet 和 COCO 上对其进行预训练。为了使训练过程更加有效并与推理阶段保持一致，作者还采用了两种技巧，即平衡随机裁剪和顺序训练：</p>
+<ul>
+<li><p><strong>平衡随机裁剪</strong>。如下图 7 所示，VOS 数据集上前景和背景像素数之间存在明显的不平衡。这样的问题通常会使模型更容易对背景属性产生偏见。为了缓解这个问题，作者采用平衡随机裁剪方案，该方案使用相同的裁剪窗口裁剪一系列帧（即第一帧、前一帧和当前帧），并限制第一帧包含足够的前景信息。该限制方法简单而有效。具体来说，平衡随机裁剪将决定随机裁剪的帧是否包含足够的前景对象像素。如果没有，该方法将继续进行裁剪操作，直到获得预期的裁剪操作。<br><img src="https://github.com/xujinzh/archive/blob/master/images/vos/cfbip/balanced-random-crop.png?raw=true"></p>
+</li>
+<li><p><strong>顺序训练</strong>。在训练阶段，FEELVOS 在一次迭代中仅预测一个步骤，指导掩模来自 ground-truth 数据。RGMP 和 STMVOS 在训练时使用之前的指导信息（掩模或特征记忆），与推理阶段更加一致，表现更好。先前的引导掩模始终由网络在评估阶段的先前推理步骤中生成。遵循 RGMP，作者在每次 SGD 迭代中使用一系列连续帧来训练网络。在每次迭代中，随机采样一批视频序列。对于每个视频序列，随机采样一帧作为参考帧，并连续采样 N + 1 帧作为前一帧和当前帧序列（有 N 帧）。在预测第一帧时，使用前一帧的真实情况作为前一个掩码。当预测后续帧时，使用最新的预测作为前一个掩模。在下图 8 中展示了一个例子。<br><img src="https://github.com/xujinzh/archive/blob/master/images/vos/cfbip/sequential-training.png?raw=true"></p>
+</li>
+</ul>
+<p>在 CFBI 中，主干后面是一个深度可分离卷积，用于提取步长为 4 的像素级嵌入（通道 &#x3D; 100）。作者进一步将嵌入特征下采样到一半大小，以便使用双局部匹配线性插值以节省 GPU 内存。</p>
+<p>在 CFBI+ 中，主干后面是 FPN，用于提取三个像素级嵌入（通道 &#x3D; 32、64 和 128），步长分别为 4、8 和 16。窗口大小为 {4，8，12，16，20，24}，{2，4，6，8，10，12} 和 {4，6，8，10} 适用于三个等级（步长 &#x3D; 4、8 和 16）。</p>
+<p>对于协作集成器（CE），作者应用组归一化（GN）和门控通道变换（GCT）来提高使用小批量时的训练稳定性和性能。作者将 $b_B$ 和 $b_F$ 初始化为 0。在 CFBI+ 中，每个匹配尺度都有单独的 $b_B$ 和 $b_F$。</p>
+<p>在训练过程中，首先将所有视频下采样到 480p 分辨率，这与 DAVIS 默认设置相同。采用动量为 0.9 的 SGD 并应用自举交叉熵损失，仅考虑 15% 最难的像素。此外，作者应用翻转、缩放和平衡随机裁剪作为数据增强。缩放范围为 1.0 到 1.3 倍，裁剪窗口大小为 465 x 465。在训练阶段，作者将 BN 的参数冻结在主干中。在测试阶段，所有视频的大小都调整为不超过 1.3 x 480p 分辨率，这与训练阶段一致。对于多尺度测试，分别在 YouTube-VOS 和 DAVIS 上应用尺度 {1.0，1.15，1.3,1.5} 和 {1.5， 1.7，1.9}。</p>
+<p>对于 YouTube-VOS 实验，作者使用 4 个 Tesla V100 GPU，学习率为 0.01，执行 100,000 步，批量大小为 8。当前序列的长度为 $N &#x3D; 3$。YouTube-VOS 上的训练时间约为 3 天。对于仅使用 DAVIS 进行的训练，作者使用 0.006 的学习率进行 50,000 步，批量大小为 6 个视频，使用 2 个 GPU。当前序列的长度也是 $N &#x3D; 3$。对于使用 DAVIS 和 YouTube-VOS 进行训练，首先按照上述设置在 YouTube-VOS 上训练 CFBI 或 CFBI +。之后，在 DAVIS 上对模型进行微调。为了避免过度拟合，在微调时将 DAVIS 视频与 YouTube-VOS 以 1:2 的比例混合。此外，使用 0.01 的学习率进行 50,000 步，批量大小为 8 个视频，使用 4 个 Tesla V100 GPU。当前序列的长度是 $N &#x3D; 5$ 比 $N &#x3D; 3$ 稍好一些。作者使用 PyTorch 来实现他们的方法。</p>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>遵循之前最先进的方法，作者在 YouTube-VOS、DAVIS 2016 和 DAVIS 2017 上评估方法。为了对 YouTube-VOS 进行评估，在 YouTube-VOS training split 上训练模型。对于 DAVIS，在 DAVIS-2017 training split 上训练模型。此外，根据一些最新算法使用 DAVIS 2017 和 YouTube-VOS 进行训练并提供 DAVIS 结果。</p>
+<p>评估指标是 $\mathcal{J}$ 得分，计算为预测和地面真实掩模之间的平均 IoU，以及 $\mathcal{F}$ 得分，计算为预测边界和地面真实边界之间的平均边界相似性度量，以及它们的平均值 ($\mathcal{J}$&amp;$\mathcal{F}$ ）。作者在官方评估服务器上或使用官方工具评估结果。</p>
+<h2 id="Compare-With-the-State-of-the-Art-Methods"><a href="#Compare-With-the-State-of-the-Art-Methods" class="headerlink" title="Compare With the State-of-the-Art Methods"></a>Compare With the State-of-the-Art Methods</h2><p>YouTube-VOS 是最新的用于多对象视频分割的大规模数据集。与包含 120 个视频的流行 DAVIS 基准相比，YouTube-VOS 大约大 37 倍。具体来说，YouTube-VOS 包含 training split 中的 3471 个视频（65 个类别）、validation split 中的 507 个视频（另外 26 个未见类别）和 testing split 中的 541 个视频（另外 29 个未见类别）。由于未见过的对象类别的存在，YouTube-VOS 验证分割非常适合衡量 VOS 方法的泛化能力。</p>
+<p>如下表 1 所示，作者在 2018 validation split 和 2019 testing split 中将他们的方法与最新的 VOS 方法进行了比较。CFBI+ 平均得分为 82.0%，在每个评估指标上都明显优于所有其他方法。通过使用具有双倍批量大小和学习率的更强训练计划，可以将 CFBI+ 的性能提高到 82.8% ($CFBI+^{2\times}$)。特别是，CFBI+ 的多对象推理速度比 BoLT（1.36s）快得多。</p>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/vos/cfbip/quantitative-eval-on-youtube-vos.png?raw=true"></p>
+<p>受益于多尺度匹配，CFBI+ 比 CFBI 更稳健（82.0% v.s. 81.4%）且更高效（0.25s v.s. 0.29s）。特别是，CFBI+ 仅使用了一半的训练批量大小，就超过了 $CFBI^{2\times}$。此外，82.8% 的结果明显高于 KMNVOS（超 1.4%），KMNVOS 遵循 STMVOS 使用大量模拟数据进行训练。通过模拟数据，STMVOS 的性能大幅提升，从 68.2% 提高到 79.4%。一个可能的原因是 STMVOS 对时间平滑度没有任何假设，因此需要更多的数据来充分学习语义时空匹配。相比之下，CFBI 和 CFBI+ 可以有效地从 VOS 数据集中学习视频属性，受益于作者的 VOS 特定设计。此外，通过在评估过程中应用多尺度和翻转策略，可以将 CFBI+ 的性能进一步提高到 83.3%。</p>
+<p>作者还将他们的方法与 2019 testing split 的两个最佳结果进行比较，即第二届大规模视频对象分割挑战赛中的排名 1 (EMN) 和排名 2 (MST) 的结果。在不使用模型集成、模拟数据或测试阶段增强的情况下，CFBI+ (82.9%) 显着优于 Rank 1 结果 (81.8%)，同时保持 4 FPS 的高效多对象速度。值得注意的是，CFBI+ 的改进主要来自看不见的类别（78.9% $\mathcal{J}$ &#x2F; 86.8% $\mathcal{F}$ v.s. 77.3%$\mathcal{J}$ &#x2F; 84.7% $\mathcal{F}$），而不是看见的。如此强劲的结果进一步证明了 CFBI+ 的泛化能力和有效性。</p>
+<p>DAVIS 2017 是 DAVIS 2016 的多对象扩展。DAVIS 2017 的 validation split 由 30 个视频中的 59 个对象组成。训练部分包含 60 个视频。与 YouTube-VOS 相比，DAVIS 体积小得多，而且容易过拟合。</p>
+<p>如下表 2 所示，在不使用模拟数据的情况下，CFBI+ 超过了 KMNVOS 和 EGMN（82.9% v.s. 82.8%）。此外，CFBI+ 实现了比 KMNVOS (0.24%) 更快的多对象推理速度 (0.18s)。与 KMNVOS 和 EGMN 不同，CFBI+ 或 CFBI 的主干特征是为每帧中的所有对象共享的，这导致了更有效的多对象推理。评估时增强可以进一步将 CFBI+ 的得分提高到 84.5%。</p>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/vos/cfbip/quantitative-eval-on-davis-2017.png?raw=true"></p>
+<p>作者还在 DAVIS-2017 testing split 上评估了他们的方法，这比 validation split 更具挑战性。在测试中，作者在 STMVOS 提出的设置（即在 600p 分辨率上进行评估）下比 KMNVOS（77.2%）高出 0.8%。在评估 DAVIS 默认 480p 分辨率时，CFBI+ 或 CFBI 比使用 600p 分辨率的 STMVOS 好得多（75.6% 或 75.0% v.s. 72.2%）。这些强有力的结果进一步证明了 CFBI+ 和 CFBI 的泛化能力。</p>
+<p>仅当在 DAVIS 上使用 480p 分辨率进行评估时，CFBI+ 的速度才能与 CFBI 相媲美。原因是在小分辨率上进行评估时，卷积层的计算比例较大。而 CFBI+ 由于引入了 FPN，比 CFBI 有更多的卷积层。在较大分辨率（例如 600p）下，CFBI+ 比 CFBI 更快（0.29 秒 v.s. 0.35 秒）。</p>
+<p>DAVIS 2016 包含 20 个视频，每个视频都用高质量蒙版注释单个目标对象。作者将 CFBI 方法与下表 3 中最先进的方法进行了比较。在 DAVIS-2016 validation split 上，作者使用额外的 YouTube-VOS 训练分割进行训练的 CFBI+ 取得了 89.9% 的平均分数，略差于 KMNVOS 90.5%，这是一种使用前面提到的模拟数据的方法。由于 DAVIS 中的数据量很小，使用额外的模拟数据可以帮助缓解过度拟合。与设置更接近作者的公平得多的基线（即 FEELVOS）相比，所提出的 CFBI+ 不仅实现了更好的准确度（89.9% vs 81.7%），而且保持了更快的推理速度（0.17s v.s. 0.45s）.</p>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/vos/cfbip/quantitative-eval-on-davis-2016.png?raw=true"></p>
+<h2 id="Ablation-Study"><a href="#Ablation-Study" class="headerlink" title="Ablation Study"></a>Ablation Study</h2><p>作者分析了 CFBI 中提出的每个组件对 DAVIS-2017 验证分割的消融效果。在 FEELVOS 之后，作者仅使用 DAVIS-2017 training split 作为这些实验的训练数据。</p>
+<ul>
+<li><p><strong>背景嵌入</strong>。如下表4所示，作者首先分析去除背景嵌入而仅保留前景的影响。如果没有任何背景机制，作者的方法的结果会从 74.9% 大幅下降到 70.9%。这一结果表明，协同嵌入前景和背景特征具有重要意义。此外，像素级匹配或实例级注意力中背景信息的缺失将使结果分别降低至 73.0% 或 72.3%。因此，与实例级注意力相比，像素级匹配性能对背景嵌入的影响更敏感。造成这种现象的一个可能的原因是存在一些与前景相似的背景像素的可能性高于一些背景实例。最后，作者从距离度量中删除前景和背景偏差 $b_F$ 和 $b_B$，结果下降到 72.8%，这进一步表明应该单独考虑前景像素之间的距离和背景像素之间的距离。<br><img src="https://github.com/xujinzh/archive/blob/master/images/vos/cfbip/ablation-of-background-embedding.png?raw=true"></p>
+</li>
+<li><p><strong>空洞匹配</strong>。如下表5所示，随着空洞因子($l$)的增加，CFBI 的性能会下降，速度会增加。与原始匹配相比，2-atrous 匹配会显着加快推理速度，但性能只会略有下降。进一步增大 $l$，速度将不再快速提升，性能会大幅下降。与 2-atrous 多局部匹配相比，2-atrous 全局匹配与原始全局匹配具有几乎相同的性能（81.3% v.s. 81.4%），但速度大大加快了 93%。简而言之，Atrous Matching 可以显着提高匹配过程的效率，尤其是全局匹配。<br><img src="https://github.com/xujinzh/archive/blob/master/images/vos/cfbip/ablation-of-atrous-matching.png?raw=true"></p>
+</li>
+<li><p><strong>多尺度匹配</strong>。下表 6 显示了多尺度匹配的消融研究。在 CFBI 实验中，逐像素特征的通道维度为 100。在 CFBI+ 实验中，对于 S &#x3D; 4、S &#x3D; 8 和 S &#x3D; 16，通道维度分别为 32、64 和 128。作者首先评估不同匹配尺度之间的差异。如图所示，进行更大规模的匹配会带来更好的性能，但需要更多的推理时间。 CFBI-S4 比 CFBI-S16 强大得多（81.6% v.s. 78.3%）。然而，CFBI-S16 的速度比 CFBI-S4 快约 5 倍。为了提高效率，CFBI 将 CFBI-S4 的多局部匹配从 S &#x3D; 4 提升到 S &#x3D; 8，速度提高了 124%，性能仅损失 0.2%。如果想要在更大范围内进行匹配，Atrous 全局匹配 ($l &#x3D; 2$) 对于节省计算资源至关重要（CFBI-G2 0.15s v.s. CFBI 0.29s、CFBI-S4-G2 0.27s  v.s. CFBI-S4 0.65s），同时几乎没有性能损失（CFBI-G2 81.3% v.s. CFBI 81.4%，CFBI-S4-G2 81.6% v.s. CFBI-S4 81.6%）。最后，通过结合三个尺度上的所有匹配过程并逐步增加其通道维度，CFBI+ 实现了更好的性能（82.0%），而提出的空洞匹配有助于保证高效的速度（0.25s）。<br><img src="https://github.com/xujinzh/archive/blob/master/images/vos/cfbip/ablation-of-multi-scale-matching.png?raw=true"></p>
+</li>
+<li><p><strong>定性比较</strong>。为了进一步比较 CFBI 与 CFBI+，作者在下图 9 中可视化了 DAVIS-2017 validation split 的一些代表性比较结果。受益于较大规模的局部匹配，CFBI+ 可以在相似目标之间生成更准确的边界。此外，CFBI+ 能够预测一些 CFBI 难以预测的微小物体。此外，作者在下图 10 中展示了 DAVIS-2017 testing split 和 YouTubeVOS 上一些最困难情况下 CFBI+ 的更多结果。CFBI 在大多数情况下都能很好泛化，包括相似对象、小对象和遮挡。<br><img src="https://github.com/xujinzh/archive/blob/master/images/vos/cfbip/qualitative-comparison-between-cfbi-and-cfbip.png?raw=true"></p>
+</li>
+</ul>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/vos/cfbip/qualitative-of-cfbip-on-davis2017-test-and-youtube-vos2018-valid.png?raw=true"></p>
+<ul>
+<li><strong>其他组件</strong>。其他提议组件的消融研究如下表 7 所示。第 0 行（74.9%）是提议的 CFBI 的结果，第 6 行（68.3%）是作者复制的基线方法。在相同的设置下，作者的 CFBI 显着优于基线。</li>
+</ul>
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/vos/cfbip/ablation-of-other-components.png?raw=true"></p>
+<p>在第 1 行中，作者仅使用一个局部邻域窗口按照 FEELVOS 的设置进行局部匹配，这将结果从 74.9% 降到了 73.8%。这表明多本地匹配模块比 FEELVOS 的单本地匹配模块更加稳健和有效。值得注意的是，多局部匹配的计算复杂度主要取决于最大局部窗口大小，因为作者使用最大窗口局部匹配的中间结果来计算较小的窗口。</p>
+<p>在第 2 行中，作者通过使用真实掩码而不是网络预测作为先前的掩码来替换顺序训练。通过这样做，CFBI 的性能从 74.9% 下降到 73.3%，这表明了在相同设置下顺序训练的有效性。</p>
+<p>在第 3 行中，作者用 4 个深度可分离的卷积层替换了协作集成器（并且作者在每个可分离的卷积层之前继续应用实例级注意力）。该架构与 FEELVOS 的动态分割头相同。与作者的协作集成器相比，动态分割头的感受野要小得多，并且性能差 1.6%。</p>
+<p>在第 4 行中，作者在训练过程中使用正常随机裁剪而不是平衡随机裁剪。在这种情况下，性能也会下降 2.1% 至 72.8%。正如预期的那样，平衡随机裁剪成功地缓解了模型形式对背景属性的偏差。</p>
+<p>在第 5 行中，作者禁用实例级注意力作为协作集成器的指导信息，这意味着仅使用像素级信息来指导预测。在这种情况下，结果进一步恶化到 72.7%，这证明实例级信息可以进一步帮助像素级信息的分割。</p>
+<p>总之，作者解释了 CFBI 和 CFBI+ 的每个拟议组件的有效性。对于 VOS 来说，需要同时嵌入前景和背景特征。此外，通过结合像素级信息和实例级信息，模型将更加鲁棒。值得注意的是，多尺度像素级匹配比单尺度匹配更有效，而空洞匹配对于提高匹配效率至关重要。除此之外，所提出的平衡随机裁剪和顺序训练在提高训练性能方面很有用但很简单。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>文章通过引入协作前景背景集成，提出了一种新颖的视频对象分割框架，并在三个流行的基准测试上取得了新的最先进的结果。具体来说，作者将前景目标及其相应背景的特征嵌入强加为对比。此外，作者集成了像素级和实例级嵌入，使作者的框架对各种对象尺度具有鲁棒性，同时保持网络简单和快速。特别是，作者的多尺度匹配设计可以进一步提高 VOS 的性能，而作者的空洞匹配可以大大提高匹配过程的效率。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2024/03/19/vos-cfbi-cvpr2020-tpami2021/">https://xujinzh.github.io/2024/03/19/vos-cfbi-cvpr2020-tpami2021/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/vos/">vos</a></div><div class="post_share"><div class="social-share" data-image="/img/c12.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/03/18/mac-chrome-shortcut-key/" title="mac 中 chrome 快捷键"><img class="cover" src="/img/c13.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">mac 中 chrome 快捷键</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/03/04/vos-davis-eval/" title="Video Object Segmentation 评估指标"><img class="cover" src="/img/c4.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-04</div><div class="title">Video Object Segmentation 评估指标</div></div></a></div><div><a href="/2024/03/18/vos-cfbi-eccv2020/" title="CFBI, Collaborative Video Object Segmentation by Foreground-Background Integration"><img class="cover" src="/img/c30.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-18</div><div class="title">CFBI, Collaborative Video Object Segmentation by Foreground-Background Integration</div></div></a></div><div><a href="/2024/03/05/vos-feelvos-cvpr2019/" title="FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation"><img class="cover" src="/img/c20.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-05</div><div class="title">FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation</div></div></a></div><div><a href="/2024/02/28/vos-stm-network-iccv2019/" title="Video Object Segmentation using Space-Time Memory Networks"><img class="cover" src="/img/c8.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-28</div><div class="title">Video Object Segmentation using Space-Time Memory Networks</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">393</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">302</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">26</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E8%B5%84%E6%BA%90"><span class="toc-number">1.</span> <span class="toc-text">文章资源</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">2.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%9C%E8%80%85"><span class="toc-number">3.</span> <span class="toc-text">作者</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">4.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9B%E6%96%B0%E7%82%B9"><span class="toc-number">5.</span> <span class="toc-text">创新点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E5%B0%BA%E5%BA%A6%E5%8C%B9%E9%85%8D"><span class="toc-number">5.1.</span> <span class="toc-text">多尺度匹配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E6%B4%9E%E5%8C%B9%E9%85%8D"><span class="toc-number">5.2.</span> <span class="toc-text">空洞匹配</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E6%96%BD%E7%BB%86%E8%8A%82"><span class="toc-number">6.</span> <span class="toc-text">实施细节</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">7.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Compare-With-the-State-of-the-Art-Methods"><span class="toc-number">7.1.</span> <span class="toc-text">Compare With the State-of-the-Art Methods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ablation-Study"><span class="toc-number">7.2.</span> <span class="toc-text">Ablation Study</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">8.</span> <span class="toc-text">结论</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/03/19/vos-cfbi-cvpr2020-tpami2021/" title="CFBI+, Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration"><img src="/img/c12.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CFBI+, Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration"/></a><div class="content"><a class="title" href="/2024/03/19/vos-cfbi-cvpr2020-tpami2021/" title="CFBI+, Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration">CFBI+, Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration</a><time datetime="2024-03-19T06:24:50.000Z" title="发表于 2024-03-19 14:24:50">2024-03-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/18/mac-chrome-shortcut-key/" title="mac 中 chrome 快捷键"><img src="/img/c13.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mac 中 chrome 快捷键"/></a><div class="content"><a class="title" href="/2024/03/18/mac-chrome-shortcut-key/" title="mac 中 chrome 快捷键">mac 中 chrome 快捷键</a><time datetime="2024-03-18T15:13:47.000Z" title="发表于 2024-03-18 23:13:47">2024-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/18/vos-cfbi-eccv2020/" title="CFBI, Collaborative Video Object Segmentation by Foreground-Background Integration"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CFBI, Collaborative Video Object Segmentation by Foreground-Background Integration"/></a><div class="content"><a class="title" href="/2024/03/18/vos-cfbi-eccv2020/" title="CFBI, Collaborative Video Object Segmentation by Foreground-Background Integration">CFBI, Collaborative Video Object Segmentation by Foreground-Background Integration</a><time datetime="2024-03-18T06:56:55.000Z" title="发表于 2024-03-18 14:56:55">2024-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/05/vos-feelvos-cvpr2019/" title="FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation"><img src="/img/c20.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation"/></a><div class="content"><a class="title" href="/2024/03/05/vos-feelvos-cvpr2019/" title="FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation">FEELVOS, Fast End-to-End Embedding Learning for Video Object Segmentation</a><time datetime="2024-03-05T08:14:48.000Z" title="发表于 2024-03-05 16:14:48">2024-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/04/vos-davis-eval/" title="Video Object Segmentation 评估指标"><img src="/img/c4.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Video Object Segmentation 评估指标"/></a><div class="content"><a class="title" href="/2024/03/04/vos-davis-eval/" title="Video Object Segmentation 评估指标">Video Object Segmentation 评估指标</a><time datetime="2024-03-04T03:43:07.000Z" title="发表于 2024-03-04 11:43:07">2024-03-04</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: 'c07134066c2fe4a34ba462d532516059',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>
