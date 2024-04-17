@@ -1,0 +1,519 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>PCA 人脸识别 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="PCA（Principal Component Analysis） 作为一种数学矩阵分析方法，能够约简多元数据集，在许多领域有重要应用，本篇介绍 PCA 应用于人脸识别。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PCA 人脸识别">
+<meta property="og:url" content="https://xujinzh.github.io/2024/04/17/maths-app-pca-face-recognition/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="PCA（Principal Component Analysis） 作为一种数学矩阵分析方法，能够约简多元数据集，在许多领域有重要应用，本篇介绍 PCA 应用于人脸识别。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c10.jpg">
+<meta property="article:published_time" content="2024-04-17T06:22:59.000Z">
+<meta property="article:modified_time" content="2024-04-17T08:11:10.270Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="maths">
+<meta property="article:tag" content="pca">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c10.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2024/04/17/maths-app-pca-face-recognition/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PCA 人脸识别',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-17 16:11:10'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">396</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">305</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">27</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">PCA 人脸识别</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-17T06:22:59.000Z" title="发表于 2024-04-17 14:22:59">2024-04-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-17T08:11:10.270Z" title="更新于 2024-04-17 16:11:10">2024-04-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/maths/">maths</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/maths/application/">application</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="PCA 人脸识别"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>PCA（Principal Component Analysis） 作为一种数学矩阵分析方法，能够约简多元数据集，在许多领域有重要应用，本篇介绍 PCA 应用于人脸识别。</p>
+<span id="more"></span>
+
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>给定一组具有 $m$ 个样本的 $n$ 维数据 ${a_1, a_2, \cdots, a_m }$，如何找到特殊的较少方向使得数据在该方向上的投影方差最大。方差大说明在新空间中数据更容易分离，更方便判断类别等。</p>
+<h1 id="理论"><a href="#理论" class="headerlink" title="理论"></a>理论</h1><p>将每个样本写成列向量，得到矩阵：</p>
+
+$$
+A = \bigl(
+\begin{smallmatrix}
+a_1 & a_2 & \cdots & a_m
+\end{smallmatrix}
+\bigr)
+$$
+
+
+<p>为了方便，我们先对矩阵 $A$ 沿着行方向求取平均值，然后将 $A$ 的每一行减去对应的均值。这样做能够约简 $A$，方便计算。</p>
+<p>寻找主方向 $u$，使得 $A$ 在该方向的投影方差尽量大，方差最大的方向就是主方向。即</p>
+
+$$
+Var(A \cdot u) = (Au)^T(Au) = u^T A^T Au.
+$$
+
+
+<p>为目标函数。一般地，我们选择单位方向 $u$，所以有 $u^Tu&#x3D;1$.</p>
+<p>利用 Lagrange 乘子法求解如下方程：</p>
+
+$$
+L(u) = u^TA^TAu + \lambda(u^Tu-1).
+$$
+
+
+<p>对单位方向 $u$ 求方向导数，并令其为0，得到</p>
+
+$$
+A^TAu = -\lambda u.
+$$
+
+
+<p>从上式可以看出，PCA 选择的方向其实就是方阵 $A^TA$ 的特征向量方向，按照特征值从大到小排序得到对应的特征向量方向，就是 PCA 选择的按照重要度排序的方向。</p>
+<h1 id="PCA-人脸识别"><a href="#PCA-人脸识别" class="headerlink" title="PCA 人脸识别"></a>PCA 人脸识别</h1><p>利用 PCA 进行人脸识别。 将人脸图像转化为灰度图像，对所有人脸图像进行 PCA 投影到新空间（一般称为脸空间）。对每一个人的人脸图像计算投影在脸空间中的平均坐标。当新人脸识别时，先投影到脸空间，然后计算投影坐标距离已知的人脸平均坐标的最小值，该最小值对应的人脸即为识别到的人脸。</p>
+<p>步骤：<br>0. 准备人脸数据集，假设每个人有 $k+1$ 副人脸图像，共 $m$ 个人；</p>
+<ol>
+<li>把每一幅图像转化为灰度图（图像宽、高分别是 $w,h$），然后拉长为一维列向量，分别取每个人的人脸图像 $k$ 副，剩余 1 副留作验证。**依次(同一个人的脸图像挨着)*<em>作为列向量组成一个矩阵 $A_{r\times c} &#x3D; \bigl(<br>\begin{smallmatrix}<br>a_1 &amp; a_2 &amp; \cdots &amp; a_{km}<br>\end{smallmatrix}<br>\bigr), r &#x3D; w</em>h, c&#x3D;k*m$，每一个 $a_i, i&#x3D;1,2,\cdots, km$ 为一个人脸列向量；</li>
+<li>对矩阵 $A_{r\times c}$ 的每一行求取平均值，得到的均值向量即为 $a_{mean}$，然后每一行减去对应的均值。即对 $A_{r\times c}$ 取中心化，这里仍记作 $A_{r \times c}$；</li>
+<li>计算协方差矩阵，这里约简为均值相乘： $\text{Corr}<em>{c\times c} &#x3D; A^T</em>{r \times c} \cdot A_{r \times c}$；</li>
+<li>计算矩阵 $\text{Corr}<em>{c\times c}$ 的特征值向量 $eigvalue</em>{c\times 1}$和特征向量矩阵$EigVec_{c\times c}$，假设每一列为一个特征向量；</li>
+<li>对特征值按照从大到小排序，并筛选前 90%（为阈值。前 $n$ 个特征值和正好占总特征向量和的比超过 90%，根据情况选择该阈值） 的特征值对应的特征向量矩阵 $EigVec^{thres}<em>{c \times n} &#x3D; \bigl(\begin{smallmatrix}<br>EigVec^1</em>{c\times 1} &amp; EigVec^2_{c \times 1} &amp; \cdots &amp; EigVec^n_{c \times 1}<br>\end{smallmatrix}<br>\bigr)$；</li>
+<li>计算特征脸矩阵 $B_{r \times n} &#x3D; A_{r\times c} \cdot EigVec^{thres}<em>{c\times n} &#x3D; \bigl(<br>\begin{smallmatrix}<br>A</em>{r\times c}\cdot EigVec^1_{c\times 1}  &amp; A_{r\times c} \cdot EigVec^2_{c\times 1} &amp; \cdots &amp; A_{r\times c} \cdot EigVec^n_{c\times 1}<br>\end{smallmatrix}<br>\bigr)$，每一列 $A_{r \times c} \cdots EigVec^i_{c \times 1}, i &#x3D; 1, 2, \cdots, n$ 对应投影后空间的基向量，这里称为投影空间为脸空间，共有 $n$ 个基向量。</li>
+<li>将矩阵 $A_{r \times c}$ 投影到脸空间 $B_{r \times n}$ 得到脸特征矩阵，即 $P_{c \times n} &#x3D; A^T_{r\times c} \cdot B_{r\times n} &#x3D;<br>\left[<br>\begin{array}{cc|c}<br> p_1 \<br> p_2 \<br> \vdots \<br> p_n<br>\end{array}<br>\right]<br>$，<br>其中每一行对应一个脸向量在脸空间中的坐标。因为前面我们是依次（同一个人的脸图像挨着）构建矩阵 $A_{r\times c}$ 的，所以，我们可以对脸特征矩阵 $P_{c \times n}, c&#x3D;k*m$ 的每 $k$ 行计算平均，得到 $m$ 个人在的脸在脸空间中的位置坐标（领域），记作 $P_{mean} &#x3D; \bigl(\begin{smallmatrix}<br>p^1_{mean} &amp; p^2_{mean} &amp; \cdots &amp; p^m_{mean}<br>\end{smallmatrix}<br>\bigr)$，每个 $p^i_{mean}$ 都是 $1\times n$ 维的；</li>
+<li>对于新来的人脸图像进行识别。首先将人脸图像灰度化，然后拉长为一维列向量 $b_{r\times 1}$，(对应位置)减去均值向量 $a_{mean}$，得到向量 $c_{r\times 1} &#x3D; b_{r\times 1} - a_{mean}$，然后将向量 $c_{r\times 1}$ 投影到脸空间 $B_{r\times n}$，即 $p_{1\times n} &#x3D; c^T_{r\times 1} \cdot B_{r\times n}$。最后计算 $p_{1\times n}$ 距离 $p^i_{mean}$ 哪个最近，就说明是那个人的脸。</li>
+</ol>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>如下命令在终端中执行(以 Ubuntu 18.04 为例)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install miniconda</span></span><br><span class="line">wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh</span><br><span class="line"><span class="built_in">chmod</span> +x Miniconda3-latest-Linux-x86_64.sh</span><br><span class="line">/bin/bash Miniconda3-latest-Linux-x86_64.sh -b -p ~/miniconda</span><br><span class="line">conda init</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># install conda env maths-ai</span></span><br><span class="line">conda create -n maths-ai python=3.11 -y</span><br><span class="line">conda activate maths-ai</span><br><span class="line"></span><br><span class="line"><span class="comment"># install common packages</span></span><br><span class="line">pip install ipykernel ipywidgets</span><br><span class="line">python -m ipykernel install --user --name maths-ai --display-name maths-ai</span><br><span class="line">pip install opencv-python pillow numpy matplotlib scipy sympy</span><br><span class="line">pip install torch==2.2.1 torchvision==0.17.1 torchaudio==2.2.1 --index-url https://download.pytorch.org/whl/cu118</span><br></pre></td></tr></table></figure>
+<p>安装完成后，打开 jupyter 继续执行如下命令</p>
+<h2 id="下载数据"><a href="#下载数据" class="headerlink" title="下载数据"></a>下载数据</h2><p>访问链接 <a target="_blank" rel="noopener" href="https://github.com/hsahuja111/Face-Recognition-using-Principal-Component-Analysis.git">github</a>，<br>直接下载:<br><code>git clone https://github.com/hsahuja111/Face-Recognition-using-Principal-Component-Analysis.git</code></p>
+<p>下载后图像存放在 ATnT 中。</p>
+<p>参考链接：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Gaoshiguo/PCA-Principal-Components-Analysis">https://github.com/Gaoshiguo/PCA-Principal-Components-Analysis</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/hsahuja111/Face-Recognition-using-Principal-Component-Analysis/blob/master/face-recognition-using-pca.ipynb">https://github.com/hsahuja111/Face-Recognition-using-Principal-Component-Analysis/blob/master/face-recognition-using-pca.ipynb</a></li>
+</ul>
+<h2 id="数据检查"><a href="#数据检查" class="headerlink" title="数据检查"></a>数据检查</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data_path = <span class="string">&quot;/disk1/datasets/maths-ai/face-recognition/ATnT/&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">batch = <span class="number">9</span>  <span class="comment"># 只使用前9张进行PCA投影到脸空间，用最后一张验证是否能识别成功</span></span><br><span class="line">face_d = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> os.listdir(data_path):</span><br><span class="line">    file_path = os.path.join(data_path, file)</span><br><span class="line">    <span class="keyword">if</span> os.path.isdir(file_path):</span><br><span class="line">        face_d[file] = <span class="built_in">sorted</span>(os.listdir(file_path), key=<span class="keyword">lambda</span> x: <span class="built_in">int</span>(x.split(<span class="string">&quot;.&quot;</span>)[<span class="number">0</span>]))</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;共多少种人脸？&quot;</span>, <span class="built_in">len</span>(face_d)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(&#39;共多少种人脸？&#39;, 40)
+</code></pre>
+<h2 id="加载包"><a href="#加载包" class="headerlink" title="加载包"></a>加载包</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br></pre></td></tr></table></figure>
+
+<h2 id="构建矩阵"><a href="#构建矩阵" class="headerlink" title="构建矩阵"></a>构建矩阵</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">w = <span class="number">92</span></span><br><span class="line">h = <span class="number">112</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">img_to_vector</span>(<span class="params">img_path</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    把图像转化为灰度图，然后转化为一维向量</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    img = cv2.imread(img_path)</span><br><span class="line">    <span class="comment"># img = cv2.resize(img, (256, 256))</span></span><br><span class="line">    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)</span><br><span class="line">    <span class="keyword">return</span> img_gray.reshape(-<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">keys_face = <span class="built_in">sorted</span>(<span class="built_in">list</span>(face_d.keys()))</span><br><span class="line">name = keys_face[<span class="number">0</span>]</span><br><span class="line">img_path = os.path.join(data_path, name, face_d[name][<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">img_vector = img_to_vector(img_path=img_path)</span><br><span class="line"></span><br><span class="line">plt.imshow(img_vector.reshape(h, w), cmap=<span class="string">&quot;gray&quot;</span>)</span><br><span class="line">plt.title(name)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/maths/app/pca/output_12_0.png?raw=true" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">A = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> keys_face:</span><br><span class="line">    v = face_d[k]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(batch):</span><br><span class="line">        img_path = os.path.join(data_path, k, v[i])</span><br><span class="line">        img_vector = img_to_vector(img_path).reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">if</span> A <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            A = img_vector</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            A = np.hstack((A, img_vector))</span><br><span class="line">A.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(10304, 360)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">avg_face_vector = A.mean(axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">avg_face = avg_face_vector.reshape(h, w)</span><br><span class="line">plt.imshow(avg_face, cmap=<span class="string">&quot;gray&quot;</span>)</span><br><span class="line">plt.title(<span class="string">&quot;avg face&quot;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/maths/app/pca/output_15_0.png?raw=true" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A_homo = A - avg_face_vector.reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">fig, ax = plt.subplots(<span class="number">2</span>, <span class="number">5</span>)</span><br><span class="line">plt.rc(<span class="string">&quot;font&quot;</span>, size=<span class="number">13</span>)</span><br><span class="line"><span class="comment"># fig.tight_layout()</span></span><br><span class="line">fig.set_figwidth(<span class="number">25</span>)</span><br><span class="line">fig.set_figheight(<span class="number">10</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    ind = i * batch + <span class="number">1</span></span><br><span class="line">    ai = A_homo[:, ind]</span><br><span class="line">    name = keys_face[i]</span><br><span class="line">    ai_image = ai.reshape(h, w)</span><br><span class="line">    r = i // <span class="number">5</span></span><br><span class="line">    c = i % <span class="number">5</span></span><br><span class="line">    ax[r][c].imshow(ai_image, cmap=<span class="string">&quot;gray&quot;</span>)</span><br><span class="line">    ax[r][c].set_title(<span class="string">f&quot;<span class="subst">&#123;name&#125;</span>&quot;</span>)</span><br><span class="line">    ax[r][c].xaxis.set_major_locator(plt.NullLocator())</span><br><span class="line">    ax[r][c].yaxis.set_major_locator(plt.NullLocator())</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/maths/app/pca/output_17_0.png?raw=true" alt="png"></p>
+<h2 id="计算协方差阵的特征向量，选择主特征"><a href="#计算协方差阵的特征向量，选择主特征" class="headerlink" title="计算协方差阵的特征向量，选择主特征"></a>计算协方差阵的特征向量，选择主特征</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Cov_A = np.matmul(A_homo.transpose(), A_homo)</span><br><span class="line"><span class="comment"># Cov_A = np.cov(A_homo)</span></span><br><span class="line">Cov_A.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(360, 360)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eig_values, eig_vectors = np.linalg.eig(Cov_A)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 特征值从大到小排序</span></span><br><span class="line">eig_values_sorted_index = np.argsort(-eig_values)</span><br><span class="line">eig_values_sorted = np.sort(eig_values)[::-<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(<span class="built_in">range</span>(<span class="built_in">len</span>(eig_values_sorted)), <span class="built_in">list</span>(eig_values_sorted))</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/maths/app/pca/output_22_0.png?raw=true" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每一列是一个特征向量，对列按照特征值从大到小排序</span></span><br><span class="line">eig_vectors_sorted_by_values = eig_vectors[:, eig_values_sorted_index]</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 取前 threshold 个特征值，使得它们的和占总特征值和的90%</span></span><br><span class="line">eig_acc = <span class="number">0</span></span><br><span class="line">total_eig = np.<span class="built_in">sum</span>(eig_values)</span><br><span class="line"><span class="keyword">for</span> i, eig <span class="keyword">in</span> <span class="built_in">enumerate</span>(eig_values_sorted):</span><br><span class="line">    eig_acc += eig</span><br><span class="line">    <span class="keyword">if</span> eig_acc / total_eig &gt;= <span class="number">0.9</span>:</span><br><span class="line">        threshold = i</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">threshold</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>103
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 取前 threshold 个特征值作为主特征向量</span></span><br><span class="line">eig_vectors_selected = eig_vectors_sorted_by_values[:, :threshold]</span><br><span class="line">eig_vectors_selected.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(360, 103)
+</code></pre>
+<h2 id="计算特征脸"><a href="#计算特征脸" class="headerlink" title="计算特征脸"></a>计算特征脸</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A_homo.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(10304, 360)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 计算特征脸矩阵，每一列是投影空间中特征脸基向量</span></span><br><span class="line">B = np.matmul(A_homo, eig_vectors_selected)</span><br><span class="line">B.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(10304, 103)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 画出前10个特征脸基向量图像</span></span><br><span class="line">fig, ax = plt.subplots(<span class="number">2</span>, <span class="number">5</span>)</span><br><span class="line">plt.rc(<span class="string">&quot;font&quot;</span>, size=<span class="number">13</span>)</span><br><span class="line"><span class="comment"># fig.tight_layout()</span></span><br><span class="line">fig.set_figwidth(<span class="number">25</span>)</span><br><span class="line">fig.set_figheight(<span class="number">10</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    eig_face = B[:, i]</span><br><span class="line">    eig_value = eig_values_sorted[i]</span><br><span class="line">    eig_face_image = eig_face.reshape(h, w)</span><br><span class="line">    r = i // <span class="number">5</span></span><br><span class="line">    c = i % <span class="number">5</span></span><br><span class="line">    ax[r][c].imshow(eig_face_image, cmap=<span class="string">&quot;gray&quot;</span>)</span><br><span class="line">    ax[r][c].set_title(<span class="string">f&quot;<span class="subst">&#123;i&#125;</span>-th eig-face&quot;</span>)</span><br><span class="line">    ax[r][c].xaxis.set_major_locator(plt.NullLocator())</span><br><span class="line">    ax[r][c].yaxis.set_major_locator(plt.NullLocator())</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/maths/app/pca/output_29_0.png?raw=true" alt="png"></p>
+<h2 id="计算投影空间"><a href="#计算投影空间" class="headerlink" title="计算投影空间"></a>计算投影空间</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把所有脸特征投影到脸空间中，计算每个脸在投影空间中的坐标</span></span><br><span class="line"><span class="comment"># 每一行对应一个人脸在投影空间（脸空间）中的坐标位置</span></span><br><span class="line">P = np.matmul(A.transpose(), B)</span><br><span class="line">P.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(360, 103)
+</code></pre>
+<h2 id="识别人脸"><a href="#识别人脸" class="headerlink" title="识别人脸"></a>识别人脸</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 取最后一副没有参与PCA分析的人脸图，用于验证是否能够正确识别人脸</span></span><br><span class="line">name = keys_face[<span class="number">2</span>]  <span class="comment"># 随便取第3个人</span></span><br><span class="line">img_name = face_d[name][-<span class="number">1</span>]  <span class="comment"># 取最后一副图像验证</span></span><br><span class="line">img_name</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>&#39;10.pgm&#39;
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把待验证人脸图像转化为灰度图，进而拉平为向量，最后减去平均脸向量</span></span><br><span class="line">img_path = os.path.join(data_path, name, img_name)</span><br><span class="line">img_vector = img_to_vector(img_path=img_path)</span><br><span class="line">img_vector_norm = img_vector - avg_face_vector</span><br><span class="line">img_vector_norm = img_vector_norm.reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">img_vector_norm.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(10304, 1)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前待识别人脸图像</span></span><br><span class="line">plt.imshow(img_vector_norm.reshape(h, w), cmap=<span class="string">&quot;gray&quot;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/maths/app/pca/output_35_0.png?raw=true" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">B.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(10304, 103)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">img_vector_norm.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(10304, 1)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把待识别人脸向量投影到脸空间，计算得到其在脸空间中的坐标</span></span><br><span class="line">project_vector = np.matmul(img_vector_norm.reshape(<span class="number">1</span>, -<span class="number">1</span>), B)</span><br><span class="line">project_vector.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(1, 103)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">P.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(360, 103)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对每个投影后的脸特征坐标按照人脸类别（不同人）计算平均值（这里因为创建数据A时是按照不同人依次叠加的，所以同一人的特征是紧挨着的），</span></span><br><span class="line"><span class="comment"># 作为当前人的在投影空间（脸空间）中的唯一特征（坐标）</span></span><br><span class="line">P_avg = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(P.shape[<span class="number">1</span>] // batch):</span><br><span class="line">    P_slice = P[i * batch : (i + <span class="number">1</span>) * batch, :]</span><br><span class="line">    P_avg.append(P_slice.mean(axis=<span class="number">0</span>))</span><br><span class="line"><span class="built_in">len</span>(P_avg)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>11
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">P_avg[<span class="number">0</span>].shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(103,)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 计算待识别人脸特征与脸空间中哪个人脸最接近，最接近的人脸作为预测或识别的人脸name</span></span><br><span class="line">ind = np.argmin(np.<span class="built_in">sum</span>((np.array(P_avg) - project_vector.reshape(<span class="number">1</span>, -<span class="number">1</span>)) ** <span class="number">2</span>, axis=<span class="number">1</span>))</span><br><span class="line">ind</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>2
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 预测或识别的人名</span></span><br><span class="line">pred_name = keys_face[ind]</span><br><span class="line">pred_name</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>&#39;s11&#39;
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 画出真实人脸和识别的人，判断是否是同一个人</span></span><br><span class="line">img = cv2.imread(img_path)  <span class="comment"># 取的待识别的图像</span></span><br><span class="line">pred_img = cv2.imread(</span><br><span class="line">    os.path.join(data_path, pred_name, face_d[pred_name][<span class="number">0</span>])</span><br><span class="line">)  <span class="comment"># 识别出的人对应的第1副图像</span></span><br><span class="line"></span><br><span class="line">fig, ax = plt.subplots(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">ax[<span class="number">0</span>].imshow(img[..., ::-<span class="number">1</span>])</span><br><span class="line">ax[<span class="number">0</span>].set_title(<span class="string">f&quot;truth name:<span class="subst">&#123;name&#125;</span>&quot;</span>)</span><br><span class="line">ax[<span class="number">1</span>].imshow(pred_img[..., ::-<span class="number">1</span>])</span><br><span class="line">ax[<span class="number">1</span>].set_title(<span class="string">f&quot;predict name:<span class="subst">&#123;pred_name&#125;</span>&quot;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://github.com/xujinzh/archive/blob/master/images/maths/app/pca/output_44_0.png?raw=true" alt="png"></p>
+<p>根据图像和预测的人脸name可以判断识别正确</p>
+<h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><ol>
+<li>PCA 是一种线性投影方法，对于线性不可分的情况处理效果不好；</li>
+<li>可能损失有用的信息；</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2024/04/17/maths-app-pca-face-recognition/">https://xujinzh.github.io/2024/04/17/maths-app-pca-face-recognition/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/maths/">maths</a><a class="post-meta__tags" href="/tags/pca/">pca</a></div><div class="post_share"><div class="social-share" data-image="/img/c10.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/04/10/install-code-server/" title="code-server 的安装与使用"><img class="cover" src="/img/c9.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">code-server 的安装与使用</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/08/15/Newton-Leibniz-formula/" title="牛顿-莱布尼茨公式"><img class="cover" src="/img/c24.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-08-15</div><div class="title">牛顿-莱布尼茨公式</div></div></a></div><div><a href="/2020/10/10/area-of-plane-figure/" title="利用定积分求平面图形的面积"><img class="cover" src="/img/c8.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-10-10</div><div class="title">利用定积分求平面图形的面积</div></div></a></div><div><a href="/2020/09/19/basic-theorem-of-calculus-and-calculation-of-definite-integral/" title="微积分基本定理和定积分计算"><img class="cover" src="/img/c9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-09-19</div><div class="title">微积分基本定理和定积分计算</div></div></a></div><div><a href="/2020/03/20/completeness-of-real-number/" title="实数集的完备性"><img class="cover" src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-20</div><div class="title">实数集的完备性</div></div></a></div><div><a href="/2019/12/20/confidence-statistic-probability/" title="置信度与置信区间"><img class="cover" src="/img/c4.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-20</div><div class="title">置信度与置信区间</div></div></a></div><div><a href="/2020/10/17/definite-integral-calculate-volume/" title="由平行截面面积求体积"><img class="cover" src="/img/c10.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-10-17</div><div class="title">由平行截面面积求体积</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">396</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">305</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">27</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%90%86%E8%AE%BA"><span class="toc-number">2.</span> <span class="toc-text">理论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PCA-%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB"><span class="toc-number">3.</span> <span class="toc-text">PCA 人脸识别</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">4.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E6%95%B0%E6%8D%AE"><span class="toc-number">4.2.</span> <span class="toc-text">下载数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%A3%80%E6%9F%A5"><span class="toc-number">4.3.</span> <span class="toc-text">数据检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E5%8C%85"><span class="toc-number">4.4.</span> <span class="toc-text">加载包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E7%9F%A9%E9%98%B5"><span class="toc-number">4.5.</span> <span class="toc-text">构建矩阵</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%8D%8F%E6%96%B9%E5%B7%AE%E9%98%B5%E7%9A%84%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F%EF%BC%8C%E9%80%89%E6%8B%A9%E4%B8%BB%E7%89%B9%E5%BE%81"><span class="toc-number">4.6.</span> <span class="toc-text">计算协方差阵的特征向量，选择主特征</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E7%89%B9%E5%BE%81%E8%84%B8"><span class="toc-number">4.7.</span> <span class="toc-text">计算特征脸</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%8A%95%E5%BD%B1%E7%A9%BA%E9%97%B4"><span class="toc-number">4.8.</span> <span class="toc-text">计算投影空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%86%E5%88%AB%E4%BA%BA%E8%84%B8"><span class="toc-number">4.9.</span> <span class="toc-text">识别人脸</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">5.</span> <span class="toc-text">优缺点</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/04/17/maths-app-pca-face-recognition/" title="PCA 人脸识别"><img src="/img/c10.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PCA 人脸识别"/></a><div class="content"><a class="title" href="/2024/04/17/maths-app-pca-face-recognition/" title="PCA 人脸识别">PCA 人脸识别</a><time datetime="2024-04-17T06:22:59.000Z" title="发表于 2024-04-17 14:22:59">2024-04-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/10/install-code-server/" title="code-server 的安装与使用"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="code-server 的安装与使用"/></a><div class="content"><a class="title" href="/2024/04/10/install-code-server/" title="code-server 的安装与使用">code-server 的安装与使用</a><time datetime="2024-04-10T13:48:23.000Z" title="发表于 2024-04-10 21:48:23">2024-04-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/21/ubuntu-view-image-on-terminal/" title="ubuntu 终端上查看图像文件及元信息"><img src="/img/c8.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ubuntu 终端上查看图像文件及元信息"/></a><div class="content"><a class="title" href="/2024/03/21/ubuntu-view-image-on-terminal/" title="ubuntu 终端上查看图像文件及元信息">ubuntu 终端上查看图像文件及元信息</a><time datetime="2024-03-21T01:59:28.000Z" title="发表于 2024-03-21 09:59:28">2024-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/19/vos-cfbi-cvpr2020-tpami2021/" title="CFBI+, Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CFBI+, Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration"/></a><div class="content"><a class="title" href="/2024/03/19/vos-cfbi-cvpr2020-tpami2021/" title="CFBI+, Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration">CFBI+, Collaborative Video Object Segmentation by Multi-Scale Foreground-Background Integration</a><time datetime="2024-03-19T06:24:50.000Z" title="发表于 2024-03-19 14:24:50">2024-03-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/18/mac-chrome-shortcut-key/" title="mac 中 chrome 快捷键"><img src="/img/c7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mac 中 chrome 快捷键"/></a><div class="content"><a class="title" href="/2024/03/18/mac-chrome-shortcut-key/" title="mac 中 chrome 快捷键">mac 中 chrome 快捷键</a><time datetime="2024-03-18T15:13:47.000Z" title="发表于 2024-03-18 23:13:47">2024-03-18</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '0520f3d8f67190151cade9159b4c37cd',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>
