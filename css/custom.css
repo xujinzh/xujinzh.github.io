@@ -1,9 +1,12 @@
-/* 强制所有 Font Awesome 图标伪元素和类名排他性使用图标字体，防止被系统 Noto Sans 截胡 */
-[class^="fa-"]::before, 
-[class*=" fa-"]::before,
+/* 精准修复：仅针对文章内章节标题前的图标，强制解除系统 Noto Sans 字体的截胡 */
 .post-content h1::before, 
 .post-content h2::before, 
 .post-content h3::before,
 .post-content h4::before {
-    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+    font-family: "Font Awesome 6 Free" !important;
+}
+
+/* 如果你的某些章节图标属于品牌图标，可以加上这一行作为备用兜底 */
+.post-content [class*="fa-"]::before {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands", "FontAwesome" !important;
 }
