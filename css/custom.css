@@ -1,29 +1,35 @@
-/* 1. 彻底隐藏原本因为字体冲突导致方框的字体图标内容 */
 .post-content h1::before, 
 .post-content h2::before, 
 .post-content h3::before,
 .post-content h4::before {
-    content: "" !important; /* 擦除方框字符 */
-    background-color: rgb(244, 116, 102) !important; /* 使用原本的红色 */
+    content: "" !important;
     display: inline-block !important;
     position: absolute !important;
     
-    /* 2. 纯 CSS 绘制一个小圆点/小竖条（代替原来的图标） */
-    width: 8px !important;
-    height: 8px !important;
-    border-radius: 50% !important; /* 变成圆点。如果要方块，把这行删掉即可 */
+    /* 1. 使用经过编码的可爱手指 SVG 图标 (👉 效果)，免除本地图片路径的烦恼 */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 24 24' fill='%23F47466'><path d='M2 10.5C2 9.67 2.67 9 3.5 9H9V7.5C9 5.01 11.01 3 13.5 3S18 5.01 18 7.5V9h1.5c1.38 0 2.5 1.12 2.5 2.5v7c0 1.38-1.12 2.5-2.5 2.5h-8.5C7.46 21 4.5 18.04 4.5 14.5V13.5c0-.28-.22-.5-.5-.5H3.5C2.67 13 2 12.33 2 11.5v-1zM16 7.5c0-1.38-1.12-2.5-2.5-2.5S11 6.12 11 7.5V9h5V7.5z'/></svg>") !important;
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-color: transparent !important;
     
-    /* 3. 微调圆点的位置，使其居中对齐标题文字 */
-    left: -20px !important;
+    /* 2. 调整手指图标的尺寸 */
+    width: 22px !important;
+    height: 22px !important;
+    
+    /* 3. 缩短间距：让手指紧紧贴着文字 */
+    left: -14px !important; 
+    
+    /* 4. 垂直居中微调 */
     top: 50% !important;
     transform: translateY(-50%) !important;
 }
 
-/* 4. 修正标题本身的内边距，确保文字不会压到我们画的圆点 */
+/* 5. 整体调整标题左边的安全留白，确保排版完美 */
 .post-content h1, 
 .post-content h2, 
 .post-content h3,
 .post-content h4 {
     position: relative !important;
-    padding-left: 24px !important;
+    padding-left: 16px !important; /* 缩短与手指的整体间距 */
 }
