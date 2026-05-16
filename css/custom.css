@@ -1,17 +1,29 @@
-/* 1. 把网络上的 Font Awesome 复制一份，起一个你本地电脑绝对没有的全新名字 */
-@font-face {
-  font-family: 'My-Hexo-Icon-Font'; /* 这是一个全新的、绝不可能和你本地冲突的名字 */
-  font-style: normal;
-  font-weight: 900;
-  font-display: block;
-  /* 直接借用主题默认的图标，只改名字，不改路径 */
-  src: local('Font Awesome 6 Free'); 
-}
-
-/* 2. 让文章章节标题使用这个独一无二的新名字 */
+/* 1. 彻底隐藏原本因为字体冲突导致方框的字体图标内容 */
 .post-content h1::before, 
 .post-content h2::before, 
 .post-content h3::before,
 .post-content h4::before {
-    font-family: 'My-Hexo-Icon-Font', 'Font Awesome 6 Free' !important;
+    content: "" !important; /* 擦除方框字符 */
+    background-color: rgb(244, 116, 102) !important; /* 使用原本的红色 */
+    display: inline-block !important;
+    position: absolute !important;
+    
+    /* 2. 纯 CSS 绘制一个小圆点/小竖条（代替原来的图标） */
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important; /* 变成圆点。如果要方块，把这行删掉即可 */
+    
+    /* 3. 微调圆点的位置，使其居中对齐标题文字 */
+    left: -20px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+}
+
+/* 4. 修正标题本身的内边距，确保文字不会压到我们画的圆点 */
+.post-content h1, 
+.post-content h2, 
+.post-content h3,
+.post-content h4 {
+    position: relative !important;
+    padding-left: 24px !important;
 }
