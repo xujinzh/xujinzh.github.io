@@ -1,26 +1,17 @@
-/* 1. 核心修复：重新定义字体源，强制删除 local() 检查，只允许从网络下载 woff2 字体 */
+/* 1. 把网络上的 Font Awesome 复制一份，起一个你本地电脑绝对没有的全新名字 */
 @font-face {
-  font-family: 'Font Awesome 6 Free';
+  font-family: 'My-Hexo-Icon-Font'; /* 这是一个全新的、绝不可能和你本地冲突的名字 */
   font-style: normal;
   font-weight: 900;
   font-display: block;
-  src: url('https://cloudflare.com') format('css'),
-       url('https://cloudflare.com') format('woff2');
+  /* 直接借用主题默认的图标，只改名字，不改路径 */
+  src: local('Font Awesome 6 Free'); 
 }
 
-/* 2. 品牌字体的重新定义（顺便保护其他可能变成方框的品牌图标） */
-@font-face {
-  font-family: 'Font Awesome 6 Brands';
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url('https://cloudflare.com') format('woff2');
-}
-
-/* 3. 精准强制应用，防止任何本地字体截胡 */
+/* 2. 让文章章节标题使用这个独一无二的新名字 */
 .post-content h1::before, 
 .post-content h2::before, 
 .post-content h3::before,
 .post-content h4::before {
-    font-family: 'Font Awesome 6 Free' !important;
+    font-family: 'My-Hexo-Icon-Font', 'Font Awesome 6 Free' !important;
 }
