@@ -7,22 +7,33 @@
     display: none !important;
 }
 
-/* 2. 将精美心形图标作为标题行的背景图挂载 */
+/* 2. 直接清空之前的背景图配置，防止辣椒图标残留 */
 .post-content h1, 
 .post-content h2, 
 .post-content h3,
 .post-content h4 {
-    position: relative !important;
+    background-image: none !important;
+    padding-left: 0 !important;
+}
+
+/* 3. 使用超高兼容性的标准 Unicode 红心符号进行完美渲染 */
+.post-content h1::after, 
+.post-content h2::after, 
+.post-content h3::after,
+.post-content h4::after {
+    /* 在文字最前方塞入一颗绝对不变形的红心 */
+    content: "\2764" !important; 
     
-    /* 饱满的心形矢量图（颜色依旧保持为您博客的粉橘色 #F47466） */
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0Y0NzQ2NiI+PHBhdGggZD0iTTEyIDIxLjM1bC0xLjQ1LTEuMzJDNS40IDE1LjM2IDIgMTIuMjggMiA4LjUgMiA1LjQyIDQuNDIgMyA3LjUgM2MxLjc0IDAgMy40MS44MSA0LjUgMi4wOUMxMy4wOSAzLjgxIDE0Ljc2IDMgMTYuNSAzYy0zLjA4IDAtNS41IDIuNDItNS41IDUuNSAwIDMuNzggMy40IDYuODYgOC41NSAxMS41NEwxMiAyMS4zNXoiLz48L3N2Zz4=") !important;
-    background-repeat: no-repeat !important;
-    background-position: left center !important; /* 图标靠最左侧居中 */
+    /* 颜色依旧保持为您博客的粉橘色 */
+    color: #F47466 !important; 
     
-    /* 3. 控制心形图标的大小（通常 14px~16px 看起来最精致） */
-    background-size: 15px 15px !important; 
+    /* 控制红心的大小 */
+    font-size: 16px !important;
     
-    /* 4. 控制心形图标与文字的距离 */
-    /* 15px 的图标宽度 + 5px 的间隙 = 20px。如果希望文字离爱心更近，可以调小到 18px */
-    padding-left: 20px !important; 
+    /* 调整红心与右侧文字的精确距离，10px 可以让它们贴得非常紧凑 */
+    margin-right: 10px !important;
+    
+    /* 将其固定排在最左边 */
+    float: left !important;
+    line-height: inherit !important;
 }
