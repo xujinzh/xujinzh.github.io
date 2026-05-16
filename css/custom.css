@@ -1,12 +1,26 @@
-/* 精准修复：仅针对文章内章节标题前的图标，强制解除系统 Noto Sans 字体的截胡 */
+/* 1. 核心修复：重新定义字体源，强制删除 local() 检查，只允许从网络下载 woff2 字体 */
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url('https://cloudflare.com') format('css'),
+       url('https://cloudflare.com') format('woff2');
+}
+
+/* 2. 品牌字体的重新定义（顺便保护其他可能变成方框的品牌图标） */
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('https://cloudflare.com') format('woff2');
+}
+
+/* 3. 精准强制应用，防止任何本地字体截胡 */
 .post-content h1::before, 
 .post-content h2::before, 
 .post-content h3::before,
 .post-content h4::before {
-    font-family: "Font Awesome 6 Free" !important;
-}
-
-/* 如果你的某些章节图标属于品牌图标，可以加上这一行作为备用兜底 */
-.post-content [class*="fa-"]::before {
-    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands", "FontAwesome" !important;
+    font-family: 'Font Awesome 6 Free' !important;
 }
