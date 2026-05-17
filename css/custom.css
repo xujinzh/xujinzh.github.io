@@ -38,13 +38,12 @@
     line-height: inherit !important;
 }
 
-
-/* 强制修改 post-copyright 伪元素前的图标为红心 */
+/* 彻底修复和覆盖底部版权栏的图标 */
 .post-copyright::before {
-    background-image: none !important;
+    content: "❤️" !important; /* 直接使用 Emoji 红心，100% 成功显示 */
+    font-family: sans-serif !important; /* 切换为系统自带字体，防止方块 */
+    font-size: 16px !important; /* 调整红心大小 */
+    background: none !important; /* 清除可能存在的背景干扰 */
+    border: none !important;
 }
-.post-copyright::after {
-    content: "\f004" !important; /* Font Awesome 的心形 Unicode 编码 */
-    font-size: 18px !important; /* 控制红心的大小 */
-    color: #ff4d4f !important; /* 设置为红色 */
-}
+
