@@ -1,0 +1,339 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Go 语言命令行与本地 Web 查阅文档简介 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="作为 Go 开发者，你是否经常为了看一个接口（Interface）有哪些方法，或者某个第三方库的结构体怎么用，而频繁地在 IDE、源码文件和浏览器搜索引擎之间来回切换？ 其实，Go 语言官方早就为我们准备了极其强大的文档查阅工具。从轻量快捷的命令行 **go doc**，到现代化本地 Web 界面的 **pkgsite**，它们能让你在不联网、不离开终端的情况下，秒级获取精准的官方与第三方库文档。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go 语言命令行与本地 Web 查阅文档简介">
+<meta property="og:url" content="https://xujinzh.github.io/2026/06/23/golang-doc-help/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="作为 Go 开发者，你是否经常为了看一个接口（Interface）有哪些方法，或者某个第三方库的结构体怎么用，而频繁地在 IDE、源码文件和浏览器搜索引擎之间来回切换？ 其实，Go 语言官方早就为我们准备了极其强大的文档查阅工具。从轻量快捷的命令行 **go doc**，到现代化本地 Web 界面的 **pkgsite**，它们能让你在不联网、不离开终端的情况下，秒级获取精准的官方与第三方库文档。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c6.jpeg">
+<meta property="article:published_time" content="2026-06-23T02:43:14.000Z">
+<meta property="article:modified_time" content="2026-06-23T02:51:49.918Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="go">
+<meta property="article:tag" content="golang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c6.jpeg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2026/06/23/golang-doc-help/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Go 语言命令行与本地 Web 查阅文档简介',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-06-23 10:51:49'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">423</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">327</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">29</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Go 语言命令行与本地 Web 查阅文档简介</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-06-23T02:43:14.000Z" title="发表于 2026-06-23 10:43:14">2026-06-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-06-23T02:51:49.918Z" title="更新于 2026-06-23 10:51:49">2026-06-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/go/">go</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Go 语言命令行与本地 Web 查阅文档简介"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>作为 Go 开发者，你是否经常为了看一个接口（Interface）有哪些方法，或者某个第三方库的结构体怎么用，而频繁地在 IDE、源码文件和浏览器搜索引擎之间来回切换？</p>
+<p>其实，Go 语言官方早就为我们准备了极其强大的文档查阅工具。从轻量快捷的命令行 **<code>go doc</code>**，到现代化本地 Web 界面的 **<code>pkgsite</code>**，它们能让你在不联网、不离开终端的情况下，秒级获取精准的官方与第三方库文档。</p>
+<span id="more"></span>
+
+<h2 id="1-命令行神器：go-doc"><a href="#1-命令行神器：go-doc" class="headerlink" title="1. 命令行神器：go doc"></a>1. 命令行神器：go doc</h2><p>如果你正在写代码，只想快速瞄一眼某个函数或接口的签名，打开浏览器显然太慢了。<code>go doc</code> 是你最好的选择。</p>
+<h3 id="基础用法：查阅标准库"><a href="#基础用法：查阅标准库" class="headerlink" title="基础用法：查阅标准库"></a>基础用法：查阅标准库</h3><p>直接在终端输入 <code>go doc</code> + <code>包名</code> 或 <code>包名.对象名</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看整个 io 包的简要导出信息</span></span><br><span class="line">go doc io</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 io.Reader 接口的具体定义</span></span><br><span class="line">go doc io.Reader</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 fmt.Println 函数的用法和参数</span></span><br><span class="line">go doc fmt.Println</span><br></pre></td></tr></table></figure>
+
+<h3 id="进阶用法：查阅当前项目与第三方库"><a href="#进阶用法：查阅当前项目与第三方库" class="headerlink" title="进阶用法：查阅当前项目与第三方库"></a>进阶用法：查阅当前项目与第三方库</h3><p><code>go doc</code> 不仅能看标准库，还能看你当前项目或 <code>go.mod</code> 中引用的第三方库。只需切换到项目目录下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前项目下某个子包的文档</span></span><br><span class="line">go doc ./pkg/mypackage</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看子包中某个具体接口的定义</span></span><br><span class="line">go doc ./pkg/mypackage MyInterface</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看引用的第三方库（以 gin 为例）</span></span><br><span class="line">go doc github.com/gin-gonic/gin.Engine Engine</span><br></pre></td></tr></table></figure>
+
+<h3 id="实用参数推荐"><a href="#实用参数推荐" class="headerlink" title="实用参数推荐"></a>实用参数推荐</h3><ul>
+<li><code>-src</code>：不仅看文档，还要<strong>直接看该函数的底层源代码</strong>。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go doc -src fmt.Println</span><br></pre></td></tr></table></figure></li>
+<li><code>-all</code>：打印该包或该类型下的<strong>所有方法和关联函数</strong>。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go doc -all io.ReadCloser</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h2 id="2-本地-Web-交互神器：pkgsite"><a href="#2-本地-Web-交互神器：pkgsite" class="headerlink" title="2. 本地 Web 交互神器：pkgsite"></a>2. 本地 Web 交互神器：pkgsite</h2><p><code>go doc</code> 固然快，但纯文本的命令行在面对复杂的接口继承、大篇幅的示例代码（Examples）时，可读性会变差。</p>
+<p>为此，Go 官方推出了全新的 **<code>pkgsite</code>**，它可以在你的本地电脑上启动一个和官方 <a target="_blank" rel="noopener" href="https://go.dev/">pkg.go.dev</a> 一模一样的现代化高颜值网页，支持全项目检索。</p>
+<h3 id="第一步：安装工具"><a href="#第一步：安装工具" class="headerlink" title="第一步：安装工具"></a>第一步：安装工具</h3><p>在你的命令行中运行以下命令，全局安装最新版的 <code>pkgsite</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go install golang.org/x/pkgsite/cmd/pkgsite@latest</span><br></pre></td></tr></table></figure>
+
+<h3 id="第二步：一键启动"><a href="#第二步：一键启动" class="headerlink" title="第二步：一键启动"></a>第二步：一键启动</h3><p>进入你的 Go 项目根目录（包含 <code>go.mod</code> 的目录），在终端执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pkgsite -http=localhost:8080</span><br></pre></td></tr></table></figure>
+<p><em>提示：你可以自由更换 <code>8080</code> 为其他未被占用的端口。</em></p>
+<h3 id="第三步：浏览器查看"><a href="#第三步：浏览器查看" class="headerlink" title="第三步：浏览器查看"></a>第三步：浏览器查看</h3><p>打开浏览器，访问 <code>http://localhost:8080</code>，你会看到一个极简的搜索框：</p>
+<ol>
+<li><strong>查阅当前项目</strong>：在搜索框直接输入你当前项目的 <code>module</code> 名称（在 <code>go.mod</code> 第一行定义的名称），就能看到自己写的代码文档和接口。</li>
+<li><strong>查阅接口实现（最强功能）</strong>：当你点击进入任意一个接口（如 <code>io.Writer</code>）时，网页中会有一个 <strong>“Implements”</strong> 展开栏。点击它，本地网页会通过静态分析，帮你<strong>列出当前项目里所有实现了该接口的结构体</strong>！</li>
+<li><strong>完美支持 Examples</strong>：如果源码中编写了 <code>ExampleXXX</code> 的测试函数，网页上会直接渲染出可折叠的示例代码块，极其直观。</li>
+</ol>
+<hr>
+<h2 id="3-终极对比：我该用哪个？"><a href="#3-终极对比：我该用哪个？" class="headerlink" title="3. 终极对比：我该用哪个？"></a>3. 终极对比：我该用哪个？</h2><table>
+<thead>
+<tr>
+<th align="left">特性 &#x2F; 场景</th>
+<th align="left"><code>go doc</code> 命令行</th>
+<th align="left"><code>pkgsite</code> 本地 Web</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>启动速度</strong></td>
+<td align="left">🚀 瞬间输出，无需等待</td>
+<td align="left">⏳ 需要首次安装并启动服务</td>
+</tr>
+<tr>
+<td align="left"><strong>视觉体验</strong></td>
+<td align="left">📝 纯文本，适合极简主义</td>
+<td align="left">🎨 现代化网页，排版极佳</td>
+</tr>
+<tr>
+<td align="left"><strong>查看源码</strong></td>
+<td align="left">交叉对比方便（配合 <code>-src</code>）</td>
+<td align="left">需点击跳转到网页版源码</td>
+</tr>
+<tr>
+<td align="left"><strong>查找接口实现</strong></td>
+<td align="left">❌ 较难在命令行直接直观展现</td>
+<td align="left">支持一键列出所有实现者</td>
+</tr>
+<tr>
+<td align="left"><strong>最佳场景</strong></td>
+<td align="left">编码时临时查阅某个函数签名</td>
+<td align="left">架构设计、通读第三方重度依赖库</td>
+</tr>
+</tbody></table>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>熟练使用 <code>go doc</code> 和 <code>pkgsite</code> 是从 Go 初学者走向进阶的必经之路。它们不仅能帮你节省大量“翻看 <code>Ctrl+B</code> 源码”的时间，更重要的是，<strong>它们逼着你养成看规范文档、写规范注释（Comment）的好习惯</strong>。因为只要你在代码里写了注释，<code>pkgsite</code> 就会完美地为你渲染出来！</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2026/06/23/golang-doc-help/">https://xujinzh.github.io/2026/06/23/golang-doc-help/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/go/">go</a><a class="post-meta__tags" href="/tags/golang/">golang</a></div><div class="post_share"><div class="social-share" data-image="/img/c6.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2026/06/05/c-linking-library/" title="C 语言动态链接库和静态链接库"><img class="cover" src="/img/c13.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">C 语言动态链接库和静态链接库</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/06/16/python-call-go-code/" title="Python 中调用 Go 代码"><img class="cover" src="/img/c8.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-16</div><div class="title">Python 中调用 Go 代码</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">423</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">327</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">29</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%A5%9E%E5%99%A8%EF%BC%9Ago-doc"><span class="toc-number">1.</span> <span class="toc-text">1. 命令行神器：go doc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%94%A8%E6%B3%95%EF%BC%9A%E6%9F%A5%E9%98%85%E6%A0%87%E5%87%86%E5%BA%93"><span class="toc-number">1.1.</span> <span class="toc-text">基础用法：查阅标准库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6%E7%94%A8%E6%B3%95%EF%BC%9A%E6%9F%A5%E9%98%85%E5%BD%93%E5%89%8D%E9%A1%B9%E7%9B%AE%E4%B8%8E%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93"><span class="toc-number">1.2.</span> <span class="toc-text">进阶用法：查阅当前项目与第三方库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%94%A8%E5%8F%82%E6%95%B0%E6%8E%A8%E8%8D%90"><span class="toc-number">1.3.</span> <span class="toc-text">实用参数推荐</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%9C%AC%E5%9C%B0-Web-%E4%BA%A4%E4%BA%92%E7%A5%9E%E5%99%A8%EF%BC%9Apkgsite"><span class="toc-number">2.</span> <span class="toc-text">2. 本地 Web 交互神器：pkgsite</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85%E5%B7%A5%E5%85%B7"><span class="toc-number">2.1.</span> <span class="toc-text">第一步：安装工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8"><span class="toc-number">2.2.</span> <span class="toc-text">第二步：一键启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E6%B5%8F%E8%A7%88%E5%99%A8%E6%9F%A5%E7%9C%8B"><span class="toc-number">2.3.</span> <span class="toc-text">第三步：浏览器查看</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%BB%88%E6%9E%81%E5%AF%B9%E6%AF%94%EF%BC%9A%E6%88%91%E8%AF%A5%E7%94%A8%E5%93%AA%E4%B8%AA%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">3. 终极对比：我该用哪个？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/06/23/golang-doc-help/" title="Go 语言命令行与本地 Web 查阅文档简介"><img src="/img/c6.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言命令行与本地 Web 查阅文档简介"/></a><div class="content"><a class="title" href="/2026/06/23/golang-doc-help/" title="Go 语言命令行与本地 Web 查阅文档简介">Go 语言命令行与本地 Web 查阅文档简介</a><time datetime="2026-06-23T02:43:14.000Z" title="发表于 2026-06-23 10:43:14">2026-06-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/05/c-linking-library/" title="C 语言动态链接库和静态链接库"><img src="/img/c13.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C 语言动态链接库和静态链接库"/></a><div class="content"><a class="title" href="/2026/06/05/c-linking-library/" title="C 语言动态链接库和静态链接库">C 语言动态链接库和静态链接库</a><time datetime="2026-06-05T08:57:09.000Z" title="发表于 2026-06-05 16:57:09">2026-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/16/mac-ports/" title="mac 上安装 macports"><img src="/img/c21.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mac 上安装 macports"/></a><div class="content"><a class="title" href="/2026/05/16/mac-ports/" title="mac 上安装 macports">mac 上安装 macports</a><time datetime="2026-05-16T13:36:32.000Z" title="发表于 2026-05-16 21:36:32">2026-05-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/16/windows-enable-ultimate-performance/" title="windows 开启卓越性能"><img src="/img/c20.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="windows 开启卓越性能"/></a><div class="content"><a class="title" href="/2026/05/16/windows-enable-ultimate-performance/" title="windows 开启卓越性能">windows 开启卓越性能</a><time datetime="2026-05-16T04:51:15.000Z" title="发表于 2026-05-16 12:51:15">2026-05-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/21/linux-ansible/" title="运维工具 ansible 简单介绍"><img src="/img/c23.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="运维工具 ansible 简单介绍"/></a><div class="content"><a class="title" href="/2026/04/21/linux-ansible/" title="运维工具 ansible 简单介绍">运维工具 ansible 简单介绍</a><time datetime="2026-04-21T01:44:23.000Z" title="发表于 2026-04-21 09:44:23">2026-04-21</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '3ee832b24c97a4cf43ff2ee7b84e0f86',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>
