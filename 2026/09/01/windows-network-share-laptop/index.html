@@ -1,0 +1,284 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>用单网口让台式机和笔记本同时上网 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="文章内容加密，查看请联系作者。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用单网口让台式机和笔记本同时上网">
+<meta property="og:url" content="https://xujinzh.github.io/2026/09/01/windows-network-share-laptop/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="文章内容加密，查看请联系作者。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c13.jpg">
+<meta property="article:published_time" content="2026-09-01T10:16:59.000Z">
+<meta property="article:modified_time" content="2026-09-01T10:21:52.287Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="windows">
+<meta property="article:tag" content="network">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c13.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2026/09/01/windows-network-share-laptop/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '用单网口让台式机和笔记本同时上网',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-09-01 18:21:52'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">427</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">333</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">29</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">用单网口让台式机和笔记本同时上网</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-01T10:16:59.000Z" title="发表于 2026-09-01 18:16:59">2026-09-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-01T10:21:52.287Z" title="更新于 2026-09-01 18:21:52">2026-09-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/windows/">windows</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="用单网口让台式机和笔记本同时上网"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="密码无效，请和作者确认。" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="c40d447a127123377cf8a467b39f403cc10f032f4a429b5e7e236b20e88faabb">d7420555dbd47e034be0c72be203a7e320c1e7d56c0ad2ca6034dad0811d308f312acb9a3b80a0a15d3b6358656ee59d9d4cd29fa1126c2157122ff82820d54f415f24c68db8bb6c661e88f9b285954e742e4c22af3d4679e1f5f255615af8b964016cbbef65407d58e6caa9ac0c0de4f8f46b4044519acd3ce41eaca35734f3a0027efe2c306abe49d204d917b1e94008c3e36642836a44f57c325a8212fdedde5bf0063517c5e6870c0916686d6a47fcd2b6bcbec7624214867e40de2881c525cf8406a500899de7903d265d4886792e8564542c107ef52afa8a3804645fb10bd59e0096e09326c0a551cb9d441e697ba813964ba4ac4de87002e3d208178a513e12a2615e6151b2064c4f9ff876391e1e746f0cc423eac089b709887d9bfda8b6e09769362c57722eb78bad38320026e3fba43c81b7ffa8d6eccb83a92af2e453a044f5acd64cdbaff608e4c628c687ace3be2e6b9f04a930d3958f716fccd97a622dbbbdcb4862200d5d21096ec1bacf1a083c02c322b82d0ab20496ee7c4dcae4f2df7f51fbc40eafeefe50e72d2358412785a0deb63f9f7230ac824323b90d70a23cc958532b331d3d60653d55d28b808d684e17c35814d5ecfbd011207861ce39163a4cc09698576fb2bc905dfff37991cd74466cb73ac0d2d07182d4a7c0f962411012bb2e28bac1e10153800fd26cc78553ecf85db3a55d44e8ea1d36155f2984049b200bc398ac83b7683a74616725629b8abb113f1baacfbe8cf20d7bb8f6785430eae3813934962054eb6c4a46441472c6b44498d976eccd820f5d2b95c43f11dc1e8743ac0b4b1f17c82186f108d50d79a7eae400ee2cab85d40e84bcf4cd1b6eaca8cb003d001fe7ca2adf71672384cc1a0edb76b251660168fbbf2fe198d92b899bb1ff279cade15d9e3cd475b8f18af4ec1c08ea10541a00fb9475d666a7da009dcf3e300682e88b6e9d813cf849b50343491ab71f923795ec2851ebc1fee8de6d782ebe958fc268ec4f15be3c990a9e835385f34e550093cc18a0f24a1718d072a240248d6b4f2fe17f4cde4b15ec9972cd2082f47ffa654dd579ed14fe902e1bb104253284dff20bb2e69fbd222509c9188634348128f3a4832c140332572b5b9d504a3647eb777502d23452814bb375365c34d53b181542dde307f39c234f6d4b27d1d461dc932f978566310ada5e8dc69bb30e720d38be68aa15ef401390fc5802b8199ec2d008ad678baa4882ec6bd74ff9c5428ea8ad01d39d998c181eb0d6067d3367625196822157dba9ddde3a4ecda70555f59370f69262d9549f586f10b4a3645436a76fd7c874285960fee9c73dbe91553a00f178a9ffd0dee6677e3fdf14bfe94513fd7dacdaf1ca9f57ba919d7b3f07922fc69d5935e80de192dca8e77bfecd34a5ff26667f041f7ab81b7b561c1088aff238896873147c3e7c7391549b55d622abac018aa93a6f93a8ca9431d703975906c3166c31c6d5c6ee79ed2d36b0a7cbbba7ac0f8e9b6cd8b53960660198aa899259fce9a53c03bb16271ed936ea378b5a5a10afff7eb605ab9a5319f4ce4fe680c1c0a1d6848afc7edcad7570ceb5fdfc5501b78c3a92b6dda404944b512a04e50fa1e1b3042153ca4289ea5b9b1af7e3395cdb967161d3a5081d006a535efea805b32b89da831aeb7dea65bc50e94061722db3af000648ca629fa2dc7861b37ddceed9cd125eb311230ccf0b120dfbcd25148191795678bf9dc8eeaba1448427db5ed464b581bc43ccd034dafed1303d5be8b2962c3bd4b38d18f5563adca35bb9b0b8d1475aa3b088c27ea6ab9ff741bc2de9a06bde3847076338b125a3382a1633f4be598ac0274acfc7960ad99c6b1d36d07715fc4df8402eba8c5c34f757ed202ee5f520b7e9ab916952b4a36efd407bd12d265c41c725de96cb30700fbcfe066c951440176d4a802418c2ce555966e1c1989a3b88e1050926e20f9299dc15aa18427e14984c29b9d34c9dfa1aa6cb556aec6d0ba90c1fba5f6ee90532cdac72c4c789f871eef3bb017acaa38c184e050fc2eaa7904a698d10d12dcb9239b6092cc9dde01347b49c0efc56913710e9ca93fa88b9fe7f5b3ee0c343badf9dba6a6de6fa153281b9eec197dc0d4cacc9f4eadda6d0b0923d3fee2f51d39f292e6d7f836335414d71ea0cf73efd8377dcd224e834dcbf5b0c7823a4dbbdb8efbd894da0a209b6e1f62fa6d70b2a1f500161b7cb4388fd77f7f21bf2617116f2f5f305824aa12ec58a822f0958c99fd78445682f1f33f316e6ee7dc373328800bb9d07cb3233bb4f6c462b41e4e9590c90cfca413131c626f465c5db890063769b9e55295e079ec7bf1f3097271c748de8265dafd325ab05526267e6fc84831bebcb8f41c728559fbf3ca470f77a1cfc9334aab38ae5ace82007ac81665466ee1e54f4aeda1e354352bedebf12eeb9521d14fdb5e5adfff09a9cc3dc4ecdc5d79d42b0841820fc939746ed388a16892ba49bdb9d6aa3b4930deada9d3b3060e8cd12d6d8da8b525ead602c2dc95c3d3b1495d75ed9265f7c7319a763d999aaf4a7f528df217eaf39555876630c7de07f6db6c9fea2832cb0f436a4aa2aac5e8e9bbf072248435fc52e680fef5e6e0693de0675893e24548142704ce4c100deecfa9f9100ed4f0d034c8b6d9fcc46afac9045bdb763736cacdd4761507b6d4e92ef98d3794aa0eda226918d4d6cc2668af496118436c36a5c7edfd04e08dfc2102cfbd121d13282cff411526c0061c08afa653f22b7a6d4666569b695c520ad85d97d6468f0d8cc731bf7edd1be2f72118b9dc64731bd65e425ff1f3f96d8adb252f9e7f3db86a111e4e90933d218dfdab9e6f51440e12329344e1c851b43c8134e615ab34a49f99e48f56653c5d2622aba0b7d76db042c7fd6a5d78a1160f9933294211a09f73b9499e65238e20e9930f8e0946e20d5570654cea354760f447f9b63b7d68b4c6c00673d0e18cc720ad2e64a130bfb8cd898c7ff2411eace674301997c7c10a073209c8d31434fb5dc1522a3b2d3403e73f9e7564d4578cca13f469f35fbc64d0416883df45e45cb30e02d20ed726a5e47910531c822be488b4e4c43da610e3182d28a5f87d1aebc0a57574fcdcb2625c2c48ab5ea03926db8c501dd7664b2cb0c5429d4c113513c82f21f64ce2f7916ecdb25c0149d256c96297cf1131404d3a775f124077146c2ea4be4008058392a97f1bf797fa57584726628b5335f300ecda2a9a0b4d478e94dca8b345c66ff95782060df9238c2b0814a52a84af5626d26cbf6a85b2c7a33b6c9856f7708d55a22cae6905e1a155be8cbc39611c06da4af8495b7ebfaefbcf5413a0bc2187ab3ed3b263d495dc42433be4db76e007f9b4cea0b8f9caa92915c3eddb76c60b800776e2edcef04aa8659ff025210364bf8426e99c2c82c0163b96a2dcfc984bcf1e8f79a8b19d24cbae882038dda4cebe9839097c8bc0811b0ab35fc6093e39ce0171db12c90d3783094de5606c141ce245adf5427b615663d34a2a31b4602952b2eef339d5f3e917490bb95edddc92acf23f175bbb00d4a0888eb15faec5b3cebf7117d3f10dc29ca13bd89d4ea257c6f771888a31b809e8f732e6840f39fe03227edef4c0eaa1bff1b6c8dd1d586097fb569e49bc65ce66dc5c7ea234db9c9dda81aabef5fbcddc935e4a747c85de881caf4b2be824ab1df1b54dbcfabce4fdd29b08053fd6f849261fdfb87b2e5786b36677ff430ee336cb00609d499b4005f0acbbac7e6db5857e91e297248bf9f89faa59a8f8dbf08c5258c1aacca6c6026b20195744c42f4b37a99279498f937827470f6c40cfa8fa421528383c43c481a096860a2979ddd1787bb23f5eb44c5877895b7c6cd122935abac8bc1b209d7517019e7dee9fc3d2cbf2ba139595a8699f565278f2543d071c1c760b71fd34d189ad959980e376f04f98e43ac081b0edd7c59f035cc90f191c1175859d87b97ac1e0a4f9853f7c3ec92f278e35e8fc3d7f44c7bcf34a4c299d335651bedd678da7fc1256d5e74c97a8c1d19fd8325c0412ffac426fe6be0619696e40ab44f4b0061018d73956f0f4c590dda5a6c1d669b9043fe6f89c129b39bea4af375c46134e3045a7a4d24a925f432a76a7471b48affe7d524c27064fa3f7c9e155b07abd3bebe8ce74365e7b8f17351a6891af6793825d8c406091295e7255701bfa7457a4a3e32d3e68f60bd8b1e6b566cb9e5307ff940713fdfe42aaeb2fa65e071f644c60bb7c594cf8ba6fc946c5eee101135695cdd23182807402406fc464518a27e1f0a6011949c0ba65c6bf2b6e74d5a244b94b62f19cb0b776c4c89c514e1c516da57433fbbbceeb54171bc76e1a6fb0eedf674e7536f3ff11b0033eaa3c8fed46e4cff9308169abad6e8337e2f0a70a0204040a11cf93b336b8c1480070f0039b0bdab0f96f115ac2e36eabfb9b3e17ad0ae20b32a81b8565c63a08450a43d57049cf89bdffbd3c15472abff465072745f2ed9c2899dbdd11772155a3844ddcd945ffa9ea3ff1a1532d936b8724a72e4df0757782e8f7de2a16247bc2ce3de807c8501238341a478062f25141dc4555e062f74eed58834b588581f08c17235f0e1efbb8a732dc56647d636b850280f799de0c010a15363e70c40fb484ae9ab7068a7164d18475a8edd23ca5df1462533b4ca1955a54620e69390b46f60e4310b5a6328f3bdd526fa7b95a2a4f2adc971ac91c56f1f232ff7840dd3699665211707c761ec291360eeeed58969f627f24c277b12b665fa3643c1db9ae1d6b2ea6f567240ef5cea88edb09cd3110f69aba49a4134edbb34842cfa4084a4b8fe13cbc37c2e9d968c9f8b061a7ee008d42f5e5840dca5e6fc448fed68f7ca660965d9cf6045fee9d49c38691a1d6c335f2053b9912a87a07e8a721fddf66abac8242b415263c1f2d4a11bfb15513344e8aabc8e0f69d39bf05adafa23efe893de44fe4654b9b85ae5688aabe5fbe850019c252e89c9cde6a4aec73c775432caa505423073a03fdf8735099ed3babdaa6ad99b6ad5bb553f011dd4f2db59c4ead32841b52a1a402df77ccab6e4da308c5acc4ac450d5eec68d6f141085491472a09d3b31e92e2419d2ae00922b0ce2468d952a4f395efcad11f243b35b0d02155dfa9d1a096fac0424b2550588c9d543a7d353cc4eac489402201c53977b24e2ece3ad127799148006c2a142e8c1f4e627f50bb10ef39787ffaef9f27959374c3a8217ff3545d3d5cd93e9d86e4a44f83030cde492672a898982146c6d568d3e9c131ed854ab22f64b36c80c4517d5e516a16e6afb3e79e98b12644b47899c95d224064a898cb6fa800add9229b296fd92f9c57c029e91237829ace8154b631218a6ab7e25eac24cb0bc1c2ab052a91036dd65007aa565772fced99c585e7594f4f31c106668669aa1d93a387c44f1a0a68405091d6f5f072e2d72c90593f42a587e47f3a447a2047001dfc09bdd7e9ecaf3315e20f2631eea7bce1c97cf871ee90e36091b9e867b56493f88b695a16a220baedd86d02ec038214b86d13e10db0cc017460be5c643e16611e6e3154ffde2f7af8c03ff295ae7fcd5193106899ee590f4646f8e907169c720a240cccb3ede5cbcd4e2d6e961fd21710f46a8c7a9d69c6421606f9cc1ef666c3cdeecb9eae7a2e4a0290bf24edcf9e20faaddae6216891a4419fc7c3f11658191839d644c5d45e9796e643fddd3caeebbd3a6ad4a1d16402730fbf9a3ba34d85dc97b9d28069bb8b025e377ba9760784b823a9c260608359f2748c90c5ee2f5ab08d3582b504cd1c2cfbcad1c15dd08e5b626c3f80632189f9c6577aa07c6f50f79839ea51645c81e97fb42763ad3cf3af1d00dc19c015886055a972221ed84f37e5c6d097ce41086cbc6b62a9ed628479e6fe38e51d073469b738b7eb04127194eac3e4bd30d9b009a00a7806fac86dfb0877b501cb4667668f878c7fce3772be18cb8b610f29ead558237fd8a71aec6c8c831e94943d90327b666953855431418c42057ccd7cea2e8bc6c66af5d7c0dc3fd9a0908eda825b3e7b77e20a651ad44ab9dbe2fa843ba33e01e52e0babedd52168f5fc8550a567990a790762cb6806052ea0b03dfa1b8c20d9213849357707c4de5120d35543e92c9aa5b0785f48d6f11f2c6ae4045e85f2be927683597add8e9f381b6d9117b12ab87977672b0228b4a2c487db20e26bdb1386d1433051012424cb98a2db2d0d149a947c975aae26490a962d142ae1eca4a37bc56d971d9750021ea346c77f918007c1341e21a76b95f37ec3a098762bda188de21b3fc9270c943571c39a518eebfd0fd1f9e2b81aad9f11847640979b584634f14c0c0cb2d368581615f221c780f1c72e1609c8bf7f58c07a1a0f5db48d8882abebac6331d3b6509e4b5f7cdc0e35b1ff3d0f8e1a64c7508dfffb60557fefa4ecd73f65f82fae57c3345ab8c68f2ea23d994e0225499308e7e6cc26e1cf8b05b370bf9b9ac2a73db0598163416171e7f0272673501ad4ac3f966a0871cabc142ed2f2ba501f3502c489068f623f658128293e0ff926429ed5bb7f3eecdb6fd2ea092101b2d3c464d512c16f2fed1d75f73b3f433b11cd0403636a1a3f51af81fc66f817c5b27c4408eaf11179f1d74a0d0df80eb5b55ab02a4455bd7af3d624c794e6ccbd01b40bf8cb294fc07edc08ebc82188366592f8f8421e7a6484dda6148dc3d5c7a14a5bf6d3d23f360ed6de68b9c5c8e3290e3671fd6a69481154b0cfa3412b51b8f9c7bd63be2d68bf5aa533d3f106bad</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">请输入访问密码：</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css"></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2026/09/01/windows-network-share-laptop/">https://xujinzh.github.io/2026/09/01/windows-network-share-laptop/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/windows/">windows</a><a class="post-meta__tags" href="/tags/network/">network</a></div><div class="post_share"><div class="social-share" data-image="/img/c13.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2026/08/25/ssm-tcpdump-socat/" title="指定源多播发送与抓包"><img class="cover" src="/img/c26.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">指定源多播发送与抓包</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/02/04/exec-cmd-by-bat-in-window/" title="Windows 中使用 bat 执行程序"><img class="cover" src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-04</div><div class="title">Windows 中使用 bat 执行程序</div></div></a></div><div><a href="/2020/01/02/install-ubuntu-no-boot-file/" title="安装 Ubuntu 时出现 no boot file found"><img class="cover" src="/img/c30.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-02</div><div class="title">安装 Ubuntu 时出现 no boot file found</div></div></a></div><div><a href="/2020/06/12/mac-addr-and-serial-number/" title="Windows 和 Ubuntu 查看网卡 Mac 地址和硬盘序列号的方法"><img class="cover" src="/img/c25.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-12</div><div class="title">Windows 和 Ubuntu 查看网卡 Mac 地址和硬盘序列号的方法</div></div></a></div><div><a href="/2025/12/12/mac-efi-mount-operate/" title="mac 挂载和操作 EFI 双系统启动向导"><img class="cover" src="/img/c26.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-12</div><div class="title">mac 挂载和操作 EFI 双系统启动向导</div></div></a></div><div><a href="/2023/08/26/python-multiprocessing-freeze-support/" title="Python 多进程 multiprocessing 在 Linux、Mac 和 Windows 上的区别"><img class="cover" src="/img/c26.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-26</div><div class="title">Python 多进程 multiprocessing 在 Linux、Mac 和 Windows 上的区别</div></div></a></div><div><a href="/2026/02/26/starship-shell-prompt/" title="好用的跨平台命令行提示符starship"><img class="cover" src="/img/c22.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-02-26</div><div class="title">好用的跨平台命令行提示符starship</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">427</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">333</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">29</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content toc-div-class is-expand" style="display:none"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%9B%A0%EF%B8%8F-%E5%87%86%E5%A4%87%E5%B7%A5%E5%85%B7"><span class="toc-number">1.</span> <span class="toc-text">🛠️ 准备工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%8C-%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E7%89%A9%E7%90%86%E6%8E%A5%E7%BA%BF%EF%BC%88%E5%8F%B0%E5%BC%8F%E6%9C%BA%E5%85%85%E5%BD%93%E4%B8%BB%E5%8A%9B%E6%9C%BA%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">🔌 第一步：物理接线（台式机充当主力机）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%9A%99%EF%B8%8F-%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9AWindows-11-%E8%BD%AF%E4%BB%B6%E8%AE%BE%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">⚙️ 第二步：Windows 11 软件设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%92%BB-%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E7%AC%94%E8%AE%B0%E6%9C%AC%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">💻 第三步：笔记本终端设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%92%A1-%E9%81%BF%E5%9D%91%E6%8C%87%E5%8D%97%E4%B8%8E%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-number">5.</span> <span class="toc-text">💡 避坑指南与常见问题</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/09/01/windows-network-share-laptop/" title="用单网口让台式机和笔记本同时上网"><img src="/img/c13.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="用单网口让台式机和笔记本同时上网"/></a><div class="content"><a class="title" href="/2026/09/01/windows-network-share-laptop/" title="用单网口让台式机和笔记本同时上网">用单网口让台式机和笔记本同时上网</a><time datetime="2026-09-01T10:16:59.000Z" title="发表于 2026-09-01 18:16:59">2026-09-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/25/ssm-tcpdump-socat/" title="指定源多播发送与抓包"><img src="/img/c26.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="指定源多播发送与抓包"/></a><div class="content"><a class="title" href="/2026/08/25/ssm-tcpdump-socat/" title="指定源多播发送与抓包">指定源多播发送与抓包</a><time datetime="2026-08-25T15:26:53.000Z" title="发表于 2026-08-25 23:26:53">2026-08-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/07/07/go-notebook-kernel/" title="GoNB 一个 jupyter notebook go 内核"><img src="/img/c12.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GoNB 一个 jupyter notebook go 内核"/></a><div class="content"><a class="title" href="/2026/07/07/go-notebook-kernel/" title="GoNB 一个 jupyter notebook go 内核">GoNB 一个 jupyter notebook go 内核</a><time datetime="2026-07-07T02:51:46.000Z" title="发表于 2026-07-07 10:51:46">2026-07-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/30/golang-cgo/" title="Go 语言与 C 语言的桥梁：CGO 简单介绍"><img src="/img/c23.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言与 C 语言的桥梁：CGO 简单介绍"/></a><div class="content"><a class="title" href="/2026/06/30/golang-cgo/" title="Go 语言与 C 语言的桥梁：CGO 简单介绍">Go 语言与 C 语言的桥梁：CGO 简单介绍</a><time datetime="2026-06-30T03:10:32.000Z" title="发表于 2026-06-30 11:10:32">2026-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/23/golang-doc-help/" title="Go 语言命令行与本地 Web 查阅文档简介"><img src="/img/c2.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言命令行与本地 Web 查阅文档简介"/></a><div class="content"><a class="title" href="/2026/06/23/golang-doc-help/" title="Go 语言命令行与本地 Web 查阅文档简介">Go 语言命令行与本地 Web 查阅文档简介</a><time datetime="2026-06-23T02:43:14.000Z" title="发表于 2026-06-23 10:43:14">2026-06-23</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '52e9eb99c6180aadb5a1060d86d0794a',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>
