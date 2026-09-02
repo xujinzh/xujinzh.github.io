@@ -1,0 +1,284 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Systemd Journal 日志暴增？Ubuntu 日志管理与清理实战 | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="文章内容加密，查看请联系作者。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Systemd Journal 日志暴增？Ubuntu 日志管理与清理实战">
+<meta property="og:url" content="https://xujinzh.github.io/2026/09/02/linux-journal-log/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="文章内容加密，查看请联系作者。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c11.jpg">
+<meta property="article:published_time" content="2026-09-02T10:41:11.000Z">
+<meta property="article:modified_time" content="2026-09-02T10:44:29.327Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="journal">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c11.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2026/09/02/linux-journal-log/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Systemd Journal 日志暴增？Ubuntu 日志管理与清理实战',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-09-02 18:44:29'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">428</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">333</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">29</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Systemd Journal 日志暴增？Ubuntu 日志管理与清理实战</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-02T10:41:11.000Z" title="发表于 2026-09-02 18:41:11">2026-09-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-02T10:44:29.327Z" title="更新于 2026-09-02 18:44:29">2026-09-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/linux/">linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Systemd Journal 日志暴增？Ubuntu 日志管理与清理实战"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="密码无效，请和作者确认。" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="1487c44de0e1f6bb2c56da599235655e66621d65abb85ac3397e880e1e206833">d7420555dbd47e034be0c72be203a7e3e5f2ae22cc0d88fc218641e0c0b007db5caa099c2cd9dbfe48280ccbc34d3d9702faf53bb9fe3c962353b8048e9f40ea55b2d7955f74c241bdc0400c74368e8e5edb588e0fc40256c9db9166188b1f12e16a8f6462c03fd86168833d725d1b917a49a202e77fd34f9719c4a9d915a0b7024a205c8341df92fc96ffe34130f0e593502d47eb242914d8bad28b25e4729ea0da618b3b5c9ffaf49ed6068a305da2bd965b76a0f6df16efddd28809531da6dbaeeee04e7a4e9f3850719014323e48b8d572233560afb73956842fb523c7b01f6bde7b2612b0b2c4784878bc9c547ebfd95e993c3f20b9ea37fcb2f476b198f91b0b4239e5ac6a340c9846ec06fdad05e63e359594f339085097b1a1a9254183d2ca684e5a446bc068c8c786e1d6c7d9aab7ae4e25f32ebf3ccf8381c81d94e2d4f524659cc67613f8d685064534c82fa73b0ab3e52d3a332b85c18b9944b456fd902f0e70dae8d4aa5360396f17cfd33579206d3a3da5d0aebe415825a73402d879a7e7d70ced8291f020986de2e0dc9072e161bebd865a27fd66990803d23632520e4538dbdc754f435a186130671b7a7ffd18d1f82e3dc65767bdadba6bff75c3289898c2b9752ae1fe3b96f37b880f7acca4e7c1a7590be260091b9b7ff71fd2744d2460373936d840847b51cf448d361e9cc8e87556faf9738dca9ad9eb05b762f69ce11c98ea987d12090a7209792aeffbf0905897163c1e395a8ad0d74ac0dec1523d13376276e339120dbf49826ce30fd352025fae2493320ef52905003471a262f1253991c303b5eb26a10538ed7f57ddcd9ed7f99c3127833e3e848bb3804af0c23782ba981263d22f3221dda8b64784d0d207b6171bdf3321d158367af9cba8b0c8a2e684ef7c0bf956a3f4b5eaed138dc1914b6be61eb0063fff933ff522449c826a00cd780d469586192b4cf10d5aab09189b3ff1104a875f3d45816420bd596dc839a4a7f7f8ae6b3d249b7638fed34a8eee5cd651c099cc8b258a7b475ece03aac2297b3c99b3d2bc9a073688d89c142ab593f0962e91676bf5efeef3ade2fdc670a6f47887c60d3df4c466a8699fef500726bf2fce397c9e9fff85e7fd462f2eb7997f4e681c88ed62f5d145df5231dbec3e45daa719264c87ffa3b94c199779a44e1d4eba9fb4f66cbcdc9fabfe1b1e43db8e0986394a3f310fdbde72ef41e173409b24ce1fa6c65407c826305d4b7877db853f68d62e3b7e510730b15065c8c6df8f8f1e846239dd9c53e629504b08ad7295e9590d994cedee2f06305c4bc32e39ffd023b735ee73dfed2d51d33582bfa332b71f86e93476a3c0dd5a620981d7d60485a33df62c7cf0f8ff64bc266c14fd0dfbca65ad7ec61d2321a5e678c9e0e7e39d539463a53c9c51c9cb5295017b127057f2c0956b148bde8f7d540e00b16435bcc8e24d30d96e6a092d018b9a2bd2c26e40d8565dc31d46940ecfa865d3a2388f801f860502f1284df8f457e7177bdb35e69e7b48f1bf2c96c94443303c0a9120bb7128f820bae31f9d26fbc844fb604edfc2177f60b421f8f6b0926416ffc4cb2b0d2684519abda9aa04b7bd273725f10352212000991ab4dc1bb6f9c4654c2bc757bb2cf55a6aab253c40c1fb1cd10dbd7c8ff9a5e05092ebff1e05aa62766c9228735fd8956c3f418f4bd5c2dc9b30413d0d6dd71873a05e75d2e00f850019f42c1ce13cfccbd61a3aa0fdd6898d29b70b984446863c94fdb3613aa8ed7a082b7bfab6b67bcf92c5ae0e5989cc6d789413f5896f672e4829ec9014c27172c05bd7064929a14bee12947136ea64bcb9c1dc34463d486e63403e4f1b918333b6a24c9d0d24b4ad7b4a4dd30d9c48122c12b786131c93d570c1d117f1219aa7cd4823c7a409e83c82e563780f4602b53222e80d096c369ad74eaaf324ebb329f4a2896463854d0f45ff296e7a5dc62119d777e42dd0221c693938dcf87431eefbfc4a7ed266545a43672475ca0af358602379fba4002878e36066770f40069c8dec1d284a717873f12bd08f117775a67e30d4b96dff6700809b1d786729b370c2061df7db34f26322ea8809391c61794d80bf73dd340aeb60e94139e7b24a38dd6742e22d92ee7122c9c76c4dfda2ffb08d5ea01bf89ff72935d6b600dc634a3fd99633178a753d37cf92351f89a2208acb498f00052d9e35f226580f8964ac7823bcb525f875f923543914d5ed434425745368ce4c7e9954159cb4cc641544dd5a33f25fa1d5eeb766f6ca31f258bbece0488e5c7ae40c575678958eaf3eb6692897b977c5b41bcf25fe642a1fa9a316ffa1a68b1ca3f43bc6797a0a4f7d24862ed6b074aa86516f2086102796f75db884d474b5e2660f3eb6fd0d4187da34a92f4245067d92350a664a83bd02044887341b0c7da9e72975d3c2c549ff197cc66b42a5601c7607cf61ca1aee2c6c487eae8b97c7da08619e34a0c5776929f8ab82da043d96fae7a88cec56f1fb62153908ca4eb4003a5bee2d0e6e12fd89e11b8a937961648f2ec8f46b7891712cfef2d4c15fd63acdc0e8bd91270d72121dda590354dd894df708ba6a40f8ebe332d6e3d70024921daef68fd270b68e99a04a96d665bf3f96aa525d95992767c83834ca3de53a36469e7eb9ef2da8befb2aa592e52735012de3b6070e80b315207d1a75f7d33e098ad3ba2fbeacc16c285a3d1232cf9ac42fd54afeaeddf97544b2637901281c217f37fe9c2c4fcb1d1076c13c1ed4c43fc4989041fed853da4f77d3b3584da5408b55d6eba3db5b07ef027f77b6e3001400b622e1fe99a99a12e430fba234fbe9084e3e5351fb807f8f022379b7885b64481d2a889a8eabb0656449f274f0c5a87cc5dec42277ec14f7e75ddc38ee24d5846ec8b5e631eb04e5495ffd116426d919b513e17baebebd754225a87ff3cc6fe1c6c00f5cdc54512d770d308f6c46dd2ade6679ea2193c4173da16c0443d755051960028b2eae0703bb5eba6a28a2bdefc8b58efb7c31f0e3d8c84e1a4d7af8683c8c641c8e47192d2ef623213c0d92a5e8af1feacc8afb2d5476495650debc453abfaf29eac0548d74686a53a7e8fa9d8716b647a36d4a41e803816d7109ddcc06b4bb92afcf3eb7cbc78013a31db92375ac98d6a035fbd6c6255e4a63aae2853a62ec8ab7f49d3865584434cade8e85276e9e005cbdabdff11621a695ce10b3098afcd10f33b9fd2730cd8161726631d7b6d1d2665da4068ed066e3132519bab9a5057b7d3df7c08ee90390e54ccff4ead89a25e624d423076885221c0a6fefdb0ca4246395385d84e9e257a98e25462f6f4d41a7336042b235a57866a558e329bb1d9791a851ffb76e4e10ed847f70feebd46e8afb88776690ef584d47348da2142832a7b14bcbd7a1128a48a81e6e69aed9e6c826f4753d4f5140a98edd9c67c31ae4c44844139ee48160eeca965eb4dad89dbc12b027ac0bf3e4bc50b9a51083bdda1e1d91e4a754e4bb37b3f9e86aa3390b3dd6b2e2a0cc70f046ec277e4ea14c8ae86a8dac8f14f79e1eab4401b2ac8361c7ce626393e0277707a16611a3869148e9c327a0554dc5d657a08769f8ee2a4278af32a419b72aa3f8aa912836f9ed80b3e75935e52eaa05d1f09e5ba6db8755a8299f1d42cca10df7f464492e194469885aecac63508b3b2ef4c7898eee7dbaf850e735f945a82233f92ae7aa048924eed5e179752321e39e18d4bfa2060ce3a0dd2a3fa6402faa001de3c842f6ca8051ccb0741f78d75e22bbbd6cd687059616c4bc8d6f4aa969353b983440eca330b6431a1bf369b5812ca6193434bec911a16ae91d01ff081a021b4aa5991994a9641415e36e5f62d88a5536bf4005a5cf0ff6f8577ae0ac2bcb6c1586191cd93cdd2a0083650ee11b4393e70f15b8bc2fec775744c534e58092fa8bf135b7db0d1d57bdaf5c76a8f1b398e9ef28fd3d12230000bdbbbc3629719ef071dc7f076a85a8c14ca1b3366b3335b9beed9bb3b0b67354d296dcd539f6a446a2afff4312f2b03b1ea24cc62178bf540942e4edec60597f89a00f1d321d35e1006609c5c6a72abada821a376fae3397a8aa827f313a2d04a50266bafcdb81c3e9145f54b0edbde1ad91d52297168c6ecfc47b14215a4c478f2779be96b2c7ae6fd4e5956da7b55c050222ce21ed1be3693edbd5a44d64458733a879297392b2e08de494ea9e5d355f231d34d771b85d26970c2d10b1a5bf5cc5309711e0b7760d4a55c9413b8f2010e820a22f8f196378487968767c9e69ce1c35b6133900cb1fc260b339ebcc9befa7a621c883be4ce3ed887900e4033582504c80c57329a86aac7ce8e871d1c19274a24e6a8545f2f2a82ce8c8bbccdcfad5d668e06323e513b3b8271e70694142cfa4f5bcdec2ed8f63aba5678ee8c5c46e83e4911a27a2157004fac9caed0c644628429edeff7d9754ced4cef15679fcfaaf2db5c4eb9daab52936cbb215f98fb62544da16ba7229fc046f6b82c6feda9379d2579a92253c1836948ba03205a11bbd233cff970c3f9b62a22837b58eee3fc555dff004d2030b6b9996d610f526069ff4fdaa1b6e3d2b749bfed182a9433af85c79369b5eb7dd92e882f2ce8ecc61c963c657664f135dff0d8ce99de08d33e53ece81d2aa393234dbce651c94940eeae9727dc34002e38d36762cd12933281179a7e895434c5e71412a80be07cc906373cf72c38471429ceae309f01c50052fff8e58271e2ea5c44d4b118753f4f56c5fd5d8781c1a73bc6d243fabba4087c910ddac2f5d715030523290f2d6a26bb3a91e735cc97c10b5706f9608f34d5bb53003a00c1467f15524077b2525e606abc8e90a13555995bc626c7bb1d5b4396eac4864a66927b01abc207c7d8f0da169b2acce02f6b1dd4bc18022d0294351de5d3f71e626510bbce405360c2376985902290d2ec9c6bd0c363bc3bbaa7dfcd302097100f50a24f7a8e6e48353e8270e6e3848a7c489ad4340018433312c1cc63360db1a4917e8df23efec4f36222933d07442b04d2566dc48e92024347b66446fd5ed50bedd8946eea88b9c3e70a0d58f94afde399abffe28c38ee70b50fa7b12017ee5a7b619e58d035c260c6dd657aac025e5faefe0805565ac4a87d9c6af28746a4aa3e098ab9598850be6ce429ec4f2a39c2945db671c38971ad6067d5b91ad2e094f8bc17c8f45107482783ae0796be375e18afde9dc950b4d3a4af900457f1502926171a2860db28f0ad419e7cfd14f958f71f760b259e2a7e0af88cdb6d5c66c6b201a825211d5cb09dc13bf2545cb2745257d0b279c8b426031d7f7c8693f7d7993ef662c41b04814dd9f3a8127a3f221f85cad152b8c713be106e63cbf0f9e3f212d84cfcdf9e827d673366581b43af0f927e6284c8928502ddebdc99619ef1fa97b1f3f9a5bccb7e6947f2be3fa9beffe066411aec762303046d42d2e89f64b3e1e8329a4f46a1571b2e60197031abfeb9e56c1c93f06465e57844912332bf242f929081fc2a23dc6bf295d1dd315c1d427d0bec2c316d260b0b4678ac53cc8cb221dbd278ca95436d2b9c65ef3ca07f8cbf9cefcd7588399af28f1c01f023ced8aa29341776f895c504cba5624b25b426cb43c011ba7c26e457fa01e1074e24fe5da8c1c6a60174ad0c6cf8617c47df0ce62b541049a7b5942f78f7a3a2e18fd205c955c5d2d2d50fe0fa756dd7f2ad696e86fd22b16860862e9826706e6bd6f23f83805b204e3b9e04b38418f5a2b292840d7c618ab8ae1d3d1dfc1c76d33303e60b0bed06dd5c380c378b46c3de70ddf926e802d63c4d8bb61e3b6c5481c407a70c8e8335487185129c95db79d5372457eb9c0e337a3e7f769665035042b29ccb4d378740aa9dfad673ca4d3ce0a28640ef107d9ea248e85e4db733f34bf76d112623baceed38661a7280e0fcdee7b7ac7e77ecea499746de712a7d47b512fca2b862ed7d242d4e759401af79d96fd90b17b57937e7e92810c4220366f67812b3c73b97cd5910758825d811e9d1cfad15de702b5483e979a3718b0091d0df75b2e09ed087296952392fa016e874afb61fb1995d44ff9f91bc7a72e466d28a0221d53a640bb69ceacdb89fa094bd329ed094aa86ffd0e1d69b48f9fd543e4463fba4e01e6dfc1db5ab078108c1c96456c160529aaf2c17f7bffcaa9c68756754b2ecb7b27497d0acc03bc7856edbffc5bdaa0e7a7ce3f13302afeed86457f640a430a757c79470a10ab0acca89e81f5bef2f5b391b7bcbfb1006b732b42346fc2d108506cbe110ac23858a21749ed900b91fa7f79508e1f2eb0e9759de69db86e6fce6dffdc49446de581227cfb600ef22ae429d6027695beb7bfcc56cc7e35e26eb5d6639618c3ee94c30183f5848f1c314adedebee8f1e1aa5e1e72cc22572a78f6b21dfbba8c062953c67deeefe0e3f4738da903a34f0fe0d8829de8584765033c8be5f3412bf35faec59a970c6d2ee361480ea10393b3d707013333ca61f46348add3e476c2a4ae34179ddf4fee00a2fdd2a7686144167f1644228e3d0ec98f348f5e14190d1c426b45bd51ebdc5e3c20b141d7b0d29cd1708b84451ab24514cfb21a7a76284c6340923720b7897f027d62650a48389e4b6672c504b8282aaa119747a0ffc477e80d1cc4c156ba618986b133fcf521589b29080d1c602b6a1bb366a253a6fda53b286d1815ea929f832382104f78be8a86e1b1253e1bfe54c162569df2fad579bbe632f839666c0b0a0f271869c37f5472e1e67bf85d059f264856043038fb9cd7f3e05544ed0c2130f7f21bb4f34b18d20a4940683ec7832dfb924352a623de2122b7d242959b488374b8a43181a527bf521b45cad20d85d78f1ec3cc681af9a7a9e3fb572b2ddca2769ac930e08dc649e1d0eefe2ffa2861a34a8a9245b77cd411ad60fed88d0d22d0860223dd2382cd425eed9aff6b9636dd36d4c91f87ab11fa3b875fe20a0dee68c5e81752f37902713acc18c342f86a371fdb41c6a152f5892a96df3655ffe8fe5e717510b50ac6b280f0ea62a3fe8e71102d853e3da555de39e8e62bb389536055c3125477e9e3b4c9ddd6f5194593cec139c32aaddfb18c50d1244e9a3fe7b2baecdcca38c5c4d24800b72536f1faa29aecdc90457a59a2b6b8b0037949f9014f2fafe1c002ef460dbe565844d1bd15ab84870c9d5bc6bc662376d6d4d502ee2578ab11a1470d3a7d7ce5d29dcaf946ce4fb2fe06cd61a5561bb98b7d7c92a5ec5894384124d6dbd9301b6a380ae973dad331ece7a151a0596376c0fd79d410c3b52a77c4c3a7e770309d222b27dde243e6790fb2dbd41297628ae7522e94568e484a5ae095b9f6a9c44a7f5bb36e76cc372b5c2a7489af55aa03763a7076596e430eaf71ef15d834f9b926d6e0836ec119c539e73297d9368130cbe182509886f804dec1d8ebb0c85c295d25e3d317bc982d9e73a9d00265457f834863d0f7f26e6be2afe10709aa616616f9a42646c8e310e82d6c31833151dc00fd122e3d7884f777807107596ad9ebc5f4748c59ce4b5f38be63117a92ee344eb3f7d46dcafa1bbc436e4e4f88e5fcd38443d5e11ecbb4d712bf8a4ea02be2ad81fd74904c34427ff876ba4b771bbe60f1af134506377fceb4074a4e08b4c2b298a94d2c78b3460910053b5fb0242278477a44a4210317254a180e6af312e5caca143f80dad0772d44b007692dae55903add41a8a6e539fc3648072938a990c165abf072acf00a5d5ab891050af2ec4446d61a24156f79a75c78bc9f6ecfb111426b727ec960fe38243af39003974a232b085c17e1ad603efb9dd3d1a7bab29016f427062a6d652de1cd6e507f9cf6276e9d6a9cb16fd745df8bcf6ac80af3ac1b26a62305f07b8820ace5c8c8da5341cf2e5df7b90987c934c75d8a33a02493fec8110142315a34b57a97816cc9947f28a55723bb98462b7d3d6d7eab6d47c0c94aec0f7f4335c9bbbcfe9cf4193cd2fe4bb1a24d0919fb8759add4dc526b2aa6b35b9eab17139697546d9f76853e754b2e9b16b997388acddf40930bd4e26e7487572b1739a55d77aa315a9f3bf3bbebf25b6a2e9a40244e7b30c86bd6ffd0843d0dab2b01729ddf0c9a83ee4cf69c29629d85db553725d7feac6dc02df40000565800b1bdfb40a349a3ae28dbf1e01ef1c0c2f6f2cd595d9a64720854089ee9fbc889c36e77540844f6447a6264dd3adb47cc4927b3741fd328df303c190636b536008b2d034befe666975b5c76e9de7a34275431edc71339291bb90ec945901242bcaeabd103377cca31bc4339d62cb2e761c6840bfcdc9b3e0a7dbeeae9a3366e58b83a2d3a3c5ef97c3f8ad9aabb2a3d625101fdb8504c918c26f526f9fe20153654ffd69550040537df09964f04ae5ff6fd15e334fdfd9c56208d4f101e3f39e6b51ed969145aa52ae8c6f3a33ec05499947ac318483107f0ca92d86a90e102831d9941bf126501e4235778b8f72497e097438a9bf77b37241e50aec0a562012b420c0fc1a65f200ae9705d2e138e1d31269c80dcb10fb1ca8e77a294f78159df243e63b7c89adabe3dc682fbf13c66cad48af72717e9d3bf9eee5c2a444e24042abf3775437a688cac37fc51a2419d2dd0e50a60b239da82d253f857ff9182e91e445cc1b60f31b9b92ebddfbd7a3df10cb3ced5910e6c0d3d7dbfeea14af65f0ebab3ed3566518ca4160574b69f274999df01c8330f785cb3d8bc7d7df12a0603ecc5dfba7440137a189745ad7494be8ef2f37e5bfab7acc570a9c306b051bdbcf8d2b3e1502b5feb9f436ba80f35a76199046c1325b87b1b07e92dfccb408311575af494e1cb9ee0804258497f479e24cabb9dceedeef64986081f3fda14753194635c4b5018a914881a64104d16d0be5ffb147a7ff3734a56f149841e1c25da08b3e546c372057fe4cddb011033c820567cc4b0e687a64f50b6bc141e005116985d8b0341218feccc843f4c1041b8b1c2bd40e725c4b1ddcfa4558b7cdc417235ed29606ce22748d048c481eee7b7c128c50351575b76f97066938ea63a6c06fa54d2a62c1a08c78fc7e2d1314f6f9713029a031949097b6de9e171e1ef0f326dfba56a889ede0dc2f3c57c1d3d89241f89db7e18d19b7ac2f77db5140aa9d5896e16f3b55044f34b2f82bcf6d323e9af8c325812680c8288b27bfdedec4e65408ee7210712cc3d093272c9dbed9b78c15d7acbb57e7646df5194e05c9069c147fbca96048be2e3b31caa95622293263f4ec431ad50e5b5cb3e5ce4f3c168ff129969df9b7a90876506a5ef852ee2a9e8ccf37048f3d5f29bbe100bb71297727cbcafbd674e7a271d4b15c5a9a3c097dc12aee8cce75e6d94fa6e3fdbf8f79adf5880fb5da4b4f860f67b6cc009324f6c7b4bcf37abc8858cafda43fe375fd19f3a26662051bf6f0e89692746fc44e04b0056b9c38a1525a9ffd9805b003b3478b7b351838757c128d5c31836757ae5f3ececf65aad3b0ce00ccc2a13415c5b126ac3585f0c3d15c4f00fa83fa21422b33c3aae331175491a5903254d5bbd2321a25590482ca286b28dd73cfd902c555ade8437a8c32064f4cc1c1719937fd9e33d116f2fb0c4e50df335e888007375b80969381f1cdbc91d060808756e564dfe2e001b1e964c01789367dfe1a338cd8290f6935932e1d5b0cbfa322a40010b786d537195c6a01c1990a4a645dd131c7736d281ac6931bde533cd000639f36fa7180ab0c15bc46d3eb3a8c9057c0c94426a5612a5ae7895935747b935dde7c8737ab58177e0ed65b8ab97e05245eb2a960d1f5d422455fbe04cc07598438f5f384acbbb1a01cadd7a72621e5f1a80c1a368ed62c42e17656d9a01a22eaf0460a30e281a97085d1a76c4f01dbce572d18b9503cc7c3c3a2cb67214c31e81d1290ebe52b8ab15edc546428752ef0c4ddb583a1b9f5eb923bd98868963ea703e110fc5bcfa5d8b2a1202b2e5ae33a23b2b594c025e3cb29dd5ec9d668860971400af77471cf66326cde5ad4b7e12a0ffe35b0aeed04640daff0c7736dafa93a4584f53ab44a147453c9e107c38c779dc9282666cdcd97f5a2474f7420d90cdd3af3bd7f63213854f0b2915660b1b51ee0391879f5fcf072afdc2afed820a991b39b7ade1d37ef2bac4632015c8b143493061575ae522cb8c6e65aa19847750a3d386b232a9568db82ae4ba6bab78046521aa91548805293480fe60bbd3ffca4ebf2bef2ffcf065a42faa58827f822a3da053eaf0f8e208c028b61df5b048fdde38b7f0a33f835f4c2dbcfa8fe0746eb3e1fc190d185c04d9a6e6be5dd240fca65dabe66b903bd9d33e1b7b8f76b1d69c47171dd544765391e4c3b9fb49bd67dd26c8928e34bb28079d2873efae0424c2605e9ad82bfc4a13871adf13d3373ed17b6f6178dc20c1cf9c51a210ba2d5bdd3af4bcec3a6645429bbc4ff7c2336f8780fdec30fd32ac3393a19e5e07f453155a5392a8a6363550341e3a985ac5177ccd30c9026708e197b71d0ba8dd2f7cc245b40a834fa73aea76797dedb6db1aecf899aa140315f8a72e17cf4d510b3f7aa96af181dd6b5bf7102fea52f7bac218b5423f810beead92c3bdbdf24880720834dfdcf0db5aeb282a058552fbc3d5f7c453787f44f5789b2799009bf77f94d7d6d052b34a90ed563ff9ac4b830314511e01653370d6fb1b57e7a058a951f2c0247056ac05a9b004d099688b79814a96a2a7eb7b06db79783ca2f98ef8a70c5a6265e0782905e9d9ea3c8ce25b90cca9a79e4546a217c698075d3351eb87e2b25b0f82a48af84b00ed7d39f30a0f956bcef7044d41fdee09ac9f733bc49d6f8d20c4c6849f91b8a16a730b123a341db1b7f10ddeb400bbd6d9c7ccb4fcb1ab6308c7f177360cace0a8491e76bc015a17bb5f0ead16bb8c00fbbaf9cf1e722346a70b425a19d4d8761a5ed667728fccb68a5634cf0b11fb299b2b8a9bbb9d5121eeeef2703308b8f8709135a3892e0a7f9ce522c1d0c007c47dc39b0f4d4c7d3bbfd4563522dbeb7bfd22222a87f076199ca0f54d23dd645982ed84b81639f9384f8b390827f2ce4031917bf7e359c5365903bed7f9edd3d55fa597ebf374d9bafa79cbde04d0c97e4e03cabaa9fc262f9ab10ce5baabd763c7033cd6adbc74eedc220a1e56febc5512e4ac4cccdfd3c0f1dd9babc51a811747f3da935ca2a3c57e905ba7bb3386afe1c4adc3bdbe160f581b64fc7044844defc21247861760b89f23189848f43262918dfdccdaf669eede1e7148e1473404c72267fde8dac8bde72e15ddd990ef732711a0d421a5aa37096a0f9264d1f4afadbbb09c5c0a99b950b5df6490dbee75670ceffb0a0e1bce86f57c21458557c6d2fc3ccbf8c2a554b9d2c9fbe6d4903dea1f28a778a95fff2cbb172bf39a8903dc979cea41e24ba42c74ed7eaeb4f48259fd9b76b3c690cf75e0c9924d59dfc04771b339b86f4834ae36d7a0a334188f7d9825059f4963221ee14eadf7f085d8d968a39fa71c25d48d113091d91e856dd3ac1d22684a0ec969cc19a45dca36ad5bcb269248251dfce21b4af0cd825aa39b292e0379cc78154cf640cfa3f8027db3d44a7d16cfb5e1619cff7c75ad28ace49cad3f3c10b9da7427aec04ab0740479b5a82162ea506f9aa303111a679e737e32301da0c0e1217bf18eff0c75f539d578c0812b2a6866768cfa1bea42dc19a4f642caaaf2d365b164d8a7d2dae062267c6c4caf29ddbf14538fcb741bb0f35b457718e88a589c1c45c516dc89e7418702e0dca931f619075404475b26405e07ef8a6e6c0836a7398fc11a86f9e3b7a3a539047b21587d609800e0083541881b4fcbe623117c672606604b5856653f5b9979c9d8f6ce4ef5c5757447cd72f8fd0f36dc4dfc7bccb85cd7589d204c61c083</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">请输入访问密码：</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css"></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2026/09/02/linux-journal-log/">https://xujinzh.github.io/2026/09/02/linux-journal-log/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a><a class="post-meta__tags" href="/tags/journal/">journal</a></div><div class="post_share"><div class="social-share" data-image="/img/c11.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2026/09/01/windows-network-share-laptop/" title="用单网口让台式机和笔记本同时上网"><img class="cover" src="/img/c23.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">用单网口让台式机和笔记本同时上网</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/07/09/ai-pytorch-model-infer-acc-onnx-tensorrt/" title="使用 tensorrt 加速 pytorch 模型推理"><img class="cover" src="/img/c15.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-09</div><div class="title">使用 tensorrt 加速 pytorch 模型推理</div></div></a></div><div><a href="/2021/11/29/auto-email-server-shutdown/" title="服务器关机自动发送通知邮件"><img class="cover" src="/img/c17.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-29</div><div class="title">服务器关机自动发送通知邮件</div></div></a></div><div><a href="/2021/11/06/auto-email-server-ip/" title="服务器开机或IP改变自动发送通知邮件"><img class="cover" src="/img/c15.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-06</div><div class="title">服务器开机或IP改变自动发送通知邮件</div></div></a></div><div><a href="/2020/06/12/auto-start-command-in-linux/" title="Linux 系统中的开机自启命令简单介绍"><img class="cover" src="/img/c30.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-12</div><div class="title">Linux 系统中的开机自启命令简单介绍</div></div></a></div><div><a href="/2021/09/06/awk-command-language/" title="Linux 中的 awk 命令"><img class="cover" src="/img/c17.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-06</div><div class="title">Linux 中的 awk 命令</div></div></a></div><div><a href="/2022/10/29/build-official-python3-11/" title="Ubuntu 上编译安装官网 Python"><img class="cover" src="/img/c14.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-29</div><div class="title">Ubuntu 上编译安装官网 Python</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">428</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">333</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">29</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content toc-div-class is-expand" style="display:none"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E6%A0%B9%E6%9C%AC%E8%A7%A3%E5%86%B3%EF%BC%9A%E9%99%90%E5%88%B6%E6%97%A5%E5%BF%97%E5%A4%A7%E5%B0%8F%E4%B8%8E%E7%95%99%E5%AD%98%E6%97%B6%E9%97%B4"><span class="toc-number">1.</span> <span class="toc-text">一、 根本解决：限制日志大小与留存时间</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.</span> <span class="toc-text">1. 修改配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%85%8D%E7%BD%AE%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0"><span class="toc-number">1.2.</span> <span class="toc-text">2. 配置关键参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%87%8D%E5%90%AF%E6%9C%8D%E5%8A%A1%E7%94%9F%E6%95%88"><span class="toc-number">1.3.</span> <span class="toc-text">3. 重启服务生效</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%9A%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%E4%B8%8E%E7%AD%9B%E9%80%89%E6%9C%8D%E5%8A%A1%E6%97%A5%E5%BF%97"><span class="toc-number">2.</span> <span class="toc-text">二、 常用命令：如何查看与筛选服务日志</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9F%BA%E7%A1%80%E6%9F%A5%E7%9C%8B%E4%B8%8E%E5%AE%9E%E6%97%B6%E6%BB%9A%E5%8A%A8"><span class="toc-number">2.1.</span> <span class="toc-text">1. 基础查看与实时滚动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%8C%89%E6%97%B6%E9%97%B4%E8%8C%83%E5%9B%B4%E7%AD%9B%E9%80%89"><span class="toc-number">2.2.</span> <span class="toc-text">2. 按时间范围筛选</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%BF%9B%E9%98%B6%E6%8E%92%E6%9F%A5%E4%B8%8E%E5%AF%BC%E5%87%BA"><span class="toc-number">2.3.</span> <span class="toc-text">3. 进阶排查与导出</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E5%BA%94%E6%80%A5%E6%8E%AA%E6%96%BD%EF%BC%9A%E5%A6%82%E4%BD%95%E6%89%8B%E5%8A%A8%E9%87%8A%E6%94%BE%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4"><span class="toc-number">3.</span> <span class="toc-text">三、 应急措施：如何手动释放磁盘空间</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81-%E6%9E%B6%E6%9E%84%E4%BC%98%E5%8C%96%E5%BB%BA%E8%AE%AE"><span class="toc-number">4.</span> <span class="toc-text">四、 架构优化建议</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/09/02/linux-journal-log/" title="Systemd Journal 日志暴增？Ubuntu 日志管理与清理实战"><img src="/img/c11.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Systemd Journal 日志暴增？Ubuntu 日志管理与清理实战"/></a><div class="content"><a class="title" href="/2026/09/02/linux-journal-log/" title="Systemd Journal 日志暴增？Ubuntu 日志管理与清理实战">Systemd Journal 日志暴增？Ubuntu 日志管理与清理实战</a><time datetime="2026-09-02T10:41:11.000Z" title="发表于 2026-09-02 18:41:11">2026-09-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/01/windows-network-share-laptop/" title="用单网口让台式机和笔记本同时上网"><img src="/img/c23.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="用单网口让台式机和笔记本同时上网"/></a><div class="content"><a class="title" href="/2026/09/01/windows-network-share-laptop/" title="用单网口让台式机和笔记本同时上网">用单网口让台式机和笔记本同时上网</a><time datetime="2026-09-01T10:16:59.000Z" title="发表于 2026-09-01 18:16:59">2026-09-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/25/ssm-tcpdump-socat/" title="指定源多播发送与抓包"><img src="/img/c29.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="指定源多播发送与抓包"/></a><div class="content"><a class="title" href="/2026/08/25/ssm-tcpdump-socat/" title="指定源多播发送与抓包">指定源多播发送与抓包</a><time datetime="2026-08-25T15:26:53.000Z" title="发表于 2026-08-25 23:26:53">2026-08-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/07/07/go-notebook-kernel/" title="GoNB 一个 jupyter notebook go 内核"><img src="/img/c25.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GoNB 一个 jupyter notebook go 内核"/></a><div class="content"><a class="title" href="/2026/07/07/go-notebook-kernel/" title="GoNB 一个 jupyter notebook go 内核">GoNB 一个 jupyter notebook go 内核</a><time datetime="2026-07-07T02:51:46.000Z" title="发表于 2026-07-07 10:51:46">2026-07-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/30/golang-cgo/" title="Go 语言与 C 语言的桥梁：CGO 简单介绍"><img src="/img/c15.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言与 C 语言的桥梁：CGO 简单介绍"/></a><div class="content"><a class="title" href="/2026/06/30/golang-cgo/" title="Go 语言与 C 语言的桥梁：CGO 简单介绍">Go 语言与 C 语言的桥梁：CGO 简单介绍</a><time datetime="2026-06-30T03:10:32.000Z" title="发表于 2026-06-30 11:10:32">2026-06-30</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '6f8a47c9d330fc0bf2a566c57eac7ebc',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>
