@@ -1,0 +1,49 @@
+/* 1. 彻底清除原本可能有冲突的旧 ::before 伪元素内容 */
+.post-content h1::before, 
+.post-content h2::before, 
+.post-content h3::before,
+.post-content h4::before {
+    content: none !important;
+    display: none !important;
+}
+
+/* 2. 直接清空之前的背景图配置，防止辣椒图标残留 */
+.post-content h1, 
+.post-content h2, 
+.post-content h3,
+.post-content h4 {
+    background-image: none !important;
+    padding-left: 0 !important;
+}
+
+/* 3. 使用超高兼容性的标准 Unicode 红心符号进行完美渲染 */
+.post-content h1::after, 
+.post-content h2::after, 
+.post-content h3::after,
+.post-content h4::after {
+    /* 在文字最前方塞入一颗绝对不变形的红心 */
+    content: "\2764" !important; 
+    
+    /* 颜色依旧保持为您博客的粉橘色 */
+    color: #FF0000 !important; 
+    
+    /* 控制红心的大小 */
+    font-size: 16px !important;
+    
+    /* 调整红心与右侧文字的精确距离，10px 可以让它们贴得非常紧凑 */
+    margin-right: 10px !important;
+    
+    /* 将其固定排在最左边 */
+    float: left !important;
+    line-height: inherit !important;
+}
+
+/* 彻底修复和覆盖底部版权栏的图标 */
+.post-copyright::before {
+    content: "❤️" !important; /* 直接使用 Emoji 红心，100% 成功显示 */
+    font-family: sans-serif !important; /* 切换为系统自带字体，防止方块 */
+    font-size: 16px !important; /* 调整红心大小 */
+    background: none !important; /* 清除可能存在的背景干扰 */
+    border: none !important;
+}
+
