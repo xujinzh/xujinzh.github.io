@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>如何高效统计项目代码行与注释量？ | J. Xu</title><meta name="author" content="Jinzhong Xu"><meta name="copyright" content="Jinzhong Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="文章内容加密，查看请联系作者。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何高效统计项目代码行与注释量？">
+<meta property="og:url" content="https://xujinzh.github.io/2026/09/14/code-line-stat/index.html">
+<meta property="og:site_name" content="J. Xu">
+<meta property="og:description" content="文章内容加密，查看请联系作者。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xujinzh.github.io/img/c8.jpg">
+<meta property="article:published_time" content="2026-09-14T12:25:41.000Z">
+<meta property="article:modified_time" content="2026-09-14T12:30:08.106Z">
+<meta property="article:author" content="Jinzhong Xu">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="c">
+<meta property="article:tag" content="cloc">
+<meta property="article:tag" content="ssc">
+<meta property="article:tag" content="go">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xujinzh.github.io/img/c8.jpg"><link rel="shortcut icon" href="/img/letter-j.png"><link rel="canonical" href="https://xujinzh.github.io/2026/09/14/code-line-stat/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '如何高效统计项目代码行与注释量？',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-09-14 20:30:08'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/silence.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">431</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">336</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">29</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="J. Xu"><img class="site-icon" src="/img/letter-j.png"/><span class="site-name">J. Xu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">如何高效统计项目代码行与注释量？</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-14T12:25:41.000Z" title="发表于 2026-09-14 20:25:41">2026-09-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-14T12:30:08.106Z" title="更新于 2026-09-14 20:30:08">2026-09-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/">technology</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technology/linux/">linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="如何高效统计项目代码行与注释量？"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="密码无效，请和作者确认。" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="74a31d3ab1d1f5e6275ac8142d913e83231eaf8c7cea18111a57a29eee569e0c">d7420555dbd47e034be0c72be203a7e3c0038009fbac90832eee05d64deb9f3f8ff7bd4d246798c85a0ec723dc59a5f20e24f6df24c99fb51e0601637c0325cc5344d556ec5e222868105453ad52ba363dc27c624466b5fd5eb0fec0df3a7bcbb9f85922ba6b8fee3d360920382ceb0386758dbb0d42ed194a2449bef648b2a1f901348a47aecb4c8c0a1a5a4df3e6e0c324f49671a44f3ab8a928d8f45a40091ea86357b186ee0c3bf61ca244785dc028b4302842e685505ee1cdc5d77685eb1c542d12328c079b6689b465fd002d29cf06a01a37c8084b7ebb8215c0586118b8a8c7c719fdb8ca480caeea78f290fb0c19104e9b60e1be98251f8a4456d1e35fe32e49b6605696640295e4a9656bf308a2f656a370b6fa4aed739c30d2fb0de5a0406fe91159b61c7c45c3095c8b3543c6c3a971bea10c8dec78daf303ff9d8e2756160b2f00844a5fa93af3f125c7123cc828a5b5ba68c5bd8e0fbade85752fa72faf5af57dc1bc6d953f03757a5dec10f0cbb419266bcfe6f254fdd361e33ebada870ed9604316b5d9dc744a921c039d086ef62ea82acbe47f1eb53edd7cd1aa274be62334aa500042b528c235d30d8db4913f0eb3b7b814e882f6bd2f35618bcfc11389efc12c031e0a16cb8276aeecd9279fa92827ef85992e88e61f11f6458691ae0bc68b700b64af0030606a97f450264e0affa355bdf7f3cbec986e4b358f69694c945a7ee37802df04a92a6a8d125105e052d069ee96e3b1c5634f486de6e27edc6217796668d332cdd91b37c662618ca4229bb3a768eb1e28cc739fe935fbbcaa2db56b38e1d785c3d463a78a383c69d21fdf74a19e75edc27ace769cd79d6bfe046fd48662e1dcbca29b9f04ca3cf6e786512d8cb4ce80cc827980cf88d9c516705f2ec857dbc6f01a784c46e1f51865066dcc620b6990b90c825b1c8904a143be275befe08b167427f262459d0c8c0a6bce47bac22650aaa4739e0498908ec37f3e1a2ba3de2ea385341c124eba9a0e3272bcee11f6955df1fd60a4f14fe916ac6e0bb80446f63624fc8036ee1d72441b88f4e50027c916471fe0e31d4e3fbc8920ba585d27910e6efa298a343c8aa328fa9c0bd218f0ecf8fa07804d56ec0ffb6a6b3748e3642d05d9fff695987412bd6e392f39863ed14218214db7057a031fb1cb6351f7d0c475e6a0e0dd8623417e40e36269320908791b4818b37193940e0cde58414e85da6633200cd424c5afb3f44f5941a3b0ad4b692950ba3459e4ab333c2c43d9b1cd805092f638732580fee62515a8ccca33097d6396dc34d00b0638c1ba88e3bb0ae4bbd5e35f6791d3ac22bb736b1f8337b62206b50888dc59fc0e13e8cb60f536ae851ea45759366ed65be835437b180ea2b5ea12e74893d3b55ee5ed2e45318055a69b79b45d9d0dd559dc22ca4a7d12027d453b8611032211a61d8ddacd0e053419c057798c9c4f8bffff87b7159fdcdc83856ec894cbf60c8e035caaa8f97de64741dad6f6d7b10cc49239f9e24bfcc862801788bd18ddaa731bd41ded531c7ab807950dfbe4576ca1b86744c6377ff6f7fc6110e8fcc796164a70d1a52a7d4bb21b9db445bacd2cc2ff2daceeacf830f7f8cff40df4d685e1e51875c6b532ed3d1611b078f715d26793040d80a36fba240c662efa00742940d160841d2739ec8aa0279b4e1fb64f3f262a36fb090fb9fd57849b48e3d1f98d10376320f9209f43f239104f19c71857ce30a4a835c9aad2464cb1ec271899b83089e6563c37d940bcd74d20e5a538c0628e256602b410f0f5a2c55e42a0915c010615bc09075af78bbd1f377878454206fc88df0003dbd7fa8ca9ef4a2d53c32433b140b5a5b377884c6a8dc46bfc450e6b4776d78642d79b824c103ffc52eb4cb337692f9f1d462e65819eb1c7dc765dc9d98262ac9817e445195a547b8301bf44f6873d1f1221873d471b2f3bbb27fc40b92c73d8c0aebf831921c5d6b86939c3ad3d8c00188dfa1e369dab139b1e9a2efc8f972620b8b1f2113c35cd01104fc5b6c00a814cba08567ce4842ad223917534eddcc4bdf0199cd6eb176f6e4ec762f4632fe17dcb5573df04b1b9f4a2669f3513c567d2c4579a1ce835e5fc87a2ef7ac79b245b9fdc867878e44369b08f19b43d919b5ec096c5700cb20133aca15fd665ee65bca40dd03f49ba7cf09287f5216c68591779c22de7a3c503ab40990ec5773f272baaf188bd61f44051393242dac9248cf847e42b52ef47f739692bba389b55daf60edfa96adcae45f56cdfcbd258904ce8b39d8494c61dd848f36b17a166f63e0c55858e25e15e788b9d09f6ba6f5db4ecf20a661e2a59b50af08db9aa7e2361a5cdb30dd285e5f995016e1b1d192dfa894a8d246e35c6b7d54ee2ed63ff540eacb0fd4f62d22d601ec0fbaff239ab5a1796b5d43c3c20333ce626f8a7f1b1012e39fda19487b5cbceefa443cd7d6bc24f3d55dffd3d5d0951d5080c7a4bee6a68c06e6acc08c00583b6bd0f8fb5acd5e24b630237071a185c1369b42ae51885f6ce2fc6db2a4372dacf0df6f857f6c0d03c5d632bc74997fad4f47fa1f0bb1f05d71108c2c3477715134a409cf234e166ec44b8e7b6b6bdcd431070270adb03ee2de3538438bf0bcd682237048b83289e6b893f461f6e58c03b2cc0ca7ba6217af3dc39f68861ffebe301248dcb0af2a11a5bb0a18b12a2856905c73dc9462b0da0af6b8847adad95b9c89d053d8343e8a8d2b1bcb5ba062f4279b33559e4ece5c72ef49060f8f68fc2a7f16ff39016e2438f9f81efa3e72e4e29d9fc28bf7ade6caec5f9c3ba3b8ec3878a8ff3defeb282d9688201dac75503ee5154ba2eead62a34943854242e22a0bd6dd4ea44f148ac0571a8554b5f3b59ccfb14af18ef3bf805d2deee1c7c0196966a0c4d88d9be6ac473f88495c1bfb2148a4f13c30dde0bb41166ea2cde2c896566c92044a07355e76cde7040d9d165d5be34c41c169c85b3fec2b2b1ac895bc4585758eecbced2a391a6fafefe5d2d1d23072b1b21d7ab5d6c304293df7a5bf1d294467c1b336e0a56c36de988755d0cebda4da72599f62b16df1ea70a82c48be2957b37f0e961fdbc020ffc5d6495afd35f617dc52197f00d494f46b3f361aae3f03103aae568bb9ae2ce79d5c3bff554b4ec4687d83e3c0bb4ff9f962fbefc1d760cdc2184196f947883fa3e5a19f5bea770be95f60828ad97de1fb67258ebd3b94c47dae1e2030227b23ebea78f543acb4fcf530e0ca8d76202e7dba0cc4f1a3ea0137f941d377f7c2857a4c0336f10f4426feeaeb153498e205985e468a30174561322723361fc2ca1a50b938f216e3ac4fb1b079b60e025f42579b28780566e9877c29ed2402aa169750e8209083736cf3599cb7d5020a5015d4930376b8b86b62df80f81aeb665ad5863ef3f511ee1576fac47249b9a336a6932e2a76446c607842159b51ca063465b4cbbb52aaecce9b0262be141c4653832e7b30e4fa41469c50d81fc78f3c23e931297db54138d7ddef6c07bf2d0dc941d4aa34c1bce34b0bfe37b93b0e1f24c6d3a50a649e279efa0edf9b5b26531fe0f55b83302e661c54d0b2b0347ac2389f8fc9656b206f15e65df7c6d8e3a37d52aa872154d487345dac6d92dcc3cf0efed307eb3be9f47d0c65db2162233acb4076e450f11314e89f2da13fd2b54dccfc8c6caeb6cc48833380bfe71353ced6f48e3c4a3eabfa47bc92e20520f73b7b01f231d4ab5de7648083eb2f8bdcf5292c1da61d25c9809ab470e040253a3eb31631424c2c06d5a403b0dc291658dee8c4d089bce609fe07a7becc8ebde2109d46f8e661be0e1fc29a02586db278ba07ef0e3060b0671109fc8cc746776ce2edf7c690daf586f6e1e870081addfcc8beb3ad7c6c07e82b65799d520744f5369deb5b1bf9c62fac3a60cdb4567a6125a6ed56beecb3d29c028756bf8f54ec97d2a5f11d8a951a79da0476f2aa52a86eb760de929dc08d87999dd7a5d83cc12c1becb697bd047d2dc56e761829d5139eecd8cffe8ab91bf3978cfa832a0e11962576f65b57db3e87c3fef9c55f6aad4ac24ae1e2a4b5603d192d095ce9524437c903ff6f63ba816750bb0581a2d75cff7e97b06622321551fc5cf54fb33723cb1edef277de90c7814c9e085dc39e51680974b7938869af3450422b23400f54c170f5f5e0ea0bf59660a32132cce5e98050441b8f1042af203dfce5c6460a150eb2e977c3d299bf8ab558729fd5c76841595b5a9167541b8d941f488eeff7e91e007d56600600b21a2d3186cdde71d30698b6f3d6053ca49068f47e9935201ca223d524f95040676c7111162b30d4ef2c1b356b654b85eddfb79d7ab7f6402c31cfb4122e418db85c3fcd03e5dd7f56c32507831051aaaa4414046f4d08e4bacb3d67e2bae11a2a7c2e943857b89bfffb8a82d9a4155796fc1eecff9956008cdf20249054aca3412692913ffbaf49da593c463c233483282636a511ad9a41165abdecc92e546f6bc88334e228c76a97bf802e8d3f1b94feca015ab4facfb44a943e5fded08416fabd8b66ab9511264b90bb3c5c618f7558e88259845cc93d8a63410e1fd563136897e3aab2e55817c74ad11bb390b98cc32d0f190cf78e24d82e0023dc051918292bdf8c0c869a49b68175a79c1ef939c2ec2e0256536f4f1b9db5d86b1c6281fb7a3ce40ceb84e3a61b1538114652acb99d7bab3be5799bd9592042d80d677b69470f9c2b65b3799aa518b26e7928eb51c3549aab7a5642639a296c7dcde48ff72d32cafe229b25cc6f561fd6cc79004ce586221a5f2d00af07fdb8e3366fc7ef3b4161b5346e57a7a348cebf2b21da6d0d1378ee344a5abfa14b88f58dabd6fd3bdc3fec5660bfe8841a3bfe9acd013cdd3f6d1b3be92249cb3725390b78cb808396fbb26c626a2e21ff016676a9e4de07fc64b05a679a271aa33efb92ad4d4bf37920c9ea87b4a389f446159b3eee02a5e541c5d8f6aa46d138c09325719594952b09d3c1c5d3aad13f5b09d049901d6327eb8bcb45e892a47aef8303d8eb4e5ab1fae41df13001035c26aebbd2e139ca1e86d5aa51550ee3967eb23dd39fe67ea50e8725e76b46fbc8c5803f294a8f75facdf10d11f9dc04b3cfcc23dad6ccdc1b0a935280b7d713f62c4ece3e82178638e1219e40a898f84595c082b2747f62d4f27e00004014ceca3885f2be147476302886f3063be8661824b2800eebec30538fd367d3c98df42be8a968843adc7ac8780da0673bd1af5ef6b2644c3ee82726592a81872785186ffbd4628697732742cc9b99306b836b400de9ef75e4010eb25864bcdcda9b0173eb831eed8cba241569ff558311750537e2a0e522cccf039ff05b1b2783e9786d886ba3a1a73cc7232700d356bf9a6e7d3b436c4bf681942e77d24af5052a6be20cbbaa55d19421870b83dd99da7b059091ed7732bb0fc023b3ef43d706b88474f2cc16878bbd5463b77201d20f13a680193dc6e10ce426089dd9b9cce0b8f1a491134998501af1e071c8287441c228026331d209b3100e5364012319f393df883622aceba8cbb91497cc8ac36d11ddd7f0b3ed109865a7d266083db80747f3b6bf5d237adeba49ad94b4dacc90fc8089242cb69088ab50d38631909bf05aecb1bbbcd615c69d2ddadbb65c37ef04be6afac6e9a848ba6017be5966db5c21d015b10239d48997be6eb7bedeab9c1baede6f24fe69f2c4df63e925adfa6696553959c84f2804de302a0ea69ef3558b3f1376f20bd1e8e55f054974cd4d7c8f6de774eb02892b36ef4611f355e9306600c4fa0366432ea70f4e69018da4be7e8546a62d4d77f35729d734f5d8adf7f1aa61b021879e364c1d460431cdf49fa21e6d8436bee3faf9cbcb5787d6ce8a7267f167371193571c13b1542186051a0f29763ef3631ea9cd1453e0e16471e9117bc42eb18d7768329b0a4dbabe66cf07a4b5787eaa97fc241c4816f1a275fbb5e06ca986c0bc0774bda8bc352c3ac61c0a73a1d03d29819879a9e7609b75b954155d648fcad1322fadb23c3e64db2fc3d312ec330aac778d0942fc9ef2342675108223a5f4663b82348baad3471fb64538e43934ad06b27ebb0614a5c1220f694c276f4453d3243d4636bbc459bb94371127ebe4e796c9a56e0d58c4d6feaf527f4e9daedb2de6496dcfe825315ef3f992f90ae336a803b373f3e4ef844a9c58215ad606fb8b4fb7d634dfd0cb725647b9ab5a5cd4acb5531150b551b6bb7a5f406001148256e2217b9814d084901a79b88c695f73898dfcdcb30c570b19b903d8374efd6767b67d3bc013b725898a1ea211c6cd11e8b77235ec33226021b5917705d8f8f38b8a6f676b2cab126b2196b37baba889bf7e5b130d6bf0db0422ddf59149a996713104706cd47577e58fe14e1ef602cc023aba17e83480916a23d9aca70f771a246cab5beb35df82fa15917fef9de6986438e7c5b478ff9326eee5f17f2e69d729f83079223e76694ec22ffef7ddd2936eac4d1c75d50ac8bcd4850aedf278107d50052b3867734dd9db878c10ec07535f43d315de4b4de0000e16a21410162b40e03ff1bce9feb62e787b58c145a196d23ba3f9f84de00cbc292bbec671e42e0f110c2052cd5966df7ceee1dbbfd1b6902956d5f73f2e5ff5c0381671a870ebf76a46b53edf5a8680e28a6d7d4c435792265e3f46bbfc3ece8104b50da63ac1cca68ca4f42af3943ba8c1ab752d20a8f2402b3734aab12c576b0f42ed0b4bf00a6a0745dd2f17cd394fc67934e05608f99ed4fa317aac16eab171714d7ae1122709993517fc73ef27289fad99b21464f44fc705771722e3beb427c270970d8267faf9b816ade34320548ecd8dea870b828b4c746f2e8b0d39b78cbbb4dc1b646e6986520509333dff269c30f45ddcd9feb3a6ccc1baf80fe5541f4d810d26d2ea99ef1e6821f2676c998666e6336d374aaf0381c876446c5f64d6023839c95d433da47d9beb25640843856ceb59ec739c256f4434fad9474a883b90589f6a53e8e5cecc1cac85ecc98826ac050d867bd5c62302f4d68c28736469462d2169d925e65b7a197a8a7111fd6b4d221a7a105f05c1bc520cef4693ba8e1acc1ebf6f3862cc61da0fa00ee63b0751e915047e5af7d334a8268c647f0fa7e1e34209a130351ad8a93285f8a1d8c4653a169ab0e3f02aee2af2ade42103d76c611e2255d10feae09359c07660c7d917689af0d349ab933cc4ea95d750741003d0242a0e3f8733660a86361403617c047ab4a350bfc1965b00989660e30d161987d99323a173a5342d3b120f618bc886ef026290fd45487186abba21c4d4bc1473af026d60f659765b7c98d472aee5709834a0adf317274de619b38b50f3b04fea3de18de82df8f68b55d257353aec77c31e194c2aacd143e5fde4f89f4494cb832a31a3727e173aa1c118ba53df7dad1b2361662ff89f0c66d3f10a9002ad90c4494dd7cc3412a3a1cdd3d95d90e5426695167e8a435325cb9dea383aab100df389c6f54f1d40ed42e68f58f99de7440fddafbafbd5ac993c1659ad78e6eb9ce08757b381afe02e50ee5c12dd3988ba885ff7ec46b2ae21a46dce52524fef467b1b37d4d735c1af1c299392eaa8b3946a4516702817a21439bf0c7bdb5313d4d10599e451b10a67043df293b45a7a73be3a6f9605deb4c5064baec69791436876e26099738321b99ddcf84f6ea88faa90f585c035987743d0d22e14ce6385480be131d0f36e8cc0e853764a1c42b8729e9ec76937d800ea8348f98924c3c469de9a26bae60689f93dc19eef8bd2b8efd69246a65638cf7c954d9f7fad894254d0ed3e111dcbc414a371505f15590c44f5533e233f061439ee3d12b445ff6b89094a271dfd2683b530f76f9cab0404ed37eb772c11edd9f5335f3ab78fb26eb0996867892f1307bc2232d160d80b2dfc285a5293f6ec191ca245cea801a5fd355ec826767ce0d97aaa6063b7760798a990c043a6f3ada73364fe4b6302547a3dacf840565daa9e76c2e637deef39fb86d753de8c32255c8e38a39266b9bbb8c2d6f15bb07846d0e99846be1f17c1c333c8e0068912795dba78abf695c92750b879641a30d538fc88053fdfa87ae6e9c07d03ec2dee35e98b6003481beb36c29874c29e85cfece2af5e65e1404eea210bbaf972563fcc75002427363ba8f0273baf32aa3748e19ce37e58ab06bc4907ab6cb8353bcf3e54ad100318a9d844907f497c9a9f3b24918ae5bc35eece59fa64da229ded1ef8d32436fd26cfb78777705b136aa6350d90b8d420aa318997326dff0962f95c04b81146ceb7d7d52a20d9bdd8163aa5b5818eccd5a12c84d752fdc1d2415a217931d4508b8907c7b64e5eb09227e3087744cbbb1052fd08daf259ef258b4e329f5792f4679fdcff4fa3e8df3b0681f446785d96e23c343ca3637260499580001ce5af7be83aad54e7cc79c9998f3a80e80bb89c09a90e8483ce22937876c851ab641f228b5615b1ac6e3df05d5203ff4a2b216c27bd6c5334b12a35d7a9a1e337038d6766c5c86e90d91ddbf4421fe2b1560a3bf0fe1013bdab8473f38b2b2bb73182abe8d0b2e6f8b02c359e0e2e77b508b061b132f325948dc16a6ce497c476b07692a16d79e8a2e08b3a7dc6f71f9ccec143bb9000d32eea7b24cd6e6f5ed29efd486e67d6177c4ce319ab3c5936c5f43720fb41b154d1edf8b300f962c20614f18be894e3ad29008afe1d4802bbbd7c0b184746cde2d4e5b43a24e148fe21ccb070f117bd59796f766df6591c31d765b95d30dac96af4227ade2dc93bc8c7bd5e14e38a4d51770adf33b8957ea80fb6351cbf16642a704f0cc6563b4672504ad55bcb36f473481ee70b62b61137b52b2a032a44aa80b8dce85647e707694262698f9e2cb413e954f22e40177e7b2df92fb1a17d2c44c4949784889729b23c1bcde73221c5d26c3f9e26cbae8c4966d17225a268cb2d14dc5cf1022cd286e86f13de683e1d54db901ac634208891e6d29a8d5b7019e6c07b235f8f3547cf09f4e95216a00439eb87f79093aec48a2106d6aa07ffd2f9f4f2da91d9edf245e68d32d21e9bdce3321ae5be2c617ee85e8cbe81df6a3e5682f48b5b6955bf1df7c19a7312dcc5b21b0eac833cae41b7f0577e1c454bcad66d9e85b870b4f774ec00da091707ca27612eae68e2371491301d7f417229f9ec2e4d1dd5e8b47847429d358c751c3d3865b46607da9e2280a3915c088732a57b8effe696b9b03f09a9a3d128a1b7d6626a46433974e2fbc91082aee311c11e0e22a749a61e3b4e88db07b7ae21ec2737a3b67ab5d7e8613ff24c3ddd6562c1dc9b04627066dfa1bfa1ceca6afb40a8f701d37f7277be8c3b059fd8a4e9f0d5942ba5d034903a2c9937b92d53cc79967e66ef60e1ef4242a47e8d4cdf34807cd63a01b72acfa950007962e80810e3292b65624f202427ad56956137eb301d75346bc1bfd7823e9614ccf14aa825cb83b103057131072538eafb108526b53dfc5ba4c6bec66e47e029792f62d938a00856ed52d522948a22f98bca5bb2baa9227f73b2352b63da33f70dcb2979074b34b1a8c28ee871ffe8c157e1018f5387d24684232a150f6b5e454c1cc68afb3d99a6abbf2ba1845c8e2f69de614694d5b434ae4df9536724094d9578f456c5aa8f47b2e500bcf8402bf5779059b80f2270bf66656367b7be0af87b4ea1bfc38557c32a164c114befd96198bb681b9969673e444da1ab7d02b6c0a8385d056cb27c223b9bf515c9b2e59bf031bccd66fa269a05d08cf1b4f76404daa2394c3edc279c752bd8a9c3488a3b9e0b9bd67f707e4bd653077daf5c1d7fb5377708599e9cd1916e18015ef06fb36a3a0c6c21db32417bfb605e5d406f263632baaaf09ea243668e6af6a68261dbc4088d4d74cf54fa32583c86dec75c8f21f802d0e04a74aadba30d68cd93be9ab16e652cdd509a15c07a4af3af447334ed59e8dfd009c01dce4fe1947fbd0bcb99f3f3ee62f6272794cce8555c445e65787458992cbbcde11ab4871e1056b7d733a3fcab670853725af2ee456653674b31a10d2633cb9ceac58cac7c8f742cbba17cfd396552afef11d0fd8d2bd6387bfe71958cf3f53991eebd7d7e63ac56b40651fb34b082d6c7f6cc3f1880ad6759829a2554f8476d7a696701451c9fee153b9ac509c9cc2468fd475ffcadc66e1d5ebfa6940482c15461d66a6119b53b1d82544865c4d0153a4e6e238598852d2901fc40028b6acbfd9b2805ad01d61ee8302ae4e880923dd1da60a2675bf32c1454fadaeb17c44e1d088447ddd42e92d2c5faee55f0af0e627ef82936644606c8779e3a203d59fcf8c7e0a53082acc01031e4fa10eb28cec9a8da1bb8399f840b88bc08d78c0b579dccb0c48e46640ba4f98f386aef89629157f33aed1f35e40825fcfbb2d530f2192ec02be9ab84c148ce659a39eb271559a3721ac89250c38a0aecc8c4b3415e2871121d58646778bc6d7923fdf53872f426d40882579cd3f35f183004b161b7b0269591f68dec32e9572e9566b854c08b06321b7439355ceef6e14881f6e3379ef06a8a23aa804445be73942c77b13d2681264f2a5bc914839419f493f85d32caa61571b8702c557e263e589c3ffb31a5f7b3232fb0cb779cc97efbd7b0d331bfe6ddb2fe9885e95c6cf1654ce0ebdbb48a216947d184d588eec75d155ade19e741a76ead27d306fe77dbeebfa149e75fd9464393d06a9ecafaa6fe14cf0179da7ae2eb0477c734d47be297defdec16cbfb9bfccc8552f958805225bd739446bb585b61e4344b76d4d5895b85ac4a11fdd7d0fcc1eefe8000df15b07ae86812a58b0ca05361b59f3b66d468d15050206d161a55c6c87b7c5f0c05052bb9e726e98820231abb8bbd1473875d523c5b926d679129d68290c40252ca05abe7a0fe11b8fe9ac7b52f9b2550b113c0f47e955cc3a2cc92dd99a60a548d87db464a8a4ab583c047931e11bf3af78d593fe08edffdf9dc90bb6f9bf7bfe1d2e1be80ae15e46d5e63353fa7fcb5ec40e0060ea54d8b8a504e93ba707d9aa4d8dddcaaad8762f3407b468afd04a7d438c180ff68c7e1c66153a4bd495c1bd0542b6bac4e6ff8edacf32be2d703dd442fc6fd2bd095a5edcf167e46bf692ce323e9761909f3823436493f96930babf195f9a31baf35a307ee0f92043999d596553af87ec5d1f</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">请输入访问密码：</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css"></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io">Jinzhong Xu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xujinzh.github.io/2026/09/14/code-line-stat/">https://xujinzh.github.io/2026/09/14/code-line-stat/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xujinzh.github.io" target="_blank">J. Xu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a><a class="post-meta__tags" href="/tags/c/">c</a><a class="post-meta__tags" href="/tags/cloc/">cloc</a><a class="post-meta__tags" href="/tags/ssc/">ssc</a><a class="post-meta__tags" href="/tags/go/">go</a><a class="post-meta__tags" href="/tags/java/">java</a></div><div class="post_share"><div class="social-share" data-image="/img/c8.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2026/09/03/go-upgrade-guide/" title="Go 语言微版本平滑升级指南：从 go1.26.5 到 go1.26.7"><img class="cover" src="/img/c9.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Go 语言微版本平滑升级指南：从 go1.26.5 到 go1.26.7</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/06/16/python-call-go-code/" title="Python 中调用 Go 代码"><img class="cover" src="/img/c30.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-16</div><div class="title">Python 中调用 Go 代码</div></div></a></div><div><a href="/2020/08/19/python-calling-c-code/" title="Python 调用 C 语言的函数"><img class="cover" src="/img/c5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-08-19</div><div class="title">Python 调用 C 语言的函数</div></div></a></div><div><a href="/2019/12/21/Python-deepcopy-copy/" title="Python 中 deepcopy, copy, 赋值的区别"><img class="cover" src="/img/c11.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-21</div><div class="title">Python 中 deepcopy, copy, 赋值的区别</div></div></a></div><div><a href="/2023/08/28/ai-stable-diffusion-webui/" title="用于文生图的 AI 模型 Stable Diffusion 的部署"><img class="cover" src="/img/c20.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-28</div><div class="title">用于文生图的 AI 模型 Stable Diffusion 的部署</div></div></a></div><div><a href="/2022/07/04/anaconda-pip-offline-install-whl/" title="通过 pip 离线安装 whl、tar.gz 到 anaconda"><img class="cover" src="/img/c2.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-04</div><div class="title">通过 pip 离线安装 whl、tar.gz 到 anaconda</div></div></a></div><div><a href="/2024/07/09/ai-pytorch-model-infer-acc-onnx-tensorrt/" title="使用 tensorrt 加速 pytorch 模型推理"><img class="cover" src="/img/c11.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-09</div><div class="title">使用 tensorrt 加速 pytorch 模型推理</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/silence.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jinzhong Xu</div><div class="author-info__description">众妙之门</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">431</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">336</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">29</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xujinzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xujinzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xujinzhong027@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.mathscv.com" target="_blank" title="MathsCVBlog"><i class="fab fa-j"></i></a><a class="social-icon" href="https://xujinzh.github.io" target="_blank" title="GitHubBlog"><i class="fab fa-github-alt"></i></a><a class="social-icon" href="https://www.mathscv.com/power" target="_blank" title="MathsCVPower"><i class="fab fa-m"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">日本核污染水强排入海！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content toc-div-class is-expand" style="display:none"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%8A-%E6%A0%B8%E5%BF%83%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94%E9%80%9F%E8%A7%88"><span class="toc-number">1.</span> <span class="toc-text">📊 核心工具对比速览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%9B%A0%EF%B8%8F-%E5%B7%A5%E5%85%B7%E4%B8%80%EF%BC%9Acloc-%E2%80%94%E2%80%94-%E8%80%81%E7%89%8C%E3%80%81%E5%85%A8%E8%83%BD%E3%80%81%E5%8F%AF%E5%AF%BC%E5%87%BA%EF%BC%88%E6%9C%80%E7%BB%8F%E5%85%B8%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">🛠️ 工具一：cloc —— 老牌、全能、可导出（最经典）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85%E6%96%B9%E5%BC%8F"><span class="toc-number">2.1.</span> <span class="toc-text">1. 安装方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%B8%B8%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%91%BD%E4%BB%A4"><span class="toc-number">2.2.</span> <span class="toc-text">2. 常用统计命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%9A%A1-%E5%B7%A5%E5%85%B7%E4%BA%8C%EF%BC%9Ascc-%E2%80%94%E2%80%94-%E9%80%9F%E5%BA%A6%E6%B5%81%E6%B4%BE%E7%9A%84%E7%BB%88%E6%9E%81%E5%88%A9%E5%99%A8%EF%BC%88%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">⚡ 工具二：scc —— 速度流派的终极利器（强烈推荐）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85%E6%96%B9%E5%BC%8F-1"><span class="toc-number">3.1.</span> <span class="toc-text">1. 安装方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">2. 使用方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%92%BB-%E5%B7%A5%E5%85%B7%E4%B8%89%EF%BC%9A%E5%86%85%E7%BD%AE%E7%BB%88%E7%AB%AF%E5%91%BD%E4%BB%A4-wc%EF%BC%88%E6%97%A0%E9%9C%80%E5%AE%89%E8%A3%85%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">💻 工具三：内置终端命令 wc（无需安装）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%92%A1-%E6%80%BB%E7%BB%93%E4%B8%8E%E5%BB%BA%E8%AE%AE"><span class="toc-number">5.</span> <span class="toc-text">💡 总结与建议</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/09/14/code-line-stat/" title="如何高效统计项目代码行与注释量？"><img src="/img/c8.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="如何高效统计项目代码行与注释量？"/></a><div class="content"><a class="title" href="/2026/09/14/code-line-stat/" title="如何高效统计项目代码行与注释量？">如何高效统计项目代码行与注释量？</a><time datetime="2026-09-14T12:25:41.000Z" title="发表于 2026-09-14 20:25:41">2026-09-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/03/go-upgrade-guide/" title="Go 语言微版本平滑升级指南：从 go1.26.5 到 go1.26.7"><img src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言微版本平滑升级指南：从 go1.26.5 到 go1.26.7"/></a><div class="content"><a class="title" href="/2026/09/03/go-upgrade-guide/" title="Go 语言微版本平滑升级指南：从 go1.26.5 到 go1.26.7">Go 语言微版本平滑升级指南：从 go1.26.5 到 go1.26.7</a><time datetime="2026-09-03T11:36:04.000Z" title="发表于 2026-09-03 19:36:04">2026-09-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/03/linux-7z-passwd-compress/" title="Linux 下使用 7z 进行带密码压缩与解压的完整指南"><img src="/img/c30.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux 下使用 7z 进行带密码压缩与解压的完整指南"/></a><div class="content"><a class="title" href="/2026/09/03/linux-7z-passwd-compress/" title="Linux 下使用 7z 进行带密码压缩与解压的完整指南">Linux 下使用 7z 进行带密码压缩与解压的完整指南</a><time datetime="2026-09-03T11:30:38.000Z" title="发表于 2026-09-03 19:30:38">2026-09-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/02/linux-journal-log/" title="Systemd Journal 日志暴增？Ubuntu 日志管理与清理实战"><img src="/img/c20.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Systemd Journal 日志暴增？Ubuntu 日志管理与清理实战"/></a><div class="content"><a class="title" href="/2026/09/02/linux-journal-log/" title="Systemd Journal 日志暴增？Ubuntu 日志管理与清理实战">Systemd Journal 日志暴增？Ubuntu 日志管理与清理实战</a><time datetime="2026-09-02T10:41:11.000Z" title="发表于 2026-09-02 18:41:11">2026-09-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/01/windows-network-share-laptop/" title="用单网口让台式机和笔记本同时上网"><img src="/img/c23.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="用单网口让台式机和笔记本同时上网"/></a><div class="content"><a class="title" href="/2026/09/01/windows-network-share-laptop/" title="用单网口让台式机和笔记本同时上网">用单网口让台式机和笔记本同时上网</a><time datetime="2026-09-01T10:16:59.000Z" title="发表于 2026-09-01 18:16:59">2026-09-01</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By Jinzhong Xu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '695ca5d39e2ba2f9feb5',
+      clientSecret: '9d4027af6364ff54595b7a8580977ec58c38a5ae',
+      repo: 'xujinzh.github.io',
+      owner: 'xujinzh',
+      admin: ['xujinzh'],
+      id: '6802910acb5d4d097867a409dabfe31f',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="众,妙,之,门" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>
